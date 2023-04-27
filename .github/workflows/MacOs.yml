@@ -1,0 +1,126 @@
+name: MacOs
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "Benchmarks/**"
+      - "Cmake/**"
+      - "Examples/**"
+      - "Include/**"
+      - "Source/**"
+      - "Tests/**"
+      - "CMakeLists.txt"
+      - "conanfile.txt"
+
+env:
+  BUILD_TYPE: Release
+  CONAN_USER_HOME: ~/
+  CONAN_HOME_FOLDER: ~/.conan
+  BUILD_FLAGS: -DBUILD_UNIT_TESTS:BOOL=ON -DBUILD_INTEGRATION_TESTS:BOOL=ON -DBUILD_BENCHMARKS:BOOL=ON -DBUILD_EXAMPLES:BOOL=ON
+
+jobs:
+  build:
+    runs-on: macos-12
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Conan
+        run: sudo pip3 install conan
+
+      - name: Setup Conan
+        run: conan config set storage.download_cache="${{ env.CONAN_HOME_FOLDER }}/download_cache"
+
+      - name: Cache Conan Packages
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CONAN_HOME_FOLDER }}
+          key: ${{ runner.os }}-build-conan-cache-${{ hashFiles('./conanfile.txt') }}
+
+      - name: Install Packages Using Conan
+        run: mkdir build && cd ./build && conan install -s build_type=${{ env.BUILD_TYPE }} --build=missing ..
+
+      - name: Install Boost Url
+        run: mkdir BoostUrl && cd ./BoostUrl && git clone https://github.com/boostorg/url.git
+
+      - name: Configure CMake
+        run: cmake ${{ env.BUILD_FLAGS }} -B ./build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+
+      - name: Build
+        run: cmake --build ./build --config ${{ env.BUILD_TYPE }}
+
+      - name: Install
+        run: cmake --install ./build --config ${{ env.BUILD_TYPE }}
+
+      - name: Pack Library
+        run: cd ./build/publish/Library && tar -cvf MacOsLibrary.tar ./
+
+      - name: Pack Unit Tests
+        run: cd ./build/publish/UnitTests && tar -cvf MacOsUnitTests.tar ./
+
+      - name: Pack Integration Tests
+        run: cd ./build/publish/IntegrationTests && tar -cvf MacOsIntegrationTests.tar ./
+
+      - name: Pack Examples
+        run: cd ./build/publish/Examples && tar -cvf MacOsExamples.tar ./
+
+      - name: Pack Benchmarks
+        run: cd ./build/publish/Benchmarks && tar -cvf MacOsBenchmarks.tar ./
+
+      - name: Upload Library
+        uses: actions/upload-artifact@v3
+        with:
+          name: MacOsLibrary
+          path: ./build/publish/Library/MacOsLibrary.tar
+
+      - name: Upload Unit Tests
+        uses: actions/upload-artifact@v3
+        with:
+          name: MacOsTests
+          path: ./build/publish/UnitTests/MacOsUnitTests.tar
+
+      - name: Upload Integration Tests
+        uses: actions/upload-artifact@v3
+        with:
+          name: MacOsTests
+          path: ./build/publish/IntegrationTests/MacOsIntegrationTests.tar
+
+      - name: Upload Examples
+        uses: actions/upload-artifact@v3
+        with:
+          name: MacOsExamples
+          path: ./build/publish/Examples/MacOsExamples.tar
+
+      - name: Upload Benchmarks
+        uses: actions/upload-artifact@v3
+        with:
+          name: MacOsBenchmarks
+          path: ./build/publish/Benchmarks/MacOsBenchmarks.tar
+
+  test:
+    needs: build
+    runs-on: macos-12
+
+    steps:
+      - name: Download Unit Tests
+        uses: actions/download-artifact@v3
+        with:
+          name: MacOsUnitTests
+
+      - name: Unpack Unit Tests
+        run: tar -xvf MacOsUnitTests.tar
+
+      - name: Run Unit Tests
+        run: ./UnitTests
+
+      - name: Download Integration Tests
+        uses: actions/download-artifact@v3
+        with:
+          name: MacOsIntegrationTests
+
+      - name: Unpack Integration Tests
+        run: tar -xvf MacOsIntegrationTests.tar
+
+      - name: Run Integration Tests
+        run: ./IntegrationTests
