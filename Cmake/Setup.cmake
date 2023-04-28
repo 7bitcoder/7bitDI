@@ -32,8 +32,6 @@ set(BUILD_LIBRARY_TYPE_VALUES "Shared;Static;HeaderOnly" CACHE STRING
 
 set_property(CACHE BUILD_LIBRARY_TYPE PROPERTY STRINGS ${BUILD_LIBRARY_TYPE_VALUES})
 
-message(STATUS "===== Library build as ${BUILD_LIBRARY_TYPE} library =====")
-
 set(BUILD_TESTS OFF CACHE BOOL "Turn on to build tests")
 set(BUILD_EXAMPLES OFF CACHE BOOL "Turn on to build examples")
 set(BUILD_BENCHMARKS OFF CACHE BOOL "Turn on to build benchmarks")
@@ -43,9 +41,12 @@ if(BUILD_LIBRARY_TYPE STREQUAL "Shared")
 elseif(BUILD_LIBRARY_TYPE STREQUAL "Static")
     set(SEVEN_BIT_INJECTOR_STATIC_LIB ON)
 elseif(BUILD_LIBRARY_TYPE STREQUAL "HeaderOnly")
-    set(SEVEN_BIT_INJECTOR_HEADER_OLNY_LIB ON)
+    set(SEVEN_BIT_INJECTOR_HEADER_ONLY_LIB ON)
 endif()
 
 set(SEVEN_BIT_INJECTOR_VERSION ${CMAKE_PROJECT_VERSION})
 
 configure_file(Include/SevenBit/LibraryConfig.hpp.input ${PROJECT_SOURCE_DIR}/Include/SevenBit/LibraryConfig.hpp)
+
+message(STATUS "======= 7BitInjector version: ${SEVEN_BIT_INJECTOR_VERSION} =======")
+message(STATUS "======= 7BitInjector build as ${BUILD_LIBRARY_TYPE} library =======")

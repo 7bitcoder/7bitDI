@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "SevenBit/_Internal/IServiceHolder.hpp"
-#include "SevenBit/_Internal/ServiceScope.hpp"
+#include "SevenBit/_Internal/ServiceLifeTime.hpp"
 
 namespace sb
 {
@@ -13,7 +13,7 @@ namespace sb
     {
         using Ptr = std::unique_ptr<IServiceCreator>;
 
-        virtual const ServiceScope &getServiceScope() const = 0;
+        virtual const ServiceLifeTime &getServiceScope() const = 0;
 
         virtual TypeId getServiceTypeId() const = 0;
 

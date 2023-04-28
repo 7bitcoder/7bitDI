@@ -1,31 +1,15 @@
 #pragma once
 
-#include <cstddef>
-#include <exception>
-#include <forward_list>
-#include <list>
 #include <memory>
-#include <stdexcept>
-#include <string>
-#include <type_traits>
-#include <typeindex>
 #include <unordered_map>
-#include <unordered_set>
-#include <vector>
 
 #include "SevenBit/ServiceProvider.hpp"
-#include "SevenBit/_Internal/Exceptions.hpp"
-#include "SevenBit/_Internal/IServiceCreator.hpp"
 #include "SevenBit/_Internal/IServiceCreatorsProvider.hpp"
-#include "SevenBit/_Internal/IServiceHolder.hpp"
 #include "SevenBit/_Internal/ServiceConstructor.hpp"
 #include "SevenBit/_Internal/ServiceCreators.hpp"
 #include "SevenBit/_Internal/ServiceFactory.hpp"
-#include "SevenBit/_Internal/ServiceOwner.hpp"
-#include "SevenBit/_Internal/ServiceScope.hpp"
-#include "SevenBit/_Internal/ServicesContainer.hpp"
+#include "SevenBit/_Internal/ServiceLifeTime.hpp"
 #include "SevenBit/_Internal/TypeId.hpp"
-#include "SevenBit/_Internal/Utils.hpp"
 
 namespace sb
 {
@@ -44,29 +28,29 @@ namespace sb
         ServiceCollection &operator=(const ServiceCollection &) = delete;
         ServiceCollection &operator=(ServiceCollection &&) = default;
 
-        ServiceProvider buildServiceProvider() { return ServiceProvider{this}; }
+        ServiceProvider buildServiceProvider();
 
-        template <class I, class T = I> void addSingleton() { add<I, T>(ServiceScope::singeleton()); }
-        template <class I, class T = I> void addScoped() { add<I, T>(ServiceScope::scoped()); }
-        template <class I, class T = I> void addTransient() { add<I, T>(ServiceScope::transient()); }
-        template <class I, class T = I> void add(ServiceScope scope)
+        template <class I, class T = I> void addSingleton() { add<I, T>(ServiceLifeTime::singeleton()); }
+        template <class I, class T = I> void addScoped() { add<I, T>(ServiceLifeTime::scoped()); }
+        template <class I, class T = I> void addTransient() { add<I, T>(ServiceLifeTime::transient()); }
+        template <class I, class T = I> void add(ServiceLifeTime scope)
         {
             add(std::make_unique<ServiceConstructor<I, T>>(scope));
         }
 
         template <class I, class T = I, class FactoryFcn> void addSingleton(FactoryFcn factory)
         {
-            add<I, T>(ServiceScope::singeleton(), std::move(factory));
+            add<I, T>(ServiceLifeTime::singeleton(), std::move(factory));
         }
         template <class I, class T = I, class FactoryFcn> void addScoped(FactoryFcn factory)
         {
-            add<I, T>(ServiceScope::scoped(), std::move(factory));
+            add<I, T>(ServiceLifeTime::scoped(), std::move(factory));
         }
         template <class I, class T = I, class FactoryFcn> void addTransient(FactoryFcn factory)
         {
-            add<I, T>(ServiceScope::transient(), std::move(factory));
+            add<I, T>(ServiceLifeTime::transient(), std::move(factory));
         }
-        template <class I, class T = I, class FactoryFcn> void add(ServiceScope scope, FactoryFcn factory)
+        template <class I, class T = I, class FactoryFcn> void add(ServiceLifeTime scope, FactoryFcn factory)
         {
             add(std::make_unique<ServiceFactory<I, T, FactoryFcn>>(scope, std::move(factory)));
         }
@@ -101,72 +85,23 @@ namespace sb
             return false;
         }
 
-        void merge(ServiceCollection &&serviceCollection)
-        {
-            _serviceCreatorsMap.merge(std::move(serviceCollection._serviceCreatorsMap));
-        }
+        void merge(ServiceCollection &&serviceCollection);
 
       private:
-        void add(IServiceCreator::Ptr creator)
-        {
-            if (!creator)
-            {
-                throw ServiceCreatorInvalidException{};
-            }
-            auto serviceTypeId = creator->getServiceTypeId();
-            auto serviceInterfaceTypeId = creator->getServiceInterfaceTypeId();
-            auto serviceScope = creator->getServiceScope();
+        void add(IServiceCreator::Ptr creator);
 
-            if (isAlreadyResistered(*creator))
-            {
-                throw new ServiceTypeAlreadyRegisteredException{serviceTypeId};
-            }
+        const ServiceCreators *getCreators(TypeId typeId) const;
 
-            auto &creators = _serviceCreatorsMap[serviceInterfaceTypeId];
-            if (creators.size() && creators.getServicesScope() != serviceScope)
-            {
-                throw ServiceScopeMissmatchException{serviceTypeId, serviceInterfaceTypeId};
-            }
-            creators.add(std::move(creator));
-        }
+        const IServiceCreator *getMainCreator(TypeId typeId) const;
 
-        const ServiceCreators *getCreators(TypeId typeId) const
-        {
-            auto pair = _serviceCreatorsMap.find(typeId);
-            return pair != _serviceCreatorsMap.end() ? &pair->second : nullptr;
-        }
+        bool isAlreadyResistered(IServiceCreator &newCreator) const;
 
-        const IServiceCreator *getMainCreator(TypeId typeId) const
-        {
-            if (auto creators = getCreators(typeId))
-            {
-                return &creators->getMainCreator();
-            }
-            return nullptr;
-        }
+        auto begin() const;
 
-        bool isAlreadyResistered(IServiceCreator &newCreator) const
-        {
-            auto it = _serviceCreatorsMap.find(newCreator.getServiceInterfaceTypeId());
-
-            if (it == _serviceCreatorsMap.end())
-            {
-                return false;
-            }
-
-            auto &[_, creators] = *it;
-            for (auto &creator : creators)
-            {
-                if (creator && newCreator.getServiceTypeId() == creator->getServiceTypeId())
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        auto begin() const { return _serviceCreatorsMap.cbegin(); }
-
-        auto end() const { return _serviceCreatorsMap.cend(); }
+        auto end() const;
     };
 } // namespace sb
+
+#ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
+#include "SevenBit/_Internal/Impl/ServiceCollection.hpp"
+#endif

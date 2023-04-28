@@ -1,25 +1,11 @@
 #pragma once
 
-#include <cstddef>
-#include <exception>
-#include <forward_list>
-#include <list>
 #include <memory>
-#include <stdexcept>
-#include <string>
-#include <type_traits>
-#include <typeindex>
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
 
-#include "SevenBit/_Internal/Exceptions.hpp"
 #include "SevenBit/_Internal/IServiceCreator.hpp"
 #include "SevenBit/_Internal/IServiceHolder.hpp"
 #include "SevenBit/_Internal/ServiceOwner.hpp"
-#include "SevenBit/_Internal/ServiceScope.hpp"
-#include "SevenBit/_Internal/ServicesContainer.hpp"
-#include "SevenBit/_Internal/Utils.hpp"
+#include "SevenBit/_Internal/TypeId.hpp"
 
 namespace sb
 {
@@ -29,10 +15,10 @@ namespace sb
     {
       private:
         FactoryFcn _factoryFunction;
-        ServiceScope _scope;
+        ServiceLifeTime _scope;
 
       public:
-        ServiceFactory(const ServiceScope &scope, FactoryFcn factoryFunction)
+        ServiceFactory(const ServiceLifeTime &scope, FactoryFcn factoryFunction)
             : _factoryFunction{std::move(factoryFunction)}, _scope{scope}
         {
             static_assert(std::is_base_of_v<I, T>, "Type T must inherit from I");
@@ -40,7 +26,7 @@ namespace sb
             //               "Factory function must return unique pointner");
         }
 
-        const ServiceScope &getServiceScope() const { return _scope; }
+        const ServiceLifeTime &getServiceScope() const { return _scope; }
 
         TypeId getServiceTypeId() const { return typeid(T); }
         TypeId getServiceInterfaceTypeId() const { return typeid(I); }

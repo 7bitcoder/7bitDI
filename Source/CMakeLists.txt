@@ -1,4 +1,3 @@
-
 if(SEVEN_BIT_INJECTOR_SHARED_LIB)
   add_library(SevenBitInjector SHARED
     Source.cpp

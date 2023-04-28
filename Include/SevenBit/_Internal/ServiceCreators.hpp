@@ -1,82 +1,51 @@
 #pragma once
 
-#include <cstddef>
-#include <exception>
-#include <forward_list>
-#include <list>
-#include <memory>
-#include <stdexcept>
-#include <string>
-#include <type_traits>
-#include <typeindex>
-#include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
-#include "SevenBit/_Internal/Exceptions.hpp"
 #include "SevenBit/_Internal/IServiceCreator.hpp"
-#include "SevenBit/_Internal/IServiceHolder.hpp"
-#include "SevenBit/_Internal/ServiceOwner.hpp"
-#include "SevenBit/_Internal/ServiceScope.hpp"
-#include "SevenBit/_Internal/Utils.hpp"
+#include "SevenBit/_Internal/TypeId.hpp"
 
 namespace sb
 {
-    class ServiceProvider;
-
     class ServiceCreators
     {
       private:
         std::vector<IServiceCreator::Ptr> _serviceCreators;
 
       public:
-        ServiceCreators() { _serviceCreators.reserve(1); }
+        ServiceCreators();
 
         ServiceCreators(ServiceCreators &&) = default;
         ServiceCreators(const ServiceCreators &) = delete;
         ServiceCreators &operator=(const ServiceCreators &) = delete;
         ServiceCreators &operator=(ServiceCreators &&) = default;
 
-        ServiceScope getServicesScope() const { return getMainCreator().getServiceScope(); }
+        ServiceLifeTime getServicesScope() const;
 
-        TypeId getInterfaceTypeId() const { return getMainCreator().getServiceInterfaceTypeId(); }
+        void seal();
 
-        void add(IServiceCreator::Ptr creator)
-        {
-            if (!creator)
-            {
-                throw ServiceCreatorInvalidException{};
-            }
-            _serviceCreators.emplace_back(std::move(creator));
-        }
+        auto begin() const { return _serviceCreators.begin(); }
+        auto end() const { return _serviceCreators.end(); }
 
-        template <class T> size_t remove()
-        {
-            TypeId type = typeid(T);
-            return std::erase_if(_serviceCreators, [=](auto &creator) { return creator.getServiceTypeId() == type; });
-        }
+        TypeId getInterfaceTypeId() const;
 
-        template <class T> bool contains()
-        {
-            TypeId type = typeid(T);
-            for (auto &creator : _serviceCreators)
-            {
-                if (creator->getServiceTypeId() == type)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        void add(IServiceCreator::Ptr creator);
 
-        void seal() { _serviceCreators.shrink_to_fit(); }
+        template <class T> size_t remove() { return remove(typeid(T)); }
 
-        auto begin() const { return _serviceCreators.crbegin(); }
-        auto end() const { return _serviceCreators.crend(); }
+        size_t remove(TypeId typeId);
 
-        size_t size() const { return _serviceCreators.size(); }
+        template <class T> bool contains() { return contains(typeid(T)); }
 
-        IServiceCreator &getMainCreator() const { return *_serviceCreators.back(); }
+        bool contains(TypeId typeId);
+
+        size_t size() const;
+
+        IServiceCreator &getMainCreator() const;
     };
 
 } // namespace sb
+
+#ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
+#include "SevenBit/_Internal/Impl/ServiceCreators.hpp"
+#endif

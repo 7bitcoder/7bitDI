@@ -3,7 +3,7 @@
 #include <memory>
 #include <thread>
 
-#include "SevenBit/Injector.hpp"
+#include "SevenBit/ServiceCollection.hpp"
 
 namespace
 {
@@ -101,7 +101,7 @@ class SeriviceProviderTest : public ::testing::Test
 {
   protected:
     sb::ServiceCollection collection;
-    sb::ServiceContainer singletons;
+    sb::ServicesContainer singletons;
     sb::ServiceProvider provider = collection.buildServiceProvider();
 
     static void SetUpTestSuite() {}

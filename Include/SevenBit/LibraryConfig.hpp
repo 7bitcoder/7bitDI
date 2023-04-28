@@ -1,5 +1,7 @@
-#define SEVEN_BIT_INJECTOR_SHARED_LIB
-/* #undef SEVEN_BIT_INJECTOR_STATIC_LIB */
+#pragma once
+
+/* #undef SEVEN_BIT_INJECTOR_SHARED_LIB */
+#define SEVEN_BIT_INJECTOR_STATIC_LIB
 /* #undef SEVEN_BIT_INJECTOR_HEADER_ONLY_LIB */
 
 #define SEVEN_BIT_INJECTOR_VERSION "0.1.0"
@@ -17,3 +19,13 @@
 
 #endif
 
+#ifdef SEVEN_BIT_INJECTOR_HEADER_ONLY_LIB
+
+#define SEVEN_BIT_INJECTOR_ADD_IMPL
+#define INLINE inline
+
+#else
+
+#define INLINE
+
+#endif

@@ -1,7 +1,6 @@
 /build
 /.cache
 /.vscode
-/BoostUrl
-/Boost
 .DS_Store
 CmakeUserPresets.json
+CmakePresets.json

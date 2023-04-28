@@ -28,7 +28,7 @@ namespace sb
 
         TypeId getServiceInterfaceTypeId() const final { return typeid(I); }
 
-        std::unique_ptr<T> moveOutService() { return std::move(_service); }
+        void *moveOutService() { return _service.release(); }
 
         bool isValid() const final { return bool{_service}; }
 

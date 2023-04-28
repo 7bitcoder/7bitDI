@@ -4,7 +4,7 @@
 #include <memory>
 #include <thread>
 
-#include "SevenBit/Injector.hpp"
+#include "SevenBit/ServiceCollection.hpp"
 
 namespace
 {

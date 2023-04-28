@@ -1,3 +1,5 @@
+#pragma once
+
 #cmakedefine SEVEN_BIT_INJECTOR_SHARED_LIB
 #cmakedefine SEVEN_BIT_INJECTOR_STATIC_LIB
 #cmakedefine SEVEN_BIT_INJECTOR_HEADER_ONLY_LIB
@@ -17,3 +19,13 @@
 
 #endif
 
+#ifdef SEVEN_BIT_INJECTOR_HEADER_ONLY_LIB
+
+#define SEVEN_BIT_INJECTOR_ADD_IMPL
+#define INLINE inline
+
+#else
+
+#define INLINE
+
+#endif

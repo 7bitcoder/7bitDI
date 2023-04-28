@@ -10,12 +10,12 @@ target_link_libraries(Tests PUBLIC
     GTest::gtest
 )
 
+if(NOT SEVEN_BIT_INJECTOR_HEADER_ONLY_LIB)
+    target_link_libraries(Tests PUBLIC
+        SevenBitInjector
+    )
+endif()
+
 gtest_discover_tests(Tests
     WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     PROPERTIES TIMEOUT 10)
-
-install(TARGETS Tests DESTINATION Tests)
-
-if(SEVENBITREST_SHARED_LIB)
-    install(TARGETS Tests DESTINATION Tests)
-endif()

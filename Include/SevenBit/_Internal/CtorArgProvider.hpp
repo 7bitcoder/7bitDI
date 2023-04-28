@@ -1,28 +1,19 @@
 #pragma once
 
-#include <cstddef>
-#include <exception>
-#include <forward_list>
-#include <list>
 #include <memory>
-#include <stdexcept>
-#include <string>
-#include <type_traits>
-#include <typeindex>
-#include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 #include "SevenBit/ServiceProvider.hpp"
-#include "SevenBit/_Internal/Utils.hpp"
 
 namespace sb
 {
+    template <class... T> inline constexpr bool notSupportedType = false;
+
     template <class T> struct CtorArgProvider
     {
         auto getService(ServiceProvider &provider)
         {
-            static_assert(utils::notSupportedType<T>, "Type is not supported as function augument parameter");
+            static_assert(notSupportedType<T>, "Type is not supported as function augument parameter");
         }
     };
 
@@ -81,7 +72,7 @@ namespace sb
 
     template <class T> struct CtorArgProvider<std::vector<T>>
     {
-        static_assert(utils::notSupportedType<T>,
+        static_assert(notSupportedType<T>,
                       "Vector should contain pointners or unique pointners for transient services");
     };
 } // namespace sb
