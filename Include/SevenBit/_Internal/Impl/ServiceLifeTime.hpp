@@ -18,5 +18,8 @@ namespace sb
 
     INLINE bool ServiceLifeTime::operator==(const ServiceLifeTime &scope) const { return _type == scope._type; }
     INLINE bool ServiceLifeTime::operator!=(const ServiceLifeTime &scope) const { return _type != scope._type; }
-
+    INLINE bool ServiceLifeTime::operator<(const ServiceLifeTime &scope) const { return _type < scope._type; }
+    INLINE bool ServiceLifeTime::operator>(const ServiceLifeTime &scope) const { return _type > scope._type; }
+    INLINE bool ServiceLifeTime::operator<=(const ServiceLifeTime &scope) const { return _type <= scope._type; }
+    INLINE bool ServiceLifeTime::operator>=(const ServiceLifeTime &scope) const { return _type >= scope._type; }
 } // namespace sb

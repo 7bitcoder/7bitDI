@@ -1,10 +1,11 @@
 #pragma once
 #include <memory>
+#include <typeindex>
 #include <unordered_set>
 
 #include "SevenBit/_Internal/Exceptions.hpp"
-#include "SevenBit/_Internal/IServiceAccessor.hpp"
 #include "SevenBit/_Internal/IServiceCreator.hpp"
+#include "SevenBit/_Internal/IServiceFactory.hpp"
 #include "SevenBit/_Internal/ServiceLifeTime.hpp"
 #include "SevenBit/_Internal/TypeId.hpp"
 
@@ -13,30 +14,50 @@ namespace sb
     class ServiceDescriptor
     {
       private:
-        const ServiceLifeTime _lifetime;
+        ServiceLifeTime _lifetime;
 
         TypeId _serviceTypeId;
-        TypeId _implementationTypeId;
 
-        IServiceCreator::Ptr _creator;
-        IServiceAccessor::Ptr _accesor;
+        IServiceFactory::Ptr _implementationFactory;
 
       public:
         using Ptr = std::unique_ptr<ServiceDescriptor>;
 
-        ServiceDescriptor(TypeId typeIdUnderConstruction, std::unordered_set<TypeId> &typeIdsUnderConstruction);
+        ServiceDescriptor(TypeId serviceTypeId, ServiceLifeTime lifetime, IServiceFactory::Ptr implementationFactory)
+            : _serviceTypeId(serviceTypeId), _lifetime(lifetime),
+              _implementationFactory(std::move(implementationFactory))
+        {
+            if (!_implementationFactory)
+            {
+                // todo throw "sth"
+            }
+        }
+
+        ServiceDescriptor(const ServiceDescriptor &other)
+            : ServiceDescriptor(other._serviceTypeId, other._lifetime,
+                                other._implementationFactory ? other._implementationFactory->clone() : nullptr)
+        {
+        }
+
+        ServiceDescriptor(ServiceDescriptor &&) = default;
+
+        ServiceDescriptor &operator=(const ServiceDescriptor &other)
+        {
+            _serviceTypeId = other._serviceTypeId;
+            _lifetime = other._lifetime;
+            _implementationFactory = other._implementationFactory ? other._implementationFactory->clone() : nullptr;
+            return *this;
+        }
+        ServiceDescriptor &operator=(ServiceDescriptor &&other) = default;
 
         const ServiceLifeTime &getLifeTime() const { return _lifetime; }
 
-        const TypeId &getServiceTypeId() const { return _serviceTypeId; }
+        TypeId getServiceTypeId() const { return _serviceTypeId; }
 
-        const TypeId &getImplementationTypeId() const { return _implementationTypeId; }
+        TypeId getImplementationTypeId() const { return _implementationFactory->getServiceTypeId(); }
 
-        const IServiceCreator *getImplementationCreator() const { return _creator.get(); }
-
-        const IServiceAccessor *getImplementationAccessor() const { return _accesor.get(); }
+        const IServiceFactory &getImplementationFactory() const { return *_implementationFactory; }
     };
-
 } // namespace sb
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL

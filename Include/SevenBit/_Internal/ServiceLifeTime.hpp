@@ -30,8 +30,12 @@ namespace sb
         bool isTransient() const;
         bool is(Type type) const;
 
-        bool operator==(const ServiceLifeTime &scope) const;
+        bool operator>(const ServiceLifeTime &scope) const;
+        bool operator<(const ServiceLifeTime &scope) const;
+        bool operator>=(const ServiceLifeTime &scope) const;
+        bool operator<=(const ServiceLifeTime &scope) const;
         bool operator!=(const ServiceLifeTime &scope) const;
+        bool operator==(const ServiceLifeTime &scope) const;
     };
 
 } // namespace sb
