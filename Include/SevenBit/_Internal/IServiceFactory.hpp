@@ -7,7 +7,7 @@
 
 namespace sb
 {
-    class ServiceProvider;
+    class ServiceProvider2;
 
     struct IServiceFactory
     {
@@ -15,7 +15,7 @@ namespace sb
 
         virtual TypeId getServiceTypeId() const = 0;
 
-        virtual IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider) const = 0;
+        virtual IServiceInstance::Ptr createInstance(ServiceProvider2 &serviceProvider) const = 0;
 
         virtual IServiceFactory::Ptr clone() = 0;
 

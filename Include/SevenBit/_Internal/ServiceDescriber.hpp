@@ -15,8 +15,46 @@ namespace sb
     class ServiceDescriber
     {
       public:
+        template <class TImplementation>
+        using Factory = std::function<std::unique_ptr<TImplementation>(ServiceProvider &)>;
+        template <class TImplementation> using ExternalProvider = std::function<TImplementation *(ServiceProvider &)>;
+
+        template <class TService, class TImplementation = TService> static void describeSingleton()
+        {
+            return describe<TService, TImplementation>(ServiceLifeTime::singeleton());
+        }
+        template <class TService, class TImplementation = TService> static void describeScoped()
+        {
+            return describe<TService, TImplementation>(ServiceLifeTime::scoped());
+        }
+        template <class TService, class TImplementation = TService> static void describeTransient()
+        {
+            return describe<TService, TImplementation>(ServiceLifeTime::transient());
+        }
+
         template <class TService, class TImplementation = TService>
-        static ServiceDescriptor describe(TImplementation *service)
+        static void describeSingleton(Factory<TImplementation> factory)
+        {
+            return describe<TService, TImplementation>(ServiceLifeTime::singeleton(), std::move(factory));
+        }
+        template <class TService, class TImplementation = TService>
+        static void describeScoped(Factory<TImplementation> factory)
+        {
+            return describe<TService, TImplementation>(ServiceLifeTime::scoped(), std::move(factory));
+        }
+        template <class TService, class TImplementation = TService>
+        static void describeTransient(Factory<TImplementation> factory)
+        {
+            return describe<TService, TImplementation>(ServiceLifeTime::transient(), std::move(factory));
+        }
+
+        template <class TService, class TImplementation = TService>
+        static void describeSingeleton(TImplementation &service)
+        {
+            return describeSingeleton<TService, TImplementation>(&service);
+        }
+        template <class TService, class TImplementation = TService>
+        static void describeSingeleton(TImplementation *service)
         {
             inheritCheck<TService, TImplementation>();
             auto factory = std::make_unique<ExternalServiceFactory<TImplementation>>(service);
@@ -24,19 +62,29 @@ namespace sb
         }
 
         template <class TService, class TImplementation = TService>
-        static ServiceDescriptor describe(ServiceLifeTime lifetime,
-                                          std::function<TImplementation *(ServiceProvider &)> factoryFcn)
+        static void describeSingeleton(ExternalProvider<TImplementation> provider)
+        {
+            return describe(ServiceDescriber::describe<TService>(ServiceLifeTime::singeleton(), std::move(provider)));
+        }
+        template <class TService, class TImplementation = TService>
+        static void describeScoped(ExternalProvider<TImplementation> provider)
+        {
+            return describe(ServiceDescriber::describe<TService>(ServiceLifeTime::scoped(), std::move(provider)));
+        }
+
+        template <class TService, class TImplementation = TService>
+        static ServiceDescriptor describe(ServiceLifeTime lifetime, ExternalProvider<TImplementation> provider)
         {
             inheritCheck<TService, TImplementation>();
-            auto factory = std::make_unique<ExternalServiceFcnFactory<TImplementation>>(std::move(factoryFcn));
+            auto factory = std::make_unique<ExternalServiceFcnFactory<TImplementation>>(std::move(provider));
             return describe<TService>(lifetime, std::move(factory));
         }
 
         template <class TService, class TImplementation = TService>
-        static ServiceDescriptor describe(ServiceLifeTime lifetime,
-                                          std::function<std::unique_ptr<TImplementation>(ServiceProvider &)> factoryFcn)
+        static ServiceDescriptor describe(ServiceLifeTime lifetime, Factory<TImplementation> factoryFcn)
         {
             inheritCheck<TService, TImplementation>();
+            // todo check scope!= transient
             auto factory = std::make_unique<ServiceFcnFactory<TImplementation>>(std::move(factoryFcn));
             return describe<TService>(lifetime, std::move(factory));
         }

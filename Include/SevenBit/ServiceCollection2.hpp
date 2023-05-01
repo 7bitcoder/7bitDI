@@ -14,6 +14,7 @@
 #include "SevenBit/_Internal/ServiceDescriptor.hpp"
 #include "SevenBit/_Internal/ServiceFactory.hpp"
 #include "SevenBit/_Internal/ServiceLifeTime.hpp"
+#include "SevenBit/_Internal/ServiceProviderOptions.hpp"
 #include "SevenBit/_Internal/TypeId.hpp"
 
 namespace sb
@@ -42,7 +43,7 @@ namespace sb
         ServiceCollection2 &operator=(const ServiceCollection2 &) = default;
         ServiceCollection2 &operator=(ServiceCollection2 &&) = default;
 
-        ServiceProvider buildServiceProvider();
+        ServiceProvider buildServiceProvider(ServiceProviderOptions options);
 
         Iterator begin() { return _serviceDescriptors.begin(); }
         Iterator end() { return _serviceDescriptors.end(); }

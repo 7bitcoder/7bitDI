@@ -4,14 +4,16 @@
 #include <unordered_map>
 #include <vector>
 
+#include "SevenBit/_Internal/Exceptions.hpp"
 #include "SevenBit/_Internal/IServiceHolder.hpp"
+#include "SevenBit/_Internal/IServiceInstance.hpp"
 
 namespace sb
 {
     class ServiceList
     {
       private:
-        std::vector<IServiceHolder::Ptr> _serviceHolders;
+        std::vector<IServiceInstance::Ptr> _services;
         bool _sealed = false;
 
       public:
@@ -22,29 +24,88 @@ namespace sb
         ServiceList &operator=(const ServiceList &) = delete;
         ServiceList &operator=(ServiceList &&) = default;
 
-        void add(IServiceHolder::Ptr holder);
+        ServiceList &add(IServiceInstance::Ptr service)
+        {
+            if (!service || !service->isValid())
+            {
+                throw ServiceHolderInvalidException{};
+            }
+            _services.push_back(std::move(service));
+            return *this;
+        }
 
-        void *get(TypeId typeId) const;
+        template <class TService> TService *get() { return (TService *)get(typeid(TService)); }
 
-        void *at(size_t index = 0) const;
+        void *get(TypeId typeId) const
+        {
+            if (auto instance = getInstance(typeId))
+            {
+                return instance->get();
+            }
+            return nullptr;
+        }
 
-        bool empty() const;
+        template <class TService> TService *at(size_t index = 0) const
+        {
+            if (auto instance = getInstanceAt(index))
+            {
+                return (TService *)instance->get();
+            }
+            return nullptr;
+        }
 
-        std::vector<void *> getAll() const;
+        void *at(size_t index = 0) { return at<void>(index); }
 
-        IServiceHolder *getHolder(TypeId typeId) const;
+        bool empty() const { return _services.empty(); }
 
-        IServiceHolder *getHolderAt(size_t index = 0) const;
+        template <class TService> std::vector<TService *> getAll() const
+        {
+            std::vector<TService *> result;
+            result.reserve(_services.size());
+            for (auto &instance : _services)
+            {
+                result.push_back((TService *)instance->get());
+            }
+            return result;
+        }
 
-        void reserve(size_t size);
+        std::vector<void *> getAll() const { return getAll<void>(); }
 
-        void seal();
-        bool isSealed() const;
+        IServiceInstance *getInstance(TypeId typeId) const
+        {
+            for (auto &holder : _services)
+            {
+                if (holder->getTypeId() == typeId)
+                {
+                    return holder.get();
+                }
+            }
+            return nullptr;
+        }
 
-        bool contains(TypeId typeId) const;
+        IServiceInstance *getInstanceAt(size_t index = 0) const
+        {
+            if (index < _services.size())
+            {
+                return _services.at(index).get();
+            }
+            return nullptr;
+        }
 
-        auto begin() const { return _serviceHolders.begin(); }
-        auto end() const { return _serviceHolders.end(); }
+        void reserve(size_t size) { _services.reserve(size); }
+
+        void seal()
+        {
+            _services.shrink_to_fit();
+            _sealed = true;
+        }
+
+        bool isSealed() const { return _sealed; }
+
+        bool contains(TypeId typeId) const { return getInstance(typeId); }
+
+        auto begin() const { return _services.begin(); }
+        auto end() const { return _services.end(); }
     };
 } // namespace sb
 
