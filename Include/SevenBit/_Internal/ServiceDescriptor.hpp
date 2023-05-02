@@ -4,7 +4,6 @@
 #include <unordered_set>
 
 #include "SevenBit/_Internal/Exceptions.hpp"
-#include "SevenBit/_Internal/IServiceCreator.hpp"
 #include "SevenBit/_Internal/IServiceFactory.hpp"
 #include "SevenBit/_Internal/ServiceLifeTime.hpp"
 #include "SevenBit/_Internal/TypeId.hpp"
@@ -61,5 +60,4 @@ namespace sb
 } // namespace sb
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#include "SevenBit/_Internal/Impl/ScopedGuard.hpp"
 #endif

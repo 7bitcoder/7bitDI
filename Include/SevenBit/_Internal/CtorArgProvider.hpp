@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-#include "SevenBit/ServiceProvider.hpp"
+#include "SevenBit/IServiceProvider.hpp"
 
 namespace sb
 {
@@ -11,7 +11,7 @@ namespace sb
 
     template <class T> struct CtorArgProvider
     {
-        auto getService(ServiceProvider &provider)
+        auto getService(IServiceProvider &provider)
         {
             static_assert(notSupportedType<T>, "Type is not supported as function augument parameter");
         }
@@ -19,55 +19,55 @@ namespace sb
 
     template <class T> struct CtorArgProvider<T *>
     {
-        auto getService(ServiceProvider &sp) { return &sp.getRequiredService<T>(); }
+        auto getService(IServiceProvider &sp) { return &sp.getRequiredService<T>(); }
     };
     template <class T> struct CtorArgProvider<const T *>
     {
-        auto getService(ServiceProvider &sp) { return &sp.getRequiredService<T>(); }
+        auto getService(IServiceProvider &sp) { return &sp.getRequiredService<T>(); }
     };
     template <class T> struct CtorArgProvider<T *const>
     {
-        auto getService(ServiceProvider &sp) { return &sp.getRequiredService<T>(); }
+        auto getService(IServiceProvider &sp) { return &sp.getRequiredService<T>(); }
     };
     template <class T> struct CtorArgProvider<const T *const>
     {
-        auto getService(ServiceProvider &sp) { return &sp.getRequiredService<T>(); }
+        auto getService(IServiceProvider &sp) { return &sp.getRequiredService<T>(); }
     };
 
     template <class T> struct CtorArgProvider<T &>
     {
-        auto getService(ServiceProvider &sp) { return sp.getRequiredService<T>(); }
+        auto getService(IServiceProvider &sp) { return sp.getRequiredService<T>(); }
     };
     template <class T> struct CtorArgProvider<const T &>
     {
-        auto getService(ServiceProvider &sp) { return sp.getRequiredService<T>(); }
+        auto getService(IServiceProvider &sp) { return sp.getRequiredService<T>(); }
     };
 
     template <class T> struct CtorArgProvider<std::unique_ptr<T>>
     {
-        auto getService(ServiceProvider &sp) { return sp.createService<T>(); }
+        auto getService(IServiceProvider &sp) { return sp.createRequiredService<T>(); }
     };
     template <class T> struct CtorArgProvider<const std::unique_ptr<T>>
     {
-        auto getService(ServiceProvider &sp) { return sp.createService<T>(); }
+        auto getService(IServiceProvider &sp) { return sp.createRequiredService<T>(); }
     };
 
     template <class T> struct CtorArgProvider<std::vector<T *>>
     {
-        auto getService(ServiceProvider &sp) { return sp.getServices<T>(); }
+        auto getService(IServiceProvider &sp) { return sp.getServices<T>(); }
     };
     template <class T> struct CtorArgProvider<const std::vector<T *>>
     {
-        auto getService(ServiceProvider &sp) { return sp.getServices<T>(); }
+        auto getService(IServiceProvider &sp) { return sp.getServices<T>(); }
     };
 
     template <class T> struct CtorArgProvider<std::vector<std::unique_ptr<T>>>
     {
-        auto getService(ServiceProvider &sp) { return sp.createServices<T>(); }
+        auto getService(IServiceProvider &sp) { return sp.createServices<T>(); }
     };
     template <class T> struct CtorArgProvider<const std::vector<std::unique_ptr<T>>>
     {
-        auto getService(ServiceProvider &sp) { return sp.createServices<T>(); }
+        auto getService(IServiceProvider &sp) { return sp.createServices<T>(); }
     };
 
     template <class T> struct CtorArgProvider<std::vector<T>>

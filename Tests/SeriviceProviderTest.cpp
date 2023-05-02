@@ -101,8 +101,6 @@ class SeriviceProviderTest : public ::testing::Test
 {
   protected:
     sb::ServiceCollection collection;
-    sb::ServicesContainer singletons;
-    sb::ServiceProvider provider = collection.buildServiceProvider();
 
     static void SetUpTestSuite() {}
 
@@ -124,9 +122,11 @@ TEST_F(SeriviceProviderTest, GetService)
     collection.addSingleton<SimpleClass>();
     collection.addScoped<OneRefClass>();
 
-    EXPECT_TRUE(provider.getService<SimpleClass>());
-    EXPECT_TRUE(provider.getService<OneRefClass>());
-    EXPECT_FALSE(provider.getService<TransientRefClass>());
+    auto provider = collection.buildServiceProvider();
+
+    EXPECT_TRUE(provider->getService<SimpleClass>());
+    EXPECT_TRUE(provider->getService<OneRefClass>());
+    EXPECT_FALSE(provider->getService<TransientRefClass>());
 }
 
 TEST_F(SeriviceProviderTest, CircularDependency)
@@ -134,7 +134,9 @@ TEST_F(SeriviceProviderTest, CircularDependency)
     collection.addSingleton<CircularDependencyA>();
     collection.addScoped<CircularDependencyB>();
 
-    EXPECT_THROW(provider.getService<CircularDependencyA>(), sb::CircularDependencyException);
+    auto provider = collection.buildServiceProvider();
+
+    EXPECT_THROW(provider->getService<CircularDependencyA>(), sb::CircularDependencyException);
 }
 
 TEST_F(SeriviceProviderTest, GetRequiredService)
@@ -143,17 +145,21 @@ TEST_F(SeriviceProviderTest, GetRequiredService)
     collection.addScoped<OneRefClass>();
     collection.addTransient<TransientClass>();
 
-    EXPECT_NO_THROW(provider.getRequiredService<SimpleClass>());
-    EXPECT_NO_THROW(provider.getRequiredService<OneRefClass>());
-    EXPECT_THROW(provider.getRequiredService<TransientRefClass>(), sb::ServiceNotRegisteredException);
+    auto provider = collection.buildServiceProvider();
+
+    EXPECT_NO_THROW(provider->getRequiredService<SimpleClass>());
+    EXPECT_NO_THROW(provider->getRequiredService<OneRefClass>());
+    EXPECT_THROW(provider->getRequiredService<TransientRefClass>(), sb::ServiceNotRegisteredException);
 }
 
 TEST_F(SeriviceProviderTest, CreateService)
 {
     collection.addTransient<TransientClass>();
 
-    EXPECT_TRUE(provider.createService<TransientClass>());
-    EXPECT_NO_THROW(provider.createService<TransientClass>());
+    auto provider = collection.buildServiceProvider();
+
+    EXPECT_TRUE(provider->createService<TransientClass>());
+    EXPECT_NO_THROW(provider->createService<TransientClass>());
 }
 
 TEST_F(SeriviceProviderTest, GetServiceCorrectReferences)
@@ -161,13 +167,15 @@ TEST_F(SeriviceProviderTest, GetServiceCorrectReferences)
     collection.addSingleton<SimpleClass>();
     collection.addScoped<OneRefClass>();
 
-    auto simpleClass = provider.getService<SimpleClass>();
+    auto provider = collection.buildServiceProvider();
+
+    auto simpleClass = provider->getService<SimpleClass>();
     EXPECT_TRUE(simpleClass);
-    auto scoped = provider.getService<OneRefClass>();
+    auto scoped = provider->getService<OneRefClass>();
     EXPECT_TRUE(scoped);
     EXPECT_TRUE(scoped->simpleClass);
     EXPECT_EQ(scoped->simpleClass, simpleClass);
-    EXPECT_EQ(provider.getService<SimpleClass>(), simpleClass);
+    EXPECT_EQ(provider->getService<SimpleClass>(), simpleClass);
 }
 
 TEST_F(SeriviceProviderTest, NotTransientCreationForbidden)
@@ -175,17 +183,21 @@ TEST_F(SeriviceProviderTest, NotTransientCreationForbidden)
     collection.addSingleton<SimpleClass>();
     collection.addScoped<OneRefClass>();
 
-    EXPECT_THROW(provider.createService<SimpleClass>(), sb::NotTransientException);
-    EXPECT_THROW(provider.createService<OneRefClass>(), sb::NotTransientException);
+    auto provider = collection.buildServiceProvider();
+
+    EXPECT_THROW(provider->createService<SimpleClass>(), sb::NotTransientException);
+    EXPECT_THROW(provider->createService<OneRefClass>(), sb::NotTransientException);
 }
 
 TEST_F(SeriviceProviderTest, TransientGetServiceForbidden)
 {
     collection.addTransient<TransientClass>();
 
-    EXPECT_NO_THROW(provider.createService<TransientClass>());
-    EXPECT_TRUE(provider.createService<TransientClass>());
-    EXPECT_THROW(provider.getService<TransientClass>(), sb::TransientForbidException);
+    auto provider = collection.buildServiceProvider();
+
+    EXPECT_NO_THROW(provider->createService<TransientClass>());
+    EXPECT_TRUE(provider->createService<TransientClass>());
+    EXPECT_THROW(provider->getService<TransientClass>(), sb::TransientForbidException);
 }
 
 TEST_F(SeriviceProviderTest, TransientReferencesAreUnique)
@@ -193,31 +205,41 @@ TEST_F(SeriviceProviderTest, TransientReferencesAreUnique)
     collection.addTransient<TransientClass>();
     collection.addScoped<TransientRefClass>();
 
-    auto scoped = provider.getService<TransientRefClass>();
+    auto provider = collection.buildServiceProvider();
+
+    auto scoped = provider->getService<TransientRefClass>();
     EXPECT_TRUE(scoped);
-    EXPECT_NE(scoped->transient, provider.createService<TransientClass>());
-    EXPECT_NE(provider.createService<TransientClass>(), provider.createService<TransientClass>());
+    EXPECT_NE(scoped->transient, provider->createService<TransientClass>());
+    EXPECT_NE(provider->createService<TransientClass>(), provider->createService<TransientClass>());
 }
 
 TEST_F(SeriviceProviderTest, GetSelf)
 {
-    auto self = provider.getService<sb::ServiceProvider>();
+
+    auto provider = collection.buildServiceProvider();
+
+    auto self = provider->getService<sb::IServiceProvider>();
     EXPECT_TRUE(self);
-    EXPECT_EQ(self, &provider);
+    EXPECT_EQ(self, provider.get());
 }
 
 TEST_F(SeriviceProviderTest, GetSelfRef)
 {
-    auto &self = provider.getRequiredService<sb::ServiceProvider>();
-    EXPECT_EQ(&self, &provider);
+
+    auto provider = collection.buildServiceProvider();
+
+    auto &self = provider->getRequiredService<sb::IServiceProvider>();
+    EXPECT_EQ(&self, provider.get());
 }
 
 TEST_F(SeriviceProviderTest, GetOneServiceInServicesScoped)
 {
     collection.addScoped<SimpleClass>();
 
-    auto &service = provider.getRequiredService<SimpleClass>();
-    auto services = provider.getServices<SimpleClass>();
+    auto provider = collection.buildServiceProvider();
+
+    auto &service = provider->getRequiredService<SimpleClass>();
+    auto services = provider->getServices<SimpleClass>();
     EXPECT_EQ(services.size(), 1);
     EXPECT_EQ(services[0], &service);
 }
@@ -226,18 +248,22 @@ TEST_F(SeriviceProviderTest, GetOneServiceInServicesTransient)
 {
     collection.addTransient<SimpleClass>();
 
-    auto services = provider.createServices<SimpleClass>();
-    auto service = provider.createService<SimpleClass>();
+    auto provider = collection.buildServiceProvider();
+
+    auto services = provider->createServices<SimpleClass>();
+    auto service = provider->createService<SimpleClass>();
     EXPECT_EQ(services.size(), 1);
     EXPECT_NE(services[0], service);
 }
 
-TEST_F(SeriviceProviderTest, GetOneServiceInServicesSingeleton)
+TEST_F(SeriviceProviderTest, GetOneServiceInServicesSingleton)
 {
     collection.addSingleton<SimpleClass>();
 
-    auto services = provider.getServices<SimpleClass>();
-    auto &service = provider.getRequiredService<SimpleClass>();
+    auto provider = collection.buildServiceProvider();
+
+    auto services = provider->getServices<SimpleClass>();
+    auto &service = provider->getRequiredService<SimpleClass>();
     EXPECT_EQ(services.size(), 1);
     EXPECT_EQ(services[0], &service);
 }
@@ -248,8 +274,10 @@ TEST_F(SeriviceProviderTest, GetLastInheritedService)
     collection.addScoped<IInheranceClass, InheranceClassB>();
     collection.addScoped<IInheranceClass, LongInheritanceC>();
 
-    auto &last = provider.getRequiredService<IInheranceClass>();
-    auto &last2 = provider.getRequiredService<IInheranceClass>();
+    auto provider = collection.buildServiceProvider();
+
+    auto &last = provider->getRequiredService<IInheranceClass>();
+    auto &last2 = provider->getRequiredService<IInheranceClass>();
     EXPECT_EQ(last.getName(), "C");
     EXPECT_EQ(last2.getName(), "C");
     EXPECT_EQ(&last, &last2);
@@ -261,17 +289,21 @@ TEST_F(SeriviceProviderTest, GetAllInheritedServices)
     collection.addScoped<IInheranceClass, InheranceClassB>();
     collection.addScoped<IInheranceClass, LongInheritanceC>();
 
-    provider.getService<IInheranceClass>();
-    auto all = provider.getServices<IInheranceClass>();
+    auto provider = collection.buildServiceProvider();
+
+    provider->getService<IInheranceClass>();
+    auto all = provider->getServices<IInheranceClass>();
     EXPECT_EQ(all.size(), 3);
-    EXPECT_EQ(all[0]->getName(), "C");
+    EXPECT_EQ(all[0]->getName(), "A");
     EXPECT_EQ(all[1]->getName(), "B");
-    EXPECT_EQ(all[2]->getName(), "A");
+    EXPECT_EQ(all[2]->getName(), "C");
 }
 
 TEST_F(SeriviceProviderTest, GetAllInheritedServicesNotExisting)
 {
-    auto all = provider.getServices<TransientClass>();
+    auto provider = collection.buildServiceProvider();
+
+    auto all = provider->getServices<TransientClass>();
     EXPECT_TRUE(all.empty());
 }
 
@@ -279,7 +311,9 @@ TEST_F(SeriviceProviderTest, GetAllInheritedServicesForbidTransient)
 {
     collection.addTransient<TransientClass>();
 
-    EXPECT_THROW(provider.getServices<TransientClass>(), sb::TransientForbidException);
+    auto provider = collection.buildServiceProvider();
+
+    EXPECT_THROW(provider->getServices<TransientClass>(), sb::TransientForbidException);
 }
 
 TEST_F(SeriviceProviderTest, GetAllInheritedServicesInjected)
@@ -289,9 +323,11 @@ TEST_F(SeriviceProviderTest, GetAllInheritedServicesInjected)
     collection.addScoped<IInheranceClass, LongInheritanceC>();
     collection.addScoped<InheritanceAllRef>();
 
-    provider.getService<IInheranceClass>();
-    auto all = provider.getServices<IInheranceClass>();
-    auto &ref = provider.getRequiredService<InheritanceAllRef>();
+    auto provider = collection.buildServiceProvider();
+
+    provider->getService<IInheranceClass>();
+    auto all = provider->getServices<IInheranceClass>();
+    auto &ref = provider->getRequiredService<InheritanceAllRef>();
     auto &allRef = ref.inheritances;
 
     // contains same references
@@ -307,7 +343,9 @@ TEST_F(SeriviceProviderTest, CreateInheritedTransientServices)
     collection.addTransient<IInheranceClass, InheranceClassB>();
     collection.addTransient<IInheranceClass, LongInheritanceC>();
 
-    auto last = provider.createService<IInheranceClass>();
+    auto provider = collection.buildServiceProvider();
+
+    auto last = provider->createService<IInheranceClass>();
     EXPECT_EQ(last->getName(), "C");
 }
 
@@ -317,12 +355,14 @@ TEST_F(SeriviceProviderTest, CreateAllInheritedTransientServices)
     collection.addTransient<IInheranceClass, InheranceClassB>();
     collection.addTransient<IInheranceClass, LongInheritanceC>();
 
-    provider.createServices<IInheranceClass>();
-    auto all = provider.createServices<IInheranceClass>();
+    auto provider = collection.buildServiceProvider();
+
+    provider->createServices<IInheranceClass>();
+    auto all = provider->createServices<IInheranceClass>();
     EXPECT_EQ(all.size(), 3);
-    EXPECT_EQ(all[0]->getName(), "C");
+    EXPECT_EQ(all[0]->getName(), "A");
     EXPECT_EQ(all[1]->getName(), "B");
-    EXPECT_EQ(all[2]->getName(), "A");
+    EXPECT_EQ(all[2]->getName(), "C");
 }
 
 TEST_F(SeriviceProviderTest, CreateAllTransientServicesMustBeUnique)
@@ -332,9 +372,11 @@ TEST_F(SeriviceProviderTest, CreateAllTransientServicesMustBeUnique)
     collection.addTransient<IInheranceClass, LongInheritanceC>();
     collection.addScoped<InheritanceTransientAllRef>();
 
-    provider.createServices<IInheranceClass>();
-    auto all = provider.createServices<IInheranceClass>();
-    auto &ref = provider.getRequiredService<InheritanceTransientAllRef>();
+    auto provider = collection.buildServiceProvider();
+
+    provider->createServices<IInheranceClass>();
+    auto all = provider->createServices<IInheranceClass>();
+    auto &ref = provider->getRequiredService<InheritanceTransientAllRef>();
     auto &allRef = ref.inheritances;
 
     // contains diff references
@@ -354,11 +396,13 @@ TEST_F(SeriviceProviderTest, MakeScopedProvider)
     collection.addScoped<OneRefClass>();
     collection.addTransient<TransientClass>();
 
-    auto scoped = provider.createScoped();
+    auto provider = collection.buildServiceProvider();
 
-    scoped.getService<IInheranceClass>();
-    provider.getService<IInheranceClass>();
-    EXPECT_EQ(scoped.getService<IInheranceClass>(), provider.getService<IInheranceClass>());
-    EXPECT_NE(scoped.getService<OneRefClass>(), provider.getService<OneRefClass>());
-    EXPECT_NE(scoped.createService<TransientClass>(), provider.createService<TransientClass>());
+    auto scoped = provider->createScope();
+
+    scoped->getService<IInheranceClass>();
+    provider->getService<IInheranceClass>();
+    EXPECT_EQ(scoped->getService<IInheranceClass>(), provider->getService<IInheranceClass>());
+    EXPECT_NE(scoped->getService<OneRefClass>(), provider->getService<OneRefClass>());
+    EXPECT_NE(scoped->createService<TransientClass>(), provider->createService<TransientClass>());
 }

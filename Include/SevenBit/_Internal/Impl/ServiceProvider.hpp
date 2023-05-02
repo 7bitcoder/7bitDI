@@ -17,7 +17,7 @@ namespace sb
 
     INLINE void *ServiceProvider::getService(TypeId typeId)
     {
-        if (auto list = singeletons().getList(typeId))
+        if (auto list = singletons().getList(typeId))
         {
             return list->at(0);
         }
@@ -34,7 +34,7 @@ namespace sb
 
     INLINE std::vector<void *> ServiceProvider::getServices(TypeId typeId)
     {
-        if (auto list = singeletons().getList(typeId); list && list->isSealed())
+        if (auto list = singletons().getList(typeId); list && list->isSealed())
         {
             return list->getAll();
         }
@@ -75,7 +75,7 @@ namespace sb
             throw TransientForbidException{creator.getServiceTypeId()};
         }
         auto holder = createHolder(creator);
-        auto &container = scope.isSingeleton() ? singeletons() : scoped();
+        auto &container = scope.isSingleton() ? singletons() : scoped();
         return container.addAndGetList(std::move(holder))->at(0);
     }
 
@@ -85,7 +85,7 @@ namespace sb
         {
             throw TransientForbidException{creators.getInterfaceTypeId()};
         }
-        auto &container = creators.getServicesScope().isSingeleton() ? singeletons() : scoped();
+        auto &container = creators.getServicesScope().isSingleton() ? singletons() : scoped();
         ServiceList *serviceList = container.getList(creators.getInterfaceTypeId());
 
         if (!serviceList)
@@ -125,7 +125,7 @@ namespace sb
 
     INLINE ServicesContainer &ServiceProvider::scoped() { return _scoped; }
 
-    INLINE ServicesContainer &ServiceProvider::singeletons()
+    INLINE ServicesContainer &ServiceProvider::singletons()
     {
         if (_singletons)
         {
@@ -135,6 +135,6 @@ namespace sb
         {
             throw std::runtime_error("wrong service provider configuration");
         }
-        return _parent->singeletons();
+        return _parent->singletons();
     }
 } // namespace sb

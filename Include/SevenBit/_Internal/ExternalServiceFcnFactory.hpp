@@ -4,23 +4,15 @@
 #include <memory>
 
 #include "SevenBit/_Internal/ExternalService.hpp"
-#include "SevenBit/_Internal/IServiceCreator.hpp"
 #include "SevenBit/_Internal/IServiceFactory.hpp"
-#include "SevenBit/_Internal/IServiceHolder.hpp"
 #include "SevenBit/_Internal/IServiceInstance.hpp"
 #include "SevenBit/_Internal/ServiceOwner.hpp"
-#include "SevenBit/_Internal/ServiceOwner2.hpp"
 #include "SevenBit/_Internal/TypeId.hpp"
 
 namespace sb
 {
-    class ServiceProvider;
-
-    template <class T> class ExternalServiceFcnFactory final : public IServiceFactory
+    template <class T, class FactoryFcn> class ExternalServiceFcnFactory final : public IServiceFactory
     {
-      public:
-        using FactoryFcn = std::function<T *(ServiceProvider &)>;
-
       private:
         FactoryFcn _factoryFunction;
 
@@ -29,12 +21,12 @@ namespace sb
 
         TypeId getServiceTypeId() const { return typeid(T); }
 
-        IServiceInstance::Ptr get(ServiceProvider &serviceProvider) const
+        IServiceInstance::Ptr createInstance(IServiceProvider &serviceProvider) const
         {
             return std::make_unique<ExternalService<T>>(_factoryFunction(serviceProvider));
         }
 
-        IServiceFactory::Ptr clone() { return std::make_unique<ExternalServiceFcnFactory<T>>(*this); }
+        IServiceFactory::Ptr clone() { return std::make_unique<ExternalServiceFcnFactory<T, FactoryFcn>>(*this); }
     };
 
 } // namespace sb

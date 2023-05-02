@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "SevenBit/_Internal/Exceptions.hpp"
-#include "SevenBit/_Internal/IServiceHolder.hpp"
 #include "SevenBit/_Internal/IServiceInstance.hpp"
 
 namespace sb
@@ -17,12 +16,18 @@ namespace sb
         bool _sealed = false;
 
       public:
-        ServiceList();
+        ServiceList() = default;
 
         ServiceList(ServiceList &&) = default;
         ServiceList(const ServiceList &) = delete;
         ServiceList &operator=(const ServiceList &) = delete;
         ServiceList &operator=(ServiceList &&) = default;
+
+        auto begin() const { return _services.begin(); }
+        auto end() const { return _services.end(); }
+
+        auto rBegin() const { return _services.rbegin(); }
+        auto rEnd() const { return _services.rend(); }
 
         ServiceList &add(IServiceInstance::Ptr service)
         {
@@ -54,6 +59,8 @@ namespace sb
             return nullptr;
         }
 
+        void *first() { return at(0); }
+
         void *at(size_t index = 0) { return at<void>(index); }
 
         bool empty() const { return _services.empty(); }
@@ -62,8 +69,9 @@ namespace sb
         {
             std::vector<TService *> result;
             result.reserve(_services.size());
-            for (auto &instance : _services)
+            for (auto it = rBegin(); it != rEnd(); ++it)
             {
+                auto &instance = *it;
                 result.push_back((TService *)instance->get());
             }
             return result;
@@ -103,12 +111,8 @@ namespace sb
         bool isSealed() const { return _sealed; }
 
         bool contains(TypeId typeId) const { return getInstance(typeId); }
-
-        auto begin() const { return _services.begin(); }
-        auto end() const { return _services.end(); }
     };
 } // namespace sb
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#include "SevenBit/_Internal/Impl/ServiceList.hpp"
 #endif

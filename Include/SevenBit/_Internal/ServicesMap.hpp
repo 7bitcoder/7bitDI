@@ -4,7 +4,6 @@
 #include <unordered_map>
 
 #include "SevenBit/_Internal/Exceptions.hpp"
-#include "SevenBit/_Internal/IServiceHolder.hpp"
 #include "SevenBit/_Internal/IServiceInstance.hpp"
 #include "SevenBit/_Internal/ServiceList.hpp"
 #include "SevenBit/_Internal/TypeId.hpp"
@@ -42,5 +41,4 @@ namespace sb
 } // namespace sb
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#include "SevenBit/_Internal/Impl/ServicesContainer.hpp"
 #endif

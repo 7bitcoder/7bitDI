@@ -5,15 +5,12 @@
 
 #include "SevenBit/_Internal/CtorArgProvider.hpp"
 #include "SevenBit/_Internal/CtorReflection.hpp"
-#include "SevenBit/_Internal/IServiceCreator.hpp"
 #include "SevenBit/_Internal/IServiceFactory.hpp"
 #include "SevenBit/_Internal/IServiceInstance.hpp"
-#include "SevenBit/_Internal/ServiceOwner2.hpp"
+#include "SevenBit/_Internal/ServiceOwner.hpp"
 
 namespace sb
 {
-    class ServiceProvider;
-
     template <class T> class ServiceCtorFactory final : public IServiceFactory
     {
       private:
@@ -25,7 +22,7 @@ namespace sb
 
         TypeId getServiceTypeId() const { return typeid(T); }
 
-        IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider) const
+        IServiceInstance::Ptr createInstance(IServiceProvider &serviceProvider) const
         {
             return create(serviceProvider, Indices{});
         };
@@ -34,12 +31,12 @@ namespace sb
 
       private:
         template <size_t... Index>
-        typename ServiceOwner2<T>::Ptr create(ServiceProvider &serviceProvider, std::index_sequence<Index...>) const
+        typename ServiceOwner<T>::Ptr create(IServiceProvider &serviceProvider, std::index_sequence<Index...>) const
         {
             auto servicePtr =
                 std::make_unique<T>(CtorArgProvider<typename ConstructorTraits::template Arg<Index>::Type>{}.getService(
                     serviceProvider)...);
-            return std::make_unique<ServiceOwner2<T>>(std::move(servicePtr));
+            return std::make_unique<ServiceOwner<T>>(std::move(servicePtr));
         }
     };
 

@@ -2,8 +2,8 @@
 #include <unordered_set>
 
 #include "SevenBit/_Internal/Exceptions.hpp"
-#include "SevenBit/_Internal/IServiceHolder.hpp"
 #include "SevenBit/_Internal/ScopedGuard.hpp"
+#include "SevenBit/_Internal/TypeId.hpp"
 
 namespace sb
 {

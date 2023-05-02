@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <vector>
 
-#include "SevenBit/_Internal/IServiceCreator.hpp"
 #include "SevenBit/_Internal/ServiceDescriptor.hpp"
 #include "SevenBit/_Internal/ServiceLifeTime.hpp"
 #include "SevenBit/_Internal/TypeId.hpp"
@@ -16,7 +15,7 @@ namespace sb
         std::vector<ServiceDescriptor> _serviceDescriptors;
 
       public:
-        ServiceDescriptorList();
+        ServiceDescriptorList() = default;
 
         ServiceDescriptorList(ServiceDescriptorList &&) = default;
         ServiceDescriptorList(const ServiceDescriptorList &) = delete;
@@ -31,6 +30,9 @@ namespace sb
 
         auto begin() const { return _serviceDescriptors.begin(); }
         auto end() const { return _serviceDescriptors.end(); }
+
+        auto rBegin() const { return _serviceDescriptors.rbegin(); }
+        auto rEnd() const { return _serviceDescriptors.rend(); }
 
         void add(ServiceDescriptor descriptor)
         {
@@ -84,5 +86,4 @@ namespace sb
 } // namespace sb
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#include "SevenBit/_Internal/Impl/ServiceCreators.hpp"
 #endif

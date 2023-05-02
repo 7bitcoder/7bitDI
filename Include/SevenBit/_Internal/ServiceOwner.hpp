@@ -2,33 +2,30 @@
 
 #include <memory>
 
-#include "SevenBit/_Internal/IServiceHolder.hpp"
+#include "SevenBit/_Internal/IServiceInstance.hpp"
 
 namespace sb
 {
-    template <class I, class T> class ServiceOwner final : public IServiceHolder
+    template <class T> class ServiceOwner final : public IServiceInstance
     {
       private:
         std::unique_ptr<T> _service;
 
       public:
-        using Ptr = std::unique_ptr<ServiceOwner<I, T>>;
+        using Ptr = std::unique_ptr<ServiceOwner<T>>;
 
-        ServiceOwner(std::unique_ptr<T> service) : _service(std::move(service))
-        {
-            static_assert(std::is_base_of_v<I, T>, "Type T must inherit from I");
-        }
+        ServiceOwner(std::unique_ptr<T> service) : _service(std::move(service)) {}
 
         ServiceOwner(const ServiceOwner &) = delete;
+        ServiceOwner(ServiceOwner &&) = default;
         ServiceOwner &operator=(const ServiceOwner &) = delete;
+        ServiceOwner &operator=(ServiceOwner &&) = default;
 
-        void *getService() final { return _service.get(); }
+        void *get() final { return _service.get(); }
 
-        TypeId getServiceTypeId() const final { return typeid(T); }
+        void *moveOut() { return _service.release(); }
 
-        TypeId getServiceInterfaceTypeId() const final { return typeid(I); }
-
-        void *moveOutService() { return _service.release(); }
+        TypeId getTypeId() const final { return typeid(T); }
 
         bool isValid() const final { return bool{_service}; }
 

@@ -7,7 +7,7 @@ namespace sb
       public:
         enum Type
         {
-            Singeleton,
+            Singleton,
             Scoped,
             Transient
         };
@@ -16,7 +16,7 @@ namespace sb
         Type _type;
 
       public:
-        static ServiceLifeTime singeleton();
+        static ServiceLifeTime singleton();
         static ServiceLifeTime scoped();
         static ServiceLifeTime transient();
 
@@ -25,7 +25,7 @@ namespace sb
         ServiceLifeTime(const ServiceLifeTime &) = default;
         ServiceLifeTime &operator=(const ServiceLifeTime &) = default;
 
-        bool isSingeleton() const;
+        bool isSingleton() const;
         bool isScoped() const;
         bool isTransient() const;
         bool is(Type type) const;

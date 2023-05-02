@@ -3,141 +3,238 @@
 #include <memory>
 #include <vector>
 
+#include "SevenBit/IServiceProvider.hpp"
 #include "SevenBit/LibraryConfig.hpp"
 
 #include "SevenBit/_Internal/CircularDependencyGuard.hpp"
 #include "SevenBit/_Internal/Exceptions.hpp"
-#include "SevenBit/_Internal/IServiceCreatorsProvider.hpp"
-#include "SevenBit/_Internal/IServiceHolder.hpp"
-#include "SevenBit/_Internal/ServiceOwner.hpp"
-#include "SevenBit/_Internal/ServicesContainer.hpp"
+#include "SevenBit/_Internal/IServiceInstance.hpp"
+#include "SevenBit/_Internal/ServiceDescriber.hpp"
+#include "SevenBit/_Internal/ServiceDescriptor.hpp"
+#include "SevenBit/_Internal/ServiceDescriptorList.hpp"
+#include "SevenBit/_Internal/ServiceDescriptorsMap.hpp"
+#include "SevenBit/_Internal/ServiceProviderOptions.hpp"
+#include "SevenBit/_Internal/ServicesMap.hpp"
+#include "SevenBit/_Internal/TypeId.hpp"
 
 namespace sb
 {
-    class ServiceCollection;
-
-    class ServiceProvider
+    class ServiceProvider final : public IServiceProvider
     {
       public:
-        using ExternalServices = std::vector<IServiceHolder::Ptr>;
         using Ptr = std::unique_ptr<ServiceProvider>;
 
       private:
-        friend class ServiceCollection;
-
-        ServiceProvider *_parent = nullptr;
-        const IServiceCreatorsProvider *_creatorsProvider = nullptr;
-
-        ServicesContainer::Ptr _singletons;
-        ServicesContainer _scoped;
-
+        ServiceProvider *_root = nullptr;
+        ServiceDescriptorsMap::Ptr _descriptorsMap;
+        ServiceProviderOptions _options;
+        ServicesMap _services;
         CircularDependencyGuard _guard;
 
-        ServiceProvider(const IServiceCreatorsProvider *creatorsProvider, ServiceProvider *parent = nullptr);
+        ServiceProvider(ServiceProvider *root) : _root(root) {}
 
       public:
+        template <class TDescriptorIt>
+        ServiceProvider(TDescriptorIt begin, TDescriptorIt end, ServiceProviderOptions options = {})
+            : _descriptorsMap(std::make_unique<ServiceDescriptorsMap>(begin, end)), _options(std::move(options)),
+              _root(this)
+        {
+            _descriptorsMap->add(
+                ServiceDescriber::describeScoped([](IServiceProvider &provider) { return &provider; }));
+        }
+
         ServiceProvider(const ServiceProvider &) = delete;
-        ServiceProvider(ServiceProvider &&) = default;
+        ServiceProvider(ServiceProvider &&) = delete;
 
         ServiceProvider &operator=(const ServiceProvider &) = delete;
-        ServiceProvider &operator=(ServiceProvider &&) = default;
+        ServiceProvider &operator=(ServiceProvider &&) = delete;
 
-        ServiceProvider createScoped();
+        IServiceProvider::Ptr createScope() { return std::unique_ptr<ServiceProvider>(new ServiceProvider{_root}); }
 
-        template <class I> I &getRequiredService()
+        void *getService(TypeId serviceTypeId) final
         {
-            if (auto ptr = getService<I>())
+            if (auto list = singletons().getList(serviceTypeId))
             {
-                return *ptr;
+                return list->first();
             }
-            throw ServiceNotRegisteredException{typeid(I)};
+            if (auto list = scoped().getList(serviceTypeId))
+            {
+                return list->first();
+            }
+            return createAndRegister(serviceTypeId);
         }
 
-        template <class I> I *getService() { return (I *)getService(typeid(I)); }
-
-        void *getService(TypeId typeId);
-
-        template <class I> std::vector<I *> getServices()
+        void *getRequiredService(TypeId serviceTypeId)
         {
-            auto services = getServices(typeid(I));
-            std::vector<I *> result;
-            result.reserve(services.size());
-            for (auto ptr : services)
+            if (auto service = getService(serviceTypeId))
             {
-                result.push_back((I *)ptr);
+                return service;
             }
-            return result;
+            throw ServiceNotRegisteredException{serviceTypeId};
         }
 
-        std::vector<void *> getServices(TypeId typeId);
+        std::vector<void *> getServices(TypeId serviceTypeId) final
+        {
+            if (auto list = singletons().getList(serviceTypeId); list && list->isSealed())
+            {
+                return list->getAll();
+            }
+            if (auto list = scoped().getList(serviceTypeId); list && list->isSealed())
+            {
+                return list->getAll();
+            }
+            return createAndRegisterAll(serviceTypeId);
+        }
 
-        template <class I> std::unique_ptr<I> createService() { return createUnique<I>(); }
+        void *createService(TypeId serviceTypeId) { return create(serviceTypeId); }
 
-        template <class I> std::vector<std::unique_ptr<I>> createServices() { return createAllUnique<I>(); }
+        void *createRequiredService(TypeId serviceTypeId)
+        {
+            if (auto service = createService(serviceTypeId))
+            {
+                return service;
+            }
+            throw ServiceNotRegisteredException{serviceTypeId};
+        }
+
+        std::vector<void *> createServices(TypeId serviceTypeId) { return createAll(serviceTypeId); }
 
       private:
-        void *createAndRegister(TypeId typeId);
-
-        std::vector<void *> createAndRegisterAll(TypeId typeId);
-
-        template <class I> std::unique_ptr<I> createUnique()
+        void *createAndRegister(TypeId typeId)
         {
-            if (auto creator = creatorsProvider().getMainCreator(typeid(I)))
+            if (auto descriptor = getDescriptorsMap().getDescriptor(typeId))
             {
-                return createUnique<I>(*creator);
+                return createAndRegister(*descriptor);
             }
             return nullptr;
         }
 
-        template <class I> std::vector<std::unique_ptr<I>> createAllUnique()
+        std::vector<void *> createAndRegisterAll(TypeId typeId)
         {
-            if (auto creators = creatorsProvider().getCreators(typeid(I)))
+            if (auto descriptors = getDescriptorsMap().getDescriptorsList(typeId))
             {
-                return createAllUnique<I>(*creators);
+                return createAndRegisterAll(*descriptors);
             }
             return {};
         }
 
-        void *createAndRegister(const IServiceCreator &creator);
-
-        std::vector<void *> createAndRegisterAll(const ServiceCreators &creators);
-
-        template <class I> std::unique_ptr<I> createUnique(const IServiceCreator &creator)
+        void *create(TypeId typeId)
         {
-            auto &scope = creator.getServiceScope();
-            if (!scope.isTransient())
+            if (auto descriptor = getDescriptorsMap().getDescriptor(typeId))
             {
-                throw NotTransientException{creator.getServiceTypeId()};
+                return create(*descriptor);
             }
-            auto holder = createHolder(creator);
-            return std::unique_ptr<I>((I *)holder->moveOutService());
+            return nullptr;
         }
 
-        template <class I> std::vector<std::unique_ptr<I>> createAllUnique(const ServiceCreators &creators)
+        std::vector<void *> createAll(TypeId typeId)
         {
-            std::vector<std::unique_ptr<I>> result;
-            if (!creators.getServicesScope().isTransient())
+            if (auto descriptors = getDescriptorsMap().getDescriptorsList(typeId))
             {
-                throw NotTransientException{typeid(I)};
+                return createAll(*descriptors);
             }
-            result.reserve(creators.size());
-            for (auto &creator : creators)
+            return {};
+        }
+
+        void *createAndRegister(const ServiceDescriptor &descriptor)
+        {
+            auto &lifeTime = descriptor.getLifeTime();
+            if (lifeTime.isTransient())
             {
-                result.push_back(createUnique<I>(*creator));
+                throw TransientForbidException{descriptor.getServiceTypeId()};
+            }
+            auto instance = createInstance(descriptor);
+            auto &servicesMap = lifeTime.isSingleton() ? singletons() : scoped();
+            return servicesMap[descriptor.getServiceTypeId()].add(std::move(instance)).at(0);
+        }
+
+        std::vector<void *> createAndRegisterAll(const ServiceDescriptorList &descriptors)
+        {
+            auto &lifeTime = descriptors.getLifeTime();
+            if (lifeTime.isTransient())
+            {
+                throw TransientForbidException{descriptors.last().getServiceTypeId()};
+            }
+            auto &container = lifeTime.isSingleton() ? singletons() : scoped();
+            ServiceList *serviceList = container.getList(descriptors.getServiceTypeId());
+
+            if (!serviceList)
+            {
+                serviceList = &container[descriptors.getServiceTypeId()].add(createInstance(descriptors.last()));
+            }
+            serviceList->reserve(descriptors.size());
+            for (auto it = ++descriptors.rBegin(); it != descriptors.rEnd(); ++it) // skip main service
+            {
+                serviceList->add(createInstance(*it));
+            }
+            serviceList->seal();
+            return serviceList->getAll();
+        }
+
+        void *create(const ServiceDescriptor &descriptor)
+        {
+            auto &lifetime = descriptor.getLifeTime();
+            if (!lifetime.isTransient())
+            {
+                throw NotTransientException{descriptor.getServiceTypeId()};
+            }
+            auto instance = createInstance(descriptor);
+            return instance->moveOut();
+        }
+
+        std::vector<void *> createAll(const ServiceDescriptorList &descriptors)
+        {
+            std::vector<void *> result;
+            if (!descriptors.getLifeTime().isTransient())
+            {
+                throw NotTransientException{descriptors.getServiceTypeId()};
+            }
+            result.reserve(descriptors.size());
+            for (auto &descriptor : descriptors)
+            {
+                result.push_back(create(descriptor));
             }
             return result;
         }
 
-        IServiceHolder::Ptr createHolder(const IServiceCreator &creator);
+        IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor)
+        {
+            auto scopedGuard = _guard.spawnGuard(descriptor.getImplementationTypeId());
 
-        const IServiceCreatorsProvider &creatorsProvider();
+            auto instance = descriptor.getImplementationFactory().createInstance(*this);
 
-        ServicesContainer &scoped();
+            if (instance && instance->isValid())
+            {
+                return instance;
+            }
+            throw ConstructionException{descriptor.getServiceTypeId()};
+        }
 
-        ServicesContainer &singeletons();
+        const ServiceDescriptorsMap &getDescriptorsMap()
+        {
+            if (_root && _root->_descriptorsMap)
+            {
+                return *_root->_descriptorsMap;
+            }
+            // todo fix
+            throw ServiceCreatorProviderNotSet{};
+        }
+
+        ServicesMap &scoped() { return _services; }
+
+        ServicesMap &singletons()
+        {
+            if (_root)
+            {
+                return _root->_services;
+            }
+            throw ServiceCreatorProviderNotSet{};
+            // todo throw std::runtime_error("wrong service provider configuration");
+        }
+
+        bool isRoot() { return this == _root; }
     };
 } // namespace sb
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#include "SevenBit/_Internal/Impl/ServiceProvider.hpp"
 #endif

@@ -182,7 +182,7 @@ From consumer B:
 	16TransientService pointer: 0x11ff04400
 ```
 
-Singeleton service address is always the same.
+Singleton service address is always the same.
 Scoped service address is same across request. Transient service address is always different.
 
 ## Injecting Interfaces

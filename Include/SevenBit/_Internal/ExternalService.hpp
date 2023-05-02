@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "SevenBit/_Internal/IServiceHolder.hpp"
 #include "SevenBit/_Internal/IServiceInstance.hpp"
 
 namespace sb
@@ -33,7 +32,7 @@ namespace sb
 
         TypeId getTypeId() const final { return typeid(T); }
 
-        bool isValid() const final { return bool{_service}; }
+        bool isValid() const final { return _service != nullptr; }
 
         operator bool() const { return isValid(); }
     };
