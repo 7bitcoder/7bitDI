@@ -3,7 +3,8 @@
 #include <string>
 
 #include "SevenBit/LibraryConfig.hpp"
-#include "SevenBit/_Internal/Exceptions.hpp"
+
+#include "SevenBit/Exceptions.hpp"
 
 namespace sb
 {

@@ -3,12 +3,14 @@
 #include <memory>
 #include <unordered_map>
 
-#include "SevenBit/_Internal/Exceptions.hpp"
-#include "SevenBit/_Internal/IServiceInstance.hpp"
-#include "SevenBit/_Internal/ServiceList.hpp"
-#include "SevenBit/_Internal/TypeId.hpp"
+#include "SevenBit/LibraryConfig.hpp"
 
-namespace sb
+#include "SevenBit/Exceptions.hpp"
+#include "SevenBit/IServiceInstance.hpp"
+#include "SevenBit/TypeId.hpp"
+#include "SevenBit/_Internal/ServiceList.hpp"
+
+namespace sb::internal
 {
     class ServicesMap
     {
@@ -18,27 +20,17 @@ namespace sb
       public:
         using Ptr = std::unique_ptr<ServicesMap>;
 
-        ServiceList &add(TypeId serviceTypeId, IServiceInstance::Ptr service)
-        {
-            return _serviceListMap[serviceTypeId].add(std::move(service));
-        }
+        ServiceList &add(TypeId serviceTypeId, IServiceInstance::Ptr service);
 
-        ServiceList &operator[](TypeId serviceTypeId) { return _serviceListMap[serviceTypeId]; }
+        ServiceList &operator[](TypeId serviceTypeId);
 
-        ServiceList *getList(TypeId serviceTypeId)
-        {
-            auto it = _serviceListMap.find(serviceTypeId);
-            return it != _serviceListMap.end() ? &it->second : nullptr;
-        }
+        ServiceList *getList(TypeId serviceTypeId);
 
-        const ServiceList *getList(TypeId serviceTypeId) const
-        {
-            auto it = _serviceListMap.find(serviceTypeId);
-            return it != _serviceListMap.end() ? &it->second : nullptr;
-        }
+        const ServiceList *getList(TypeId serviceTypeId) const;
     };
 
-} // namespace sb
+} // namespace sb::internal
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
+#include "SevenBit/_Internal/Impl/ServicesMap.hpp"
 #endif

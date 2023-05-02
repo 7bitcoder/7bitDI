@@ -2,9 +2,11 @@
 
 #include <memory>
 
-#include "SevenBit/_Internal/IServiceInstance.hpp"
+#include "SevenBit/LibraryConfig.hpp"
 
-namespace sb
+#include "SevenBit/IServiceInstance.hpp"
+
+namespace sb::internal
 {
     template <class T> class ExternalService final : public IServiceInstance
     {
@@ -36,4 +38,4 @@ namespace sb
 
         operator bool() const { return isValid(); }
     };
-} // namespace sb
+} // namespace sb::internal

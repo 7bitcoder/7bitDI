@@ -5,9 +5,9 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
-#include "SevenBit/_Internal/Exceptions.hpp"
-#include "SevenBit/_Internal/IServiceInstance.hpp"
-#include "SevenBit/_Internal/TypeId.hpp"
+#include "SevenBit/Exceptions.hpp"
+#include "SevenBit/IServiceInstance.hpp"
+#include "SevenBit/TypeId.hpp"
 
 namespace sb
 {
@@ -76,6 +76,3 @@ namespace sb
         virtual ~IServiceProvider() = default;
     };
 } // namespace sb
-
-#ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#endif

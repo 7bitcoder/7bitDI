@@ -1,15 +1,9 @@
 #pragma once
 
-#include <algorithm>
-#include <charconv>
 #include <cstddef>
 #include <memory>
-#include <optional>
-#include <string>
-#include <string_view>
-#include <type_traits>
-#include <typeinfo>
-#include <vector>
+
+#include "SevenBit/LibraryConfig.hpp"
 
 namespace sb::utils
 {

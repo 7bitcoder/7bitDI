@@ -1,17 +1,14 @@
 #pragma once
-#include <memory>
-#include <type_traits>
-#include <typeindex>
-#include <unordered_set>
 
-#include "SevenBit/IServiceProvider.hpp"
+#include <type_traits>
+
+#include "SevenBit/LibraryConfig.hpp"
+
+#include "SevenBit/ServiceDescriptor.hpp"
 #include "SevenBit/_Internal/ExternalServiceFactory.hpp"
 #include "SevenBit/_Internal/ExternalServiceFcnFactory.hpp"
-#include "SevenBit/_Internal/IServiceFactory.hpp"
 #include "SevenBit/_Internal/ServiceCtorFactory.hpp"
-#include "SevenBit/_Internal/ServiceDescriptor.hpp"
 #include "SevenBit/_Internal/ServiceFcnFactory.hpp"
-#include "SevenBit/_Internal/ServiceLifeTime.hpp"
 #include "SevenBit/_Internal/Utils.hpp"
 
 namespace sb
@@ -35,7 +32,7 @@ namespace sb
         static ServiceDescriptor describe(ServiceLifeTime lifetime)
         {
             inheritCheck<TService, TImplementation>();
-            auto factory = std::make_unique<ServiceCtorFactory<TImplementation>>();
+            auto factory = std::make_unique<internal::ServiceCtorFactory<TImplementation>>();
             return {typeid(TService), lifetime, std::move(factory)};
         }
 
@@ -118,8 +115,8 @@ namespace sb
         {
             inheritCheck<TService, TImplementation>();
             nonTransientFactoryCheck(lifetime);
-            auto factory =
-                std::make_unique<ExternalServiceFcnFactory<TImplementation, FactoryFcn>>(std::move(factoryFcn));
+            auto factory = std::make_unique<internal::ExternalServiceFcnFactory<TImplementation, FactoryFcn>>(
+                std::move(factoryFcn));
 
             return {typeid(TService), lifetime, std::move(factory)};
         }
@@ -128,7 +125,8 @@ namespace sb
         static ServiceDescriptor describeWithFactory(ServiceLifeTime lifetime, FactoryFcn factoryFcn)
         {
             inheritCheck<TService, TImplementation>();
-            auto factory = std::make_unique<ServiceFcnFactory<TImplementation, FactoryFcn>>(std::move(factoryFcn));
+            auto factory =
+                std::make_unique<internal::ServiceFcnFactory<TImplementation, FactoryFcn>>(std::move(factoryFcn));
 
             return {typeid(TService), lifetime, std::move(factory)};
         }

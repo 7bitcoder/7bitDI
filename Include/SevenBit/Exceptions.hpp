@@ -3,7 +3,9 @@
 #include <stdexcept>
 #include <string>
 
-#include "SevenBit/_Internal/TypeId.hpp"
+#include "SevenBit/LibraryConfig.hpp"
+
+#include "SevenBit/TypeId.hpp"
 
 namespace sb
 {

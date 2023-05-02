@@ -2,9 +2,10 @@
 #include <unordered_set>
 
 #include "SevenBit/LibraryConfig.hpp"
+
 #include "SevenBit/_Internal/ScopedGuard.hpp"
 
-namespace sb
+namespace sb::internal
 {
     INLINE ScopedGuard::ScopedGuard(TypeId typeIdUnderConstruction,
                                     std::unordered_set<TypeId> &typeIdsUnderConstruction)
@@ -19,4 +20,4 @@ namespace sb
 
     INLINE ScopedGuard::~ScopedGuard() { _typeIdsUnderConstruction.erase(_typeIdUnderConstruction); }
 
-} // namespace sb
+} // namespace sb::internal

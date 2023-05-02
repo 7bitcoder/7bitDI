@@ -4,10 +4,12 @@
 #include <unordered_map>
 #include <vector>
 
-#include "SevenBit/_Internal/Exceptions.hpp"
-#include "SevenBit/_Internal/IServiceInstance.hpp"
+#include "SevenBit/LibraryConfig.hpp"
 
-namespace sb
+#include "SevenBit/Exceptions.hpp"
+#include "SevenBit/IServiceInstance.hpp"
+
+namespace sb::internal
 {
     class ServiceList
     {
@@ -29,90 +31,32 @@ namespace sb
         auto rBegin() const { return _services.rbegin(); }
         auto rEnd() const { return _services.rend(); }
 
-        ServiceList &add(IServiceInstance::Ptr service)
-        {
-            if (!service || !service->isValid())
-            {
-                throw ServiceHolderInvalidException{};
-            }
-            _services.push_back(std::move(service));
-            return *this;
-        }
+        ServiceList &add(IServiceInstance::Ptr service);
 
-        template <class TService> TService *get() { return (TService *)get(typeid(TService)); }
+        void *get(TypeId typeId) const;
 
-        void *get(TypeId typeId) const
-        {
-            if (auto instance = getInstance(typeId))
-            {
-                return instance->get();
-            }
-            return nullptr;
-        }
+        void *first();
 
-        template <class TService> TService *at(size_t index = 0) const
-        {
-            if (auto instance = getInstanceAt(index))
-            {
-                return (TService *)instance->get();
-            }
-            return nullptr;
-        }
+        void *at(size_t index = 0);
 
-        void *first() { return at(0); }
+        bool empty() const;
 
-        void *at(size_t index = 0) { return at<void>(index); }
+        std::vector<void *> getAll() const;
 
-        bool empty() const { return _services.empty(); }
+        IServiceInstance *getInstance(TypeId typeId) const;
 
-        template <class TService> std::vector<TService *> getAll() const
-        {
-            std::vector<TService *> result;
-            result.reserve(_services.size());
-            for (auto it = rBegin(); it != rEnd(); ++it)
-            {
-                auto &instance = *it;
-                result.push_back((TService *)instance->get());
-            }
-            return result;
-        }
+        IServiceInstance *getInstanceAt(size_t index = 0) const;
 
-        std::vector<void *> getAll() const { return getAll<void>(); }
+        void reserve(size_t size);
 
-        IServiceInstance *getInstance(TypeId typeId) const
-        {
-            for (auto &holder : _services)
-            {
-                if (holder->getTypeId() == typeId)
-                {
-                    return holder.get();
-                }
-            }
-            return nullptr;
-        }
+        void seal();
 
-        IServiceInstance *getInstanceAt(size_t index = 0) const
-        {
-            if (index < _services.size())
-            {
-                return _services.at(index).get();
-            }
-            return nullptr;
-        }
+        bool isSealed() const;
 
-        void reserve(size_t size) { _services.reserve(size); }
-
-        void seal()
-        {
-            _services.shrink_to_fit();
-            _sealed = true;
-        }
-
-        bool isSealed() const { return _sealed; }
-
-        bool contains(TypeId typeId) const { return getInstance(typeId); }
+        bool contains(TypeId typeId) const;
     };
-} // namespace sb
+} // namespace sb::internal
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
+#include "SevenBit/_Internal/Impl/ServiceList.hpp"
 #endif

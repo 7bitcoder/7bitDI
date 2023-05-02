@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SevenBit/LibraryConfig.hpp"
+
 namespace sb
 {
     struct ServiceProviderOptions

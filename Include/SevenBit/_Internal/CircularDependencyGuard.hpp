@@ -1,11 +1,13 @@
 #pragma once
 #include <unordered_set>
 
-#include "SevenBit/_Internal/Exceptions.hpp"
-#include "SevenBit/_Internal/ScopedGuard.hpp"
-#include "SevenBit/_Internal/TypeId.hpp"
+#include "SevenBit/LibraryConfig.hpp"
 
-namespace sb
+#include "SevenBit/Exceptions.hpp"
+#include "SevenBit/TypeId.hpp"
+#include "SevenBit/_Internal/ScopedGuard.hpp"
+
+namespace sb::internal
 {
     class CircularDependencyGuard
     {
@@ -15,7 +17,7 @@ namespace sb
       public:
         ScopedGuard spawnGuard(TypeId typeIdUnderConstruction);
     };
-} // namespace sb
+} // namespace sb::internal
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
 #include "SevenBit/_Internal/Impl/CircularDependencyGuard.hpp"

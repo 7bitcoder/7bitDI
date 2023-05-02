@@ -1,7 +1,8 @@
 #pragma once
 
 #include "SevenBit/LibraryConfig.hpp"
-#include "SevenBit/_Internal/ServiceLifeTime.hpp"
+
+#include "SevenBit/ServiceLifeTime.hpp"
 
 namespace sb
 {

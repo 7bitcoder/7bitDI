@@ -2,9 +2,11 @@
 
 #include <memory>
 
+#include "SevenBit/LibraryConfig.hpp"
+
+#include "SevenBit/IServiceInstance.hpp"
 #include "SevenBit/IServiceProvider.hpp"
-#include "SevenBit/_Internal/IServiceInstance.hpp"
-#include "SevenBit/_Internal/ServiceLifeTime.hpp"
+#include "SevenBit/ServiceLifeTime.hpp"
 
 namespace sb
 {

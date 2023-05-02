@@ -8,13 +8,13 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
-#include "SevenBit/ServiceProvider.hpp"
-#include "SevenBit/_Internal/IServiceFactory.hpp"
-#include "SevenBit/_Internal/ServiceDescriber.hpp"
-#include "SevenBit/_Internal/ServiceDescriptor.hpp"
-#include "SevenBit/_Internal/ServiceLifeTime.hpp"
-#include "SevenBit/_Internal/ServiceProviderOptions.hpp"
-#include "SevenBit/_Internal/TypeId.hpp"
+#include "SevenBit/IServiceFactory.hpp"
+#include "SevenBit/ServiceDescriber.hpp"
+#include "SevenBit/ServiceDescriptor.hpp"
+#include "SevenBit/ServiceLifeTime.hpp"
+#include "SevenBit/ServiceProviderOptions.hpp"
+#include "SevenBit/TypeId.hpp"
+#include "SevenBit/_Internal/ServiceProvider.hpp"
 
 namespace sb
 {
@@ -38,10 +38,7 @@ namespace sb
         ServiceCollection &operator=(const ServiceCollection &) = default;
         ServiceCollection &operator=(ServiceCollection &&) = default;
 
-        IServiceProvider::Ptr buildServiceProvider(ServiceProviderOptions options = {})
-        {
-            return std::make_unique<ServiceProvider>(begin(), end(), options);
-        }
+        IServiceProvider::Ptr buildServiceProvider(ServiceProviderOptions options = {});
 
         Iterator begin() { return _serviceDescriptors.begin(); }
         Iterator end() { return _serviceDescriptors.end(); }
@@ -61,30 +58,30 @@ namespace sb
         ConstReverseIterator rbegin() const { return crBegin(); }
         ConstReverseIterator rend() const { return crEnd(); }
 
-        ServiceDescriptor &at(size_t index) { return _serviceDescriptors.at(index); }
-        const ServiceDescriptor &at(size_t index) const { return _serviceDescriptors.at(index); }
+        ServiceDescriptor &at(size_t index);
+        const ServiceDescriptor &at(size_t index) const;
 
-        ServiceDescriptor &front() { return _serviceDescriptors.front(); }
-        const ServiceDescriptor &front() const { return _serviceDescriptors.front(); }
+        ServiceDescriptor &front();
+        const ServiceDescriptor &front() const;
 
-        ServiceDescriptor &back() { return _serviceDescriptors.back(); }
-        const ServiceDescriptor &back() const { return _serviceDescriptors.back(); }
+        ServiceDescriptor &back();
+        const ServiceDescriptor &back() const;
 
-        ServiceDescriptor &operator[](size_t index) { return at(index); }
-        const ServiceDescriptor &operator[](size_t index) const { return at(index); }
+        ServiceDescriptor &operator[](size_t index);
+        const ServiceDescriptor &operator[](size_t index) const;
 
-        size_t size() const { return _serviceDescriptors.size(); }
-        size_t count() const { return size(); }
+        size_t size() const;
+        size_t count() const;
 
-        bool empty() const { return _serviceDescriptors.empty(); }
+        bool empty() const;
 
-        size_t capacity() const { return _serviceDescriptors.capacity(); }
+        size_t capacity() const;
 
-        void reserve(size_t space) { _serviceDescriptors.reserve(space); }
+        void reserve(size_t space);
 
-        void shrinkToFit() { _serviceDescriptors.shrink_to_fit(); }
+        void shrinkToFit();
 
-        void clear() { _serviceDescriptors.clear(); }
+        void clear();
 
         template <class TPred> Iterator findIf(const TPred &pred) { return std::find_if(begin(), end(), pred); }
 
@@ -97,76 +94,41 @@ namespace sb
 
         template <class TService> bool contains() const { return contains(typeid(TService)); }
 
-        bool contains(TypeId serviceTypeId) const
-        {
-            return containsIf([&](auto &descriptor) { return descriptor.getServiceTypeId() == serviceTypeId; });
-        }
+        bool contains(TypeId serviceTypeId) const;
 
         template <class TService, class TImplementation> bool containsExact() const
         {
             return containsExact(typeid(TService), typeid(TImplementation));
         }
 
-        bool containsExact(TypeId serviceTypeId, TypeId implementationTypeId) const
-        {
-            return containsIf([&](auto &descriptor) {
-                return descriptor.getImplementationTypeId() == implementationTypeId &&
-                       descriptor.getServiceTypeId() == serviceTypeId;
-            });
-        }
+        bool containsExact(TypeId serviceTypeId, TypeId implementationTypeId) const;
 
-        Iterator insert(ConstIterator pos, ServiceDescriptor descriptor)
-        {
-            return _serviceDescriptors.insert(pos, std::move(descriptor));
-        }
+        Iterator insert(ConstIterator pos, ServiceDescriptor descriptor);
 
-        ServiceCollection &add(ServiceDescriptor descriptor)
-        {
-            _serviceDescriptors.push_back(std::move(descriptor));
-            return *this;
-        }
+        ServiceCollection &add(ServiceDescriptor descriptor);
 
-        ServiceCollection &add(const ServiceCollection &collection)
-        {
-            reserve(size() + collection.size());
-            for (auto &descriptor : collection)
-            {
-                add(descriptor);
-            }
-            return *this;
-        }
+        ServiceCollection &add(const ServiceCollection &collection);
 
-        Iterator remove(Iterator pos) { return _serviceDescriptors.erase(pos); }
-        Iterator remove(ConstIterator pos) { return _serviceDescriptors.erase(pos); }
+        Iterator remove(Iterator pos);
+        Iterator remove(ConstIterator pos);
 
-        Iterator removeRange(Iterator begin, Iterator end) { return _serviceDescriptors.erase(begin, end); }
-        Iterator removeRange(ConstIterator begin, ConstIterator end) { return _serviceDescriptors.erase(begin, end); }
+        Iterator removeRange(Iterator begin, Iterator end);
+        Iterator removeRange(ConstIterator begin, ConstIterator end);
 
         template <class TPred> size_t removeIf(const TPred &pred) { return std::erase_if(_serviceDescriptors, pred); }
 
         template <class TService> ServiceCollection &removeAll() { return removeAll(typeid(TService)); }
 
-        ServiceCollection &removeAll(TypeId serviceTypeId)
-        {
-            removeIf([&](auto &descriptor) { return descriptor.getServiceTypeId() == serviceTypeId; });
-            return *this;
-        }
+        ServiceCollection &removeAll(TypeId serviceTypeId);
 
         template <class TService, class TImplementation = TService> ServiceCollection &remove()
         {
             return remove(typeid(TService), typeid(TImplementation));
         }
 
-        ServiceCollection &remove(TypeId serviceTypeId, TypeId implementationTypeId)
-        {
-            removeIf([&](auto &descriptor) {
-                return descriptor.getImplementationTypeId() == implementationTypeId &&
-                       descriptor.getServiceTypeId() == serviceTypeId;
-            });
-            return *this;
-        }
+        ServiceCollection &remove(TypeId serviceTypeId, TypeId implementationTypeId);
 
-        void pop() { _serviceDescriptors.pop_back(); }
+        void pop();
 
         template <class TService, class TImplementation = TService> ServiceCollection &add(ServiceLifeTime lifeTime)
         {
@@ -225,4 +187,5 @@ namespace sb
 } // namespace sb
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
+#include "SevenBit/_Internal/Impl/ServiceCollection.hpp"
 #endif

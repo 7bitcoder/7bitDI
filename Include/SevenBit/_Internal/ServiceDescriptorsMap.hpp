@@ -3,12 +3,14 @@
 #include <memory>
 #include <unordered_map>
 
-#include "SevenBit/_Internal/ServiceDescriptor.hpp"
-#include "SevenBit/_Internal/ServiceDescriptorList.hpp"
-#include "SevenBit/_Internal/ServiceLifeTime.hpp"
-#include "SevenBit/_Internal/TypeId.hpp"
+#include "SevenBit/LibraryConfig.hpp"
 
-namespace sb
+#include "SevenBit/ServiceDescriptor.hpp"
+#include "SevenBit/ServiceLifeTime.hpp"
+#include "SevenBit/TypeId.hpp"
+#include "SevenBit/_Internal/ServiceDescriptorList.hpp"
+
+namespace sb::internal
 {
     class ServiceDescriptorsMap
     {
@@ -39,38 +41,16 @@ namespace sb
         ServiceDescriptorsMap &operator=(const ServiceDescriptorsMap &) = delete;
         ServiceDescriptorsMap &operator=(ServiceDescriptorsMap &&) = default;
 
-        void add(ServiceDescriptor descriptor)
-        {
-            _serviceCreatorsMap[descriptor.getServiceTypeId()].add(std::move(descriptor));
-        }
+        void add(ServiceDescriptor descriptor);
 
-        void seal()
-        {
-            for (auto &list : *this)
-            {
-                list.second.seal();
-            }
-        }
+        void seal();
 
-        const ServiceDescriptorList *getDescriptorsList(TypeId typeId) const
-        {
-            if (auto it = _serviceCreatorsMap.find(typeId); it != end())
-            {
-                return &it->second;
-            }
-            return nullptr;
-        }
+        const ServiceDescriptorList *getDescriptorsList(TypeId typeId) const;
 
-        const ServiceDescriptor *getDescriptor(TypeId typeId) const
-        {
-            if (auto descriptor = getDescriptorsList(typeId))
-            {
-                return &descriptor->last();
-            }
-            return nullptr;
-        }
+        const ServiceDescriptor *getDescriptor(TypeId typeId) const;
     };
-} // namespace sb
+} // namespace sb::internal
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
+#include "SevenBit/_Internal/Impl/ServiceDescriptorsMap.hpp"
 #endif

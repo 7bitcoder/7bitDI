@@ -3,7 +3,9 @@
 #include <utility>
 #include <vector>
 
-namespace sb
+#include "SevenBit/LibraryConfig.hpp"
+
+namespace sb::internal
 {
 #if defined(__GNUC__) && (__GNUC__ >= 7)
 #pragma GCC diagnostic push
@@ -79,4 +81,4 @@ namespace sb
 #if defined(__GNUC__) && (__GNUC__ >= 7)
 #pragma GCC diagnostic pop
 #endif
-} // namespace sb
+} // namespace sb::internal

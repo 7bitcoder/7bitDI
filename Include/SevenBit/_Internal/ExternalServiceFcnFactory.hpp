@@ -1,15 +1,15 @@
 #pragma once
 
-#include <functional>
 #include <memory>
 
-#include "SevenBit/_Internal/ExternalService.hpp"
-#include "SevenBit/_Internal/IServiceFactory.hpp"
-#include "SevenBit/_Internal/IServiceInstance.hpp"
-#include "SevenBit/_Internal/ServiceOwner.hpp"
-#include "SevenBit/_Internal/TypeId.hpp"
+#include "SevenBit/LibraryConfig.hpp"
 
-namespace sb
+#include "SevenBit/IServiceFactory.hpp"
+#include "SevenBit/IServiceInstance.hpp"
+#include "SevenBit/TypeId.hpp"
+#include "SevenBit/_Internal/ExternalService.hpp"
+
+namespace sb::internal
 {
     template <class T, class FactoryFcn> class ExternalServiceFcnFactory final : public IServiceFactory
     {
@@ -29,4 +29,4 @@ namespace sb
         IServiceFactory::Ptr clone() { return std::make_unique<ExternalServiceFcnFactory<T, FactoryFcn>>(*this); }
     };
 
-} // namespace sb
+} // namespace sb::internal

@@ -3,9 +3,11 @@
 #include <memory>
 #include <vector>
 
+#include "SevenBit/LibraryConfig.hpp"
+
 #include "SevenBit/IServiceProvider.hpp"
 
-namespace sb
+namespace sb::internal
 {
     template <class... T> inline constexpr bool notSupportedType = false;
 
@@ -75,4 +77,4 @@ namespace sb
         static_assert(notSupportedType<T>,
                       "Vector should contain pointners or unique pointners for transient services");
     };
-} // namespace sb
+} // namespace sb::internal

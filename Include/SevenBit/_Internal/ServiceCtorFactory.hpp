@@ -3,13 +3,15 @@
 #include <memory>
 #include <type_traits>
 
+#include "SevenBit/LibraryConfig.hpp"
+
+#include "SevenBit/IServiceFactory.hpp"
+#include "SevenBit/IServiceInstance.hpp"
 #include "SevenBit/_Internal/CtorArgProvider.hpp"
 #include "SevenBit/_Internal/CtorReflection.hpp"
-#include "SevenBit/_Internal/IServiceFactory.hpp"
-#include "SevenBit/_Internal/IServiceInstance.hpp"
 #include "SevenBit/_Internal/ServiceOwner.hpp"
 
-namespace sb
+namespace sb::internal
 {
     template <class T> class ServiceCtorFactory final : public IServiceFactory
     {
@@ -40,4 +42,4 @@ namespace sb
         }
     };
 
-} // namespace sb
+} // namespace sb::internal

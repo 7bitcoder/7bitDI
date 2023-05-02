@@ -5,7 +5,7 @@
 #include <thread>
 
 #include "SevenBit/ServiceCollection.hpp"
-#include "SevenBit/ServiceProvider.hpp"
+#include "SevenBit/_Internal/ServiceProvider.hpp"
 
 namespace
 {
