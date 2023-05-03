@@ -5,7 +5,7 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
-namespace sb::utils
+namespace sb::internal::utils
 {
     template <class... T> inline constexpr bool notSupportedType = false;
 
@@ -34,4 +34,8 @@ namespace sb::utils
 
     template <typename T> inline constexpr bool IsUniquePtrV = IsUniquePtr<T>::value;
 
-} // namespace sb::utils
+    template <class TService, class TImplementation> static void inheritCheck()
+    {
+        static_assert(std::is_base_of_v<TService, TImplementation>, "Type TImplementation must inherit from TService");
+    }
+} // namespace sb::internal::utils

@@ -4,9 +4,9 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
+#include "SevenBit/Exceptions.hpp"
 #include "SevenBit/ServiceDescriptor.hpp"
 #include "SevenBit/_Internal/ExternalServiceFactory.hpp"
-#include "SevenBit/_Internal/ExternalServiceFcnFactory.hpp"
 #include "SevenBit/_Internal/ServiceCtorFactory.hpp"
 #include "SevenBit/_Internal/ServiceFcnFactory.hpp"
 #include "SevenBit/_Internal/Utils.hpp"
@@ -31,7 +31,7 @@ namespace sb
         template <class TService, class TImplementation = TService>
         static ServiceDescriptor describe(ServiceLifeTime lifetime)
         {
-            inheritCheck<TService, TImplementation>();
+            internal::utils::inheritCheck<TService, TImplementation>();
             auto factory = std::make_unique<internal::ServiceCtorFactory<TImplementation>>();
             return {typeid(TService), lifetime, std::move(factory)};
         }
@@ -53,20 +53,13 @@ namespace sb
         static ServiceDescriptor describe(ServiceLifeTime lifetime, FactoryFcn factoryFcn)
         {
             using ReturnType = std::invoke_result_t<FactoryFcn, IServiceProvider &>;
-            if constexpr (sb::utils::IsUniquePtrV<ReturnType>)
-            {
-                using TImplementation = typename sb::utils::IsUniquePtr<ReturnType>::Type;
-                return describeWithFactory<TService, TImplementation, FactoryFcn>(lifetime, std::move(factoryFcn));
-            }
-            else if constexpr (std::is_pointer_v<ReturnType>)
-            {
-                using TImplementation = typename std::remove_pointer<ReturnType>::type;
-                return describeWithExternal<TService, TImplementation, FactoryFcn>(lifetime, std::move(factoryFcn));
-            }
-            else
-            {
-                unsupportedFactory<FactoryFcn>();
-            }
+            using FactoryType = internal::ServiceFcnFactory<ReturnType, FactoryFcn>;
+            using TImplementation = typename FactoryType::Type;
+            internal::utils::inheritCheck<TService, TImplementation>();
+
+            auto factory = std::make_unique<FactoryType>(lifetime, std::move(factoryFcn));
+
+            return {typeid(TService), lifetime, std::move(factory)};
         }
 
         template <class FactoryFcn> static ServiceDescriptor describeSingleton(FactoryFcn factory)
@@ -85,66 +78,11 @@ namespace sb
         template <class FactoryFcn> static ServiceDescriptor describe(ServiceLifeTime lifetime, FactoryFcn factoryFcn)
         {
             using ReturnType = std::invoke_result_t<FactoryFcn, IServiceProvider &>;
-            if constexpr (sb::utils::IsUniquePtrV<ReturnType>)
-            {
-                using TService = typename sb::utils::IsUniquePtr<ReturnType>::Type;
-                return describeWithFactory<TService, TService, FactoryFcn>(lifetime, std::move(factoryFcn));
-            }
-            else if constexpr (std::is_pointer_v<ReturnType>)
-            {
-                using TService = typename std::remove_pointer<ReturnType>::type;
-                return describeWithExternal<TService, TService, FactoryFcn>(lifetime, std::move(factoryFcn));
-            }
-            else
-            {
-                unsupportedFactory<FactoryFcn>();
-            }
-        }
+            using FactoryType = internal::ServiceFcnFactory<ReturnType, FactoryFcn>;
+            using TImplementation = typename FactoryType::Type;
 
-      private:
-        template <class FactoryFcn> static void unsupportedFactory()
-        {
-            static_assert(
-                notSupportedFactory<FactoryFcn>,
-                "Factory function should have this scheme: (IServiceProvider&) -> std::unique_ptr<T> | T * it "
-                "should take as argument IServiceProvider& and return std::unique_ptr<T> or pointner T *");
-        }
-
-        template <class TService, class TImplementation, class FactoryFcn>
-        static ServiceDescriptor describeWithExternal(ServiceLifeTime lifetime, FactoryFcn factoryFcn)
-        {
-            inheritCheck<TService, TImplementation>();
-            nonTransientFactoryCheck(lifetime);
-            auto factory = std::make_unique<internal::ExternalServiceFcnFactory<TImplementation, FactoryFcn>>(
-                std::move(factoryFcn));
-
-            return {typeid(TService), lifetime, std::move(factory)};
-        }
-
-        template <class TService, class TImplementation, class FactoryFcn>
-        static ServiceDescriptor describeWithFactory(ServiceLifeTime lifetime, FactoryFcn factoryFcn)
-        {
-            inheritCheck<TService, TImplementation>();
-            auto factory =
-                std::make_unique<internal::ServiceFcnFactory<TImplementation, FactoryFcn>>(std::move(factoryFcn));
-
-            return {typeid(TService), lifetime, std::move(factory)};
-        }
-
-        template <class... T> inline static constexpr bool notSupportedFactory = false;
-
-        template <class TService, class TImplementation> static void inheritCheck()
-        {
-            static_assert(std::is_base_of_v<TService, TImplementation>,
-                          "Type TImplementation must inherit from TService");
-        }
-
-        void static nonTransientFactoryCheck(const ServiceLifeTime &lifeTime)
-        {
-            if (lifeTime.isTransient())
-            {
-                // todo throw
-            }
+            auto factory = std::make_unique<FactoryType>(lifetime, std::move(factoryFcn));
+            return {typeid(TImplementation), lifetime, std::move(factory)};
         }
     };
 } // namespace sb

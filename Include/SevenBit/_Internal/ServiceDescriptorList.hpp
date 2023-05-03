@@ -38,11 +38,7 @@ namespace sb::internal
 
         void add(ServiceDescriptor descriptor);
 
-        template <class T> size_t remove() { return remove(typeid(T)); }
-
         size_t remove(TypeId typeId);
-
-        template <class T> bool contains() { return contains(typeid(T)); }
 
         bool contains(TypeId typeId);
 

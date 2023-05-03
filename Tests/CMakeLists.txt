@@ -8,6 +8,7 @@ add_executable(Tests
 
 target_link_libraries(Tests PUBLIC
     GTest::gtest
+    GTest::gmock
 )
 
 if(NOT SEVEN_BIT_INJECTOR_HEADER_ONLY_LIB)

@@ -15,14 +15,14 @@ namespace sb::internal
     template <class T> class ExternalServiceFactory final : public IServiceFactory
     {
       private:
-        T *_service;
+        T *_service = nullptr;
 
       public:
         ExternalServiceFactory(T *service) : _service{service} {}
 
         TypeId getServiceTypeId() const { return typeid(T); }
 
-        IServiceInstance::Ptr get(IServiceProvider &serviceProvider) const
+        IServiceInstance::Ptr createInstance(IServiceProvider &serviceProvider) const
         {
             return std::make_unique<ExternalService<T>>(_service);
         }

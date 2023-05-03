@@ -10,4 +10,10 @@ namespace sb::internal
     {
         return ScopedGuard{typeIdUnderConstruction, _typeIdsUnderConstruction};
     }
+
+    INLINE ScopedGuard CircularDependencyGuard::operator()(TypeId typeIdUnderConstruction)
+    {
+        return spawnGuard(typeIdUnderConstruction);
+    }
+
 } // namespace sb::internal

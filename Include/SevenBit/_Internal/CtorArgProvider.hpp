@@ -15,7 +15,7 @@ namespace sb::internal
     {
         auto getService(IServiceProvider &provider)
         {
-            static_assert(notSupportedType<T>, "Type is not supported as function augument parameter");
+            static_assert(notSupportedType<T>, "Type is not supported as constructor argument parameter");
         }
     };
 

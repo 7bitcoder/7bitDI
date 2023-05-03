@@ -4,6 +4,7 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
+#include "SevenBit/Exceptions.hpp"
 #include "SevenBit/IServiceInstance.hpp"
 
 namespace sb::internal
@@ -26,11 +27,7 @@ namespace sb::internal
 
         void *get() final { return _service; }
 
-        void *moveOut()
-        {
-            //   throw "todo"
-            return nullptr;
-        }
+        void *moveOut() { throw CannotMoveOutServiceException{getTypeId(), "External service cannot be moved out."}; }
 
         TypeId getTypeId() const final { return typeid(T); }
 

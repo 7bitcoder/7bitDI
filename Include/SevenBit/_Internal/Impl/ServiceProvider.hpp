@@ -171,7 +171,7 @@ namespace sb::internal
         {
             return instance;
         }
-        throw ConstructionException{descriptor.getServiceTypeId()};
+        throw InvalidServiceException{descriptor.getImplementationTypeId(), "Service instance is null or is invalid"};
     }
 
     INLINE const ServiceDescriptorsMap &ServiceProvider::getDescriptorsMap()
@@ -180,8 +180,7 @@ namespace sb::internal
         {
             return *_root->_descriptorsMap;
         }
-        // todo fix
-        throw ServiceCreatorProviderNotSet{};
+        throw NullPointnerException{"root cannot be null"};
     }
 
     INLINE ServicesMap &ServiceProvider::scoped() { return _services; }
@@ -192,7 +191,6 @@ namespace sb::internal
         {
             return _root->_services;
         }
-        throw ServiceCreatorProviderNotSet{};
-        // todo throw std::runtime_error("wrong service provider configuration");
+        throw NullPointnerException{"root cannot be null"};
     }
 } // namespace sb::internal

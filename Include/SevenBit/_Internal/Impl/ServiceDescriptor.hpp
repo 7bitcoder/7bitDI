@@ -2,6 +2,7 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
+#include "SevenBit/Exceptions.hpp"
 #include "SevenBit/ServiceDescriptor.hpp"
 
 namespace sb
@@ -12,7 +13,7 @@ namespace sb
     {
         if (!_implementationFactory)
         {
-            // todo throw "sth"
+            throw NullPointnerException{"Implementation factory cannot be null"};
         }
     }
 

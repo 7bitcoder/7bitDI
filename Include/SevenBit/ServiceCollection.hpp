@@ -147,6 +147,12 @@ namespace sb
             return add(ServiceDescriber::describeTransient<TService, TImplementation>());
         }
 
+        // template <class TService, class TImplementation = TService>
+        // ServiceCollection &addSingleton(TImplementation *service)
+        // {
+        //     return add(ServiceDescriber::describeSingleton<TService, TImplementation>(service));
+        // }
+
         template <class TService, class FactoryFcn>
         ServiceCollection &addTransient(ServiceLifeTime lifeTime, FactoryFcn factory)
         {

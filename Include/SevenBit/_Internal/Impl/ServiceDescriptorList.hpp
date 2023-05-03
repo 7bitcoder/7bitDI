@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <vector>
 
+#include "SevenBit/Exceptions.hpp"
 #include "SevenBit/LibraryConfig.hpp"
 
 #include "SevenBit/_Internal/ServiceDescriptorList.hpp"
@@ -47,7 +48,7 @@ namespace sb::internal
     {
         if (contains(descriptor.getImplementationTypeId()))
         {
-            // todo throw
+            throw ServiceAlreadyRegisteredException{descriptor.getImplementationTypeId()};
         }
     }
 
@@ -55,7 +56,8 @@ namespace sb::internal
     {
         if (!_serviceDescriptors.empty() && last().getLifeTime() != descriptor.getLifeTime())
         {
-            // todo throw
+            throw ServiceLifeTimeMissmatchException{descriptor.getImplementationTypeId(),
+                                                    descriptor.getServiceTypeId()};
         }
     }
 

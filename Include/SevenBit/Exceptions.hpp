@@ -1,5 +1,6 @@
 #pragma once
 
+#include <exception>
 #include <stdexcept>
 #include <string>
 
@@ -9,64 +10,59 @@
 
 namespace sb
 {
-    struct NullReferenceException : public std::runtime_error
+    struct InjectorException : public std::runtime_error
     {
-        NullReferenceException();
+        InjectorException(const std::string &error);
     };
 
-    struct ServiceHolderInvalidException : public std::runtime_error
+    struct NullPointnerException : public InjectorException
     {
-        ServiceHolderInvalidException();
+        NullPointnerException(const std::string &why);
     };
 
-    struct ServiceCreatorInvalidException : public std::runtime_error
+    struct ForbiddenServiceFactoryException : public InjectorException
     {
-        ServiceCreatorInvalidException();
+        ForbiddenServiceFactoryException(TypeId typeId, const std::string &reason);
     };
 
-    struct ServiceNotRegisteredException : public std::runtime_error
+    struct CannotMoveOutServiceException : public InjectorException
+    {
+        CannotMoveOutServiceException(TypeId typeId, const std::string &reason);
+    };
+
+    struct InvalidServiceException : public InjectorException
+    {
+        InvalidServiceException(TypeId typeId, const std::string &reason);
+    };
+
+    struct ServiceNotRegisteredException : public InjectorException
     {
         ServiceNotRegisteredException(TypeId typeIndex);
     };
 
-    struct ConstructionException : public std::runtime_error
+    struct ServiceAlreadyRegisteredException : public InjectorException
     {
-        ConstructionException(TypeId typeIndex);
+        ServiceAlreadyRegisteredException(TypeId typeIndex);
     };
 
-    struct NotTransientException : public std::runtime_error
+    struct ServiceLifeTimeMissmatchException : public InjectorException
+    {
+        ServiceLifeTimeMissmatchException(TypeId typeIndex, TypeId interface);
+    };
+
+    struct NotTransientException : public InjectorException
     {
         NotTransientException(TypeId typeIndex);
     };
 
-    struct TransientForbidException : public std::runtime_error
+    struct TransientForbidException : public InjectorException
     {
         TransientForbidException(TypeId typeIndex);
     };
 
-    struct CircularDependencyException : public std::runtime_error
+    struct CircularDependencyException : public InjectorException
     {
         CircularDependencyException(TypeId typeIndex);
-    };
-
-    struct ServiceCreatorProviderNotSet : public std::runtime_error
-    {
-        ServiceCreatorProviderNotSet();
-    };
-
-    struct ServiceShouldBeProvidedExternally : public std::runtime_error
-    {
-        ServiceShouldBeProvidedExternally(TypeId typeIndex);
-    };
-
-    struct ServiceTypeAlreadyRegisteredException : public std::runtime_error
-    {
-        ServiceTypeAlreadyRegisteredException(TypeId typeIndex);
-    };
-
-    struct ServiceScopeMissmatchException : public std::runtime_error
-    {
-        ServiceScopeMissmatchException(TypeId typeIndex, TypeId interface);
     };
 } // namespace sb
 

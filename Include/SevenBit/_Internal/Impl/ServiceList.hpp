@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SevenBit/Exceptions.hpp"
 #include "SevenBit/LibraryConfig.hpp"
 
 #include "SevenBit/_Internal/ServiceList.hpp"
@@ -10,7 +11,7 @@ namespace sb::internal
     {
         if (!service || !service->isValid())
         {
-            throw ServiceHolderInvalidException{};
+            throw NullPointnerException{"service is null"};
         }
         _services.push_back(std::move(service));
         return *this;

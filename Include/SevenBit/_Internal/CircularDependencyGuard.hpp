@@ -3,7 +3,6 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
-#include "SevenBit/Exceptions.hpp"
 #include "SevenBit/TypeId.hpp"
 #include "SevenBit/_Internal/ScopedGuard.hpp"
 
@@ -16,6 +15,8 @@ namespace sb::internal
 
       public:
         ScopedGuard spawnGuard(TypeId typeIdUnderConstruction);
+
+        ScopedGuard operator()(TypeId typeIdUnderConstruction);
     };
 } // namespace sb::internal
 
