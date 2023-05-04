@@ -2,7 +2,9 @@
 
 #include <memory>
 #include <unordered_map>
+#include <unordered_set>
 
+#include "SevenBit/Exceptions.hpp"
 #include "SevenBit/LibraryConfig.hpp"
 
 #include "SevenBit/ServiceDescriptor.hpp"
@@ -35,7 +37,6 @@ namespace sb::internal
             {
                 add(*it);
             }
-            seal();
         }
 
         ServiceDescriptorsMap &operator=(const ServiceDescriptorsMap &) = delete;

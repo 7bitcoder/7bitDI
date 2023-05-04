@@ -27,3 +27,5 @@ endif()
 if(BUILD_EXAMPLES)
         add_subdirectory(Examples)
 endif()
+
+install(DIRECTORY Include/ DESTINATION include)

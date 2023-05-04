@@ -18,25 +18,25 @@
 namespace sb::internal
 {
 
-    template <class FactoryFcn> class ServiceFcnFactory final : public IServiceFactory
+    template <class FactoryFcn> class ExternalServiceFcnFactory final : public IServiceFactory
     {
       private:
         FactoryFcn _factoryFunction;
 
       public:
         using ReturnType = std::invoke_result_t<FactoryFcn, IServiceProvider &>;
-        using IsReturnTypeUniquePtr = utils::IsUniquePtr<ReturnType>;
-        using ServiceType = typename IsReturnTypeUniquePtr::Type;
+        using IsReturnTypePtr = std::is_pointer<ReturnType>;
+        using ServiceType = std::remove_pointer_t<ReturnType>;
 
-        ServiceFcnFactory(FactoryFcn factoryFunction) : _factoryFunction{std::move(factoryFunction)} {}
+        ExternalServiceFcnFactory(FactoryFcn factoryFunction) : _factoryFunction{std::move(factoryFunction)} {}
 
         TypeId getServiceTypeId() const { return typeid(ServiceType); }
 
         IServiceInstance::Ptr createInstance(IServiceProvider &serviceProvider) const
         {
-            return std::make_unique<ServiceOwner<ServiceType>>(_factoryFunction(serviceProvider));
+            return std::make_unique<ExternalService<ServiceType>>(_factoryFunction(serviceProvider));
         }
 
-        IServiceFactory::Ptr clone() { return std::make_unique<ServiceFcnFactory<FactoryFcn>>(*this); }
+        IServiceFactory::Ptr clone() { return std::make_unique<ExternalServiceFcnFactory<FactoryFcn>>(*this); }
     };
 } // namespace sb::internal

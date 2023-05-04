@@ -2,26 +2,30 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
+#include "SevenBit/ServiceProviderOptions.hpp"
 #include "SevenBit/_Internal/ServiceProvider.hpp"
 
 namespace sb::internal
 {
-    INLINE ServiceProvider::ServiceProvider(ServiceProvider *root) : _root(root) {}
+    INLINE ServiceProvider::ServiceProvider(ServiceProviderOptions options, ServiceProvider *root)
+        : _options(std::move(options)), _services(_options.strongDestructionOrder), _root(root)
+    {
+    }
 
     INLINE IServiceProvider::Ptr ServiceProvider::createScope()
     {
-        return std::unique_ptr<ServiceProvider>(new ServiceProvider{_root});
+        return std::unique_ptr<ServiceProvider>(new ServiceProvider{_options, _root});
     }
 
     INLINE void *ServiceProvider::getService(TypeId serviceTypeId)
     {
         if (auto list = singletons().getList(serviceTypeId))
         {
-            return list->first();
+            return list->first()->get();
         }
         if (auto list = scoped().getList(serviceTypeId))
         {
-            return list->first();
+            return list->first()->get();
         }
         return createAndRegister(serviceTypeId);
     }
@@ -39,11 +43,11 @@ namespace sb::internal
     {
         if (auto list = singletons().getList(serviceTypeId); list && list->isSealed())
         {
-            return list->getAll();
+            return list->getAllServices();
         }
         if (auto list = scoped().getList(serviceTypeId); list && list->isSealed())
         {
-            return list->getAll();
+            return list->getAllServices();
         }
         return createAndRegisterAll(serviceTypeId);
     }
@@ -109,7 +113,7 @@ namespace sb::internal
         }
         auto instance = createInstance(descriptor);
         auto &servicesMap = lifeTime.isSingleton() ? singletons() : scoped();
-        return servicesMap[descriptor.getServiceTypeId()].add(std::move(instance)).at(0);
+        return servicesMap[descriptor.getServiceTypeId()].add(std::move(instance)).first()->get();
     }
 
     INLINE std::vector<void *> ServiceProvider::createAndRegisterAll(const ServiceDescriptorList &descriptors)
@@ -132,7 +136,7 @@ namespace sb::internal
             serviceList->add(createInstance(*it));
         }
         serviceList->seal();
-        return serviceList->getAll();
+        return serviceList->getAllServices();
     }
 
     INLINE void *ServiceProvider::create(const ServiceDescriptor &descriptor)
@@ -163,7 +167,7 @@ namespace sb::internal
 
     INLINE IServiceInstance::Ptr ServiceProvider::createInstance(const ServiceDescriptor &descriptor)
     {
-        auto scopedGuard = _guard.spawnGuard(descriptor.getImplementationTypeId());
+        auto _ = _guard(descriptor.getImplementationTypeId());
 
         auto instance = descriptor.getImplementationFactory().createInstance(*this);
 

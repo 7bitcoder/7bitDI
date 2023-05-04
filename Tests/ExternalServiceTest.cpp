@@ -32,7 +32,7 @@ TEST_F(ExternalServiceTest, ShouldProperelyCreateExternalService)
     EXPECT_EQ(external.getTypeId(), typeid(TestClass1));
 }
 
-TEST_F(ExternalServiceTest, ShouldProperelyCreateExternalServiceOnNull)
+TEST_F(ExternalServiceTest, ShouldProperelyCreateExternalNullService)
 {
     TestClass1 test;
     sb::internal::ExternalService<TestClass1> external{nullptr};
@@ -43,7 +43,7 @@ TEST_F(ExternalServiceTest, ShouldProperelyCreateExternalServiceOnNull)
     EXPECT_EQ(external.getTypeId(), typeid(TestClass1));
 }
 
-TEST_F(ExternalServiceTest, ShouldThrowOnModeOut)
+TEST_F(ExternalServiceTest, ShouldThrowOnMoveOut)
 {
     TestClass1 test;
     sb::internal::ExternalService external{&test};

@@ -147,47 +147,50 @@ namespace sb
             return add(ServiceDescriber::describeTransient<TService, TImplementation>());
         }
 
-        // template <class TService, class TImplementation = TService>
-        // ServiceCollection &addSingleton(TImplementation *service)
-        // {
-        //     return add(ServiceDescriber::describeSingleton<TService, TImplementation>(service));
-        // }
+        template <class TService> ServiceCollection &addSingleton(TService *service)
+        {
+            return add(ServiceDescriber::describeSingleton<TService, TService>(service));
+        }
 
-        template <class TService, class FactoryFcn>
-        ServiceCollection &addTransient(ServiceLifeTime lifeTime, FactoryFcn factory)
+        template <class TService, class TImplementation> ServiceCollection &addSingleton(TImplementation *service)
+        {
+            return add(ServiceDescriber::describeSingleton<TService, TImplementation>(service));
+        }
+
+        template <class TService, class FactoryFcn> ServiceCollection &add(ServiceLifeTime lifeTime, FactoryFcn factory)
         {
             return add(ServiceDescriber::describe<TService, FactoryFcn>(lifeTime, std::move(factory)));
         }
 
         template <class TService, class FactoryFcn> ServiceCollection &addSingleton(FactoryFcn factory)
         {
-            return add(ServiceDescriber::describeSingleton<TService, FactoryFcn>(std::move(factory)));
+            return add(ServiceDescriber::describeSingletonFrom<TService, FactoryFcn>(std::move(factory)));
         }
         template <class TService, class FactoryFcn> ServiceCollection &addScoped(FactoryFcn factory)
         {
-            return add(ServiceDescriber::describeScoped<TService, FactoryFcn>(std::move(factory)));
+            return add(ServiceDescriber::describeScopedFrom<TService, FactoryFcn>(std::move(factory)));
         }
         template <class TService, class FactoryFcn> ServiceCollection &addTransient(FactoryFcn factory)
         {
-            return add(ServiceDescriber::describeTransient<TService, FactoryFcn>(std::move(factory)));
+            return add(ServiceDescriber::describeTransientFrom<TService, FactoryFcn>(std::move(factory)));
         }
 
-        template <class FactoryFcn> ServiceCollection &addTransient(ServiceLifeTime lifeTime, FactoryFcn factory)
+        template <class FactoryFcn> ServiceCollection &add(ServiceLifeTime lifeTime, FactoryFcn factory)
         {
-            return add(ServiceDescriber::describe(lifeTime, std::move(factory)));
+            return add(ServiceDescriber::describeFrom(lifeTime, std::move(factory)));
         }
 
         template <class FactoryFcn> ServiceCollection &addSingleton(FactoryFcn factory)
         {
-            return add(ServiceDescriber::describeSingleton(std::move(factory)));
+            return add(ServiceDescriber::describeSingletonFrom(std::move(factory)));
         }
         template <class FactoryFcn> ServiceCollection &addScoped(FactoryFcn factory)
         {
-            return add(ServiceDescriber::describeScoped(std::move(factory)));
+            return add(ServiceDescriber::describeScopedFrom(std::move(factory)));
         }
         template <class FactoryFcn> ServiceCollection &addTransient(FactoryFcn factory)
         {
-            return add(ServiceDescriber::describeTransient(std::move(factory)));
+            return add(ServiceDescriber::describeTransientFrom(std::move(factory)));
         }
     };
 } // namespace sb

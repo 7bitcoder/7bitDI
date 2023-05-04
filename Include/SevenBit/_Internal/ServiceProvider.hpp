@@ -10,9 +10,12 @@
 #include "SevenBit/IServiceProvider.hpp"
 #include "SevenBit/ServiceDescriber.hpp"
 #include "SevenBit/ServiceDescriptor.hpp"
+#include "SevenBit/ServiceLifeTime.hpp"
 #include "SevenBit/ServiceProviderOptions.hpp"
 #include "SevenBit/TypeId.hpp"
 #include "SevenBit/_Internal/CircularDependencyGuard.hpp"
+#include "SevenBit/_Internal/ExternalServiceFactory.hpp"
+#include "SevenBit/_Internal/ExternalServiceFcnFactory.hpp"
 #include "SevenBit/_Internal/ServiceDescriptorList.hpp"
 #include "SevenBit/_Internal/ServiceDescriptorsMap.hpp"
 #include "SevenBit/_Internal/ServicesMap.hpp"
@@ -31,16 +34,19 @@ namespace sb::internal
         ServicesMap _services;
         CircularDependencyGuard _guard;
 
-        ServiceProvider(ServiceProvider *root);
+        ServiceProvider(ServiceProviderOptions options, ServiceProvider *root);
 
       public:
         template <class TDescriptorIt>
         ServiceProvider(TDescriptorIt begin, TDescriptorIt end, ServiceProviderOptions options = {})
             : _descriptorsMap(std::make_unique<ServiceDescriptorsMap>(begin, end)), _options(std::move(options)),
-              _root(this)
+              _services(_options.strongDestructionOrder), _root(this)
         {
+            IServiceFactory::Ptr factory{
+                new ExternalServiceFcnFactory{[](IServiceProvider &provider) { return &provider; }}};
             _descriptorsMap->add(
-                ServiceDescriber::describeScoped([](IServiceProvider &provider) { return &provider; }));
+                ServiceDescriptor{typeid(IServiceProvider), ServiceLifeTime::scoped(), std::move(factory)});
+            _descriptorsMap->seal();
         }
 
         ServiceProvider(const ServiceProvider &) = delete;

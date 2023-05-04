@@ -1,21 +1,17 @@
 #pragma once
 
-/* #undef SEVEN_BIT_INJECTOR_SHARED_LIB */
-#define SEVEN_BIT_INJECTOR_STATIC_LIB
-/* #undef SEVEN_BIT_INJECTOR_HEADER_ONLY_LIB */
+#include "SevenBit/CmakeDef.hpp"
 
-#define SEVEN_BIT_INJECTOR_VERSION "0.1.0"
+#ifndef SEVEN_BIT_INJECTOR_VERSION
+
+#define SEVEN_BIT_INJECTOR_VERSION "0.0.0"
+
+#endif
 
 #if !defined SEVEN_BIT_INJECTOR_SHARED_LIB && !defined SEVEN_BIT_INJECTOR_STATIC_LIB &&                                \
     !defined SEVEN_BIT_INJECTOR_HEADER_ONLY_LIB
 
 #define SEVEN_BIT_INJECTOR_HEADER_ONLY_LIB
-
-#endif
-
-#if !defined SEVEN_BIT_INJECTOR_VERSION
-
-#define SEVEN_BIT_INJECTOR_VERSION "0.0.0"
 
 #endif
 

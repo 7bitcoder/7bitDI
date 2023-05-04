@@ -16,9 +16,13 @@ namespace sb::internal
     {
       private:
         std::unordered_map<TypeId, ServiceList> _serviceListMap;
+        std::vector<IServiceInstance::Ptr *> _constructionOrder;
+        bool _strongDestructionOrder = false;
 
       public:
         using Ptr = std::unique_ptr<ServicesMap>;
+
+        ServicesMap(bool strongDestructionOrder);
 
         ServiceList &add(TypeId serviceTypeId, IServiceInstance::Ptr service);
 
@@ -27,6 +31,8 @@ namespace sb::internal
         ServiceList *getList(TypeId serviceTypeId);
 
         const ServiceList *getList(TypeId serviceTypeId) const;
+
+        ~ServicesMap();
     };
 
 } // namespace sb::internal

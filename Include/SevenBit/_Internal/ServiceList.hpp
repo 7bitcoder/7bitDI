@@ -33,27 +33,21 @@ namespace sb::internal
 
         ServiceList &add(IServiceInstance::Ptr service);
 
-        void *get(TypeId typeId) const;
+        IServiceInstance::Ptr &last();
 
-        void *first();
+        IServiceInstance::Ptr &first();
 
-        void *at(size_t index = 0);
+        IServiceInstance::Ptr &at(size_t index = 0);
+
+        std::vector<void *> getAllServices() const;
 
         bool empty() const;
-
-        std::vector<void *> getAll() const;
-
-        IServiceInstance *getInstance(TypeId typeId) const;
-
-        IServiceInstance *getInstanceAt(size_t index = 0) const;
 
         void reserve(size_t size);
 
         void seal();
 
         bool isSealed() const;
-
-        bool contains(TypeId typeId) const;
     };
 } // namespace sb::internal
 

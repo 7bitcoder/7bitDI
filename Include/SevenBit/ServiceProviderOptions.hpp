@@ -6,6 +6,6 @@ namespace sb
 {
     struct ServiceProviderOptions
     {
-        bool strongDestructuringOrder = false;
+        bool strongDestructionOrder = false;
     };
 } // namespace sb

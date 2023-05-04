@@ -24,29 +24,32 @@ IF(WIN32)
     SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /bigobj")
 ENDIF(WIN32)
 
-set(BUILD_LIBRARY_TYPE "HeaderOnly" CACHE STRING
+set(LIBRARY_TYPE "HeaderOnly" CACHE STRING
     "Library build type: Shared;Static;HeaderOnly")
 
-set(BUILD_LIBRARY_TYPE_VALUES "Shared;Static;HeaderOnly" CACHE STRING
+set(LIBRARY_TYPE_VALUES "Shared;Static;HeaderOnly" CACHE STRING
     "List of possible BUILD_LIBRARY_Type values")
 
-set_property(CACHE BUILD_LIBRARY_TYPE PROPERTY STRINGS ${BUILD_LIBRARY_TYPE_VALUES})
+set_property(CACHE LIBRARY_TYPE PROPERTY STRINGS ${LIBRARY_TYPE_VALUES})
 
 set(BUILD_TESTS OFF CACHE BOOL "Turn on to build tests")
 set(BUILD_EXAMPLES OFF CACHE BOOL "Turn on to build examples")
 set(BUILD_BENCHMARKS OFF CACHE BOOL "Turn on to build benchmarks")
 
-if(BUILD_LIBRARY_TYPE STREQUAL "Shared")
+set(SEVEN_BIT_INJECTOR_VERSION ${CMAKE_PROJECT_VERSION})
+
+if(LIBRARY_TYPE STREQUAL "Shared")
+    set(BUILD_LIBRARY_TYPE "Shared")
     set(SEVEN_BIT_INJECTOR_SHARED_LIB ON)
-elseif(BUILD_LIBRARY_TYPE STREQUAL "Static")
+elseif(LIBRARY_TYPE STREQUAL "Static")
+    set(BUILD_LIBRARY_TYPE "Static")
     set(SEVEN_BIT_INJECTOR_STATIC_LIB ON)
-elseif(BUILD_LIBRARY_TYPE STREQUAL "HeaderOnly")
+else() # headerOnly
+    set(BUILD_LIBRARY_TYPE "HeaderOnly")
     set(SEVEN_BIT_INJECTOR_HEADER_ONLY_LIB ON)
 endif()
 
-set(SEVEN_BIT_INJECTOR_VERSION ${CMAKE_PROJECT_VERSION})
-
-configure_file(Include/SevenBit/LibraryConfig.hpp.input ${PROJECT_SOURCE_DIR}/Include/SevenBit/LibraryConfig.hpp)
+configure_file(Include/SevenBit/CmakeDef.hpp.input ${PROJECT_SOURCE_DIR}/Include/SevenBit/CmakeDef.hpp)
 
 message(STATUS "======= 7BitInjector version: ${SEVEN_BIT_INJECTOR_VERSION} =======")
 message(STATUS "======= 7BitInjector build as ${BUILD_LIBRARY_TYPE} library =======")

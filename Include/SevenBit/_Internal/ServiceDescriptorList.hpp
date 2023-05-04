@@ -38,11 +38,10 @@ namespace sb::internal
 
         void add(ServiceDescriptor descriptor);
 
-        size_t remove(TypeId typeId);
-
         bool contains(TypeId typeId);
 
         size_t size() const;
+        bool empty() const;
 
         const ServiceDescriptor &last() const;
 
@@ -50,6 +49,7 @@ namespace sb::internal
 
       private:
         void checkIfRegistered(ServiceDescriptor &descriptor);
+        void checkBaseType(ServiceDescriptor &descriptor);
         void checkLifeTime(ServiceDescriptor &descriptor);
     };
 

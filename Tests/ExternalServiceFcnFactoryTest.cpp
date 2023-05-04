@@ -6,25 +6,26 @@
 #include "Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/IServiceProvider.hpp"
 #include "SevenBit/ServiceLifeTime.hpp"
+#include "SevenBit/_Internal/ExternalServiceFcnFactory.hpp"
 #include "SevenBit/_Internal/ServiceFcnFactory.hpp"
 
-class ServiceFcnFactoryTest : public ::testing::Test
+class ExternalServiceFcnFactoryTest : public ::testing::Test
 {
   protected:
     static void TearUpTestSuite() {}
 
-    ServiceFcnFactoryTest() {}
+    ExternalServiceFcnFactoryTest() {}
 
     void SetUp() override {}
 
     void TearDown() override {}
 
-    ~ServiceFcnFactoryTest() {}
+    ~ExternalServiceFcnFactoryTest() {}
 
     static void TearDownTestSuite() {}
 };
 
-TEST_F(ServiceFcnFactoryTest, ShouldNotCompileWrongFactoryScheme)
+TEST_F(ExternalServiceFcnFactoryTest, ShouldNotCompileWrongFactoryScheme)
 {
     // TestClass1 test;
     // auto fcn = [&](sb::IServiceProvider &) { return test; };
@@ -32,32 +33,33 @@ TEST_F(ServiceFcnFactoryTest, ShouldNotCompileWrongFactoryScheme)
     // sb::internal::ServiceFcnFactory<TestClass1 *, decltype(fcn)> factory{sb::ServiceLifeTime::transient(), fcn};
 }
 
-TEST_F(ServiceFcnFactoryTest, ShouldReturnProperTypeId)
+TEST_F(ExternalServiceFcnFactoryTest, ShouldReturnProperTypeId)
 {
-    auto fcn = [&](sb::IServiceProvider &) { return std::make_unique<TestClass1>(); };
-
-    sb::internal::ServiceFcnFactory factory{fcn};
+    TestClass1 test;
+    auto fcn = [&](sb::IServiceProvider &) { return &test; };
+    sb::internal::ExternalServiceFcnFactory factory{fcn};
 
     EXPECT_EQ(factory.getServiceTypeId(), typeid(TestClass1));
 }
 
-TEST_F(ServiceFcnFactoryTest, ShouldCreateService)
+TEST_F(ExternalServiceFcnFactoryTest, ShouldCreateService)
 {
     ServiceProviderMock mock;
-    auto fcn = [&](sb::IServiceProvider &) { return std::make_unique<TestClass1>(); };
-    sb::internal::ServiceFcnFactory factory{fcn};
+    TestClass1 test;
+    auto fcn = [&](sb::IServiceProvider &) { return &test; };
+    sb::internal::ExternalServiceFcnFactory factory{fcn};
 
     auto instance = factory.createInstance(mock);
 
     EXPECT_TRUE(instance);
 }
 
-TEST_F(ServiceFcnFactoryTest, ShouldCloneFactory)
+TEST_F(ExternalServiceFcnFactoryTest, ShouldCloneFactory)
 {
-    TestClass1 test;
     ServiceProviderMock mock;
-    auto fcn = [&](sb::IServiceProvider &) { return std::make_unique<TestClass1>(); };
-    sb::internal::ServiceFcnFactory factory{fcn};
+    TestClass1 test;
+    auto fcn = [&](sb::IServiceProvider &) { return &test; };
+    sb::internal::ExternalServiceFcnFactory factory{fcn};
 
     auto cloned = factory.clone();
 

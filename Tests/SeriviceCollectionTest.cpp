@@ -169,6 +169,10 @@ TEST_F(SeriviceCollectionTest, AddInheritedServicesFactory)
     collection.addScoped<IInheranceClass>(
         [](sb::IServiceProvider &provider) { return std::make_unique<LongInheritanceC>(nullptr, nullptr); });
 
+    InheranceClassA a{nullptr, nullptr};
+    collection.addSingleton(&a);
+    collection.addSingleton<IInheranceClass>(&a);
+
     EXPECT_TRUE(collection.contains<IInheranceClass>());
 }
 

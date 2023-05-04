@@ -55,6 +55,12 @@ namespace sb
     {
     }
 
+    INLINE ServiceBaseTypeMissmatchException::ServiceBaseTypeMissmatchException(TypeId typeIndex, TypeId interface)
+        : InjectorException{std::string{"Service: '"} + typeIndex.name() + "' should implement this base type '" +
+                            interface.name() + "' ."}
+    {
+    }
+
     INLINE ServiceLifeTimeMissmatchException::ServiceLifeTimeMissmatchException(TypeId typeIndex, TypeId interface)
         : InjectorException{std::string{"Service: '"} + typeIndex.name() +
                             "' should have same scope as other services implementing this interface '" +

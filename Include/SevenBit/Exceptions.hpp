@@ -45,6 +45,11 @@ namespace sb
         ServiceAlreadyRegisteredException(TypeId typeIndex);
     };
 
+    struct ServiceBaseTypeMissmatchException : public InjectorException
+    {
+        ServiceBaseTypeMissmatchException(TypeId typeIndex, TypeId interface);
+    };
+
     struct ServiceLifeTimeMissmatchException : public InjectorException
     {
         ServiceLifeTimeMissmatchException(TypeId typeIndex, TypeId interface);

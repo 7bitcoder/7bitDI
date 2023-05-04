@@ -19,16 +19,10 @@ namespace sb::internal
 
     INLINE void ServiceDescriptorList::add(ServiceDescriptor descriptor)
     {
+        checkBaseType(descriptor);
         checkIfRegistered(descriptor);
         checkLifeTime(descriptor);
         _serviceDescriptors.emplace_back(std::move(descriptor));
-    }
-
-    INLINE size_t ServiceDescriptorList::remove(TypeId typeId)
-    {
-        return std::erase_if(_serviceDescriptors, [&](ServiceDescriptor &descriptor) {
-            return descriptor.getImplementationTypeId() == typeId;
-        });
     }
 
     INLINE bool ServiceDescriptorList::contains(TypeId typeId)
@@ -39,6 +33,8 @@ namespace sb::internal
     }
 
     INLINE size_t ServiceDescriptorList::size() const { return _serviceDescriptors.size(); }
+
+    INLINE bool ServiceDescriptorList::empty() const { return _serviceDescriptors.empty(); }
 
     INLINE const ServiceDescriptor &ServiceDescriptorList::last() const { return _serviceDescriptors.back(); }
 
@@ -52,12 +48,19 @@ namespace sb::internal
         }
     }
 
+    INLINE void ServiceDescriptorList::checkBaseType(ServiceDescriptor &descriptor)
+    {
+        if (!empty() && descriptor.getServiceTypeId() != getServiceTypeId())
+        {
+            throw ServiceBaseTypeMissmatchException{descriptor.getServiceTypeId(), getServiceTypeId()};
+        }
+    }
+
     INLINE void ServiceDescriptorList::checkLifeTime(ServiceDescriptor &descriptor)
     {
-        if (!_serviceDescriptors.empty() && last().getLifeTime() != descriptor.getLifeTime())
+        if (!empty() && descriptor.getLifeTime() != getLifeTime())
         {
-            throw ServiceLifeTimeMissmatchException{descriptor.getImplementationTypeId(),
-                                                    descriptor.getServiceTypeId()};
+            throw ServiceLifeTimeMissmatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
         }
     }
 
