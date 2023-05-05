@@ -27,20 +27,8 @@ namespace sb
     {
     }
 
-    INLINE ServiceNotRegisteredException::ServiceNotRegisteredException(TypeId typeIndex)
-        : InjectorException{std::string{"Service: '"} + typeIndex.name() + "' was not registered."}
-    {
-    }
-
-    INLINE NotTransientException::NotTransientException(TypeId typeIndex)
-        : InjectorException{std::string{"Service: '"} + typeIndex.name() +
-                            "' is not registered as transient and could not be created."}
-    {
-    }
-
-    INLINE TransientForbidException::TransientForbidException(TypeId typeIndex)
-        : InjectorException{std::string{"Service: '"} + typeIndex.name() +
-                            "' is registered as transient and cannot be saved in DI."}
+    INLINE ServiceNotFoundException::ServiceNotFoundException(TypeId typeIndex, const std::string &reason)
+        : InjectorException{std::string{"Service: '"} + typeIndex.name() + "' was not found, reason: " + reason + "."}
     {
     }
 

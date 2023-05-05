@@ -47,6 +47,7 @@ namespace sb
         template <class TService, class TImplementation = TService>
         static ServiceDescriptor describeSingleton(TImplementation *service)
         {
+            internal::utils::inheritCheck<TService, TImplementation>();
             auto factory = std::make_unique<internal::ExternalServiceFactory<TImplementation>>(service);
             return {typeid(TService), ServiceLifeTime::singleton(), std::move(factory)};
         }
@@ -95,6 +96,7 @@ namespace sb
         template <class TService, class FactoryFcn>
         static ServiceDescriptor describeFromAutoFactory(ServiceLifeTime lifetime, FactoryFcn factoryFcn)
         {
+            checkCopyAndMove<FactoryFcn>();
             if constexpr (std::is_invocable_v<FactoryFcn>)
             {
                 return describeFromFactory<TService>(lifetime, [=](IServiceProvider &) { return factoryFcn(); });
@@ -122,6 +124,14 @@ namespace sb
             using Service =
                 typename std::conditional<std::is_void_v<TService>, typename FactoryType::ServiceType, TService>::type;
             return {typeid(Service), lifetime, std::move(factory)};
+        }
+
+        template <class FactoryFcn> static void checkCopyAndMove()
+        {
+            if constexpr (!std::is_copy_constructible_v<FactoryFcn> || !std::is_move_constructible_v<FactoryFcn>)
+            {
+                static_assert(notSupportedFactory<FactoryFcn>, "Factory function should be movable and copyable.");
+            }
         }
 
         template <class FactoryFcn> static void badFactory()

@@ -32,6 +32,8 @@ namespace sb::internal
 
         const ServiceList *getList(TypeId serviceTypeId) const;
 
+        void clear();
+
         ~ServicesMap();
     };
 

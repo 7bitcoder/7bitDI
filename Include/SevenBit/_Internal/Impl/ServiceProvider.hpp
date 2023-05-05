@@ -2,28 +2,30 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
+#include "SevenBit/Exceptions.hpp"
 #include "SevenBit/ServiceProviderOptions.hpp"
 #include "SevenBit/_Internal/ServiceProvider.hpp"
+#include "SevenBit/_Internal/ServiceProviderRoot.hpp"
 
 namespace sb::internal
 {
-    INLINE ServiceProvider::ServiceProvider(ServiceProviderOptions options, ServiceProvider *root)
-        : _options(std::move(options)), _services(_options.strongDestructionOrder), _root(root)
+    INLINE ServiceProvider::ServiceProvider(IServiceProviderRoot &root, ServiceProviderOptions options)
+        : _root(root), _options(options), _services(_options.strongDestructionOrder)
     {
     }
 
     INLINE IServiceProvider::Ptr ServiceProvider::createScope()
     {
-        return std::unique_ptr<ServiceProvider>(new ServiceProvider{_options, _root});
+        return std::unique_ptr<ServiceProvider>(new ServiceProvider{_root, _options});
     }
 
     INLINE void *ServiceProvider::getService(TypeId serviceTypeId)
     {
-        if (auto list = singletons().getList(serviceTypeId))
+        if (auto list = getSingletons().getList(serviceTypeId))
         {
             return list->first()->get();
         }
-        if (auto list = scoped().getList(serviceTypeId))
+        if (auto list = getScoped().getList(serviceTypeId))
         {
             return list->first()->get();
         }
@@ -36,16 +38,17 @@ namespace sb::internal
         {
             return service;
         }
-        throw ServiceNotRegisteredException{serviceTypeId};
+        throw ServiceNotFoundException{serviceTypeId,
+                                       "Service was not registered or was registered as transient service"};
     }
 
     INLINE std::vector<void *> ServiceProvider::getServices(TypeId serviceTypeId)
     {
-        if (auto list = singletons().getList(serviceTypeId); list && list->isSealed())
+        if (auto list = getSingletons().getList(serviceTypeId); list && list->isSealed())
         {
             return list->getAllServices();
         }
-        if (auto list = scoped().getList(serviceTypeId); list && list->isSealed())
+        if (auto list = getScoped().getList(serviceTypeId); list && list->isSealed())
         {
             return list->getAllServices();
         }
@@ -60,7 +63,8 @@ namespace sb::internal
         {
             return service;
         }
-        throw ServiceNotRegisteredException{serviceTypeId};
+        throw ServiceNotFoundException{serviceTypeId,
+                                       "Service was not registered or was registered as singleton/scoped service"};
     }
 
     INLINE std::vector<void *> ServiceProvider::createServices(TypeId serviceTypeId)
@@ -68,11 +72,13 @@ namespace sb::internal
         return createAll(serviceTypeId);
     }
 
+    INLINE void ServiceProvider::clear() { _services.clear(); }
+
     INLINE void *ServiceProvider::createAndRegister(TypeId serviceTypeId)
     {
-        if (auto descriptor = getDescriptorsMap().getDescriptor(serviceTypeId))
+        if (auto descriptor = getDescriptorsMap().getDescriptorsList(serviceTypeId))
         {
-            return createAndRegister(*descriptor);
+            return createAndRegister(descriptor->last());
         }
         return nullptr;
     }
@@ -88,9 +94,9 @@ namespace sb::internal
 
     INLINE void *ServiceProvider::create(TypeId serviceTypeId)
     {
-        if (auto descriptor = getDescriptorsMap().getDescriptor(serviceTypeId))
+        if (auto descriptor = getDescriptorsMap().getDescriptorsList(serviceTypeId))
         {
-            return create(*descriptor);
+            return create(descriptor->last());
         }
         return nullptr;
     }
@@ -109,10 +115,10 @@ namespace sb::internal
         auto &lifeTime = descriptor.getLifeTime();
         if (lifeTime.isTransient())
         {
-            throw TransientForbidException{descriptor.getServiceTypeId()};
+            return nullptr;
         }
         auto instance = createInstance(descriptor);
-        auto &servicesMap = lifeTime.isSingleton() ? singletons() : scoped();
+        auto &servicesMap = lifeTime.isSingleton() ? getSingletons() : getScoped();
         return servicesMap[descriptor.getServiceTypeId()].add(std::move(instance)).first()->get();
     }
 
@@ -121,9 +127,9 @@ namespace sb::internal
         auto &lifeTime = descriptors.getLifeTime();
         if (lifeTime.isTransient())
         {
-            throw TransientForbidException{descriptors.last().getServiceTypeId()};
+            return {};
         }
-        auto &container = lifeTime.isSingleton() ? singletons() : scoped();
+        auto &container = lifeTime.isSingleton() ? getSingletons() : getScoped();
         ServiceList *serviceList = container.getList(descriptors.getServiceTypeId());
 
         if (!serviceList)
@@ -144,7 +150,7 @@ namespace sb::internal
         auto &lifetime = descriptor.getLifeTime();
         if (!lifetime.isTransient())
         {
-            throw NotTransientException{descriptor.getServiceTypeId()};
+            return nullptr;
         }
         auto instance = createInstance(descriptor);
         return instance->moveOut();
@@ -155,7 +161,7 @@ namespace sb::internal
         std::vector<void *> result;
         if (!descriptors.getLifeTime().isTransient())
         {
-            throw NotTransientException{descriptors.getServiceTypeId()};
+            return result;
         }
         result.reserve(descriptors.size());
         for (auto &descriptor : descriptors)
@@ -178,23 +184,12 @@ namespace sb::internal
         throw InvalidServiceException{descriptor.getImplementationTypeId(), "Service instance is null or is invalid"};
     }
 
-    INLINE const ServiceDescriptorsMap &ServiceProvider::getDescriptorsMap()
-    {
-        if (_root && _root->_descriptorsMap)
-        {
-            return *_root->_descriptorsMap;
-        }
-        throw NullPointnerException{"root cannot be null"};
-    }
+    INLINE const ServiceProviderOptions &ServiceProvider::getOptions() { return _options; }
 
-    INLINE ServicesMap &ServiceProvider::scoped() { return _services; }
+    INLINE ServicesMap &ServiceProvider::getScoped() { return _services; }
 
-    INLINE ServicesMap &ServiceProvider::singletons()
-    {
-        if (_root)
-        {
-            return _root->_services;
-        }
-        throw NullPointnerException{"root cannot be null"};
-    }
+    INLINE ServicesMap &ServiceProvider::getSingletons() { return _root.getSingletons(); }
+
+    INLINE const ServiceDescriptorsMap &ServiceProvider::getDescriptorsMap() { return _root.getDescriptorsMap(); }
+
 } // namespace sb::internal

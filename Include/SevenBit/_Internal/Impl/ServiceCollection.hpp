@@ -9,17 +9,17 @@ namespace sb
 
     INLINE IServiceProvider::Ptr ServiceCollection::buildServiceProvider(ServiceProviderOptions options)
     {
-        return std::make_unique<internal::ServiceProvider>(begin(), end(), options);
+        return std::make_unique<internal::ServiceProviderRoot>(begin(), end(), options);
     }
 
     INLINE ServiceDescriptor &ServiceCollection::at(size_t index) { return _serviceDescriptors.at(index); }
     INLINE const ServiceDescriptor &ServiceCollection::at(size_t index) const { return _serviceDescriptors.at(index); }
 
-    INLINE ServiceDescriptor &ServiceCollection::front() { return _serviceDescriptors.front(); }
-    INLINE const ServiceDescriptor &ServiceCollection::front() const { return _serviceDescriptors.front(); }
+    INLINE ServiceDescriptor &ServiceCollection::first() { return at(0); }
+    INLINE const ServiceDescriptor &ServiceCollection::first() const { return at(0); }
 
-    INLINE ServiceDescriptor &ServiceCollection::back() { return _serviceDescriptors.back(); }
-    INLINE const ServiceDescriptor &ServiceCollection::back() const { return _serviceDescriptors.back(); }
+    INLINE ServiceDescriptor &ServiceCollection::last() { return at(size() - 1); }
+    INLINE const ServiceDescriptor &ServiceCollection::last() const { return at(size() - 1); }
 
     INLINE ServiceDescriptor &ServiceCollection::operator[](size_t index) { return at(index); }
     INLINE const ServiceDescriptor &ServiceCollection::operator[](size_t index) const { return at(index); }

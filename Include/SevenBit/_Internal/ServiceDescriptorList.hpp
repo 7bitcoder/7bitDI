@@ -27,6 +27,9 @@ namespace sb::internal
         auto begin() const { return _serviceDescriptors.begin(); }
         auto end() const { return _serviceDescriptors.end(); }
 
+        auto begin() { return _serviceDescriptors.begin(); }
+        auto end() { return _serviceDescriptors.end(); }
+
         auto rBegin() const { return _serviceDescriptors.rbegin(); }
         auto rEnd() const { return _serviceDescriptors.rend(); }
 

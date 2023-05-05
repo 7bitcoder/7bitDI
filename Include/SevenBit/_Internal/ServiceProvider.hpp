@@ -16,58 +16,47 @@
 #include "SevenBit/_Internal/CircularDependencyGuard.hpp"
 #include "SevenBit/_Internal/ExternalServiceFactory.hpp"
 #include "SevenBit/_Internal/ExternalServiceFcnFactory.hpp"
+#include "SevenBit/_Internal/IServiceProviderRoot.hpp"
 #include "SevenBit/_Internal/ServiceDescriptorList.hpp"
 #include "SevenBit/_Internal/ServiceDescriptorsMap.hpp"
 #include "SevenBit/_Internal/ServicesMap.hpp"
 
 namespace sb::internal
 {
-    class ServiceProvider final : public IServiceProvider
+    class ServiceProvider : public IServiceProvider
     {
       public:
         using Ptr = std::unique_ptr<ServiceProvider>;
 
       private:
-        ServiceProvider *_root = nullptr;
-        ServiceDescriptorsMap::Ptr _descriptorsMap;
+        IServiceProviderRoot &_root;
         ServiceProviderOptions _options;
         ServicesMap _services;
         CircularDependencyGuard _guard;
 
-        ServiceProvider(ServiceProviderOptions options, ServiceProvider *root);
-
       public:
-        template <class TDescriptorIt>
-        ServiceProvider(TDescriptorIt begin, TDescriptorIt end, ServiceProviderOptions options = {})
-            : _descriptorsMap(std::make_unique<ServiceDescriptorsMap>(begin, end)), _options(std::move(options)),
-              _services(_options.strongDestructionOrder), _root(this)
-        {
-            IServiceFactory::Ptr factory{
-                new ExternalServiceFcnFactory{[](IServiceProvider &provider) { return &provider; }}};
-            _descriptorsMap->add(
-                ServiceDescriptor{typeid(IServiceProvider), ServiceLifeTime::scoped(), std::move(factory)});
-            _descriptorsMap->seal();
-        }
-
+        ServiceProvider(IServiceProviderRoot &root, ServiceProviderOptions options);
         ServiceProvider(const ServiceProvider &) = delete;
         ServiceProvider(ServiceProvider &&) = delete;
 
         ServiceProvider &operator=(const ServiceProvider &) = delete;
         ServiceProvider &operator=(ServiceProvider &&) = delete;
 
-        IServiceProvider::Ptr createScope();
+        IServiceProvider::Ptr createScope() override;
 
-        void *getService(TypeId serviceTypeId) final;
+        void *getService(TypeId serviceTypeId) override;
 
-        void *getRequiredService(TypeId serviceTypeId);
+        void *getRequiredService(TypeId serviceTypeId) override;
 
-        std::vector<void *> getServices(TypeId serviceTypeId) final;
+        std::vector<void *> getServices(TypeId serviceTypeId) override;
 
-        void *createService(TypeId serviceTypeId);
+        void *createService(TypeId serviceTypeId) override;
 
-        void *createRequiredService(TypeId serviceTypeId);
+        void *createRequiredService(TypeId serviceTypeId) override;
 
-        std::vector<void *> createServices(TypeId serviceTypeId);
+        std::vector<void *> createServices(TypeId serviceTypeId) override;
+
+        void clear();
 
       private:
         void *createAndRegister(TypeId typeId);
@@ -88,11 +77,13 @@ namespace sb::internal
 
         IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor);
 
+        const ServiceProviderOptions &getOptions();
+
+        ServicesMap &getScoped();
+
+        ServicesMap &getSingletons();
+
         const ServiceDescriptorsMap &getDescriptorsMap();
-
-        ServicesMap &scoped();
-
-        ServicesMap &singletons();
     };
 } // namespace sb::internal
 

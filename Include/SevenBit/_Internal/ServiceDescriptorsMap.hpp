@@ -47,8 +47,6 @@ namespace sb::internal
         void seal();
 
         const ServiceDescriptorList *getDescriptorsList(TypeId typeId) const;
-
-        const ServiceDescriptor *getDescriptor(TypeId typeId) const;
     };
 } // namespace sb::internal
 

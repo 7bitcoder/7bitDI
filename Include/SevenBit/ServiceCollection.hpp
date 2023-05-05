@@ -14,7 +14,7 @@
 #include "SevenBit/ServiceLifeTime.hpp"
 #include "SevenBit/ServiceProviderOptions.hpp"
 #include "SevenBit/TypeId.hpp"
-#include "SevenBit/_Internal/ServiceProvider.hpp"
+#include "SevenBit/_Internal/ServiceProviderRoot.hpp"
 
 namespace sb
 {
@@ -61,11 +61,11 @@ namespace sb
         ServiceDescriptor &at(size_t index);
         const ServiceDescriptor &at(size_t index) const;
 
-        ServiceDescriptor &front();
-        const ServiceDescriptor &front() const;
+        ServiceDescriptor &first();
+        const ServiceDescriptor &first() const;
 
-        ServiceDescriptor &back();
-        const ServiceDescriptor &back() const;
+        ServiceDescriptor &last();
+        const ServiceDescriptor &last() const;
 
         ServiceDescriptor &operator[](size_t index);
         const ServiceDescriptor &operator[](size_t index) const;
@@ -159,7 +159,7 @@ namespace sb
 
         template <class TService, class FactoryFcn> ServiceCollection &add(ServiceLifeTime lifeTime, FactoryFcn factory)
         {
-            return add(ServiceDescriber::describe<TService, FactoryFcn>(lifeTime, std::move(factory)));
+            return add(ServiceDescriber::describeFrom<TService, FactoryFcn>(lifeTime, std::move(factory)));
         }
 
         template <class TService, class FactoryFcn> ServiceCollection &addSingleton(FactoryFcn factory)

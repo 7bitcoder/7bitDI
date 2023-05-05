@@ -35,9 +35,9 @@ namespace sb
         InvalidServiceException(TypeId typeId, const std::string &reason);
     };
 
-    struct ServiceNotRegisteredException : public InjectorException
+    struct ServiceNotFoundException : public InjectorException
     {
-        ServiceNotRegisteredException(TypeId typeIndex);
+        ServiceNotFoundException(TypeId typeIndex, const std::string &reason);
     };
 
     struct ServiceAlreadyRegisteredException : public InjectorException
@@ -53,16 +53,6 @@ namespace sb
     struct ServiceLifeTimeMissmatchException : public InjectorException
     {
         ServiceLifeTimeMissmatchException(TypeId typeIndex, TypeId interface);
-    };
-
-    struct NotTransientException : public InjectorException
-    {
-        NotTransientException(TypeId typeIndex);
-    };
-
-    struct TransientForbidException : public InjectorException
-    {
-        TransientForbidException(TypeId typeIndex);
     };
 
     struct CircularDependencyException : public InjectorException

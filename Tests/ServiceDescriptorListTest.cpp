@@ -5,6 +5,7 @@
 #include "Classes/BasicTest.hpp"
 #include "SevenBit/Exceptions.hpp"
 #include "SevenBit/IServiceFactory.hpp"
+#include "SevenBit/ServiceDescriber.hpp"
 #include "SevenBit/ServiceLifeTime.hpp"
 #include "SevenBit/_Internal/ServiceCtorFactory.hpp"
 #include "SevenBit/_Internal/ServiceDescriptorList.hpp"
@@ -29,28 +30,23 @@ TEST_F(ServiceDescriptorListTest, ShouldAddServiceDescriptors)
 {
     sb::internal::ServiceDescriptorList list;
 
-    auto factory = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass3>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory)});
+    auto act = [&]() {
+        list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
+        list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+        list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
+    };
 
-    auto factory2 = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass4>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory2)});
-
-    auto factory3 = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass5>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory3)});
+    EXPECT_NO_THROW((act()));
 }
 
 TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorAlreadyRegistered)
 {
     sb::internal::ServiceDescriptorList list;
 
-    auto factory = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass3>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory)});
+    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
+    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    auto factory2 = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass5>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory2)});
-
-    auto factory3 = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass5>()};
-    auto act = [&]() { list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory3)}); };
+    auto act = [&]() { list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>()); };
 
     EXPECT_THROW((act()), sb::ServiceAlreadyRegisteredException);
 }
@@ -59,14 +55,10 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorLifeTimeMismatch
 {
     sb::internal::ServiceDescriptorList list;
 
-    auto factory = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass3>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory)});
+    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
+    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    auto factory2 = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass4>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory2)});
-
-    auto factory3 = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass5>()};
-    auto act = [&]() { list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::singleton(), std::move(factory3)}); };
+    auto act = [&]() { list.add(sb::ServiceDescriber::describeScoped<TestInheritClass1, TestInheritClass5>()); };
 
     EXPECT_THROW((act()), sb::ServiceLifeTimeMissmatchException);
 }
@@ -75,14 +67,10 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorBaseTypeMismatch
 {
     sb::internal::ServiceDescriptorList list;
 
-    auto factory = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass3>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory)});
+    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
+    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    auto factory2 = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass4>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory2)});
-
-    auto factory3 = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass5>()};
-    auto act = [&]() { list.add({typeid(TestInheritClass2), sb::ServiceLifeTime::scoped(), std::move(factory3)}); };
+    auto act = [&]() { list.add(sb::ServiceDescriber::describeScoped<TestInheritClass2, TestInheritClass5>()); };
 
     EXPECT_THROW((act()), sb::ServiceBaseTypeMissmatchException);
 }
@@ -91,14 +79,9 @@ TEST_F(ServiceDescriptorListTest, ShouldContainDescriptor)
 {
     sb::internal::ServiceDescriptorList list;
 
-    auto factory = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass3>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory)});
-
-    auto factory2 = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass4>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory2)});
-
-    auto factory3 = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass5>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory3)});
+    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
+    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
 
     EXPECT_TRUE(list.contains(typeid(TestInheritClass5)));
     EXPECT_TRUE(list.contains(typeid(TestInheritClass4)));
@@ -110,14 +93,9 @@ TEST_F(ServiceDescriptorListTest, ShouldReturnProperSize)
 {
     sb::internal::ServiceDescriptorList list;
 
-    auto factory = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass3>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory)});
-
-    auto factory2 = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass4>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory2)});
-
-    auto factory3 = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass5>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory3)});
+    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
+    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
 
     EXPECT_EQ(list.size(), 3);
 }
@@ -126,14 +104,9 @@ TEST_F(ServiceDescriptorListTest, ShouldReturnProperEmpty)
 {
     sb::internal::ServiceDescriptorList list;
 
-    auto factory = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass3>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory)});
-
-    auto factory2 = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass4>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory2)});
-
-    auto factory3 = sb::IServiceFactory::Ptr{new sb::internal::ServiceCtorFactory<TestInheritClass5>()};
-    list.add({typeid(TestInheritClass1), sb::ServiceLifeTime::scoped(), std::move(factory3)});
+    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
+    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
 
     EXPECT_FALSE(list.empty());
 }

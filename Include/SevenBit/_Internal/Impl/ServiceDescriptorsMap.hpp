@@ -27,13 +27,4 @@ namespace sb::internal
         }
         return nullptr;
     }
-
-    INLINE const ServiceDescriptor *ServiceDescriptorsMap::getDescriptor(TypeId typeId) const
-    {
-        if (auto descriptor = getDescriptorsList(typeId))
-        {
-            return &descriptor->last();
-        }
-        return nullptr;
-    }
 } // namespace sb::internal

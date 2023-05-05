@@ -32,16 +32,18 @@ namespace sb::internal
         auto it = _serviceListMap.find(serviceTypeId);
         return it != _serviceListMap.end() ? &it->second : nullptr;
     }
-
-    INLINE ServicesMap::~ServicesMap()
+    INLINE void ServicesMap::clear()
     {
-        if (!_strongDestructionOrder)
+        if (_strongDestructionOrder)
         {
-            return;
+            for (auto it = _constructionOrder.rbegin(); it != _constructionOrder.rend(); ++it)
+            {
+                (*it)->reset();
+            }
         }
-        for (auto it = _constructionOrder.rbegin(); it != _constructionOrder.rend(); ++it)
-        {
-            (*it)->reset();
-        }
+        _constructionOrder.clear();
+        _serviceListMap.clear();
     }
+
+    INLINE ServicesMap::~ServicesMap() { clear(); }
 } // namespace sb::internal
