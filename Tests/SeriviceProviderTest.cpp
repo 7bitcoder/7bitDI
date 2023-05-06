@@ -107,6 +107,39 @@ class SeriviceProviderTest : public ::testing::Test
     static void TearDownTestSuite() {}
 };
 
+// buildServiceProvider Tests
+
+TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToAlreadyRegisteredService)
+{
+    sb::ServiceCollection collection;
+    
+    collection.addSingleton<TestClass1>();
+    collection.addSingleton<TestClass1>();
+    collection.addSingleton<TestClass2>();
+
+    EXPECT_THROW((collection.buildServiceProvider()), sb::ServiceAlreadyRegisteredException);
+}
+
+TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToAlreadyRegisteredInheritedService)
+{
+    collection.addSingleton<TestInheritClass1, TestInheritClass3>();
+    collection.addSingleton<TestInheritClass1, TestInheritClass3>();
+    collection.addSingleton<TestInheritClass1, TestInheritClass4>();
+
+    EXPECT_THROW((collection.buildServiceProvider()), sb::ServiceAlreadyRegisteredException);
+}
+
+TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToLifetimeMissmatchInheritedService)
+{
+    collection.addSingleton<TestInheritClass1, TestInheritClass3>();
+    collection.addSingleton<TestInheritClass1, TestInheritClass5>();
+    collection.addTransient<TestInheritClass1, TestInheritClass4>();
+
+    EXPECT_THROW((collection.buildServiceProvider()), sb::ServiceLifeTimeMissmatchException);
+}
+
+// getService Tests
+
 TEST_F(SeriviceProviderTest, ShouldGetServices)
 {
     auto provider = sb::ServiceCollection{}
@@ -163,6 +196,30 @@ TEST_F(SeriviceProviderTest, ShouldGetCastedInheritedServices)
     EXPECT_FALSE(provider->getService<TestInheritClass4>());
 }
 
+TEST_F(SeriviceProviderTest, ShouldGetOneLastServiceSingleton)
+{
+    auto provider = sb::ServiceCollection{}
+                        .addSingleton<TestInheritClass1, TestInheritClass2>()
+                        .addSingleton<TestInheritClass1, TestInheritClass3>()
+                        .addSingleton<TestInheritClass1, TestInheritClass5>()
+                        .buildServiceProvider();
+
+    EXPECT_TRUE(provider->getService<TestInheritClass1>());
+    EXPECT_EQ(provider->getService<TestInheritClass1>()->number(), 5);
+}
+
+TEST_F(SeriviceProviderTest, ShouldGetOneLastServiceScope)
+{
+    auto provider = sb::ServiceCollection{}
+                        .addScoped<TestInheritClass1, TestInheritClass2>()
+                        .addScoped<TestInheritClass1, TestInheritClass3>()
+                        .addScoped<TestInheritClass1, TestInheritClass5>()
+                        .buildServiceProvider();
+
+    EXPECT_TRUE(provider->getService<TestInheritClass1>());
+    EXPECT_EQ(provider->getService<TestInheritClass1>()->number(), 5);
+}
+
 TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToCircularDependency)
 {
 
@@ -174,32 +231,16 @@ TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToCircularDependency)
     EXPECT_THROW(provider->getService<CircularDependencyA>(), sb::CircularDependencyException);
 }
 
-TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToAlreadyRegisteredService)
+TEST_F(SeriviceProviderTest, ShouldGetSelf)
 {
-    collection.addSingleton<TestClass1>();
-    collection.addSingleton<TestClass1>();
-    collection.addSingleton<TestClass2>();
+    auto provider = sb::ServiceCollection{}.buildServiceProvider();
 
-    EXPECT_THROW((collection.buildServiceProvider()), sb::ServiceAlreadyRegisteredException);
+    auto self = provider->getService<sb::IServiceProvider>();
+    EXPECT_TRUE(self);
+    EXPECT_EQ(self, provider.get());
 }
 
-TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToAlreadyRegisteredInheritedService)
-{
-    collection.addSingleton<TestInheritClass1, TestInheritClass3>();
-    collection.addSingleton<TestInheritClass1, TestInheritClass3>();
-    collection.addSingleton<TestInheritClass1, TestInheritClass4>();
-
-    EXPECT_THROW((collection.buildServiceProvider()), sb::ServiceAlreadyRegisteredException);
-}
-
-TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToLifetimeMissmatchInheritedService)
-{
-    collection.addSingleton<TestInheritClass1, TestInheritClass3>();
-    collection.addSingleton<TestInheritClass1, TestInheritClass5>();
-    collection.addTransient<TestInheritClass1, TestInheritClass4>();
-
-    EXPECT_THROW((collection.buildServiceProvider()), sb::ServiceLifeTimeMissmatchException);
-}
+// getRequiredService Tests
 
 TEST_F(SeriviceProviderTest, ShouldGetRequiredServices)
 {
@@ -261,24 +302,7 @@ TEST_F(SeriviceProviderTest, ShouldGetRequiredCastedInheritedServices)
     EXPECT_THROW(provider->getRequiredService<TestInheritClass4>(), sb::ServiceNotFoundException);
 }
 
-TEST_F(SeriviceProviderTest, ShouldGetSelf)
-{
-    auto provider = sb::ServiceCollection{}.buildServiceProvider();
-
-    auto self = provider->getService<sb::IServiceProvider>();
-    EXPECT_TRUE(self);
-    EXPECT_EQ(self, provider.get());
-}
-
-TEST_F(SeriviceProviderTest, ShouldGetRequiredSelf)
-{
-    auto provider = sb::ServiceCollection{}.buildServiceProvider();
-
-    auto &self = provider->getRequiredService<sb::IServiceProvider>();
-    EXPECT_EQ(&self, provider.get());
-}
-
-TEST_F(SeriviceProviderTest, GetOneLastServiceSingleton)
+TEST_F(SeriviceProviderTest, ShouldGetRequiredOneLastServiceSingleton)
 {
     auto provider = sb::ServiceCollection{}
                         .addSingleton<TestInheritClass1, TestInheritClass2>()
@@ -289,7 +313,7 @@ TEST_F(SeriviceProviderTest, GetOneLastServiceSingleton)
     EXPECT_EQ(provider->getRequiredService<TestInheritClass1>().number(), 5);
 }
 
-TEST_F(SeriviceProviderTest, GetOneLastServiceScope)
+TEST_F(SeriviceProviderTest, ShouldGetRequiredOneLastServiceScope)
 {
     auto provider = sb::ServiceCollection{}
                         .addScoped<TestInheritClass1, TestInheritClass2>()
@@ -300,7 +324,43 @@ TEST_F(SeriviceProviderTest, GetOneLastServiceScope)
     EXPECT_EQ(provider->getRequiredService<TestInheritClass1>().number(), 5);
 }
 
-TEST_F(SeriviceProviderTest, ShouldGetServicesInOrder)
+TEST_F(SeriviceProviderTest, ShouldFailGetRequiredServiceDueToCircularDependency)
+{
+
+    auto provider = sb::ServiceCollection{}
+                        .addSingleton<CircularDependencyA>()
+                        .addScoped<CircularDependencyB>()
+                        .buildServiceProvider();
+
+    EXPECT_THROW(provider->getRequiredService<CircularDependencyA>(), sb::CircularDependencyException);
+}
+
+TEST_F(SeriviceProviderTest, ShouldGetRequiredSelf)
+{
+    auto provider = sb::ServiceCollection{}.buildServiceProvider();
+
+    auto &self = provider->getRequiredService<sb::IServiceProvider>();
+    EXPECT_EQ(&self, provider.get());
+}
+
+
+// getServices Tests
+
+TEST_F(SeriviceProviderTest, ShouldGetMultipleServices)
+{
+    auto provider = sb::ServiceCollection{}
+                        .addSingleton<TestClass1>()
+                        .addScoped<TestClass2>()
+                        .addTransient<TestClass3>()
+                        .buildServiceProvider();
+
+    EXPECT_EQ(provider->getServices(typeid(TestClass1)).size(), 1);
+    EXPECT_EQ(provider->getServices(typeid(TestClass2)).size(), 1);
+    EXPECT_TRUE(provider->getServices(typeid(TestClass3)).empty());
+    EXPECT_TRUE(provider->getServices(typeid(TestClass4)).empty());
+}
+
+TEST_F(SeriviceProviderTest, ShouldGetMultipleServicesInOrder)
 {
     auto provider = sb::ServiceCollection{}
                         .addScoped<TestInheritClass1>()
@@ -311,17 +371,48 @@ TEST_F(SeriviceProviderTest, ShouldGetServicesInOrder)
                         .buildServiceProvider();
 
     auto services = provider->getServices(typeid(TestInheritClass1));
-    auto castedServices = provider->getServices<TestInheritClass1>();
     EXPECT_EQ(services.size(), 5);
-    EXPECT_EQ(castedServices.size(), 5);
-    EXPECT_EQ(castedServices[0]->number(), 1);
-    EXPECT_EQ(castedServices[1]->number(), 2);
-    EXPECT_EQ(castedServices[2]->number(), 3);
-    EXPECT_EQ(castedServices[3]->number(), 4);
-    EXPECT_EQ(castedServices[4]->number(), 5);
+    EXPECT_EQ(static_cast<TestInheritClass1*>(services[0])->number(), 1);
+    EXPECT_EQ(static_cast<TestInheritClass1*>(services[1])->number(), 2);
+    EXPECT_EQ(static_cast<TestInheritClass1*>(services[2])->number(), 3);
+    EXPECT_EQ(static_cast<TestInheritClass1*>(services[3])->number(), 4);
+    EXPECT_EQ(static_cast<TestInheritClass1*>(services[4])->number(), 5);
 }
 
-TEST_F(SeriviceProviderTest, ShouldGetServicesInOrderAfterNormalGet)
+TEST_F(SeriviceProviderTest, ShouldGetMultipleInheritedServices)
+{
+    auto provider = sb::ServiceCollection{}
+                        .addSingleton<TestInheritClass1, TestInheritClass2>()
+                        .addScoped<TestInheritClass2, TestInheritClass3>()
+                        .addTransient<TestInheritClass3, TestInheritClass3>()
+                        .buildServiceProvider();
+
+    EXPECT_EQ(provider->getServices<TestInheritClass1>().size(), 1);
+    EXPECT_EQ(provider->getServices<TestInheritClass2>().size(), 1);
+    EXPECT_TRUE(provider->getServices<TestInheritClass3>().empty());
+    EXPECT_TRUE(provider->getServices<TestInheritClass4>().empty());
+}
+
+TEST_F(SeriviceProviderTest, ShouldGetMultipleCastedServicesInOrder)
+{
+    auto provider = sb::ServiceCollection{}
+                        .addScoped<TestInheritClass1>()
+                        .addScoped<TestInheritClass1, TestInheritClass2>()
+                        .addScoped<TestInheritClass1, TestInheritClass3>()
+                        .addScoped<TestInheritClass1, TestInheritClass4>()
+                        .addScoped<TestInheritClass1, TestInheritClass5>()
+                        .buildServiceProvider();
+
+    auto services = provider->getServices<TestInheritClass1>();
+    EXPECT_EQ(services.size(), 5);
+    EXPECT_EQ(services[0]->number(), 1);
+    EXPECT_EQ(services[1]->number(), 2);
+    EXPECT_EQ(services[2]->number(), 3);
+    EXPECT_EQ(services[3]->number(), 4);
+    EXPECT_EQ(services[4]->number(), 5);
+}
+
+TEST_F(SeriviceProviderTest, ShouldGetMultipleServicesInOrderAfterNormalGet)
 {
     auto provider = sb::ServiceCollection{}
                         .addScoped<TestInheritClass1>()
@@ -342,7 +433,7 @@ TEST_F(SeriviceProviderTest, ShouldGetServicesInOrderAfterNormalGet)
     EXPECT_TRUE(provider->getService<TestInheritClass1>());
 }
 
-TEST_F(SeriviceProviderTest, ShouldGetEmptyServicesForNotExisting)
+TEST_F(SeriviceProviderTest, ShouldGetEmptyMultipleServicesForNotExisting)
 {
     auto provider = sb::ServiceCollection{}.buildServiceProvider();
 
@@ -350,127 +441,267 @@ TEST_F(SeriviceProviderTest, ShouldGetEmptyServicesForNotExisting)
     EXPECT_TRUE(all.empty());
 }
 
-TEST_F(SeriviceProviderTest, ShouldCreateService)
+TEST_F(SeriviceProviderTest, ShouldFailGetMultipleServicesDueToCircularDependency)
 {
-    auto provider = sb::ServiceCollection{}.addTransient<TestClass1>().buildServiceProvider();
+    auto provider = sb::ServiceCollection{}
+                        .addSingleton<CircularDependencyA>()
+                        .addScoped<CircularDependencyB>()
+                        .buildServiceProvider();
 
-    EXPECT_TRUE(provider->createService<TestClass1>());
-    EXPECT_NO_THROW(provider->createService<TestClass1>());
+    EXPECT_THROW(provider->getServices<CircularDependencyA>(), sb::CircularDependencyException);
 }
 
-TEST_F(SeriviceProviderTest, ShouldCreateInheritedService)
+TEST_F(SeriviceProviderTest, ShouldGetSelfMultipleServices)
 {
-    auto provider = sb::ServiceCollection{}.addTransient<TestClass1>().buildServiceProvider();
+    auto provider = sb::ServiceCollection{}.buildServiceProvider();
 
-    EXPECT_TRUE(provider->createService<TestClass1>());
-    EXPECT_NO_THROW(provider->createService<TestClass1>());
+    auto services = provider->getServices<sb::IServiceProvider>();
+    EXPECT_EQ(services.size(), 1);
+    EXPECT_EQ(services[0], provider.get());
 }
 
-TEST_F(SeriviceProviderTest, GetServiceCorrectReferences)
+// createService Tests
+
+TEST_F(SeriviceProviderTest, ShouldCreateServices)
 {
-    collection.addSingleton<SimpleClass>();
-    collection.addScoped<OneRefClass>();
+    auto provider = sb::ServiceCollection{}
+                        .addSingleton<TestClass1>()
+                        .addScoped<TestClass2>()
+                        .addTransient<TestClass3>()
+                        .buildServiceProvider();
 
-    auto provider = collection.buildServiceProvider();
-
-    auto simpleClass = provider->getService<SimpleClass>();
-    EXPECT_TRUE(simpleClass);
-    auto scoped = provider->getService<OneRefClass>();
-    EXPECT_TRUE(scoped);
-    EXPECT_TRUE(scoped->simpleClass);
-    EXPECT_EQ(scoped->simpleClass, simpleClass);
-    EXPECT_EQ(provider->getService<SimpleClass>(), simpleClass);
+    EXPECT_FALSE(provider->createService(typeid(TestClass1)));
+    EXPECT_FALSE(provider->createService(typeid(TestClass2)));
+    EXPECT_TRUE(provider->createService(typeid(TestClass3)));
+    EXPECT_FALSE(provider->createService(typeid(TestClass4)));
 }
 
-TEST_F(SeriviceProviderTest, TransientGetServiceForbidden)
+TEST_F(SeriviceProviderTest, ShouldCreateCastedServices)
 {
-    collection.addTransient<TransientClass>();
+    auto provider = sb::ServiceCollection{}
+                        .addSingleton<TestClass1>()
+                        .addScoped<TestClass2>()
+                        .addTransient<TestClass3>()
+                        .buildServiceProvider();
 
-    auto provider = collection.buildServiceProvider();
-
-    EXPECT_NO_THROW(provider->createService<TransientClass>());
-    EXPECT_TRUE(provider->createService<TransientClass>());
+    EXPECT_FALSE(provider->createService<TestClass1>());
+    EXPECT_FALSE(provider->createService<TestClass2>());
+    EXPECT_TRUE(provider->createService<TestClass3>());
+    EXPECT_FALSE(provider->createService<TestClass4>());
 }
 
-TEST_F(SeriviceProviderTest, TransientReferencesAreUnique)
+TEST_F(SeriviceProviderTest, ShouldCreateInheritedServices)
 {
-    collection.addTransient<TransientClass>();
-    collection.addScoped<TransientRefClass>();
+    auto provider = sb::ServiceCollection{}
+                        .addSingleton<TestInheritClass1, TestInheritClass2>()
+                        .addScoped<TestInheritClass2, TestInheritClass3>()
+                        .addTransient<TestInheritClass3, TestInheritClass3>()
+                        .buildServiceProvider();
 
-    auto provider = collection.buildServiceProvider();
-
-    auto scoped = provider->getService<TransientRefClass>();
-    EXPECT_TRUE(scoped);
-    EXPECT_NE(scoped->transient, provider->createService<TransientClass>());
-    EXPECT_NE(provider->createService<TransientClass>(), provider->createService<TransientClass>());
+    EXPECT_FALSE(provider->createService(typeid(TestInheritClass1)));
+    EXPECT_FALSE(provider->createService(typeid(TestInheritClass2)));
+    EXPECT_TRUE(provider->createService(typeid(TestInheritClass3)));
+    EXPECT_FALSE(provider->createService(typeid(TestInheritClass4)));
 }
 
-TEST_F(SeriviceProviderTest, CreateInheritedTransientServices)
+TEST_F(SeriviceProviderTest, ShouldCreateCastedInheritedServices)
 {
-    collection.addTransient<IInheranceClass, InheranceClassA>();
-    collection.addTransient<IInheranceClass, InheranceClassB>();
-    collection.addTransient<IInheranceClass, LongInheritanceC>();
+    auto provider = sb::ServiceCollection{}
+                        .addSingleton<TestInheritClass1, TestInheritClass2>()
+                        .addScoped<TestInheritClass2, TestInheritClass3>()
+                        .addTransient<TestInheritClass3, TestInheritClass3>()
+                        .buildServiceProvider();
 
-    auto provider = collection.buildServiceProvider();
-
-    auto last = provider->createService<IInheranceClass>();
-    EXPECT_EQ(last->getName(), "C");
+    EXPECT_FALSE(provider->createService<TestInheritClass1>());
+    EXPECT_FALSE(provider->createService<TestInheritClass2>());
+    EXPECT_TRUE(provider->createService<TestInheritClass3>());
+    EXPECT_FALSE(provider->createService<TestInheritClass4>());
 }
 
-TEST_F(SeriviceProviderTest, CreateAllInheritedTransientServices)
+TEST_F(SeriviceProviderTest, ShouldFailCreateServiceDueToCircularDependency)
 {
-    collection.addTransient<IInheranceClass, InheranceClassA>();
-    collection.addTransient<IInheranceClass, InheranceClassB>();
-    collection.addTransient<IInheranceClass, LongInheritanceC>();
+    auto provider = sb::ServiceCollection{}
+                        .addTransient<CircularDependencyA>()
+                        .addTransient<CircularDependencyB>()
+                        .buildServiceProvider();
 
-    auto provider = collection.buildServiceProvider();
-
-    provider->createServices<IInheranceClass>();
-    auto all = provider->createServices<IInheranceClass>();
-    EXPECT_EQ(all.size(), 3);
-    EXPECT_EQ(all[0]->getName(), "A");
-    EXPECT_EQ(all[1]->getName(), "B");
-    EXPECT_EQ(all[2]->getName(), "C");
+    EXPECT_THROW(provider->createService<CircularDependencyA>(), sb::CircularDependencyException);
 }
 
-TEST_F(SeriviceProviderTest, CreateAllTransientServicesMustBeUnique)
+TEST_F(SeriviceProviderTest, ShouldNotCreateSelf)
 {
-    collection.addTransient<IInheranceClass, InheranceClassA>();
-    collection.addTransient<IInheranceClass, InheranceClassB>();
-    collection.addTransient<IInheranceClass, LongInheritanceC>();
-    collection.addScoped<InheritanceTransientAllRef>();
+    auto provider = sb::ServiceCollection{}.buildServiceProvider();
 
-    auto provider = collection.buildServiceProvider();
-
-    provider->createServices<IInheranceClass>();
-    auto all = provider->createServices<IInheranceClass>();
-    auto &ref = provider->getRequiredService<InheritanceTransientAllRef>();
-    auto &allRef = ref.inheritances;
-
-    // contains diff references
-    EXPECT_EQ(all.size(), allRef.size());
-    EXPECT_NE(all[2], allRef[0]);
-    EXPECT_NE(all[1], allRef[1]);
-    EXPECT_NE(all[0], allRef[2]);
+    EXPECT_FALSE(provider->createService<sb::IServiceProvider>());
 }
 
-TEST_F(SeriviceProviderTest, MakeScopedProvider)
+// createRequiredService Tests
+
+TEST_F(SeriviceProviderTest, ShouldCreateRequiredServices)
 {
-    collection.addSingleton<IInheranceClass, InheranceClassA>();
-    collection.addSingleton<IInheranceClass, InheranceClassB>();
-    collection.addSingleton<IInheranceClass, LongInheritanceC>();
-    collection.addScoped<InheritanceTransientAllRef>();
-    collection.addScoped<SimpleClass>();
-    collection.addScoped<OneRefClass>();
-    collection.addTransient<TransientClass>();
+    auto provider = sb::ServiceCollection{}
+                        .addSingleton<TestClass1>()
+                        .addScoped<TestClass2>()
+                        .addTransient<TestClass3>()
+                        .buildServiceProvider();
 
-    auto provider = collection.buildServiceProvider();
+    EXPECT_THROW(provider->createRequiredService(typeid(TestClass1)), sb::ServiceNotFoundException);
+    EXPECT_THROW(provider->createRequiredService(typeid(TestClass2)), sb::ServiceNotFoundException);
+    EXPECT_NO_THROW(provider->createRequiredService(typeid(TestClass3)));
+    EXPECT_TRUE(provider->createRequiredService(typeid(TestClass3)));
+    EXPECT_THROW(provider->createRequiredService(typeid(TestClass4)), sb::ServiceNotFoundException);
+}
 
-    auto scoped = provider->createScope();
+TEST_F(SeriviceProviderTest, ShouldCreateRequiredCastedServices)
+{
+    auto provider = sb::ServiceCollection{}
+                        .addSingleton<TestClass1>()
+                        .addScoped<TestClass2>()
+                        .addTransient<TestClass3>()
+                        .buildServiceProvider();
 
-    scoped->getService<IInheranceClass>();
-    provider->getService<IInheranceClass>();
-    EXPECT_EQ(scoped->getService<IInheranceClass>(), provider->getService<IInheranceClass>());
-    EXPECT_NE(scoped->getService<OneRefClass>(), provider->getService<OneRefClass>());
-    EXPECT_NE(scoped->createService<TransientClass>(), provider->createService<TransientClass>());
+    EXPECT_THROW(provider->createRequiredService<TestClass1>(), sb::ServiceNotFoundException);
+    EXPECT_THROW(provider->createRequiredService<TestClass2>(), sb::ServiceNotFoundException);
+    EXPECT_NO_THROW(provider->createRequiredService<TestClass3>());
+    EXPECT_THROW(provider->createRequiredService<TestClass4>(), sb::ServiceNotFoundException);
+}
+
+TEST_F(SeriviceProviderTest, ShouldCreateRequiredInheritedServices)
+{
+    auto provider = sb::ServiceCollection{}
+                        .addSingleton<TestInheritClass1, TestInheritClass2>()
+                        .addScoped<TestInheritClass2, TestInheritClass3>()
+                        .addTransient<TestInheritClass3, TestInheritClass3>()
+                        .buildServiceProvider();
+
+    EXPECT_THROW(provider->createRequiredService(typeid(TestInheritClass1)), sb::ServiceNotFoundException);
+    EXPECT_THROW(provider->createRequiredService(typeid(TestInheritClass2)), sb::ServiceNotFoundException);
+    EXPECT_NO_THROW(provider->createRequiredService(typeid(TestInheritClass3)));
+    EXPECT_TRUE(provider->createRequiredService(typeid(TestInheritClass3)));
+    EXPECT_THROW(provider->createRequiredService(typeid(TestInheritClass4)), sb::ServiceNotFoundException);
+}
+
+TEST_F(SeriviceProviderTest, ShouldCreateRequiredCastedInheritedServices)
+{
+    auto provider = sb::ServiceCollection{}
+                        .addSingleton<TestInheritClass1, TestInheritClass2>()
+                        .addScoped<TestInheritClass2, TestInheritClass3>()
+                        .addTransient<TestInheritClass3, TestInheritClass3>()
+                        .buildServiceProvider();
+
+    EXPECT_THROW(provider->createRequiredService<TestInheritClass1>(), sb::ServiceNotFoundException);
+    EXPECT_THROW(provider->createRequiredService<TestInheritClass2>(), sb::ServiceNotFoundException);
+    EXPECT_NO_THROW(provider->createRequiredService<TestInheritClass3>());
+    EXPECT_THROW(provider->createRequiredService<TestInheritClass4>(), sb::ServiceNotFoundException);
+}
+
+TEST_F(SeriviceProviderTest, ShouldFailCreateRequiredServiceDueToCircularDependency)
+{
+    auto provider = sb::ServiceCollection{}
+                        .addTransient<CircularDependencyA>()
+                        .addTransient<CircularDependencyB>()
+                        .buildServiceProvider();
+
+    EXPECT_THROW(provider->createRequiredService<CircularDependencyA>(), sb::CircularDependencyException);
+}
+
+TEST_F(SeriviceProviderTest, ShouldNotCreateRequiredSelf)
+{
+    auto provider = sb::ServiceCollection{}.buildServiceProvider();
+
+    EXPECT_THROW(provider->createRequiredService<sb::IServiceProvider>(), sb::ServiceNotFoundException);
+}
+
+// createServices Tests
+
+TEST_F(SeriviceProviderTest, ShouldCreateMultipleServices)
+{
+    auto provider = sb::ServiceCollection{}
+                        .addSingleton<TestClass1>()
+                        .addScoped<TestClass2>()
+                        .addTransient<TestClass3>()
+                        .buildServiceProvider();
+
+    EXPECT_TRUE(provider->createServices(typeid(TestClass1)).empty());
+    EXPECT_TRUE(provider->createServices(typeid(TestClass2)).empty());
+    EXPECT_EQ(provider->createServices(typeid(TestClass3)).size(), 1);
+    EXPECT_TRUE(provider->createServices(typeid(TestClass4)).empty());
+}
+
+TEST_F(SeriviceProviderTest, ShouldCreateMultipleServicesInOrder)
+{
+    auto provider = sb::ServiceCollection{}
+                        .addTransient<TestInheritClass1>()
+                        .addTransient<TestInheritClass1, TestInheritClass2>()
+                        .addTransient<TestInheritClass1, TestInheritClass3>()
+                        .addTransient<TestInheritClass1, TestInheritClass4>()
+                        .addTransient<TestInheritClass1, TestInheritClass5>()
+                        .buildServiceProvider();
+
+    auto services = provider->createServices(typeid(TestInheritClass1));
+    EXPECT_EQ(services.size(), 5);
+    EXPECT_EQ(static_cast<TestInheritClass1*>(services[0])->number(), 1);
+    EXPECT_EQ(static_cast<TestInheritClass1*>(services[1])->number(), 2);
+    EXPECT_EQ(static_cast<TestInheritClass1*>(services[2])->number(), 3);
+    EXPECT_EQ(static_cast<TestInheritClass1*>(services[3])->number(), 4);
+    EXPECT_EQ(static_cast<TestInheritClass1*>(services[4])->number(), 5);
+}
+
+TEST_F(SeriviceProviderTest, ShouldCreateMultipleInheritedServices)
+{
+    auto provider = sb::ServiceCollection{}
+                        .addSingleton<TestInheritClass1, TestInheritClass2>()
+                        .addScoped<TestInheritClass2, TestInheritClass3>()
+                        .addTransient<TestInheritClass3, TestInheritClass3>()
+                        .buildServiceProvider();
+
+    EXPECT_TRUE(provider->createServices<TestInheritClass1>().empty());
+    EXPECT_TRUE(provider->createServices<TestInheritClass2>().empty());
+    EXPECT_EQ(provider->createServices<TestInheritClass3>().size(), 1);
+    EXPECT_TRUE(provider->createServices<TestInheritClass4>().empty());
+}
+
+TEST_F(SeriviceProviderTest, ShouldCreateMultipleCastedServicesInOrder)
+{
+    auto provider = sb::ServiceCollection{}
+                        .addTransient<TestInheritClass1>()
+                        .addTransient<TestInheritClass1, TestInheritClass2>()
+                        .addTransient<TestInheritClass1, TestInheritClass3>()
+                        .addTransient<TestInheritClass1, TestInheritClass4>()
+                        .addTransient<TestInheritClass1, TestInheritClass5>()
+                        .buildServiceProvider();
+
+    auto services = provider->createServices<TestInheritClass1>();
+    EXPECT_EQ(services.size(), 5);
+    EXPECT_EQ(services[0]->number(), 1);
+    EXPECT_EQ(services[1]->number(), 2);
+    EXPECT_EQ(services[2]->number(), 3);
+    EXPECT_EQ(services[3]->number(), 4);
+    EXPECT_EQ(services[4]->number(), 5);
+}
+
+TEST_F(SeriviceProviderTest, ShouldCreateEmptyMultipleServicesForNotExisting)
+{
+    auto provider = sb::ServiceCollection{}.buildServiceProvider();
+
+    auto all = provider->createServices<TestClass1>();
+    EXPECT_TRUE(all.empty());
+}
+
+TEST_F(SeriviceProviderTest, ShouldFaildCreateMultipleServicesDueToCircularDependency)
+{
+    auto provider = sb::ServiceCollection{}
+                        .addTransient<CircularDependencyA>()
+                        .addTransient<CircularDependencyB>()
+                        .buildServiceProvider();
+
+    EXPECT_THROW(provider->createServices<CircularDependencyA>(), sb::CircularDependencyException);
+}
+
+TEST_F(SeriviceProviderTest, ShouldFailCreateSelfMultipleServices)
+{
+    auto provider = sb::ServiceCollection{}.buildServiceProvider();
+
+    auto services = provider->createServices<sb::IServiceProvider>();
+    EXPECT_TRUE(services.empty());
 }

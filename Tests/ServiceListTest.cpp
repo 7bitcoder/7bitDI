@@ -44,7 +44,6 @@ TEST_F(ServiceListTest, ShouldAddServices)
 
 TEST_F(ServiceListTest, ShouldFailAddNullService)
 {
-    TestClass1 test;
     sb::internal::ServiceList list;
 
     sb::IServiceInstance::Ptr instance{nullptr};
@@ -55,7 +54,6 @@ TEST_F(ServiceListTest, ShouldFailAddNullService)
 
 TEST_F(ServiceListTest, ShouldFailAddInvalidService)
 {
-    TestClass1 test;
     sb::internal::ServiceList list;
 
     sb::IServiceInstance::Ptr instance{new sb::internal::ServiceOwner<TestClass1>{nullptr}};

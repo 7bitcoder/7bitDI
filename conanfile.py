@@ -11,7 +11,3 @@ class SevenBitInjectorRecipe(ConanFile):
 
     def requirements(self):
         self.requires("gtest/cci.20210126")
-        self.requires("benchmark/1.7.1")
-
-    def validate(self):
-        check_min_cppstd(self, "17")

@@ -54,7 +54,6 @@ TEST_F(ServiceFcnFactoryTest, ShouldCreateService)
 
 TEST_F(ServiceFcnFactoryTest, ShouldCloneFactory)
 {
-    TestClass1 test;
     ServiceProviderMock mock;
     auto fcn = [&](sb::IServiceProvider &) { return std::make_unique<TestClass1>(); };
     sb::internal::ServiceFcnFactory factory{fcn};
