@@ -49,7 +49,7 @@ else() # headerOnly
     set(SEVEN_BIT_INJECTOR_HEADER_ONLY_LIB ON)
 endif()
 
-configure_file(Include/SevenBit/CmakeDef.hpp.input ${PROJECT_SOURCE_DIR}/Include/SevenBit/CmakeDef.hpp)
+configure_file(Include/SevenBit/DI/CmakeDef.hpp.input ${PROJECT_SOURCE_DIR}/Include/SevenBit/DI/CmakeDef.hpp)
 
 message(STATUS "======= 7BitInjector version: ${SEVEN_BIT_INJECTOR_VERSION} =======")
 message(STATUS "======= 7BitInjector build as ${BUILD_LIBRARY_TYPE} library =======")

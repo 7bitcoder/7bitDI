@@ -3,7 +3,7 @@
 #include <memory>
 
 using namespace std;
-using namespace sb;
+using namespace sb::di;
 
 class Service
 {

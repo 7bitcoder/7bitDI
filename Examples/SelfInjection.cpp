@@ -1,7 +1,7 @@
 #include "SevenBitRest.hpp"
 
 using namespace std::string_literals;
-using namespace sb;
+using namespace sb::di;
 
 struct SingletonService
 {

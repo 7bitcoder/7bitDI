@@ -3,12 +3,12 @@
 
 #include "Classes/BasicInherit.hpp"
 #include "Classes/BasicTest.hpp"
-#include "SevenBit/Details/ServiceCtorFactory.hpp"
-#include "SevenBit/Details/ServiceDescriptorList.hpp"
-#include "SevenBit/Exceptions.hpp"
-#include "SevenBit/IServiceFactory.hpp"
-#include "SevenBit/ServiceDescriber.hpp"
-#include "SevenBit/ServiceLifeTime.hpp"
+#include "SevenBit/DI/Details/ServiceCtorFactory.hpp"
+#include "SevenBit/DI/Details/ServiceDescriptorList.hpp"
+#include "SevenBit/DI/Exceptions.hpp"
+#include "SevenBit/DI/IServiceFactory.hpp"
+#include "SevenBit/DI/ServiceDescriber.hpp"
+#include "SevenBit/DI/ServiceLifeTime.hpp"
 
 class ServiceDescriptorListTest : public ::testing::Test
 {
@@ -28,12 +28,12 @@ class ServiceDescriptorListTest : public ::testing::Test
 
 TEST_F(ServiceDescriptorListTest, ShouldAddServiceDescriptors)
 {
-    sb::details::ServiceDescriptorList list;
+    sb::di::details::ServiceDescriptorList list;
 
     auto act = [&]() {
-        list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
-        list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
-        list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
+        list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
+        list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+        list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
     };
 
     EXPECT_NO_THROW((act()));
@@ -41,35 +41,35 @@ TEST_F(ServiceDescriptorListTest, ShouldAddServiceDescriptors)
 
 TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorLifeTimeMismatch)
 {
-    sb::details::ServiceDescriptorList list;
+    sb::di::details::ServiceDescriptorList list;
 
-    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
-    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
+    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    auto act = [&]() { list.add(sb::ServiceDescriber::describeScoped<TestInheritClass1, TestInheritClass5>()); };
+    auto act = [&]() { list.add(sb::di::ServiceDescriber::describeScoped<TestInheritClass1, TestInheritClass5>()); };
 
-    EXPECT_THROW((act()), sb::ServiceLifeTimeMissmatchException);
+    EXPECT_THROW((act()), sb::di::ServiceLifeTimeMissmatchException);
 }
 
 TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorBaseTypeMismatch)
 {
-    sb::details::ServiceDescriptorList list;
+    sb::di::details::ServiceDescriptorList list;
 
-    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
-    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
+    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    auto act = [&]() { list.add(sb::ServiceDescriber::describeScoped<TestInheritClass2, TestInheritClass5>()); };
+    auto act = [&]() { list.add(sb::di::ServiceDescriber::describeScoped<TestInheritClass2, TestInheritClass5>()); };
 
-    EXPECT_THROW((act()), sb::ServiceBaseTypeMissmatchException);
+    EXPECT_THROW((act()), sb::di::ServiceBaseTypeMissmatchException);
 }
 
 TEST_F(ServiceDescriptorListTest, ShouldContainDescriptor)
 {
-    sb::details::ServiceDescriptorList list;
+    sb::di::details::ServiceDescriptorList list;
 
-    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
-    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
-    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
+    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
+    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
 
     EXPECT_TRUE(list.contains(typeid(TestInheritClass5)));
     EXPECT_TRUE(list.contains(typeid(TestInheritClass4)));
@@ -79,22 +79,22 @@ TEST_F(ServiceDescriptorListTest, ShouldContainDescriptor)
 
 TEST_F(ServiceDescriptorListTest, ShouldReturnProperSize)
 {
-    sb::details::ServiceDescriptorList list;
+    sb::di::details::ServiceDescriptorList list;
 
-    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
-    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
-    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
+    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
+    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
 
     EXPECT_EQ(list.size(), 3);
 }
 
 TEST_F(ServiceDescriptorListTest, ShouldReturnProperEmpty)
 {
-    sb::details::ServiceDescriptorList list;
+    sb::di::details::ServiceDescriptorList list;
 
-    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
-    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
-    list.add(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
+    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
+    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
 
     EXPECT_FALSE(list.empty());
 }

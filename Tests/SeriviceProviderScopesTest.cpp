@@ -6,14 +6,12 @@
 #include "Classes/BasicInherit.hpp"
 #include "Classes/BasicTest.hpp"
 #include "Classes/CirularDependency.hpp"
-#include "SevenBit/Exceptions.hpp"
-#include "SevenBit/ServiceCollection.hpp"
+#include "SevenBit/DI/Exceptions.hpp"
+#include "SevenBit/DI/ServiceCollection.hpp"
 
 class SeriviceProviderScopesTest : public ::testing::Test
 {
   protected:
-    sb::ServiceCollection collection;
-
     static void SetUpTestSuite() {}
 
     SeriviceProviderScopesTest() {}
@@ -29,7 +27,7 @@ class SeriviceProviderScopesTest : public ::testing::Test
 
 TEST_F(SeriviceProviderScopesTest, MakeScopedProvider)
 {
-    auto provider = sb::ServiceCollection{}
+    auto provider = sb::di::ServiceCollection{}
                         .addSingleton<TestClass1>()
                         .addSingleton<TestClass2>()
                         .addSingleton<TestClass3>()
@@ -40,7 +38,7 @@ TEST_F(SeriviceProviderScopesTest, MakeScopedProvider)
 
 TEST_F(SeriviceProviderScopesTest, CheckServicesRefWithScopedProvider)
 {
-    auto provider = sb::ServiceCollection{}
+    auto provider = sb::di::ServiceCollection{}
                         .addSingleton<TestClass1>()
                         .addScoped<TestClass2>()
                         .addTransient<TestClass3>()

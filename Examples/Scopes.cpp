@@ -2,7 +2,7 @@
 
 using namespace std;
 using namespace string_literals;
-using namespace sb;
+using namespace sb::di;
 
 struct SingletonService
 {

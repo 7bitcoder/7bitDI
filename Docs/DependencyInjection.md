@@ -17,7 +17,7 @@ Transient services are always different, a new instance is provided to every ser
 
 using namespace std;
 using namespace string_literals;
-using namespace sb;
+using namespace sb::di;
 
 struct SingletonService
 {
@@ -57,7 +57,7 @@ This example shows how scope of service works by comparing pointers between diff
 
 using namespace std;
 using namespace std::string_literals;
-using namespace sb;
+using namespace sb::di;
 
 std::string tabs(size_t indentation) { return string(indentation, '\t'); }
 
@@ -195,7 +195,7 @@ Services can be registered and injected by interfaces.
 #include "SevenBitRest.hpp"
 
 using namespace std;
-using namespace sb;
+using namespace sb::di;
 
 struct IServiceA
 {
@@ -263,7 +263,7 @@ Multiple services can inherit one interface and can be injected using vector.
 #include "SevenBitRest.hpp"
 
 using namespace std;
-using namespace sb;
+using namespace sb::di;
 
 struct IWorker
 {
@@ -358,7 +358,7 @@ Example:
 
 using namespace std;
 using namespace string_literals;
-using namespace sb;
+using namespace sb::di;
 
 struct SingletonService
 {
@@ -406,7 +406,7 @@ Service Provider object can be injected and can be used to manually get (scoped/
 #include "SevenBitRest.hpp"
 
 using namespace std::string_literals;
-using namespace sb;
+using namespace sb::di;
 
 struct SingletonService
 {
@@ -453,7 +453,7 @@ Factory function can be provided to manually create a service. Function should r
 #include <memory>
 
 using namespace std;
-using namespace sb;
+using namespace sb::di;
 
 class Service
 {

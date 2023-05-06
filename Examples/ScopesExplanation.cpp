@@ -2,7 +2,7 @@
 
 using namespace std;
 using namespace std::string_literals;
-using namespace sb;
+using namespace sb::di;
 
 std::string tabs(size_t indentation) { return string(indentation, '\t'); }
 

@@ -1,7 +1,7 @@
 #include "SevenBitRest.hpp"
 
 using namespace std;
-using namespace sb;
+using namespace sb::di;
 
 struct IServiceA
 {

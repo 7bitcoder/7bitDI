@@ -2,16 +2,18 @@
 
 #include <gmock/gmock.h>
 
-#include "SevenBit/IServiceInstance.hpp"
-#include "SevenBit/IServiceProvider.hpp"
+#include "SevenBit/DI/IServiceInstance.hpp"
+#include "SevenBit/DI/IServiceProvider.hpp"
 
-struct ServiceProviderMock : public sb::IServiceProvider
+struct ServiceProviderMock : public sb::di::IServiceProvider
 {
-    MOCK_METHOD((sb::IServiceProvider::Ptr), createScope, (), (override));
-    MOCK_METHOD((const sb::IServiceInstance *), tryGetInstance, (sb::TypeId serviceTypeId), (override));
-    MOCK_METHOD((const sb::IServiceInstance &), getInstance, (sb::TypeId serviceTypeId), (override));
-    MOCK_METHOD((std::vector<const sb::IServiceInstance *>), getInstances, (sb::TypeId serviceTypeId), (override));
-    MOCK_METHOD((sb::IServiceInstance::Ptr), tryCreateInstance, (sb::TypeId serviceTypeId), (override));
-    MOCK_METHOD((sb::IServiceInstance::Ptr), createInstance, (sb::TypeId serviceTypeId), (override));
-    MOCK_METHOD((std::vector<sb::IServiceInstance::Ptr>), createInstances, (sb::TypeId serviceTypeId), (override));
+    MOCK_METHOD((sb::di::IServiceProvider::Ptr), createScope, (), (override));
+    MOCK_METHOD((const sb::di::IServiceInstance *), tryGetInstance, (sb::di::TypeId serviceTypeId), (override));
+    MOCK_METHOD((const sb::di::IServiceInstance &), getInstance, (sb::di::TypeId serviceTypeId), (override));
+    MOCK_METHOD((std::vector<const sb::di::IServiceInstance *>), getInstances, (sb::di::TypeId serviceTypeId),
+                (override));
+    MOCK_METHOD((sb::di::IServiceInstance::Ptr), tryCreateInstance, (sb::di::TypeId serviceTypeId), (override));
+    MOCK_METHOD((sb::di::IServiceInstance::Ptr), createInstance, (sb::di::TypeId serviceTypeId), (override));
+    MOCK_METHOD((std::vector<sb::di::IServiceInstance::Ptr>), createInstances, (sb::di::TypeId serviceTypeId),
+                (override));
 };
