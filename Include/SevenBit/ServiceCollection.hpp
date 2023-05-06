@@ -8,13 +8,13 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
+#include "SevenBit/Details/ServiceProviderRoot.hpp"
 #include "SevenBit/IServiceFactory.hpp"
 #include "SevenBit/ServiceDescriber.hpp"
 #include "SevenBit/ServiceDescriptor.hpp"
 #include "SevenBit/ServiceLifeTime.hpp"
 #include "SevenBit/ServiceProviderOptions.hpp"
 #include "SevenBit/TypeId.hpp"
-#include "SevenBit/_Internal/ServiceProviderRoot.hpp"
 
 namespace sb
 {
@@ -196,5 +196,5 @@ namespace sb
 } // namespace sb
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#include "SevenBit/_Internal/Impl/ServiceCollection.hpp"
+#include "SevenBit/Details/Impl/ServiceCollection.hpp"
 #endif

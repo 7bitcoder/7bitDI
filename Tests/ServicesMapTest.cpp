@@ -6,10 +6,10 @@
 #include "Classes/BasicInheritDesctuction.hpp"
 #include "Classes/BasicTest.hpp"
 #include "Mocks/ServiceProviderMock.hpp"
+#include "SevenBit/Details/ExternalService.hpp"
+#include "SevenBit/Details/ServicesMap.hpp"
 #include "SevenBit/ServiceDescriber.hpp"
 #include "SevenBit/ServiceDescriptor.hpp"
-#include "SevenBit/_Internal/ExternalService.hpp"
-#include "SevenBit/_Internal/ServicesMap.hpp"
 
 class ServicesMapTest : public ::testing::Test
 {
@@ -29,10 +29,10 @@ class ServicesMapTest : public ::testing::Test
 
 TEST_F(ServicesMapTest, ShouldAdd)
 {
-    sb::internal::ServicesMap map{false};
+    sb::details::ServicesMap map{false};
 
     TestClass1 test;
-    sb::IServiceInstance::Ptr instance{new sb::internal::ExternalService{&test}};
+    sb::IServiceInstance::Ptr instance{new sb::details::ExternalService{&test}};
     auto act = [&]() { map.add(typeid(TestClass1), std::move(instance)); };
 
     EXPECT_NO_THROW((act()));
@@ -40,14 +40,14 @@ TEST_F(ServicesMapTest, ShouldAdd)
 
 TEST_F(ServicesMapTest, ShouldFindList)
 {
-    sb::internal::ServicesMap map{false};
+    sb::details::ServicesMap map{false};
 
     TestInheritClass3 test;
-    sb::IServiceInstance::Ptr instance{new sb::internal::ExternalService{&test}};
+    sb::IServiceInstance::Ptr instance{new sb::details::ExternalService{&test}};
     map.add(typeid(TestInheritClass1), std::move(instance));
 
     TestInheritClass2 test2;
-    sb::IServiceInstance::Ptr instance2{new sb::internal::ExternalService{&test2}};
+    sb::IServiceInstance::Ptr instance2{new sb::details::ExternalService{&test2}};
     map.add(typeid(TestInheritClass1), std::move(instance2));
 
     auto list = map.getList(typeid(TestInheritClass1));
@@ -63,7 +63,7 @@ TEST_F(ServicesMapTest, ShouldFindList)
 TEST_F(ServicesMapTest, ShouldDestructInProperOrder)
 {
     ServiceProviderMock mock;
-    sb::internal::ServicesMap map{true};
+    sb::details::ServicesMap map{true};
 
     struct DestructionOrderCheck
     {

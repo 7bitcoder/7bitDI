@@ -2,9 +2,9 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
-#include "SevenBit/_Internal/CircularDependencyGuard.hpp"
+#include "SevenBit/Details/CircularDependencyGuard.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
     INLINE ScopedGuard CircularDependencyGuard::spawnGuard(TypeId typeIdUnderConstruction)
     {
@@ -16,4 +16,4 @@ namespace sb::internal
         return spawnGuard(typeIdUnderConstruction);
     }
 
-} // namespace sb::internal
+} // namespace sb::details

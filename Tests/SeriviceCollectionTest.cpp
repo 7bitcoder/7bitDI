@@ -6,12 +6,12 @@
 
 #include "Classes/BasicInherit.hpp"
 #include "Classes/BasicTest.hpp"
+#include "SevenBit/Details/ServiceProvider.hpp"
 #include "SevenBit/IServiceProvider.hpp"
 #include "SevenBit/ServiceCollection.hpp"
 #include "SevenBit/ServiceDescriber.hpp"
 #include "SevenBit/ServiceDescriptor.hpp"
 #include "SevenBit/ServiceLifeTime.hpp"
-#include "SevenBit/_Internal/ServiceProvider.hpp"
 
 class SeriviceCollectionTest : public ::testing::Test
 {

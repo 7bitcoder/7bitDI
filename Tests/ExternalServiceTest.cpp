@@ -2,8 +2,8 @@
 #include <iostream>
 
 #include "Classes/BasicTest.hpp"
+#include "SevenBit/Details/ExternalService.hpp"
 #include "SevenBit/Exceptions.hpp"
-#include "SevenBit/_Internal/ExternalService.hpp"
 
 class ExternalServiceTest : public ::testing::Test
 {
@@ -24,7 +24,7 @@ class ExternalServiceTest : public ::testing::Test
 TEST_F(ExternalServiceTest, ShouldProperelyCreateExternalService)
 {
     TestClass1 test;
-    sb::internal::ExternalService external{&test};
+    sb::details::ExternalService external{&test};
 
     EXPECT_TRUE(external);
     EXPECT_TRUE(external.isValid());
@@ -35,7 +35,7 @@ TEST_F(ExternalServiceTest, ShouldProperelyCreateExternalService)
 TEST_F(ExternalServiceTest, ShouldProperelyCreateExternalNullService)
 {
     TestClass1 test;
-    sb::internal::ExternalService<TestClass1> external{nullptr};
+    sb::details::ExternalService<TestClass1> external{nullptr};
 
     EXPECT_FALSE(external);
     EXPECT_FALSE(external.isValid());
@@ -46,7 +46,7 @@ TEST_F(ExternalServiceTest, ShouldProperelyCreateExternalNullService)
 TEST_F(ExternalServiceTest, ShouldThrowOnMoveOut)
 {
     TestClass1 test;
-    sb::internal::ExternalService external{&test};
+    sb::details::ExternalService external{&test};
 
     EXPECT_THROW(external.moveOut(), sb::CannotMoveOutServiceException);
 }

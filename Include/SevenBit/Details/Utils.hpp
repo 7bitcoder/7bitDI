@@ -5,7 +5,7 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
-namespace sb::internal::utils
+namespace sb::details::utils
 {
     template <class... T> inline constexpr bool notSupportedType = false;
 
@@ -38,4 +38,4 @@ namespace sb::internal::utils
     {
         static_assert(std::is_base_of_v<TService, TImplementation>, "Type TImplementation must inherit from TService");
     }
-} // namespace sb::internal::utils
+} // namespace sb::details::utils

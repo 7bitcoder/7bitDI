@@ -9,7 +9,7 @@ namespace sb
 
     INLINE IServiceProvider::Ptr ServiceCollection::buildServiceProvider(ServiceProviderOptions options)
     {
-        return std::make_unique<internal::ServiceProviderRoot>(begin(), end(), options);
+        return std::make_unique<details::ServiceProviderRoot>(begin(), end(), options);
     }
 
     INLINE ServiceDescriptor &ServiceCollection::at(size_t index) { return _serviceDescriptors.at(index); }

@@ -7,15 +7,15 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
+#include "SevenBit/Details/ExternalService.hpp"
+#include "SevenBit/Details/ServiceOwner.hpp"
+#include "SevenBit/Details/Utils.hpp"
 #include "SevenBit/IServiceFactory.hpp"
 #include "SevenBit/IServiceInstance.hpp"
 #include "SevenBit/IServiceProvider.hpp"
 #include "SevenBit/TypeId.hpp"
-#include "SevenBit/_Internal/ExternalService.hpp"
-#include "SevenBit/_Internal/ServiceOwner.hpp"
-#include "SevenBit/_Internal/Utils.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
 
     template <class FactoryFcn> class ExternalServiceFcnFactory final : public IServiceFactory
@@ -39,4 +39,4 @@ namespace sb::internal
 
         IServiceFactory::Ptr clone() { return std::make_unique<ExternalServiceFcnFactory<FactoryFcn>>(*this); }
     };
-} // namespace sb::internal
+} // namespace sb::details

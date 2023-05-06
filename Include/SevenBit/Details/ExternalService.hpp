@@ -7,7 +7,7 @@
 #include "SevenBit/Exceptions.hpp"
 #include "SevenBit/IServiceInstance.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
     template <class T> class ExternalService final : public IServiceInstance
     {
@@ -25,7 +25,7 @@ namespace sb::internal
         ExternalService &operator=(const ExternalService &) = default;
         ExternalService &operator=(ExternalService &&) = default;
 
-        void *get() final { return _service; }
+        void *get() const final { return _service; }
 
         void *moveOut() { throw CannotMoveOutServiceException{getTypeId(), "External service cannot be moved out."}; }
 
@@ -35,4 +35,4 @@ namespace sb::internal
 
         operator bool() const { return isValid(); }
     };
-} // namespace sb::internal
+} // namespace sb::details

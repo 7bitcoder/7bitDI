@@ -2,12 +2,13 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
-#include "SevenBit/_Internal/ServiceDescriptorsMap.hpp"
+#include "SevenBit/Details/ServiceDescriptorsMap.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
     INLINE void ServiceDescriptorsMap::add(ServiceDescriptor descriptor)
     {
+        checkIfAlreadyRegistered(descriptor);
         _serviceCreatorsMap[descriptor.getServiceTypeId()].add(std::move(descriptor));
     }
 
@@ -27,4 +28,15 @@ namespace sb::internal
         }
         return nullptr;
     }
-} // namespace sb::internal
+
+    INLINE void ServiceDescriptorsMap::checkIfAlreadyRegistered(ServiceDescriptor &descriptor)
+    {
+        for (auto &[_, list] : _serviceCreatorsMap)
+        {
+            if (list.contains(descriptor.getImplementationTypeId()))
+            {
+                throw ServiceAlreadyRegisteredException{descriptor.getImplementationTypeId()};
+            }
+        }
+    }
+} // namespace sb::details

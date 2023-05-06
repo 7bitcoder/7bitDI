@@ -43,5 +43,5 @@ namespace sb
 } // namespace sb
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#include "SevenBit/_Internal/Impl/ServiceLifeTime.hpp"
+#include "SevenBit/Details/Impl/ServiceLifeTime.hpp"
 #endif

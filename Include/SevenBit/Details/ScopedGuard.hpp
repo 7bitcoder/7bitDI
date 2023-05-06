@@ -6,7 +6,7 @@
 #include "SevenBit/Exceptions.hpp"
 #include "SevenBit/TypeId.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
     class ScopedGuard
     {
@@ -20,8 +20,8 @@ namespace sb::internal
         ~ScopedGuard();
     };
 
-} // namespace sb::internal
+} // namespace sb::details
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#include "SevenBit/_Internal/Impl/ScopedGuard.hpp"
+#include "SevenBit/Details/Impl/ScopedGuard.hpp"
 #endif

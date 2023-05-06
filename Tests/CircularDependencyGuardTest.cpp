@@ -2,8 +2,8 @@
 #include <iostream>
 
 #include "Classes/BasicTest.hpp"
+#include "SevenBit/Details/CircularDependencyGuard.hpp"
 #include "SevenBit/Exceptions.hpp"
-#include "SevenBit/_Internal/CircularDependencyGuard.hpp"
 
 class CircularDependencyGuardTest : public ::testing::Test
 {
@@ -23,7 +23,7 @@ class CircularDependencyGuardTest : public ::testing::Test
 
 TEST_F(CircularDependencyGuardTest, ShouldNotDetectCirtularDependency)
 {
-    sb::internal::CircularDependencyGuard guard;
+    sb::details::CircularDependencyGuard guard;
     auto act = [&]() {
         auto _ = guard(typeid(TestClass1));
         {
@@ -39,7 +39,7 @@ TEST_F(CircularDependencyGuardTest, ShouldNotDetectCirtularDependency)
 
 TEST_F(CircularDependencyGuardTest, ShouldDetectCirtularDependency)
 {
-    sb::internal::CircularDependencyGuard guard;
+    sb::details::CircularDependencyGuard guard;
     auto act = [&]() {
         auto _ = guard(typeid(TestClass1));
         {

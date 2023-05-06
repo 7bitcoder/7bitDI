@@ -6,7 +6,7 @@
 
 #include "SevenBit/IServiceInstance.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
     template <class T> class ServiceOwner final : public IServiceInstance
     {
@@ -23,7 +23,7 @@ namespace sb::internal
         ServiceOwner &operator=(const ServiceOwner &) = delete;
         ServiceOwner &operator=(ServiceOwner &&) = default;
 
-        void *get() final { return _service.get(); }
+        void *get() const final { return _service.get(); }
 
         void *moveOut() { return _service.release(); }
 
@@ -33,4 +33,4 @@ namespace sb::internal
 
         operator bool() const { return isValid(); }
     };
-} // namespace sb::internal
+} // namespace sb::details

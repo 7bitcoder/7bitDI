@@ -3,9 +3,9 @@
 #include "SevenBit/Exceptions.hpp"
 #include "SevenBit/LibraryConfig.hpp"
 
-#include "SevenBit/_Internal/ServicesMap.hpp"
+#include "SevenBit/Details/ServicesMap.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
     INLINE ServicesMap::ServicesMap(bool strongDestructionOrder) : _strongDestructionOrder(strongDestructionOrder) {}
 
@@ -46,4 +46,4 @@ namespace sb::internal
     }
 
     INLINE ServicesMap::~ServicesMap() { clear(); }
-} // namespace sb::internal
+} // namespace sb::details

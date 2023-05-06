@@ -4,9 +4,9 @@
 #include "SevenBit/IServiceInstance.hpp"
 #include "SevenBit/LibraryConfig.hpp"
 
-#include "SevenBit/_Internal/ServiceList.hpp"
+#include "SevenBit/Details/ServiceList.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
     INLINE ServiceList &ServiceList::add(IServiceInstance::Ptr service)
     {
@@ -24,14 +24,14 @@ namespace sb::internal
 
     INLINE IServiceInstance::Ptr &ServiceList::at(size_t index) { return _services.at(index); }
 
-    INLINE std::vector<void *> ServiceList::getAllServices() const
+    INLINE std::vector<const IServiceInstance *> ServiceList::getAllServices() const
     {
-        std::vector<void *> result;
+        std::vector<const IServiceInstance *> result;
         result.reserve(_services.size());
         for (auto it = rBegin(); it != rEnd(); ++it)
         {
             auto &instance = *it;
-            result.push_back(instance->get());
+            result.push_back(instance.get());
         }
         return result;
     }
@@ -47,4 +47,4 @@ namespace sb::internal
     }
 
     INLINE bool ServiceList::isSealed() const { return _sealed; }
-} // namespace sb::internal
+} // namespace sb::details

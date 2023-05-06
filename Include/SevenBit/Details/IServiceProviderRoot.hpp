@@ -1,9 +1,9 @@
 #pragma once
 
-#include "SevenBit/_Internal/ServiceDescriptorsMap.hpp"
-#include "SevenBit/_Internal/ServicesMap.hpp"
+#include "SevenBit/Details/ServiceDescriptorsMap.hpp"
+#include "SevenBit/Details/ServicesMap.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
     struct IServiceProviderRoot
     {
@@ -13,4 +13,4 @@ namespace sb::internal
 
         virtual ~IServiceProviderRoot() = default;
     };
-} // namespace sb::internal
+} // namespace sb::details

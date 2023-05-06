@@ -6,9 +6,9 @@
 #include "SevenBit/Exceptions.hpp"
 #include "SevenBit/LibraryConfig.hpp"
 
-#include "SevenBit/_Internal/ServiceDescriptorList.hpp"
+#include "SevenBit/Details/ServiceDescriptorList.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
 
     INLINE const ServiceLifeTime &ServiceDescriptorList::getLifeTime() const { return last().getLifeTime(); }
@@ -20,7 +20,6 @@ namespace sb::internal
     INLINE void ServiceDescriptorList::add(ServiceDescriptor descriptor)
     {
         checkBaseType(descriptor);
-        checkIfRegistered(descriptor);
         checkLifeTime(descriptor);
         _serviceDescriptors.emplace_back(std::move(descriptor));
     }
@@ -40,14 +39,6 @@ namespace sb::internal
 
     INLINE ServiceDescriptor &ServiceDescriptorList::last() { return _serviceDescriptors.back(); }
 
-    INLINE void ServiceDescriptorList::checkIfRegistered(ServiceDescriptor &descriptor)
-    {
-        if (contains(descriptor.getImplementationTypeId()))
-        {
-            throw ServiceAlreadyRegisteredException{descriptor.getImplementationTypeId()};
-        }
-    }
-
     INLINE void ServiceDescriptorList::checkBaseType(ServiceDescriptor &descriptor)
     {
         if (!empty() && descriptor.getServiceTypeId() != getServiceTypeId())
@@ -64,4 +55,4 @@ namespace sb::internal
         }
     }
 
-} // namespace sb::internal
+} // namespace sb::details

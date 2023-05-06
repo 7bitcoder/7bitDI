@@ -5,12 +5,12 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
+#include "SevenBit/Details/ServiceList.hpp"
 #include "SevenBit/Exceptions.hpp"
 #include "SevenBit/IServiceInstance.hpp"
 #include "SevenBit/TypeId.hpp"
-#include "SevenBit/_Internal/ServiceList.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
     class ServicesMap
     {
@@ -37,8 +37,8 @@ namespace sb::internal
         ~ServicesMap();
     };
 
-} // namespace sb::internal
+} // namespace sb::details
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#include "SevenBit/_Internal/Impl/ServicesMap.hpp"
+#include "SevenBit/Details/Impl/ServicesMap.hpp"
 #endif

@@ -15,60 +15,71 @@ namespace sb
     {
         using Ptr = std::unique_ptr<IServiceProvider>;
 
-        virtual Ptr createScope() = 0;
+        virtual std::unique_ptr<IServiceProvider> createScope() = 0;
 
-        virtual void *getService(TypeId serviceTypeId) = 0;
+        virtual const IServiceInstance *tryGetInstance(TypeId serviceTypeId) = 0;
 
-        template <class TService> TService *getService()
+        template <class TService> TService *tryGetService()
         {
-            return static_cast<TService *>(getService(typeid(TService)));
+            if (auto instance = tryGetInstance(typeid(TService)))
+            {
+                return instance->getAs<TService>();
+            }
+            return nullptr;
         }
 
-        virtual void *getRequiredService(TypeId serviceTypeId) = 0;
+        virtual const IServiceInstance &getInstance(TypeId serviceTypeId) = 0;
 
-        template <class TService> TService &getRequiredService()
-        {
-            return *static_cast<TService *>(getRequiredService(typeid(TService)));
-        }
+        template <class TService> TService &getService() { return *getInstance(typeid(TService)).getAs<TService>(); }
 
-        virtual std::vector<void *> getServices(TypeId serviceTypeId) = 0;
+        virtual std::vector<const IServiceInstance *> getInstances(TypeId serviceTypeId) = 0;
 
         template <class TService> std::vector<TService *> getServices()
         {
-            auto services = getServices(typeid(TService));
+            auto instances = getInstances(typeid(TService));
             std::vector<TService *> result;
-            result.reserve(services.size());
-            for (auto ptr : services)
+            result.reserve(instances.size());
+            for (auto instance : instances)
             {
-                result.emplace_back(static_cast<TService *>(ptr));
+                if (instance)
+                {
+                    result.emplace_back(instance->getAs<TService>());
+                }
             }
             return result;
         }
 
-        virtual void *createService(TypeId serviceTypeId) = 0;
+        virtual std::unique_ptr<IServiceInstance> tryCreateInstance(TypeId serviceTypeId) = 0;
+
+        template <class TService> std::unique_ptr<TService> tryCreateService()
+        {
+            if (auto instance = tryCreateInstance(typeid(TService)))
+            {
+                return std::unique_ptr<TService>{instance->moveOutAs<TService>()};
+            }
+            return nullptr;
+        }
+
+        virtual std::unique_ptr<IServiceInstance> createInstance(TypeId serviceTypeId) = 0;
 
         template <class TService> std::unique_ptr<TService> createService()
         {
-            return std::unique_ptr<TService>{static_cast<TService *>(createService(typeid(TService)))};
+            return std::unique_ptr<TService>{createInstance(typeid(TService))->moveOutAs<TService>()};
         }
 
-        virtual void *createRequiredService(TypeId serviceTypeId) = 0;
-
-        template <class TService> std::unique_ptr<TService> createRequiredService()
-        {
-            return std::unique_ptr<TService>{static_cast<TService *>(createRequiredService(typeid(TService)))};
-        }
-
-        virtual std::vector<void *> createServices(TypeId serviceTypeId) = 0;
+        virtual std::vector<std::unique_ptr<IServiceInstance>> createInstances(TypeId serviceTypeId) = 0;
 
         template <class TService> std::vector<std::unique_ptr<TService>> createServices()
         {
-            auto services = createServices(typeid(TService));
+            auto instances = createInstances(typeid(TService));
             std::vector<std::unique_ptr<TService>> result;
-            result.reserve(services.size());
-            for (auto ptr : services)
+            result.reserve(instances.size());
+            for (auto &instance : instances)
             {
-                result.emplace_back(static_cast<TService *>(ptr));
+                if (instance)
+                {
+                    result.emplace_back(instance->moveOutAs<TService>());
+                }
             }
             return result;
         }

@@ -3,14 +3,14 @@
 #include <memory>
 #include <vector>
 
+#include "SevenBit/Details/IServiceProviderRoot.hpp"
+#include "SevenBit/Details/ServiceDescriptorsMap.hpp"
+#include "SevenBit/Details/ServiceProvider.hpp"
+#include "SevenBit/Details/ServicesMap.hpp"
 #include "SevenBit/LibraryConfig.hpp"
 #include "SevenBit/ServiceProviderOptions.hpp"
-#include "SevenBit/_Internal/IServiceProviderRoot.hpp"
-#include "SevenBit/_Internal/ServiceDescriptorsMap.hpp"
-#include "SevenBit/_Internal/ServiceProvider.hpp"
-#include "SevenBit/_Internal/ServicesMap.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
     class ServiceProviderRoot : public ServiceProvider, public IServiceProviderRoot
     {
@@ -47,8 +47,8 @@ namespace sb::internal
       private:
         void prebuildSingeletons();
     };
-} // namespace sb::internal
+} // namespace sb::details
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#include "SevenBit/_Internal/Impl/ServiceProviderRoot.hpp"
+#include "SevenBit/Details/Impl/ServiceProviderRoot.hpp"
 #endif

@@ -7,12 +7,12 @@
 #include "SevenBit/Exceptions.hpp"
 #include "SevenBit/LibraryConfig.hpp"
 
+#include "SevenBit/Details/ServiceDescriptorList.hpp"
 #include "SevenBit/ServiceDescriptor.hpp"
 #include "SevenBit/ServiceLifeTime.hpp"
 #include "SevenBit/TypeId.hpp"
-#include "SevenBit/_Internal/ServiceDescriptorList.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
     class ServiceDescriptorsMap
     {
@@ -47,9 +47,12 @@ namespace sb::internal
         void seal();
 
         const ServiceDescriptorList *getDescriptorsList(TypeId typeId) const;
+
+      private:
+        void checkIfAlreadyRegistered(ServiceDescriptor &descriptor);
     };
-} // namespace sb::internal
+} // namespace sb::details
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#include "SevenBit/_Internal/Impl/ServiceDescriptorsMap.hpp"
+#include "SevenBit/Details/Impl/ServiceDescriptorsMap.hpp"
 #endif

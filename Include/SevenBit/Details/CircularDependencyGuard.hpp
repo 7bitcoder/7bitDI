@@ -3,10 +3,10 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
+#include "SevenBit/Details/ScopedGuard.hpp"
 #include "SevenBit/TypeId.hpp"
-#include "SevenBit/_Internal/ScopedGuard.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
     class CircularDependencyGuard
     {
@@ -18,8 +18,8 @@ namespace sb::internal
 
         ScopedGuard operator()(TypeId typeIdUnderConstruction);
     };
-} // namespace sb::internal
+} // namespace sb::details
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#include "SevenBit/_Internal/Impl/CircularDependencyGuard.hpp"
+#include "SevenBit/Details/Impl/CircularDependencyGuard.hpp"
 #endif

@@ -2,11 +2,11 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
+#include "SevenBit/Details/ServiceProviderRoot.hpp"
+#include "SevenBit/Details/ServicesMap.hpp"
 #include "SevenBit/ServiceProviderOptions.hpp"
-#include "SevenBit/_Internal/ServiceProviderRoot.hpp"
-#include "SevenBit/_Internal/ServicesMap.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
     INLINE const ServiceDescriptorsMap &ServiceProviderRoot::getDescriptorsMap() { return _descriptorsMap; }
 
@@ -20,7 +20,7 @@ namespace sb::internal
             {
                 if (descriptor.getLifeTime().isSingleton())
                 {
-                    ServiceProvider::getService(descriptor.getServiceTypeId());
+                    ServiceProvider::getInstance(descriptor.getServiceTypeId());
                 }
             }
         }
@@ -31,4 +31,4 @@ namespace sb::internal
         clear(); // clear scoped first
         // then member singeletons will be cleared
     }
-} // namespace sb::internal
+} // namespace sb::details

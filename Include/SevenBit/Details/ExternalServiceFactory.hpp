@@ -4,12 +4,12 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
+#include "SevenBit/Details/ExternalService.hpp"
 #include "SevenBit/IServiceFactory.hpp"
 #include "SevenBit/IServiceInstance.hpp"
 #include "SevenBit/TypeId.hpp"
-#include "SevenBit/_Internal/ExternalService.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
 
     template <class T> class ExternalServiceFactory final : public IServiceFactory
@@ -30,4 +30,4 @@ namespace sb::internal
         IServiceFactory::Ptr clone() { return std::make_unique<ExternalServiceFactory<T>>(*this); }
     };
 
-} // namespace sb::internal
+} // namespace sb::details

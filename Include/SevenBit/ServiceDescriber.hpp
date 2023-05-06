@@ -5,13 +5,13 @@
 #include "SevenBit/IServiceProvider.hpp"
 #include "SevenBit/LibraryConfig.hpp"
 
+#include "SevenBit/Details/ExternalServiceFactory.hpp"
+#include "SevenBit/Details/ServiceCtorFactory.hpp"
+#include "SevenBit/Details/ServiceFcnFactory.hpp"
+#include "SevenBit/Details/Utils.hpp"
 #include "SevenBit/Exceptions.hpp"
 #include "SevenBit/ServiceDescriptor.hpp"
 #include "SevenBit/ServiceLifeTime.hpp"
-#include "SevenBit/_Internal/ExternalServiceFactory.hpp"
-#include "SevenBit/_Internal/ServiceCtorFactory.hpp"
-#include "SevenBit/_Internal/ServiceFcnFactory.hpp"
-#include "SevenBit/_Internal/Utils.hpp"
 
 namespace sb
 {
@@ -33,8 +33,8 @@ namespace sb
         template <class TService, class TImplementation = TService>
         static ServiceDescriptor describe(ServiceLifeTime lifetime)
         {
-            internal::utils::inheritCheck<TService, TImplementation>();
-            auto factory = std::make_unique<internal::ServiceCtorFactory<TImplementation>>();
+            details::utils::inheritCheck<TService, TImplementation>();
+            auto factory = std::make_unique<details::ServiceCtorFactory<TImplementation>>();
             return {typeid(TService), lifetime, std::move(factory)};
         }
 
@@ -47,8 +47,8 @@ namespace sb
         template <class TService, class TImplementation = TService>
         static ServiceDescriptor describeSingleton(TImplementation *service)
         {
-            internal::utils::inheritCheck<TService, TImplementation>();
-            auto factory = std::make_unique<internal::ExternalServiceFactory<TImplementation>>(service);
+            details::utils::inheritCheck<TService, TImplementation>();
+            auto factory = std::make_unique<details::ExternalServiceFactory<TImplementation>>(service);
             return {typeid(TService), ServiceLifeTime::singleton(), std::move(factory)};
         }
 
@@ -114,7 +114,7 @@ namespace sb
         template <class TService, class FactoryFcn>
         static ServiceDescriptor describeFromFactory(ServiceLifeTime lifetime, FactoryFcn factoryFcn)
         {
-            using FactoryType = internal::ServiceFcnFactory<FactoryFcn>;
+            using FactoryType = details::ServiceFcnFactory<FactoryFcn>;
             if constexpr (!FactoryType::IsReturnTypeUniquePtr::value)
             {
                 badFactory<FactoryFcn>();

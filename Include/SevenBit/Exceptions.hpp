@@ -62,5 +62,5 @@ namespace sb
 } // namespace sb
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#include "SevenBit/_Internal/Impl/Exceptions.hpp"
+#include "SevenBit/Details/Impl/Exceptions.hpp"
 #endif

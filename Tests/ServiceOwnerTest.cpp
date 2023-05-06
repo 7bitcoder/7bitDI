@@ -3,8 +3,8 @@
 #include <memory>
 
 #include "Classes/BasicTest.hpp"
+#include "SevenBit/Details/ServiceOwner.hpp"
 #include "SevenBit/Exceptions.hpp"
-#include "SevenBit/_Internal/ServiceOwner.hpp"
 
 class ServiceOwnerTest : public ::testing::Test
 {
@@ -24,7 +24,7 @@ class ServiceOwnerTest : public ::testing::Test
 
 TEST_F(ServiceOwnerTest, ShouldProperelyCreateExternalService)
 {
-    sb::internal::ServiceOwner<TestClass1> owner{std::make_unique<TestClass1>()};
+    sb::details::ServiceOwner<TestClass1> owner{std::make_unique<TestClass1>()};
 
     EXPECT_TRUE(owner);
     EXPECT_TRUE(owner.isValid());
@@ -34,7 +34,7 @@ TEST_F(ServiceOwnerTest, ShouldProperelyCreateExternalService)
 
 TEST_F(ServiceOwnerTest, ShouldProperelyCreateExternalNullService)
 {
-    sb::internal::ServiceOwner<TestClass1> owner{nullptr};
+    sb::details::ServiceOwner<TestClass1> owner{nullptr};
 
     EXPECT_FALSE(owner);
     EXPECT_FALSE(owner.isValid());
@@ -44,7 +44,7 @@ TEST_F(ServiceOwnerTest, ShouldProperelyCreateExternalNullService)
 
 TEST_F(ServiceOwnerTest, ShouldThrowOnMoveOut)
 {
-    sb::internal::ServiceOwner<TestClass1> owner{std::make_unique<TestClass1>()};
+    sb::details::ServiceOwner<TestClass1> owner{std::make_unique<TestClass1>()};
 
     auto ptr = owner.moveOut();
     EXPECT_TRUE(ptr);

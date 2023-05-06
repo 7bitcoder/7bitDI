@@ -3,8 +3,8 @@
 
 #include "Classes/BasicTest.hpp"
 #include "Mocks/ServiceProviderMock.hpp"
+#include "SevenBit/Details/ExternalServiceFactory.hpp"
 #include "SevenBit/IServiceProvider.hpp"
-#include "SevenBit/_Internal/ExternalServiceFactory.hpp"
 
 class ExternalServiceFactoryTest : public ::testing::Test
 {
@@ -25,7 +25,7 @@ class ExternalServiceFactoryTest : public ::testing::Test
 TEST_F(ExternalServiceFactoryTest, ShouldReturnProperTypeId)
 {
     TestClass1 test;
-    sb::internal::ExternalServiceFactory<TestClass1> factory{&test};
+    sb::details::ExternalServiceFactory<TestClass1> factory{&test};
 
     EXPECT_EQ(factory.getServiceTypeId(), typeid(TestClass1));
 }
@@ -34,7 +34,7 @@ TEST_F(ExternalServiceFactoryTest, ShouldCreateService)
 {
     TestClass1 test;
     ServiceProviderMock mock;
-    sb::internal::ExternalServiceFactory<TestClass1> factory{&test};
+    sb::details::ExternalServiceFactory<TestClass1> factory{&test};
 
     auto instance = factory.createInstance(mock);
 
@@ -46,7 +46,7 @@ TEST_F(ExternalServiceFactoryTest, ShouldCloneFactory)
 {
     TestClass1 test;
 
-    sb::internal::ExternalServiceFactory<TestClass1> factory{&test};
+    sb::details::ExternalServiceFactory<TestClass1> factory{&test};
 
     auto cloned = factory.clone();
 

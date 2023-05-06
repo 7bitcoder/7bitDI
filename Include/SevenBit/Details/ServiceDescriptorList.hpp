@@ -9,7 +9,7 @@
 #include "SevenBit/ServiceLifeTime.hpp"
 #include "SevenBit/TypeId.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
     class ServiceDescriptorList
     {
@@ -51,13 +51,12 @@ namespace sb::internal
         ServiceDescriptor &last();
 
       private:
-        void checkIfRegistered(ServiceDescriptor &descriptor);
         void checkBaseType(ServiceDescriptor &descriptor);
         void checkLifeTime(ServiceDescriptor &descriptor);
     };
 
-} // namespace sb::internal
+} // namespace sb::details
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#include "SevenBit/_Internal/Impl/ServiceDescriptorList.hpp"
+#include "SevenBit/Details/Impl/ServiceDescriptorList.hpp"
 #endif

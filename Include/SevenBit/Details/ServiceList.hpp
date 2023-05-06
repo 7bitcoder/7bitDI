@@ -9,7 +9,7 @@
 #include "SevenBit/Exceptions.hpp"
 #include "SevenBit/IServiceInstance.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
     class ServiceList
     {
@@ -39,7 +39,7 @@ namespace sb::internal
 
         IServiceInstance::Ptr &at(size_t index = 0);
 
-        std::vector<void *> getAllServices() const;
+        std::vector<const IServiceInstance *> getAllServices() const;
 
         bool empty() const;
 
@@ -49,8 +49,8 @@ namespace sb::internal
 
         bool isSealed() const;
     };
-} // namespace sb::internal
+} // namespace sb::details
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#include "SevenBit/_Internal/Impl/ServiceList.hpp"
+#include "SevenBit/Details/Impl/ServiceList.hpp"
 #endif

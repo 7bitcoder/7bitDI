@@ -2,11 +2,11 @@
 #include <iostream>
 
 #include "Classes/BasicInherit.hpp"
+#include "SevenBit/Details/ServiceCtorFactory.hpp"
+#include "SevenBit/Details/ServiceDescriptorsMap.hpp"
 #include "SevenBit/ServiceDescriber.hpp"
 #include "SevenBit/ServiceDescriptor.hpp"
 #include "SevenBit/ServiceLifeTime.hpp"
-#include "SevenBit/_Internal/ServiceCtorFactory.hpp"
-#include "SevenBit/_Internal/ServiceDescriptorsMap.hpp"
 class ServiceDescriptorsMapTest : public ::testing::Test
 {
   protected:
@@ -29,11 +29,24 @@ TEST_F(ServiceDescriptorsMapTest, ShouldAddDescriptors)
     _descriptors.emplace_back(sb::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass3>());
     _descriptors.emplace_back(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
     _descriptors.emplace_back(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
-    _descriptors.emplace_back(sb::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass5>());
+    _descriptors.emplace_back(sb::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass6>());
 
-    auto act = [&]() { sb::internal::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end()}; };
+    auto act = [&]() { sb::details::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end()}; };
 
     EXPECT_NO_THROW((act()));
+}
+
+TEST_F(ServiceDescriptorsMapTest, ShouldFailAddServiceDescriptorAlreadyRegistered)
+{
+    std::vector<sb::ServiceDescriptor> _descriptors;
+    _descriptors.emplace_back(sb::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass3>());
+    _descriptors.emplace_back(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+    _descriptors.emplace_back(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
+    _descriptors.emplace_back(sb::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass5>());
+
+    auto act = [&]() { sb::details::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end()}; };
+
+    EXPECT_THROW((act()), sb::ServiceAlreadyRegisteredException);
 }
 
 TEST_F(ServiceDescriptorsMapTest, ShouldSealDescriptors)
@@ -42,9 +55,9 @@ TEST_F(ServiceDescriptorsMapTest, ShouldSealDescriptors)
     _descriptors.emplace_back(sb::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass3>());
     _descriptors.emplace_back(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
     _descriptors.emplace_back(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
-    _descriptors.emplace_back(sb::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass5>());
+    _descriptors.emplace_back(sb::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass6>());
 
-    sb::internal::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end()};
+    sb::details::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end()};
     auto act = [&]() { map.seal(); };
 
     EXPECT_NO_THROW((act()));
@@ -56,9 +69,9 @@ TEST_F(ServiceDescriptorsMapTest, ShouldFindDescriptorList)
     _descriptors.emplace_back(sb::ServiceDescriber::describeScoped<TestInheritClass2, TestInheritClass3>());
     _descriptors.emplace_back(sb::ServiceDescriber::describeScoped<TestInheritClass2, TestInheritClass5>());
     _descriptors.emplace_back(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
-    _descriptors.emplace_back(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
+    _descriptors.emplace_back(sb::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass6>());
 
-    sb::internal::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end()};
+    sb::details::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end()};
 
     auto first = map.getDescriptorsList(typeid(TestInheritClass2));
     EXPECT_TRUE(first);
@@ -77,7 +90,7 @@ TEST_F(ServiceDescriptorsMapTest, ShouldFindDescriptorList)
     EXPECT_EQ(second->begin()->getImplementationTypeId(), typeid(TestInheritClass4));
     EXPECT_EQ(second->begin()->getLifeTime(), sb::ServiceLifeTime::singleton());
     EXPECT_EQ(second->last().getServiceTypeId(), typeid(TestInheritClass1));
-    EXPECT_EQ(second->last().getImplementationTypeId(), typeid(TestInheritClass5));
+    EXPECT_EQ(second->last().getImplementationTypeId(), typeid(TestInheritClass6));
     EXPECT_EQ(second->last().getLifeTime(), sb::ServiceLifeTime::singleton());
 
     EXPECT_FALSE(map.getDescriptorsList(typeid(TestInheritClass3)));

@@ -5,13 +5,13 @@
 
 #include "SevenBit/LibraryConfig.hpp"
 
+#include "SevenBit/Details/CtorArgProvider.hpp"
+#include "SevenBit/Details/CtorReflection.hpp"
+#include "SevenBit/Details/ServiceOwner.hpp"
 #include "SevenBit/IServiceFactory.hpp"
 #include "SevenBit/IServiceInstance.hpp"
-#include "SevenBit/_Internal/CtorArgProvider.hpp"
-#include "SevenBit/_Internal/CtorReflection.hpp"
-#include "SevenBit/_Internal/ServiceOwner.hpp"
 
-namespace sb::internal
+namespace sb::details
 {
     template <class T> class ServiceCtorFactory final : public IServiceFactory
     {
@@ -42,4 +42,4 @@ namespace sb::internal
         }
     };
 
-} // namespace sb::internal
+} // namespace sb::details
