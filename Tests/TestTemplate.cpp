@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
 
-class Template : public ::testing::Test
+class Template : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}

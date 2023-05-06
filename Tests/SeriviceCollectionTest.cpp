@@ -13,7 +13,7 @@
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
 
-class SeriviceCollectionTest : public ::testing::Test
+class SeriviceCollectionTest : public testing::Test
 {
   protected:
     static void SetUpTestSuite() {}

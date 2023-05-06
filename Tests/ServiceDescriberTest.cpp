@@ -7,7 +7,7 @@
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
 
-class ServiceDescriberTest : public ::testing::Test
+class ServiceDescriberTest : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}

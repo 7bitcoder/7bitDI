@@ -7,7 +7,7 @@
 #include "SevenBit/DI/Details/ServiceCtorFactory.hpp"
 #include "SevenBit/DI/IServiceProvider.hpp"
 
-class ServiceCtorFactoryTest : public ::testing::Test
+class ServiceCtorFactoryTest : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}

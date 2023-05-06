@@ -6,7 +6,7 @@
 #include "SevenBit/DI/Details/ExternalServiceFactory.hpp"
 #include "SevenBit/DI/IServiceProvider.hpp"
 
-class ExternalServiceFactoryTest : public ::testing::Test
+class ExternalServiceFactoryTest : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}

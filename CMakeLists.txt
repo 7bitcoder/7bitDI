@@ -16,6 +16,10 @@ include_directories(Include)
 
 add_subdirectory(Source)
 
+if(BUILD_DOCS)
+        add_subdirectory(Docs)
+endif()
+
 if(BUILD_TESTS)
         add_subdirectory(Tests)
 endif()

@@ -11,12 +11,24 @@
 
 namespace sb::di
 {
+
     struct IServiceProvider
     {
         using Ptr = std::unique_ptr<IServiceProvider>;
 
+        /**
+         * @brief Create a scoped service provider
+         * @return std::unique_ptr<IServiceProvider>
+         */
         virtual std::unique_ptr<IServiceProvider> createScope() = 0;
 
+        /**
+         * @brief Returns service instance
+         *
+         * @see tryGetInstance
+         * @param serviceTypeId
+         * @return const IServiceInstance*
+         */
         virtual const IServiceInstance *tryGetInstance(TypeId serviceTypeId) = 0;
 
         template <class TService> TService *tryGetService()

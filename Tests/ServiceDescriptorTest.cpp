@@ -8,7 +8,7 @@
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
 
-class ServiceDescriptorTest : public ::testing::Test
+class ServiceDescriptorTest : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}

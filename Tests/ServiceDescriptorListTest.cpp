@@ -10,7 +10,7 @@
 #include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
 
-class ServiceDescriptorListTest : public ::testing::Test
+class ServiceDescriptorListTest : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}

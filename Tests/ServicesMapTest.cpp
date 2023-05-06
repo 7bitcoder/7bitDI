@@ -11,7 +11,7 @@
 #include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 
-class ServicesMapTest : public ::testing::Test
+class ServicesMapTest : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}

@@ -5,7 +5,7 @@
 #include "SevenBit/DI/Details/ExternalService.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 
-class ExternalServiceTest : public ::testing::Test
+class ExternalServiceTest : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}

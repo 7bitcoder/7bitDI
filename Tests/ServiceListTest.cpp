@@ -14,7 +14,7 @@
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
 
-class ServiceListTest : public ::testing::Test
+class ServiceListTest : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}

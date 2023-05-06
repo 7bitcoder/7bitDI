@@ -9,7 +9,7 @@
 #include "SevenBit/DI/IServiceProvider.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
 
-class ExternalServiceFcnFactoryTest : public ::testing::Test
+class ExternalServiceFcnFactoryTest : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}

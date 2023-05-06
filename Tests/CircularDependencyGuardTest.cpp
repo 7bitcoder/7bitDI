@@ -5,7 +5,7 @@
 #include "SevenBit/DI/Details/CircularDependencyGuard.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 
-class CircularDependencyGuardTest : public ::testing::Test
+class CircularDependencyGuardTest : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}

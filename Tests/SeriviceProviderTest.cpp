@@ -9,7 +9,7 @@
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
 
-class SeriviceProviderTest : public ::testing::Test
+class SeriviceProviderTest : public testing::Test
 {
   protected:
     static void SetUpTestSuite() {}

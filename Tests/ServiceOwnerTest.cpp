@@ -6,7 +6,7 @@
 #include "SevenBit/DI/Details/ServiceOwner.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 
-class ServiceOwnerTest : public ::testing::Test
+class ServiceOwnerTest : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}
