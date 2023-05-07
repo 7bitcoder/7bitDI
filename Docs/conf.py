@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = '7BitInjector'
-copyright = '2023, Sylwester Dawida'
+copyright = '2023, 7BitCoder Sylwester Dawida'
 author = 'Sylwester Dawida'
 
 # -- General configuration ---------------------------------------------------
@@ -21,7 +21,9 @@ extensions = [
     'sphinx.ext.imgmath',
     'sphinx.ext.todo',
     'sphinx_copybutton',
-    'breathe']
+    'breathe',
+    'myst_parser'
+]
 breathe_default_project = '7BitInjector'
 
 exclude_patterns = []

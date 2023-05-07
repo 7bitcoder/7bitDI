@@ -23,10 +23,10 @@
 
 namespace sb::di::details
 {
-    class ServiceProvider : public IServiceProvider
+    class DefaultServiceProvider : public IServiceProvider
     {
       public:
-        using Ptr = std::unique_ptr<ServiceProvider>;
+        using Ptr = std::unique_ptr<DefaultServiceProvider>;
 
       private:
         IServiceProviderRoot &_root;
@@ -35,14 +35,14 @@ namespace sb::di::details
         CircularDependencyGuard _guard;
 
       public:
-        ServiceProvider(IServiceProviderRoot &root, ServiceProviderOptions options);
-        ServiceProvider(const ServiceProvider &) = delete;
-        ServiceProvider(ServiceProvider &&) = delete;
+        DefaultServiceProvider(IServiceProviderRoot &root, ServiceProviderOptions options);
+        DefaultServiceProvider(const DefaultServiceProvider &) = delete;
+        DefaultServiceProvider(DefaultServiceProvider &&) = delete;
 
-        ServiceProvider &operator=(const ServiceProvider &) = delete;
-        ServiceProvider &operator=(ServiceProvider &&) = delete;
+        DefaultServiceProvider &operator=(const DefaultServiceProvider &) = delete;
+        DefaultServiceProvider &operator=(DefaultServiceProvider &&) = delete;
 
-        IServiceProvider::Ptr createScope() override;
+        std::unique_ptr<IServiceProvider> createScope() override;
 
         const IServiceInstance *tryGetInstance(TypeId serviceTypeId) override;
 
@@ -88,5 +88,5 @@ namespace sb::di::details
 } // namespace sb::di::details
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#include "SevenBit/DI/Details/Impl/ServiceProvider.hpp"
+#include "SevenBit/DI/Details/Impl/DefaultServiceProvider.hpp"
 #endif

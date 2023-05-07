@@ -10,6 +10,9 @@
 
 namespace sb::di
 {
+    /**
+     * @brief Base class for all injector exceptions
+     */
     struct InjectorException : public std::runtime_error
     {
         InjectorException(const std::string &error);

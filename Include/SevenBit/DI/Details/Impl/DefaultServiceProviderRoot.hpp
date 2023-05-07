@@ -2,17 +2,17 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/ServiceProviderRoot.hpp"
+#include "SevenBit/DI/Details/DefaultServiceProviderRoot.hpp"
 #include "SevenBit/DI/Details/ServicesMap.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 
 namespace sb::di::details
 {
-    INLINE const ServiceDescriptorsMap &ServiceProviderRoot::getDescriptorsMap() { return _descriptorsMap; }
+    INLINE const ServiceDescriptorsMap &DefaultServiceProviderRoot::getDescriptorsMap() { return _descriptorsMap; }
 
-    INLINE ServicesMap &ServiceProviderRoot::getSingletons() { return _singletons; }
+    INLINE ServicesMap &DefaultServiceProviderRoot::getSingletons() { return _singletons; }
 
-    INLINE void ServiceProviderRoot::prebuildSingeletons()
+    INLINE void DefaultServiceProviderRoot::prebuildSingeletons()
     {
         for (auto &[_, list] : getDescriptorsMap())
         {
@@ -20,13 +20,13 @@ namespace sb::di::details
             {
                 if (descriptor.getLifeTime().isSingleton())
                 {
-                    ServiceProvider::getInstance(descriptor.getServiceTypeId());
+                    DefaultServiceProvider::getInstance(descriptor.getServiceTypeId());
                 }
             }
         }
     }
 
-    INLINE ServiceProviderRoot::~ServiceProviderRoot()
+    INLINE DefaultServiceProviderRoot::~DefaultServiceProviderRoot()
     {
         clear(); // clear scoped first
         // then member singeletons will be cleared

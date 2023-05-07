@@ -11,6 +11,9 @@
 
 namespace sb::di
 {
+    /**
+     * @brief Describes Service
+     */
     class ServiceDescriptor
     {
       private:
@@ -23,21 +26,53 @@ namespace sb::di
       public:
         using Ptr = std::unique_ptr<ServiceDescriptor>;
 
+        /**
+         * @brief Construct a new service descriptor object
+         * @details implementationFactory cannot be null, otherwise construcor will throw exception
+         * @throws NullPointnerException if implementationFactory is null
+         */
         ServiceDescriptor(TypeId serviceTypeId, ServiceLifeTime lifetime, IServiceFactory::Ptr implementationFactory);
 
+        /**
+         * @brief Construct a new service descriptor copy
+         * @details Note that implementation factory must be clonable
+         */
         ServiceDescriptor(const ServiceDescriptor &other);
 
+        /**
+         * @brief Construct a new service descriptor by move
+         */
         ServiceDescriptor(ServiceDescriptor &&) = default;
 
+        /**
+         * @brief Assigns service descriptor
+         * @details Note that implementation factory must be clonable
+         */
         ServiceDescriptor &operator=(const ServiceDescriptor &other);
+
+        /**
+         * @brief Assigns service descriptor by move
+         */
         ServiceDescriptor &operator=(ServiceDescriptor &&other) = default;
 
+        /**
+         * @brief Get the lifetime object
+         */
         const ServiceLifeTime &getLifeTime() const;
 
+        /**
+         * @brief Get the service TypeId
+         */
         TypeId getServiceTypeId() const;
 
+        /**
+         * @brief Get the service implementation TypeId
+         */
         TypeId getImplementationTypeId() const;
 
+        /**
+         * @brief Get the service implementation factory
+         */
         const IServiceFactory &getImplementationFactory() const;
     };
 } // namespace sb::di

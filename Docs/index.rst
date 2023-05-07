@@ -21,30 +21,39 @@ Indices and tables
 
 Documentation
 ==================
-.. doxygenindex::
-.. doxygenfunction::
-.. doxygenstruct::
-.. doxygenenum::
-.. doxygentypedef::
-.. doxygenclass::
-   
+
+.. doxygentypedef:: sb::di::TypeId
+
+.. doxygenstruct:: sb::di::IServiceInstance
+   :members:
+   :undoc-members:
+
+.. doxygenstruct:: sb::di::IServiceFactory
+   :members:
+   :undoc-members:
+
+.. doxygenstruct:: sb::di::ServiceLifeTime
+   :members:
+   :undoc-members:
+
+.. doxygenclass:: sb::di::ServiceDescriptor
+   :members:
+   :undoc-members:
+
+.. doxygenclass:: sb::di::ServiceDescriber
+   :members:
+   :undoc-members:
+
+.. doxygenstruct:: sb::di::ServiceProviderOptions
+   :members:
+   :undoc-members:
+
+.. doxygenstruct:: sb::di::IServiceProvider
+   :members:
+   :undoc-members:
+
 .. doxygenclass:: sb::di::ServiceCollection
    :members:
-   :protected-members:
-   :private-members:
    :undoc-members:
-   :membergroups: 
-   :members-only:
-   :outline:
-   :no-link:
-   :allow-dot-graphs:
 
-.. doxygennamespace:: sb::di
-   :content-only:
-   :desc-only:
-   :outline:
-   :members:
-   :protected-members:
-   :private-members:
-   :undoc-members:
-   :no-link:
+

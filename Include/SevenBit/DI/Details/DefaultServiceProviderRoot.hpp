@@ -3,19 +3,19 @@
 #include <memory>
 #include <vector>
 
+#include "SevenBit/DI/Details/DefaultServiceProvider.hpp"
 #include "SevenBit/DI/Details/IServiceProviderRoot.hpp"
 #include "SevenBit/DI/Details/ServiceDescriptorsMap.hpp"
-#include "SevenBit/DI/Details/ServiceProvider.hpp"
 #include "SevenBit/DI/Details/ServicesMap.hpp"
 #include "SevenBit/DI/LibraryConfig.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 
 namespace sb::di::details
 {
-    class ServiceProviderRoot : public ServiceProvider, public IServiceProviderRoot
+    class DefaultServiceProviderRoot : public DefaultServiceProvider, public IServiceProviderRoot
     {
       public:
-        using Ptr = std::unique_ptr<ServiceProviderRoot>;
+        using Ptr = std::unique_ptr<DefaultServiceProviderRoot>;
 
       private:
         ServiceDescriptorsMap _descriptorsMap;
@@ -23,8 +23,9 @@ namespace sb::di::details
 
       public:
         template <class TDescriptorIt>
-        ServiceProviderRoot(TDescriptorIt begin, TDescriptorIt end, ServiceProviderOptions options = {})
-            : ServiceProvider(*this, options), _descriptorsMap(begin, end), _singletons(options.strongDestructionOrder)
+        DefaultServiceProviderRoot(TDescriptorIt begin, TDescriptorIt end, ServiceProviderOptions options = {})
+            : DefaultServiceProvider(*this, options), _descriptorsMap(begin, end),
+              _singletons(options.strongDestructionOrder)
         {
             IServiceFactory::Ptr factory{
                 new ExternalServiceFcnFactory{[](IServiceProvider &provider) { return &provider; }}};
@@ -42,7 +43,7 @@ namespace sb::di::details
 
         ServicesMap &getSingletons() override;
 
-        ~ServiceProviderRoot();
+        ~DefaultServiceProviderRoot();
 
       private:
         void prebuildSingeletons();
@@ -50,5 +51,5 @@ namespace sb::di::details
 } // namespace sb::di::details
 
 #ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
-#include "SevenBit/DI/Details/Impl/ServiceProviderRoot.hpp"
+#include "SevenBit/DI/Details/Impl/DefaultServiceProviderRoot.hpp"
 #endif
