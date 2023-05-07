@@ -11,49 +11,39 @@ Welcome to 7BitInjector's documentation!
    :caption: Contents:
 
 
+C++17 simple dependency injection library!
 
-Indices and tables
-==================
+7BitInjector_ is a simple C++ dependency injection library, 
+designed to be as easy to use as possible, 
+the main inspiration was asp net core dependency injection system.
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. _7BitInjector: https://github.com/7bitcoder/7bitInjector
 
-Documentation
-==================
+Navigation
+----------------
 
-.. doxygentypedef:: sb::di::TypeId
+:doc:`installation`
+    How to install 7bitInjector into your project.
 
-.. doxygenstruct:: sb::di::IServiceInstance
-   :members:
-   :undoc-members:
+:doc:`getting-started`
+    Getting started. 
 
-.. doxygenstruct:: sb::di::IServiceFactory
-   :members:
-   :undoc-members:
+:doc:`tutorials`
+    Supported browser/operating system combinations.
 
-.. doxygenstruct:: sb::di::ServiceLifeTime
-   :members:
-   :undoc-members:
+:doc:`api-reference`
+    Supported project dependencies, like Python and Sphinx.
 
-.. doxygenclass:: sb::di::ServiceDescriptor
-   :members:
-   :undoc-members:
+:doc:`examples`
+    Supported project dependencies, like Python and Sphinx.
 
-.. doxygenclass:: sb::di::ServiceDescriber
-   :members:
-   :undoc-members:
+:doc:`license`
+    Supported project dependencies, like Python and Sphinx.
 
-.. doxygenstruct:: sb::di::ServiceProviderOptions
-   :members:
-   :undoc-members:
+.. Hidden TOCs
 
-.. doxygenstruct:: sb::di::IServiceProvider
-   :members:
-   :undoc-members:
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
 
-.. doxygenclass:: sb::di::ServiceCollection
-   :members:
-   :undoc-members:
-
-
+   index

@@ -436,8 +436,7 @@ namespace sb::di
          *
          * Example:
          * @code {.cpp}
-         * ServiceCollection{}.addSingleton<BaseClass>(
-         *       []() { return std::make_unique<ImplementationClass>(); });
+         * ServiceCollection{}.addSingleton<BaseClass>([]() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
         template <class TService, class FactoryFcn> ServiceCollection &addSingleton(FactoryFcn factory)
@@ -459,8 +458,7 @@ namespace sb::di
          *
          * Example:
          * @code {.cpp}
-         * ServiceCollection{}.addScoped<BaseClass>(
-         *       []() { return std::make_unique<ImplementationClass>(); });
+         * ServiceCollection{}.addScoped<BaseClass>([]() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
         template <class TService, class FactoryFcn> ServiceCollection &addScoped(FactoryFcn factory)
@@ -482,8 +480,7 @@ namespace sb::di
          *
          * Example:
          * @code {.cpp}
-         * ServiceCollection{}.addTransient<BaseClass>(
-         *       []() { return std::make_unique<ImplementationClass>(); });
+         * ServiceCollection{}.addTransient<BaseClass>([]() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
         template <class TService, class FactoryFcn> ServiceCollection &addTransient(FactoryFcn factory)
@@ -506,8 +503,7 @@ namespace sb::di
          *
          * Example:
          * @code {.cpp}
-         * ServiceCollection{}.add(ServiceLifeTime::trensient(),
-         *       []() { return std::make_unique<TestClass>(); });
+         * ServiceCollection{}.add(ServiceLifeTime::transient(), []() { return std::make_unique<TestClass>(); });
          * @endcode
          */
         template <class FactoryFcn> ServiceCollection &add(ServiceLifeTime lifeTime, FactoryFcn factory)
