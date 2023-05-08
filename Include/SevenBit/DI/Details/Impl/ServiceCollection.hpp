@@ -7,7 +7,7 @@
 namespace sb::di
 {
 
-    INLINE std::unique_ptr<IServiceProvider> ServiceCollection::buildServiceProvider(ServiceProviderOptions options)
+    INLINE IServiceProvider::Ptr ServiceCollection::buildServiceProvider(ServiceProviderOptions options)
     {
         return std::make_unique<details::DefaultServiceProviderRoot>(begin(), end(), options);
     }

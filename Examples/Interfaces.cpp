@@ -1,62 +1,29 @@
-#include "SevenBitRest.hpp"
+#include <SevenBit/DI.hpp>
+#include <iostream>
 
 using namespace std;
 using namespace sb::di;
 
-struct IServiceA
+struct IService
 {
-    virtual std::string actionA() = 0;
+    virtual std::string helloFromService() = 0;
 
-    virtual ~IServiceA() = default;
+    virtual ~IService() = default;
 };
 
-struct IServiceB
-{
-    virtual string actionB() = 0;
-
-    virtual ~IServiceB() = default;
-};
-
-class ServiceA final : public IServiceA
+class Service final : public IService
 {
   public:
-    string actionA() { return "actionA"; }
+    string helloFromService() { return "Hello from service."; }
 };
 
-class ServiceB final : public IServiceB
-{
-  public:
-    string actionB() { return "actionB"; }
-};
-
-class ConsumerService
-{
-  private:
-    IServiceA *_serviceA;
-    IServiceB *_serviceB;
-
-  public:
-    ConsumerService(IServiceA *serviceA, IServiceB *serviceB)
-    {
-        _serviceA = serviceA;
-        _serviceB = serviceB;
-    }
-
-    string execute() { return _serviceA->actionA() + ", " + _serviceB->actionB() + " executed."; }
-};
 int main()
 {
-    WebApplicationBuilder builder;
+    IServiceProvider::Ptr provider = ServiceCollection{}.addSingleton<IService, Service>().buildServiceProvider();
 
-    auto &services = builder.getServices();
+    IService &service = provider->getService<IService>();
 
-    services.addScoped<IServiceA, ServiceA>();
-    services.addScoped<IServiceB, ServiceB>();
-    services.addScoped<ConsumerService>();
+    cout << service.helloFromService();
 
-    auto rest = builder.build();
-
-    rest.mapGet("/", [](ConsumerService &consumer) { return consumer.execute(); });
-
-    rest.run();
+    return 0;
 }

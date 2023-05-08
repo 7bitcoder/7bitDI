@@ -45,7 +45,7 @@ namespace sb::di
          * @throws ServiceLifeTimeMissmatchException if service has different lifetime than other already registered
          * with same base type
          */
-        std::unique_ptr<IServiceProvider> buildServiceProvider(ServiceProviderOptions options = {});
+        IServiceProvider::Ptr buildServiceProvider(ServiceProviderOptions options = {});
 
         Iterator begin() { return _serviceDescriptors.begin(); }
         Iterator end() { return _serviceDescriptors.end(); }

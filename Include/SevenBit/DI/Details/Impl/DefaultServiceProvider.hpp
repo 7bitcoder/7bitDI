@@ -15,7 +15,7 @@ namespace sb::di::details
     {
     }
 
-    INLINE std::unique_ptr<IServiceProvider> DefaultServiceProvider::createScope()
+    INLINE IServiceProvider::Ptr DefaultServiceProvider::createScope()
     {
         return std::unique_ptr<DefaultServiceProvider>(new DefaultServiceProvider{_root, _options});
     }

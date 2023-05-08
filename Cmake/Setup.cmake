@@ -35,7 +35,6 @@ set_property(CACHE LIBRARY_TYPE PROPERTY STRINGS ${LIBRARY_TYPE_VALUES})
 set(BUILD_DOCS OFF CACHE BOOL "Turn on to build documentation")
 set(BUILD_TESTS OFF CACHE BOOL "Turn on to build tests")
 set(BUILD_EXAMPLES OFF CACHE BOOL "Turn on to build examples")
-set(BUILD_BENCHMARKS OFF CACHE BOOL "Turn on to build benchmarks")
 
 set(SEVEN_BIT_INJECTOR_VERSION ${CMAKE_PROJECT_VERSION})
 

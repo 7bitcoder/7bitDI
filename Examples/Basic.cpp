@@ -1,4 +1,6 @@
-#include "SevenBitRest.hpp"
+#include "SevenBit/DI/IServiceProvider.hpp"
+#include <SevenBit/DI.hpp>
+#include <iostream>
 
 using namespace std;
 using namespace sb::di;
@@ -10,15 +12,11 @@ struct Service
 
 int main()
 {
-    WebApplicationBuilder builder;
+    IServiceProvider::Ptr provider = ServiceCollection{}.addSingleton<Service>().buildServiceProvider();
 
-    auto &services = builder.getServices();
+    Service &service = provider->getService<Service>();
 
-    services.addScoped<Service>();
+    cout << service.helloFromService();
 
-    auto rest = builder.build();
-
-    rest.mapGet("/", [](Service &service) { return service.helloFromService(); });
-
-    rest.run();
+    return 0;
 }

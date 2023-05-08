@@ -24,10 +24,6 @@ if(BUILD_TESTS)
         add_subdirectory(Tests)
 endif()
 
-if(BUILD_BENCHMARKS)
-        add_subdirectory(Benchmarks)
-endif()
-
 if(BUILD_EXAMPLES)
         add_subdirectory(Examples)
 endif()

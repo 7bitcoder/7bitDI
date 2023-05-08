@@ -6,9 +6,10 @@
 Welcome to 7BitInjector's documentation!
 ========================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+.. image:: _static/7bitinjector-logo.svg
+  :width: 500
+  :align: center
+  :alt: Logo
 
 
 C++17 simple dependency injection library!
@@ -21,7 +22,6 @@ the main inspiration was asp net core dependency injection system.
 
 Navigation
 ----------------
-
 :doc:`installation`
     How to install 7bitInjector into your project.
 
@@ -40,10 +40,12 @@ Navigation
 :doc:`license`
     Supported project dependencies, like Python and Sphinx.
 
-.. Hidden TOCs
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   index
+    :titlesonly:
+    :maxdepth: 2
+    :glob:
+   
+    installation
+    getting-started
+    api-reference

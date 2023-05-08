@@ -2,7 +2,6 @@ find_package(Doxygen REQUIRED)
 find_package(Sphinx REQUIRED)
 
 file(GLOB_RECURSE PUBLIC_HEADERS ../Include/*.hpp)
-
 set(DOXYGEN_INPUT_DIR ${PROJECT_SOURCE_DIR}/Include)
 set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/doxygen)
 set(DOXYGEN_INDEX_FILE ${DOXYGEN_OUTPUT_DIR}/xml/index.xml)
@@ -20,6 +19,7 @@ add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
 
 add_custom_target(GenerateXmlDoc ALL DEPENDS ${DOXYGEN_INDEX_FILE})
 
+file(GLOB_RECURSE EXAMPLES ../Examples/*.hpp)
 file(GLOB_RECURSE SHPHINX_RST_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.rst)
 set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR})
 set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/sphinx)
@@ -35,6 +35,7 @@ add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
         ${CMAKE_CURRENT_SOURCE_DIR}/index.rst
         ${DOXYGEN_INDEX_FILE}
         ${SHPHINX_RST_FILES}
+        ${EXAMPLES}
         MAIN_DEPENDENCY ${SPHINX_SOURCE}/conf.py
         COMMENT "Generating documentation with Sphinx")
 

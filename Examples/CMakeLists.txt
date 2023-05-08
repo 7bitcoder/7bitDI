@@ -3,20 +3,16 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS *.cpp)
 
 foreach(SOURCE ${SOURCES})
     get_filename_component(FILE_NAME ${SOURCE} NAME_WLE)
-    get_filename_component(DIRECTORY_PATH ${SOURCE} DIRECTORY)
-    get_filename_component(DIRECTORY_NAME ${DIRECTORY_PATH} NAME)
 
-    string(JOIN "-" EXEC "Example" ${DIRECTORY_NAME} ${FILE_NAME})
-
-    add_executable(${EXEC}
+    add_executable(${FILE_NAME}
         ${SOURCE}
     )
 
-    target_link_libraries(${EXEC}
-        SevenBitRest
+    target_link_libraries(${FILE_NAME}
+        SevenBitInjector
     )
 
-    install(TARGETS ${EXEC} DESTINATION Examples)
+    install(TARGETS ${FILE_NAME} DESTINATION Examples)
 endforeach()
 
 if(SEVENBITREST_SHARED_LIB)

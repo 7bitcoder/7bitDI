@@ -28,7 +28,7 @@ namespace sb::di
          * &scoped->getService<TestClass>() != &provider->getService<TestClass>(); // True
          * @endcode
          */
-        virtual std::unique_ptr<IServiceProvider> createScope() = 0;
+        virtual IServiceProvider::Ptr createScope() = 0;
 
         /**
          * @brief Returns service instance pointner, might be null

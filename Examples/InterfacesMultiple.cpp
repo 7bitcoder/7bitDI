@@ -1,4 +1,5 @@
-#include "SevenBitRest.hpp"
+#include <SevenBit/DI.hpp>
+#include <iostream>
 
 using namespace std;
 using namespace sb::di;
@@ -45,18 +46,17 @@ class ConsumerService
 };
 int main()
 {
-    WebApplicationBuilder builder;
+    IServiceProvider::Ptr provider = ServiceCollection{}
+                                         .addSingleton<IWorker, WorkerA>()
+                                         .addSingleton<IWorker, WorkerB>()
+                                         .addSingleton<IWorker, WorkerC>()
+                                         .addSingleton<ConsumerService>()
+                                         .buildServiceProvider();
 
-    auto &services = builder.getServices();
+    ConsumerService &consumer = provider->getService<ConsumerService>();
 
-    services.addScoped<IWorker, WorkerA>();
-    services.addScoped<IWorker, WorkerB>();
-    services.addScoped<IWorker, WorkerC>();
-    services.addScoped<ConsumerService>();
+    cout << consumer.workAll() << endl;
+    cout << "single work: " << provider->getService<IWorker>().work();
 
-    auto rest = builder.build();
-
-    rest.mapGet("/", [](ConsumerService &consumer) { return consumer.workAll(); });
-
-    rest.run();
+    return 0;
 }

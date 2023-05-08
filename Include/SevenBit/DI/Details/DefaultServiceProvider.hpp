@@ -42,7 +42,7 @@ namespace sb::di::details
         DefaultServiceProvider &operator=(const DefaultServiceProvider &) = delete;
         DefaultServiceProvider &operator=(DefaultServiceProvider &&) = delete;
 
-        std::unique_ptr<IServiceProvider> createScope() override;
+        IServiceProvider::Ptr createScope() override;
 
         const IServiceInstance *tryGetInstance(TypeId serviceTypeId) override;
 

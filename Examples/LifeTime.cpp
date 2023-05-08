@@ -3,7 +3,6 @@
 #include <memory>
 
 using namespace std;
-using namespace string_literals;
 using namespace sb::di;
 
 struct SingletonService
@@ -16,24 +15,17 @@ struct TransientService
 {
 };
 
-class ConsumerService
-{
-  public:
-    ConsumerService(const SingletonService *singleton, vector<ScopedService *> scoped,
-                    vector<unique_ptr<TransientService>> trasients)
-    {
-    }
-};
 int main()
 {
     IServiceProvider::Ptr provider = ServiceCollection{}
                                          .addSingleton<SingletonService>()
                                          .addScoped<ScopedService>()
                                          .addTransient<TransientService>()
-                                         .addScoped<ConsumerService>()
                                          .buildServiceProvider();
 
-    ConsumerService &consumer = provider->getService<ConsumerService>();
+    SingletonService &singleton = provider->getService<SingletonService>();
+    ScopedService &scoped = provider->getService<ScopedService>();
+    std::unique_ptr<TransientService> transient = provider->createService<TransientService>();
 
     return 0;
 }

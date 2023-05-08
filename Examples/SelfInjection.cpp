@@ -1,4 +1,5 @@
-#include "SevenBitRest.hpp"
+#include <SevenBit/DI.hpp>
+#include <iostream>
 
 using namespace std::string_literals;
 using namespace sb::di;
@@ -15,23 +16,15 @@ struct TransientService
 
 int main()
 {
-    WebApplicationBuilder builder;
+    IServiceProvider::Ptr provider = ServiceCollection{}
+                                         .addSingleton<SingletonService>()
+                                         .addScoped<ScopedService>()
+                                         .addTransient<TransientService>()
+                                         .buildServiceProvider();
 
-    auto &services = builder.getServices();
+    SingletonService &singleton = provider->getService<SingletonService>();
+    ScopedService &scoped = provider->getService<ScopedService>();
+    std::unique_ptr<TransientService> transient = provider->createService<TransientService>();
 
-    services.addSingleton<SingletonService>();
-    services.addScoped<ScopedService>();
-    services.addTransient<TransientService>();
-
-    auto rest = builder.build();
-
-    rest.mapGet("/", [](ServiceProvider &provider) {
-        auto singleton = provider.getService<SingletonService>();
-        auto scoped = provider.getService<ScopedService>();
-        auto trasient = provider.createService<TransientService>();
-
-        return "Service provider injection."s;
-    });
-
-    rest.run();
+    return 0;
 }

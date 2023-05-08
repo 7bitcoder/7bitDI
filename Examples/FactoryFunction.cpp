@@ -1,5 +1,5 @@
-#include "ServiceProvider.hpp"
-#include "SevenBitRest.hpp"
+#include <SevenBit/DI.hpp>
+#include <iostream>
 #include <memory>
 
 using namespace std;
@@ -18,15 +18,15 @@ class Service
 
 int main()
 {
-    WebApplicationBuilder builder;
 
-    auto &services = builder.getServices();
+    IServiceProvider::Ptr provider =
+        ServiceCollection{}
+            .addSingleton<Service>([]() { return make_unique<Service>("Hello from service!"); })
+            .buildServiceProvider();
 
-    services.addScoped<Service>([](ServiceProvider &provider) { return make_unique<Service>("Hello from service!"); });
+    Service &service = provider->getService<Service>();
 
-    auto rest = builder.build();
+    cout << service.message();
 
-    rest.mapGet("/", [](Service &service) { return service.message(); });
-
-    rest.run();
+    return 0;
 }
