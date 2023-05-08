@@ -12,7 +12,7 @@
 
 namespace sb::di::details
 {
-    class ServicesMap
+    class EXPORT ServicesMap
     {
       private:
         std::unordered_map<TypeId, ServiceList> _serviceListMap;

@@ -8,7 +8,7 @@
 
 namespace sb::di::details
 {
-    class ScopedGuard
+    class EXPORT ScopedGuard
     {
       private:
         std::unordered_set<TypeId> &_typeIdsUnderConstruction;

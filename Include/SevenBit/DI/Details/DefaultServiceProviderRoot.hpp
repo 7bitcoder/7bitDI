@@ -12,7 +12,7 @@
 
 namespace sb::di::details
 {
-    class DefaultServiceProviderRoot : public DefaultServiceProvider, public IServiceProviderRoot
+    class EXPORT DefaultServiceProviderRoot : public DefaultServiceProvider, public IServiceProviderRoot
     {
       public:
         using Ptr = std::unique_ptr<DefaultServiceProviderRoot>;

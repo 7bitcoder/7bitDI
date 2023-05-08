@@ -23,7 +23,7 @@
 
 namespace sb::di::details
 {
-    class DefaultServiceProvider : public IServiceProvider
+    class EXPORT DefaultServiceProvider : public IServiceProvider
     {
       public:
         using Ptr = std::unique_ptr<DefaultServiceProvider>;

@@ -19,9 +19,8 @@ class Service
 int main()
 {
 
-    IServiceProvider::Ptr provider =
-        ServiceCollection{}
-            .addSingleton<Service>([]() { return make_unique<Service>("Hello from service!"); })
+    IServiceProvider::Ptr provider = ServiceCollection{}
+            .addSingleton<Service>([](IServiceProvider& provider) { return make_unique<Service>("Hello from service!"); })
             .buildServiceProvider();
 
     Service &service = provider->getService<Service>();

@@ -11,7 +11,7 @@
 
 namespace sb::di::details
 {
-    class ServiceList
+    class EXPORT ServiceList
     {
       private:
         std::vector<IServiceInstance::Ptr> _services;

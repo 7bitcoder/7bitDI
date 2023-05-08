@@ -22,7 +22,6 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx_copybutton',
     'breathe',
-    'myst_parser'
 ]
 breathe_default_project = '7BitInjector'
 

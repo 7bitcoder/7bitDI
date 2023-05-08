@@ -8,7 +8,7 @@
 
 namespace sb::di::details
 {
-    class CircularDependencyGuard
+    class EXPORT CircularDependencyGuard
     {
       private:
         std::unordered_set<TypeId> _typeIdsUnderConstruction;

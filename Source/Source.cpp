@@ -10,5 +10,6 @@
 #include "SevenBit/DI/Details/Impl/ServiceDescriptorsMap.hpp"
 #include "SevenBit/DI/Details/Impl/ServiceLifeTime.hpp"
 #include "SevenBit/DI/Details/Impl/ServiceList.hpp"
-#include "SevenBit/DI/Details/Impl/ServiceProvider.hpp"
+#include "SevenBit/DI/Details/Impl/DefaultServiceProvider.hpp"
+#include "SevenBit/DI/Details/Impl/DefaultServiceProviderRoot.hpp"
 #include "SevenBit/DI/Details/Impl/ServicesMap.hpp"

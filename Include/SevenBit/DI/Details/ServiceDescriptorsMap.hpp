@@ -14,7 +14,7 @@
 
 namespace sb::di::details
 {
-    class ServiceDescriptorsMap
+    class EXPORT ServiceDescriptorsMap
     {
       private:
         std::unordered_map<TypeId, ServiceDescriptorList> _serviceCreatorsMap;

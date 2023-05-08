@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SevenBit/DI/CmakeDef.hpp"
+#include "SevenBit/DI/Export.hpp"
 
 #ifndef SEVEN_BIT_INJECTOR_VERSION
 

@@ -11,7 +11,7 @@
 
 namespace sb::di::details
 {
-    class ServiceDescriptorList
+    class EXPORT ServiceDescriptorList
     {
       private:
         std::vector<ServiceDescriptor> _serviceDescriptors;

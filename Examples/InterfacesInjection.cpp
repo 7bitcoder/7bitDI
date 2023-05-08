@@ -34,13 +34,13 @@ class ConsumerService
 {
   private:
     IServiceA *_serviceA;
-    IServiceB *_serviceB;
+    std::unique_ptr<IServiceB> _serviceB;
 
   public:
-    ConsumerService(IServiceA *serviceA, IServiceB *serviceB)
+    ConsumerService(IServiceA *serviceA, std::unique_ptr<IServiceB> serviceB)
     {
         _serviceA = serviceA;
-        _serviceB = serviceB;
+        _serviceB = std::move(serviceB);
     }
 
     string execute() { return _serviceA->actionA() + ", " + _serviceB->actionB() + " executed."; }
@@ -49,8 +49,8 @@ int main()
 {
     IServiceProvider::Ptr provider = ServiceCollection{}
                                          .addSingleton<IServiceA, ServiceA>()
-                                         .addSingleton<IServiceB, ServiceB>()
-                                         .addSingleton<ConsumerService>()
+                                         .addTransient<IServiceB, ServiceB>()
+                                         .addScoped<ConsumerService>()
                                          .buildServiceProvider();
 
     ConsumerService &consumer = provider->getService<ConsumerService>();

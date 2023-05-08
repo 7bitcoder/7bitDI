@@ -12,9 +12,9 @@ foreach(SOURCE ${SOURCES})
         SevenBitInjector
     )
 
-    install(TARGETS ${FILE_NAME} DESTINATION Examples)
+    install(TARGETS ${FILE_NAME} DESTINATION examples)
 endforeach()
 
-if(SEVENBITREST_SHARED_LIB)
-    install(TARGETS SevenBitRest DESTINATION Examples)
+if(SEVEN_BIT_INJECTOR_SHARED_LIB)
+    install(TARGETS SevenBitInjector DESTINATION examples)
 endif()

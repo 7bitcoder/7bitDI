@@ -14,7 +14,7 @@ namespace sb::di
     /**
      * @brief Describes Service
      */
-    class ServiceDescriptor
+    class EXPORT ServiceDescriptor
     {
       private:
         ServiceLifeTime _lifetime;

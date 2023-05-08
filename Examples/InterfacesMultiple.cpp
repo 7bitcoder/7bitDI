@@ -55,7 +55,7 @@ int main()
 
     ConsumerService &consumer = provider->getService<ConsumerService>();
 
-    cout << consumer.workAll() << endl;
+    cout << "work all: " << consumer.workAll() << endl;
     cout << "single work: " << provider->getService<IWorker>().work();
 
     return 0;

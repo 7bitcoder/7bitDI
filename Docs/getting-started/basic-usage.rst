@@ -2,7 +2,7 @@ Basic Usage
 ========================================
 
 This is very trivial usage of this library 
-(you could just create object inline using constructor)
+(object could be created using inline constructor)
 but is shows the main idea behind project.
 
 * Service collection class is responsible for registering services and building service provider

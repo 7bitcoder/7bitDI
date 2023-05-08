@@ -8,7 +8,7 @@ namespace sb::di
     /**
      * @brief Class used to describe service lifetime
      */
-    struct ServiceLifeTime
+    struct EXPORT ServiceLifeTime
     {
       public:
         /**

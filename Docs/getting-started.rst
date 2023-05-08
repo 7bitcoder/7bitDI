@@ -6,10 +6,16 @@ Getting Started
    :titlesonly:
 
    getting-started/basic-usage
-   getting-started/using-interfaces
-   getting-started/injecting-services
+   getting-started/separate-implementation
    getting-started/services-lifetime
+   getting-started/injecting-services
    getting-started/injecting-multiple-services
+   getting-started/injection-rules
+   getting-started/injecting-service-provider
+   getting-started/using-factories
+   getting-started/external-singleton
+   
+   
    
 
 

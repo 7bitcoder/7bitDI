@@ -18,7 +18,7 @@
 
 namespace sb::di
 {
-    class ServiceCollection
+    class EXPORT ServiceCollection
     {
       private:
         std::vector<ServiceDescriptor> _serviceDescriptors;

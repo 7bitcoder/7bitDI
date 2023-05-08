@@ -13,52 +13,52 @@ namespace sb::di
     /**
      * @brief Base class for all injector exceptions
      */
-    struct InjectorException : public std::runtime_error
+    struct EXPORT InjectorException : public std::runtime_error
     {
         InjectorException(const std::string &error);
     };
 
-    struct NullPointnerException : public InjectorException
+    struct EXPORT NullPointnerException : public InjectorException
     {
         NullPointnerException(const std::string &why);
     };
 
-    struct ForbiddenServiceFactoryException : public InjectorException
+    struct EXPORT ForbiddenServiceFactoryException : public InjectorException
     {
         ForbiddenServiceFactoryException(TypeId typeId, const std::string &reason);
     };
 
-    struct CannotMoveOutServiceException : public InjectorException
+    struct EXPORT CannotMoveOutServiceException : public InjectorException
     {
         CannotMoveOutServiceException(TypeId typeId, const std::string &reason);
     };
 
-    struct InvalidServiceException : public InjectorException
+    struct EXPORT InvalidServiceException : public InjectorException
     {
         InvalidServiceException(TypeId typeId, const std::string &reason);
     };
 
-    struct ServiceNotFoundException : public InjectorException
+    struct EXPORT ServiceNotFoundException : public InjectorException
     {
         ServiceNotFoundException(TypeId typeIndex, const std::string &reason);
     };
 
-    struct ServiceAlreadyRegisteredException : public InjectorException
+    struct EXPORT ServiceAlreadyRegisteredException : public InjectorException
     {
         ServiceAlreadyRegisteredException(TypeId typeIndex);
     };
 
-    struct ServiceBaseTypeMissmatchException : public InjectorException
+    struct EXPORT ServiceBaseTypeMissmatchException : public InjectorException
     {
         ServiceBaseTypeMissmatchException(TypeId typeIndex, TypeId interface);
     };
 
-    struct ServiceLifeTimeMissmatchException : public InjectorException
+    struct EXPORT ServiceLifeTimeMissmatchException : public InjectorException
     {
         ServiceLifeTimeMissmatchException(TypeId typeIndex, TypeId interface);
     };
 
-    struct CircularDependencyException : public InjectorException
+    struct EXPORT CircularDependencyException : public InjectorException
     {
         CircularDependencyException(TypeId typeIndex);
     };
