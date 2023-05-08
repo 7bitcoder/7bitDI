@@ -22,17 +22,17 @@ namespace sb::di::details::utils
         char value[N] = {'\0'};
     };
 
-    template <typename T, typename Enable = void> struct IsUniquePtr : std::false_type
+    template <class T> struct IsUniquePtr : std::false_type
     {
         using Type = T;
     };
 
-    template <typename T> struct IsUniquePtr<std::unique_ptr<T>> : std::true_type
+    template <class T> struct IsUniquePtr<std::unique_ptr<T>> : std::true_type
     {
         using Type = T;
     };
 
-    template <typename T> inline constexpr bool IsUniquePtrV = IsUniquePtr<T>::value;
+    template <class T> inline constexpr bool IsUniquePtrV = IsUniquePtr<T>::value;
 
     template <class TService, class TImplementation> static void inheritCheck()
     {
