@@ -49,3 +49,4 @@ Navigation
     installation
     getting-started
     reference
+    license
