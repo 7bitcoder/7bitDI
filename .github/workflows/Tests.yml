@@ -13,7 +13,7 @@ env:
   BUILD_FLAGS: -DBUILD_TESTS:BOOL=ON
 
 jobs:
-  b2-posix:
+  test-posix:
     strategy:
       fail-fast: false
       matrix:
@@ -31,7 +31,10 @@ jobs:
       - name: Install Conan
         run: sudo pip3 install conan
 
-      - name: Install Packages Using Conan
+      - name: Configure Conan
+        run: conan profile detect
+
+      - name: Install Conan Packages
         run: conan install . --output-folder=build --build=missing
 
       - name: Configure CMake
