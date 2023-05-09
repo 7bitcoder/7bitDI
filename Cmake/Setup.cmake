@@ -42,12 +42,6 @@ else() # headerOnly
     set(SEVEN_BIT_INJECTOR_HEADER_ONLY_LIB true)
 endif()
 
-set(REQUIRE_CONAN_PKGS false)
-
-if(BUILD_TESTS)
-    set(REQUIRE_CONAN_PKGS true)
-endif()
-
 configure_file(Include/SevenBit/DI/CmakeDef.hpp.input ${PROJECT_SOURCE_DIR}/Include/SevenBit/DI/CmakeDef.hpp)
 
 set(INFOS
@@ -57,6 +51,5 @@ set(INFOS
     "Build tests: ${BUILD_TESTS}"
     "Build examples: ${BUILD_EXAMPLES}"
     "Build documentation: ${BUILD_DOCS}"
-    "Require conan packages: ${REQUIRE_CONAN_PKGS}"
 )
 printInfo("${INFOS}" = 50 7 0)

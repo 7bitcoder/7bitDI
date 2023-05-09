@@ -10,7 +10,8 @@ env:
   BUILD_TYPE: Release
   CONAN_USER_HOME: ~/
   CONAN_HOME_FOLDER: ~/.conan
-  BUILD_FLAGS: -DBUILD_TESTS:BOOL=ON
+  BUILD_FLAGS: -DBUILD_TESTS:BOOL=true
+  BUILD_DIR: ${{github.workspace}}/build
 
 jobs:
   test-posix:
@@ -35,14 +36,16 @@ jobs:
         run: conan profile detect
 
       - name: Install Conan Packages
-        run: conan install . --output-folder=build --build=missing
+        run: conan install . --output-folder=${{ env.BUILD_DIR }} --build=missing
 
       - name: Configure CMake
-        run: cmake ${{ env.BUILD_FLAGS }} -B ./build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+        working-directory: ${{ env.BUILD_DIR }}
+        run: cd ${{ env.BUILD_DIR }} && cmake .. ${{ env.BUILD_FLAGS }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
 
       - name: Build
-        run: cmake --build ./build --config ${{ env.BUILD_TYPE }}
+        working-directory: ${{ env.BUILD_DIR }}
+        run: cmake --build . --config ${{ env.BUILD_TYPE }}
 
       - name: Test
-        working-directory: ${{github.workspace}}/build
+        working-directory: ${{ env.BUILD_DIR }}
         run: ctest -C ${{env.BUILD_TYPE}}
