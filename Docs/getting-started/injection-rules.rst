@@ -28,6 +28,6 @@ Injecting Services
 
 .. literalinclude:: ../../Examples/Rules.cpp
    :caption: Examples/Rules
-   :language: cpp
+   :language: C++
 
 

@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+env:
+  BUILD_TYPE: Release
+  CONAN_USER_HOME: ~/
+  CONAN_HOME_FOLDER: ~/.conan
+  BUILD_FLAGS: -DBUILD_TESTS:BOOL=ON
+
+jobs:
+  b2-posix:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-20.04
+          - os: ubuntu-22.04
+          - os: macos-11
+          - os: macos-12
+
+    runs-on: ${{matrix.os}}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Conan
+        run: sudo pip3 install conan
+
+      - name: Install Packages Using Conan
+        run: conan install . --output-folder=build --build=missing
+
+      - name: Configure CMake
+        run: cmake ${{ env.BUILD_FLAGS }} -B ./build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+
+      - name: Build
+        run: cmake --build ./build --config ${{ env.BUILD_TYPE }}
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        # Execute tests defined by the CMake configuration.
+        # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+        run: ctest -C ${{env.BUILD_TYPE}}

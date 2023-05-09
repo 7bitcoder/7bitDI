@@ -43,10 +43,12 @@ Navigation
 
 .. toctree::
     :titlesonly:
-    :maxdepth: 1
+    :maxdepth: 4
     :glob:
    
     installation
     getting-started
+    advanced
+    examples
     reference
     license

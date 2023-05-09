@@ -6,4 +6,6 @@ Reference
    :titlesonly:
 
    reference/di
+   reference/di/details
+
 

@@ -5,7 +5,7 @@ Service Provider object can be injected and can be used to manually get (scoped/
 
 .. literalinclude:: ../../Examples/SelfInjection.cpp
    :caption: Examples/SelfInjection
-   :language: cpp
+   :language: C++
 
 .. code-block:: console
    :caption: Output

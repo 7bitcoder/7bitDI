@@ -22,7 +22,7 @@ Service can be registered as singleton, scoped or transient.
 
 .. literalinclude:: ../../Examples/LifeTime.cpp
    :caption: Examples/LifeTime
-   :language: cpp
+   :language: C++
 
 Singleton service address is always the same.
 Scoped service address is same in given provider scope.
@@ -30,7 +30,7 @@ Transient service address is always different.
 
 .. literalinclude:: ../../Examples/LifeTimeExplanation.cpp
    :caption: Examples/LifeTimeExplanation
-   :language: cpp
+   :language: C++
 
 .. code-block:: console
    :caption: Possible Output

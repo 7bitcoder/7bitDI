@@ -15,4 +15,3 @@ Namespace sb::di
    di/iserviceprovider
    di/servicecollection
    di/exceptions
-   di/details

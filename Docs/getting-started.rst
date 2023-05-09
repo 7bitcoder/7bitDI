@@ -2,6 +2,7 @@ Getting Started
 ========================================
 
 .. toctree::
+   :caption: 12345
    :maxdepth: 2
    :titlesonly:
 
@@ -12,8 +13,6 @@ Getting Started
    getting-started/injecting-multiple-services
    getting-started/injection-rules
    getting-started/injecting-service-provider
-   getting-started/using-factories
-   getting-started/external-singleton
    
    
    

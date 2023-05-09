@@ -6,7 +6,7 @@ Service will be accesable only by interface, implementation is hidden for client
 
 .. literalinclude:: ../../Examples/Interfaces.cpp
    :caption: Examples/Interfaces
-   :language: cpp
+   :language: C++
 
 .. code-block:: console
    :caption: Output

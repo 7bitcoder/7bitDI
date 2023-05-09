@@ -1,10 +1,12 @@
 name: MacOs
 
 on:
+  pull_request:
+    # Sequence of patterns matched against refs/heads
+    branches:
   push:
     branches: ["main"]
     paths:
-      - "Benchmarks/**"
       - "Cmake/**"
       - "Examples/**"
       - "Include/**"
@@ -39,7 +41,7 @@ jobs:
           key: ${{ runner.os }}-build-conan-cache-${{ hashFiles('./conanfile.txt') }}
 
       - name: Install Packages Using Conan
-        run: mkdir build && cd ./build && conan install -s build_type=${{ env.BUILD_TYPE }} --build=missing ..
+        run: conan install . --output-folder=build --build=missing
 
       - name: Install Boost Url
         run: mkdir BoostUrl && cd ./BoostUrl && git clone https://github.com/boostorg/url.git

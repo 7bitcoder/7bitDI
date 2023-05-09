@@ -5,7 +5,7 @@ Singleton can be registered externally
 
 .. literalinclude:: ../../Examples/ExternalSingleton.cpp
    :caption: Examples/ExternalSingleton
-   :language: cpp
+   :language: C++
 
 .. code-block:: console
    :caption: Output

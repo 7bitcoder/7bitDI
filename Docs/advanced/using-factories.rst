@@ -6,7 +6,7 @@ Functor scheme (IServiceProvider &) -> std::unique_ptr or () -> std::unique_ptr
 
 .. literalinclude:: ../../Examples/FactoryFunctions.cpp
    :caption: Examples/FactoryFunctions
-   :language: cpp
+   :language: C++
 
 .. code-block:: console
    :caption: Output

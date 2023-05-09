@@ -10,7 +10,7 @@ but is shows the main idea behind project.
 
 .. literalinclude:: ../../Examples/Basic.cpp
    :caption: Examples/Basic
-   :language: cpp
+   :language: C++
 
 
 .. code-block:: console

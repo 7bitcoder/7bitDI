@@ -13,7 +13,7 @@ This example shows the main purpose of this library, injecting services into ser
 
 .. literalinclude:: ../../Examples/InterfacesInjection.cpp
    :caption: Examples/InterfacesInjection
-   :language: cpp
+   :language: C++
 
 .. code-block:: console
    :caption: Output

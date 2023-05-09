@@ -16,7 +16,7 @@ Multiple services can inherit one interface and can be injected using vector.
 
 .. literalinclude:: ../../Examples/InterfacesMultiple.cpp
    :caption: Examples/InterfacesMultiple
-   :language: cpp
+   :language: C++
 
 .. code-block:: console
    :caption: Output
