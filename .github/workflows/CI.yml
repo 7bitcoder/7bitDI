@@ -10,7 +10,7 @@ env:
   BUILD_TYPE: Release
   CONAN_USER_HOME: ~/
   CONAN_HOME_FOLDER: ~/.conan
-  BUILD_FLAGS: -DBUILD_TESTS:BOOL=true -BUILD_EXAMPLES:BOOL=ON
+  BUILD_FLAGS: -DBUILD_TESTS:BOOL=true -DBUILD_EXAMPLES:BOOL=true
   BUILD_DIR: ${{github.workspace}}/build
 
 jobs:
@@ -37,7 +37,7 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{ env.BUILD_DIR }}
-        run: cd ${{ env.BUILD_DIR }} && cmake .. ${{ env.BUILD_FLAGS }} -DLIBRARY_TYPE=${{ matrix.libraryType }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
+        run: cmake .. ${{ env.BUILD_FLAGS }} -DLIBRARY_TYPE=${{ matrix.libraryType }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake
 
       - name: Build
         working-directory: ${{ env.BUILD_DIR }}
