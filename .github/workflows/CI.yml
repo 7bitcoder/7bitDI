@@ -8,13 +8,11 @@ on:
 
 env:
   BUILD_TYPE: Release
-  CONAN_USER_HOME: ~/
-  CONAN_HOME_FOLDER: ~/.conan
   BUILD_FLAGS: -DBUILD_TESTS:BOOL=true -DBUILD_EXAMPLES:BOOL=true -DCMAKE_TOOLCHAIN_FILE:STRING="conan_toolchain.cmake"
   BUILD_DIR: ${{github.workspace}}/build
 
 jobs:
-  test-posix:
+  test:
     strategy:
       fail-fast: false
       matrix:
