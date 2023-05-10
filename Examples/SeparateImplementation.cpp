@@ -1,7 +1,6 @@
 #include <SevenBit/DI.hpp>
 #include <iostream>
 
-using namespace std;
 using namespace sb::di;
 
 struct IService
@@ -14,7 +13,7 @@ struct IService
 class Service final : public IService
 {
   public:
-    string helloFromService() { return "Hello from service."; }
+    std::string helloFromService() { return "Hello from service."; }
 };
 
 int main()
@@ -23,7 +22,7 @@ int main()
 
     IService &service = provider->getService<IService>();
 
-    cout << service.helloFromService();
+    std::cout << service.helloFromService();
 
     return 0;
 }

@@ -1,0 +1,47 @@
+name: Run CMake
+description: "Runs CMake"
+inputs:
+  args:
+    description: "Other arguments"
+    required: false
+    default: ""
+  build-dir:
+    description: "Build dir path"
+    required: true
+  cmake-version:
+    description: "The CMake version to run"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: CMake ${{ inputs.cmake-version }}
+      uses: jwlawson/actions-setup-cmake@v1.13
+      with:
+        cmake-version: "${{ inputs.cmake-version }}"
+
+    - name: Install Conan
+      uses: turtlebrowser/get-conan@main
+
+    - name: Configure Conan
+      run: conan profile detect
+      shell: cmd
+
+    - name: Install Conan Packages
+      run: conan install . --output-folder=${{ inputs.build-dir }} --build=missing
+      shell: cmd
+
+    - name: Configure CMake
+      working-directory: ${{ inputs.build-dir }}
+      run: cmake .. ${{ inputs.args }} 
+      shell: cmd
+
+    - name: Build
+      working-directory: ${{ inputs.build-dir }}
+      run: cmake --build .
+      shell: cmd
+
+    - name: Test
+      working-directory: ${{ inputs.build-dir }}
+      run: ctest
+      shell: cmd

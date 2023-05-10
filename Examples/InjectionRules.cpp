@@ -2,7 +2,6 @@
 #include <iostream>
 #include <memory>
 
-using namespace std;
 using namespace sb::di;
 
 struct SingletonService
@@ -15,11 +14,11 @@ struct TransientService
 {
 };
 
-class ConsumerService
+class ServiceExecutor
 {
   public:
-    ConsumerService(const SingletonService *singleton, vector<ScopedService *> scoped,
-                    vector<unique_ptr<TransientService>> trasients)
+    ServiceExecutor(const SingletonService *singleton, std::vector<ScopedService *> scoped,
+                    std::vector<std::unique_ptr<TransientService>> trasients)
     {
     }
 };
@@ -29,10 +28,10 @@ int main()
                                          .addSingleton<SingletonService>()
                                          .addScoped<ScopedService>()
                                          .addTransient<TransientService>()
-                                         .addScoped<ConsumerService>()
+                                         .addScoped<ServiceExecutor>()
                                          .buildServiceProvider();
 
-    ConsumerService &consumer = provider->getService<ConsumerService>();
+    ServiceExecutor &consumer = provider->getService<ServiceExecutor>();
 
     return 0;
 }
