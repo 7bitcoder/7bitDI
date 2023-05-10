@@ -2,7 +2,6 @@
 #include <iostream>
 #include <memory>
 
-using namespace std;
 using namespace sb::di;
 
 struct IServiceA
@@ -14,7 +13,7 @@ struct IServiceA
 
 struct IServiceB
 {
-    virtual string actionB() = 0;
+    virtual std::string actionB() = 0;
 
     virtual ~IServiceB() = default;
 };
@@ -22,41 +21,41 @@ struct IServiceB
 class ServiceA final : public IServiceA
 {
   public:
-    string actionA() { return "actionA"; }
+    std::string actionA() { return "actionA"; }
 };
 
 class ServiceB final : public IServiceB
 {
   public:
-    string actionB() { return "actionB"; }
+    std::string actionB() { return "actionB"; }
 };
 
-class ConsumerService
+class ServiceExecutor
 {
   private:
     IServiceA *_serviceA;
     std::unique_ptr<IServiceB> _serviceB;
 
   public:
-    ConsumerService(IServiceProvider* provider)
+    ServiceExecutor(IServiceProvider *provider)
     {
         _serviceA = &provider->getService<IServiceA>();
         _serviceB = provider->createService<IServiceB>();
     }
 
-    string execute() { return _serviceA->actionA() + ", " + _serviceB->actionB() + " executed."; }
+    std::string execute() { return _serviceA->actionA() + ", " + _serviceB->actionB() + " executed."; }
 };
 int main()
 {
     IServiceProvider::Ptr provider = ServiceCollection{}
                                          .addSingleton<IServiceA, ServiceA>()
                                          .addTransient<IServiceB, ServiceB>()
-                                         .addScoped<ConsumerService>()
+                                         .addScoped<ServiceExecutor>()
                                          .buildServiceProvider();
 
-    ConsumerService &consumer = provider->getService<ConsumerService>();
+    ServiceExecutor &consumer = provider->getService<ServiceExecutor>();
 
-    cout << consumer.execute();
+    std::cout << consumer.execute();
 
     return 0;
 }

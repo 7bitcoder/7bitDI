@@ -1,36 +1,5 @@
-Installation
+Building Library
 ==========================
-
-To install 7BitInjector, there are several methods:
-----------------
-
-#. Using Conan.io package manager - Recommended
-    Info soon...
-
-#. Headder only
-    Download source code from the most recent release, 
-    copy include folder into your project location,
-    for example copy into '/SevenBitInjector' folder. 
-    Include this folder into project, with CMake, u can use: 
-
-    .. code-block:: cmake
-
-        include_directories(/SevenBitInjector/include)
-
-#. Building library as Static/Shared
-    Download source code from most recent release,
-    build project using cmake, set cmake cache var "LIBRARY_TYPE" to "Static" or "Shared",
-    run install command 
-
-    .. code-block:: sh
-
-        cmake --build ./build --target install
-
-    library files are located in build/publish folder, include those files into your project, 
-    for more details see `Building Library Locally`_ section
-
-Building Library Locally
-----------------
 
 Library can be build locally using Cmake_ (`Cmake Installation`_), several cache variables can be set:
 
@@ -63,4 +32,5 @@ to install conan packages run this command in library root folder:
 .. _Breathe: https://breathe.readthedocs.io/en/latest/
 .. _Doxygen: https://www.doxygen.nl/
 .. _Gtest: https://google.github.io/googletest/
+.. _Conan: https://conan.io/
 .. _`Conan Installation`: https://conan.io/downloads.html

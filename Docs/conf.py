@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "7BitInjector"
+project = "7bitInjector"
 copyright = "2023, 7BitCoder Sylwester Dawida"
 author = "Sylwester Dawida"
 version = "1.0.0"
@@ -24,7 +24,7 @@ extensions = [
     "sphinx_copybutton",
     "breathe",
 ]
-breathe_default_project = "7BitInjector"
+breathe_default_project = "7bitInjector"
 
 exclude_patterns = []
 
@@ -35,7 +35,7 @@ html_title = f"{project} v{version}"
 html_theme = "furo"
 html_scaled_image_link = False
 html_static_path = ["_static"]
-html_logo = "_static/7BitInjector-logo.svg"
+html_logo = "_static/7bitInjector-logo.svg"
 html_theme_options = {
     "source_repository": "https://github.com/7bitcoder/7bitinjector/",
     "source_branch": "main",
