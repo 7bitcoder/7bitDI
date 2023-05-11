@@ -16,7 +16,8 @@ def projectInfo():
     with open(currentPath + "/../CmakeLists.txt", "r") as file:
         regex = re.compile("project\((.+) VERSION (.+)\)")
         result = regex.search(file.read())
-        return {"project": result.group(1), "version": result.group(2)}
+        # return {"project": result.group(1), "version": result.group(2)}
+        return {"project": "7bitInjector", "version": "1.0.0"}
 
 
 info = projectInfo()
