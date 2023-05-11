@@ -7,6 +7,7 @@ on:
     branches: ["dev"]
 
 env:
+  BUILD_TYPE: Release
   BUILD_DIR: ${{github.workspace}}/build
 
 jobs:
@@ -33,12 +34,12 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{ env.BUILD_DIR }}
-        run: cmake .. -DLIBRARY_TYPE=${{ matrix.libraryType }} -DBUILD_TESTS:BOOL=true -DBUILD_EXAMPLES:BOOL=true -DCMAKE_TOOLCHAIN_FILE:STRING="conan_toolchain.cmake"
+        run: cmake .. -DLIBRARY_TYPE=${{ matrix.libraryType }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DBUILD_TESTS:BOOL=true -DBUILD_EXAMPLES:BOOL=true -DCMAKE_TOOLCHAIN_FILE:STRING="conan_toolchain.cmake"
 
       - name: Build
         working-directory: ${{ env.BUILD_DIR }}
-        run: cmake --build .
+        run: cmake --build . --config ${{ env.BUILD_TYPE }}
 
       - name: Test
         working-directory: ${{ env.BUILD_DIR }}
-        run: ctest
+        run: ctest -C ${{env.BUILD_TYPE}}
