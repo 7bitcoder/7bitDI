@@ -1,8 +1,8 @@
 Separate Implementation
 ========================================
 
-This example shows how to register service as interface with implementation.
-Service will be accesable only by interface, implementation is hidden for client 
+This example shows how to register the service as an interface with implementation.
+Service will be accessible only by an interface, implementation is hidden for the client 
 
 .. literalinclude:: ../../Examples/SeparateImplementation.cpp
    :caption: Examples/SeparateImplementation
