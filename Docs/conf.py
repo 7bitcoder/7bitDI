@@ -6,8 +6,7 @@ currentPath = os.path.dirname(__file__)
 
 
 def createIfNotExists(path):
-    isExist = os.path.exists(path)
-    if not isExist:
+    if not os.path.exists(path):
         os.makedirs(path)
 
 
