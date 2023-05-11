@@ -20,9 +20,7 @@ runs:
       uses: jwlawson/actions-setup-cmake@v1.13
       with:
         cmake-version: "${{ inputs.cmake-version }}"
-
-    - uses: actions/checkout@v3
-
+        
     - name: Install Conan
       uses: turtlebrowser/get-conan@main
 

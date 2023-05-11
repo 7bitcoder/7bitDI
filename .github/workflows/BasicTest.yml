@@ -16,6 +16,8 @@ jobs:
     runs-on: ${{matrix.os}}
 
     steps:
+      - uses: actions/checkout@v3
+
       - name: Check CMake 3.5
         uses: ./.github/actions/CMakeTest
         with:
