@@ -3,6 +3,9 @@ import os
 import re
 
 
+currentPath = os.path.dirname(__file__)
+
+
 def createIfNotExists(path):
     isExist = os.path.exists(path)
     if not isExist:
@@ -10,7 +13,7 @@ def createIfNotExists(path):
 
 
 def projectInfo():
-    with open("../CmakeLists.txt", "r") as file:
+    with open(currentPath + "/../CmakeLists.txt", "r") as file:
         regex = re.compile("project\((.+) VERSION (.+)\)")
         result = regex.search(file.read())
         return {"project": result.group(1), "version": result.group(2)}
@@ -33,8 +36,8 @@ extensions = [
     "breathe",
 ]
 
-pathDoxygen = "../build/docs/doxygen"
-pathSphinx = "../build/docs/sphinx"
+pathDoxygen = currentPath + "/../build/docs/doxygen"
+pathSphinx = currentPath + "/../build/docs/sphinx"
 createIfNotExists(pathDoxygen)
 createIfNotExists(pathSphinx)
 
