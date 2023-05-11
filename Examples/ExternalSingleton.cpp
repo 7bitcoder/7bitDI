@@ -22,6 +22,5 @@ int main()
     Service &service = provider->getService<Service>();
 
     std::cout << service.message();
-
     return 0;
 }

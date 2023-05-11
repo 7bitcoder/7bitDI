@@ -24,36 +24,36 @@ If you notice any problems/bugs, please file an issue on the 7bitInjector_ GitHu
 
 Installation
 --------------------
-**There are few ways of installation:**
+**There are a few ways of installation:**
 
 #. Using Conan.io package manager - Recommended
     Info soon...
 
-#. Headder only
+#. Header only
     Download source code from the most recent release, 
     copy include folder into your project location,
-    for example copy into '/SevenBitInjector' folder. 
-    Include this folder into project, with CMake_, u can use: 
+    for example copy into the '/SevenBitInjector' folder. 
+    Include this folder into the project, with CMake_, u can use: 
 
-    .. code-block:: cmake
+    .. code-block:: CMake
 
         include_directories(/SevenBitInjector/include)
 
 #. Building library as Static/Shared
-    Download source code from most recent release,
-    build project using CMake_, set CMake cache var "LIBRARY_TYPE" to "Static" or "Shared",
+    Download source code from the most recent release,
+    build the project using CMake_, set CMake cache var "LIBRARY_TYPE" to "Static" or "Shared",
     run install command 
 
     .. code-block:: sh
 
         cmake --build ./build --target install
 
-    library files are located in build/publish folder, include those files into your project, 
-    for more details see `Building Library`_ guide
+    library files are located in the build/publish folder, include those files in your project, 
+    for more details see the `Building Library`_ guide
 
 Example Usage
 -----------------
-Next chapters will in detail, setp by step explain what is going on this example
+The next chapters will in detail, step by step explain what is going on in this example
 
 .. literalinclude:: ../Examples/InjectingServices.cpp
    :caption: Examples/InjectingServices

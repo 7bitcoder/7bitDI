@@ -1,18 +1,26 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# For the full list of built-in configuration values, see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
+import subprocess
+import os
+import re
 
-# -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "7bitInjector"
+def createIfNotExists(path):
+    isExist = os.path.exists(path)
+    if not isExist:
+        os.makedirs(path)
+
+
+def projectInfo():
+    with open("../CmakeLists.txt", "r") as file:
+        regex = re.compile("project\((.+) VERSION (.+)\)")
+        result = regex.search(file.read())
+        return {"project": result.group(1), "version": result.group(2)}
+
+
+info = projectInfo()
+project = info["project"]
 copyright = "2023, 7BitCoder Sylwester Dawida"
 author = "Sylwester Dawida"
-version = "1.0.0"
-
-# -- General configuration ---------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+version = info["version"]
 
 extensions = [
     "sphinx.ext.autodoc",
@@ -24,20 +32,18 @@ extensions = [
     "sphinx_copybutton",
     "breathe",
 ]
+
+pathDoxygen = "../build/docs/doxygen"
+pathSphinx = "../build/docs/sphinx"
+createIfNotExists(pathDoxygen)
+createIfNotExists(pathSphinx)
+
+subprocess.call("doxygen ./Doxyfile", shell=True)
+
+breathe_projects = {"7bitInjector": pathDoxygen + "/xml"}
 breathe_default_project = "7bitInjector"
 
-exclude_patterns = []
-
-
-# -- Options for HTML output -------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 html_title = f"{project} v{version}"
 html_theme = "furo"
 html_scaled_image_link = False
 html_static_path = ["_static"]
-html_logo = "_static/7bitInjector-logo.svg"
-html_theme_options = {
-    "source_repository": "https://github.com/7bitcoder/7bitinjector/",
-    "source_branch": "main",
-    "source_directory": "Docs/",
-}

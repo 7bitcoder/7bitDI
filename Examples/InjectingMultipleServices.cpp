@@ -9,25 +9,21 @@ struct IWorker
 
     virtual ~IWorker() = default;
 };
-class WorkerA final : public IWorker
+struct WorkerA final : public IWorker
 {
-  public:
     std::string work() { return "work A done!"; }
 };
-class WorkerB final : public IWorker
+struct WorkerB final : public IWorker
 {
-  public:
     std::string work() { return "work B done!"; }
 };
-class WorkerC final : public IWorker
+struct WorkerC final : public IWorker
 {
-  public:
     std::string work() { return "work C done!"; }
 };
 
 class ServiceExecutor
 {
-  private:
     std::vector<IWorker *> _workers;
 
   public:

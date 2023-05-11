@@ -14,30 +14,26 @@ struct TransientService
 {
 };
 
-template <class TService, bool create> auto GetOrCreate(IServiceProvider &provider)
+template <class TService, bool Get> auto getOrCreate(IServiceProvider &provider)
 {
-    if constexpr (create)
-    {
-        return provider.createService<TService>();
-    }
-    else
+    if constexpr (Get)
     {
         return &provider.getService<TService>();
     }
+    else
+    {
+        return provider.createService<TService>();
+    }
 }
 
-template <class TService, bool create>
-void compareServices(IServiceProvider &rootProvider, IServiceProvider &scopedProvider)
+template <class TService, bool Get> void compareServices(IServiceProvider &root, IServiceProvider &scoped)
 {
     std::cout << "rootProvider \t == rootProvider:\t"
-              << (GetOrCreate<TService, create>(rootProvider) == GetOrCreate<TService, create>(rootProvider))
-              << std::endl;
+              << (getOrCreate<TService, Get>(root) == getOrCreate<TService, Get>(root)) << std::endl;
     std::cout << "rootProvider \t == scopedProvider:\t"
-              << (GetOrCreate<TService, create>(rootProvider) == GetOrCreate<TService, create>(scopedProvider))
-              << std::endl;
+              << (getOrCreate<TService, Get>(root) == getOrCreate<TService, Get>(scoped)) << std::endl;
     std::cout << "scopedProvider \t == scopedProvider:\t"
-              << (GetOrCreate<TService, create>(scopedProvider) == GetOrCreate<TService, create>(scopedProvider))
-              << std::endl;
+              << (getOrCreate<TService, Get>(scoped) == getOrCreate<TService, Get>(scoped)) << std::endl;
 }
 
 int main()
@@ -55,13 +51,13 @@ int main()
 
     IServiceProvider::Ptr scopedProvider = rootProvider->createScope();
 
-    std::cout << std::endl << "Singletons comparision" << std::endl;
-    compareServices<SingletonService, false>(*rootProvider, *scopedProvider);
+    std::cout << std::endl << "Singletons comparison" << std::endl;
+    compareServices<SingletonService, true>(*rootProvider, *scopedProvider);
 
-    std::cout << std::endl << "Scoped comparision" << std::endl;
-    compareServices<ScopedService, false>(*rootProvider, *scopedProvider);
+    std::cout << std::endl << "Scoped comparison" << std::endl;
+    compareServices<ScopedService, true>(*rootProvider, *scopedProvider);
 
-    std::cout << std::endl << "Transient comparision" << std::endl;
-    compareServices<TransientService, true>(*rootProvider, *scopedProvider);
+    std::cout << std::endl << "Transient comparison" << std::endl;
+    compareServices<TransientService, false>(*rootProvider, *scopedProvider);
     return 0;
 }

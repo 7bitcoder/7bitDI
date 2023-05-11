@@ -1,14 +1,14 @@
 [![CI](https://github.com/7bitcoder/7bitinjector/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/7bitcoder/7bitinjector/actions/workflows/CI.ym)
 <div align="center">
 
-  <img src="Docs/_static/7bitInjector-logo.svg" alt="logo" width="500" height="auto" />
+  <img src="Docs/_static/logo.svg" alt="logo" width="500" height="auto" />
 
   <h4>
     C++17 simple dependency injection library!
   </h4>
 
   <p>
-    7bitInjector is a simple C++ dependency injection library, designed to be as easy to use as possible, the main inspiration was asp net core dependency injection system. 
+    7bitInjector is a simple C++ dependency injection library, designed to be as easy to use as possible, the main inspiration was the asp net core dependency injection system. 
   </p>
    
 <h4>
@@ -44,26 +44,23 @@ struct IServiceB
     virtual ~IServiceB() = default;
 };
 
-class ServiceA final : public IServiceA
+struct ServiceA final : public IServiceA
 {
-  public:
     std::string actionA() { return "actionA"; }
 };
 
-class ServiceB final : public IServiceB
+struct ServiceB final : public IServiceB
 {
-  public:
     std::string actionB() { return "actionB"; }
 };
 
-class ConsumerService
+class ServiceExecutor
 {
-  private:
     IServiceA *_serviceA;
     std::unique_ptr<IServiceB> _serviceB;
 
   public:
-    ConsumerService(IServiceA *serviceA, std::unique_ptr<IServiceB> serviceB)
+    ServiceExecutor(IServiceA *serviceA, std::unique_ptr<IServiceB> serviceB)
     {
         _serviceA = serviceA;
         _serviceB = std::move(serviceB);
@@ -76,13 +73,12 @@ int main()
     IServiceProvider::Ptr provider = ServiceCollection{}
                                          .addSingleton<IServiceA, ServiceA>()
                                          .addTransient<IServiceB, ServiceB>()
-                                         .addScoped<ConsumerService>()
+                                         .addScoped<ServiceExecutor>()
                                          .buildServiceProvider();
 
-    ConsumerService &consumer = provider->getService<ConsumerService>();
+    ServiceExecutor &executor = provider->getService<ServiceExecutor>();
 
-    std::cout << consumer.execute();
-
+    std::cout << executor.execute();
     return 0;
 }
 ```
@@ -92,7 +88,7 @@ Output
 actionA, actionB executed.
 ```
 
-More examples and tutorials available on  [documentation](#) page
+More examples and tutorials available on the [documentation](#) page
 
 @7bitcoder Sylwester Dawida 2023
 

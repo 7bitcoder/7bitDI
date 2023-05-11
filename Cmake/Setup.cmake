@@ -45,8 +45,8 @@ endif()
 configure_file(Include/SevenBit/DI/CmakeDef.hpp.input ${PROJECT_SOURCE_DIR}/Include/SevenBit/DI/CmakeDef.hpp)
 
 set(INFOS
-    "7bitInjector version: ${SEVEN_BIT_INJECTOR_VERSION}"
-    "7bitInjector build as ${BUILD_LIBRARY_TYPE} library"
+    "${CMAKE_PROJECT_NAME} version: ${SEVEN_BIT_INJECTOR_VERSION}"
+    "${CMAKE_PROJECT_NAME} build as ${BUILD_LIBRARY_TYPE} library"
     "=================================================="
     "Build tests: ${BUILD_TESTS}"
     "Build examples: ${BUILD_EXAMPLES}"

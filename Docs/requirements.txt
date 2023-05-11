@@ -1,0 +1,3 @@
+sphinx-copybutton==0.5.2
+furo==2023.3.27
+breathe==4.35.0

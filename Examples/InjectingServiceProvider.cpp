@@ -18,21 +18,18 @@ struct IServiceB
     virtual ~IServiceB() = default;
 };
 
-class ServiceA final : public IServiceA
+struct ServiceA final : public IServiceA
 {
-  public:
     std::string actionA() { return "actionA"; }
 };
 
-class ServiceB final : public IServiceB
+struct ServiceB final : public IServiceB
 {
-  public:
     std::string actionB() { return "actionB"; }
 };
 
 class ServiceExecutor
 {
-  private:
     IServiceA *_serviceA;
     std::unique_ptr<IServiceB> _serviceB;
 
@@ -56,6 +53,5 @@ int main()
     ServiceExecutor &consumer = provider->getService<ServiceExecutor>();
 
     std::cout << consumer.execute();
-
     return 0;
 }

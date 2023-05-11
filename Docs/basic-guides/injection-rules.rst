@@ -1,15 +1,15 @@
 Injection Rules
 ========================================
 
-Dependency injection mechanism relies havily on template metaprogramming and it has some limitations. The most important one is that we cannot inject service into service using reference.
+The dependency injection mechanism relies heavily on template metaprogramming and it has some limitations. The most important one is that we cannot inject service into service using reference.
 
 General
 ---------------------
 * Only one constructor should be defined for each service implementation
-* If service is registered with interface and implementation, interface should have virtual descructor
-* If multiple services are registered by the same interface, all should have the same life time (build method will throw exception)
-* Only one service implementation can be registered (build method will throw exception)
-* It is guaranteed that injected service wont be null
+* If the service is registered with interface and implementation, the interface should have a virtual destructor
+* If multiple services are registered by the same interface, all should have the same lifetime (the build method will throw an exception)
+* Only one service implementation can be registered (the build method will throw an exception)
+* It is guaranteed that injected service won't be null
 
 Injecting Services
 ---------------------

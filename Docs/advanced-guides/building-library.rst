@@ -1,15 +1,15 @@
 Building Library
 ==========================
 
-Library can be build locally using Cmake_ (`Cmake Installation`_), several cache variables can be set:
+The library can be built locally using Cmake_ (`Cmake Installation`_), and several cache variables can be set:
 
-* <variable cache name>: [possible values] (default value) - description
+* <variable cache name>: [possible values] (default value) - Description
 * LIBRARY_TYPE: ["Shared", "Static", "HeaderOnly"] ("HeaderOnly") - Library build type
 * BUILD_DOCS: [true, false] (false) - Turn on to build documentation (requires Sphinx_, Breathe_ and Doxygen_ installed)
 * BUILD_TESTS: [true, false] (false) - Turn on to build tests (requires Gtest_ to be installed, see `Conan Packages Installation`_)
 * BUILD_EXAMPLES: [true, false] (false) - Turn on to build examples
 
-build library using command:
+build the library using the command:
 
 .. code-block:: sh
 
@@ -20,7 +20,7 @@ Conan Packages Installation
 ^^^^^^^^^^^^^^^
 
 Gtest_ library is added to project using Conan_ package manager (`Conan Installation`_), 
-to install conan packages run this command in library root folder:
+to install Conan packages run this command in the library root folder:
 
 .. code-block:: sh
 
