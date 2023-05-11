@@ -188,7 +188,7 @@ namespace sb::di
          * @details descriptor.getImplementationTypeId() == typeid(TImplementation) && descriptor.getServiceTypeId() ==
          * typeid(TService)
          */
-        template <class TService, class TImplementation> bool containsExact() const
+        template <class TService, class TImplementation = TService> bool containsExact() const
         {
             return containsExact(typeid(TService), typeid(TImplementation));
         }
@@ -237,26 +237,32 @@ namespace sb::di
          * @brief Removes all descriptors meeting TPred requirement
          * @tparam TPred is functor with this sheme: (const ServiceDescriptor&) -> bool
          */
-        template <class TPred> size_t removeIf(const TPred &pred) { return std::erase_if(_serviceDescriptors, pred); }
+        template <class TPred> size_t removeIf(const TPred &pred)
+        {
+            auto it = details::utils::removeIf(begin(), end(), pred);
+            auto r = std::distance(it, end());
+            removeRange(it, end());
+            return r;
+        }
 
         /**
          * @brief Removes all descriptors meeting requirement
          * @details descriptor.getServiceTypeId() == typeid(TService)
          */
-        template <class TService> ServiceCollection &removeAll() { return removeAll(typeid(TService)); }
+        template <class TService> size_t removeAll() { return removeAll(typeid(TService)); }
 
         /**
          * @brief Removes all descriptors meeting requirement
          * @details descriptor.getServiceTypeId() == serviceTypeId
          */
-        ServiceCollection &removeAll(TypeId serviceTypeId);
+        size_t removeAll(TypeId serviceTypeId);
 
         /**
          * @brief Removes all descriptors meeting requirement
          * @details descriptor.getImplementationTypeId() == typeid(TImplementation) && descriptor.getServiceTypeId() ==
          * typeid(TService)
          */
-        template <class TService, class TImplementation = TService> ServiceCollection &remove()
+        template <class TService, class TImplementation = TService> size_t remove()
         {
             return remove(typeid(TService), typeid(TImplementation));
         }
@@ -266,7 +272,7 @@ namespace sb::di
          * @details descriptor.getImplementationTypeId() == implementationTypeId && descriptor.getServiceTypeId() ==
          * serviceTypeId
          */
-        ServiceCollection &remove(TypeId serviceTypeId, TypeId implementationTypeId);
+        size_t remove(TypeId serviceTypeId, TypeId implementationTypeId);
 
         /**
          * @brief Removes last descriptor

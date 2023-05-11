@@ -89,19 +89,17 @@ namespace sb::di
         return _serviceDescriptors.erase(begin, end);
     }
 
-    INLINE ServiceCollection &ServiceCollection::removeAll(TypeId serviceTypeId)
+    INLINE size_t ServiceCollection::removeAll(TypeId serviceTypeId)
     {
-        removeIf([&](auto &descriptor) { return descriptor.getServiceTypeId() == serviceTypeId; });
-        return *this;
+        return removeIf([&](auto &descriptor) { return descriptor.getServiceTypeId() == serviceTypeId; });
     }
 
-    INLINE ServiceCollection &ServiceCollection::remove(TypeId serviceTypeId, TypeId implementationTypeId)
+    INLINE size_t ServiceCollection::remove(TypeId serviceTypeId, TypeId implementationTypeId)
     {
-        removeIf([&](auto &descriptor) {
+        return removeIf([&](auto &descriptor) {
             return descriptor.getImplementationTypeId() == implementationTypeId &&
                    descriptor.getServiceTypeId() == serviceTypeId;
         });
-        return *this;
     }
 
     INLINE void ServiceCollection::pop() { _serviceDescriptors.pop_back(); }

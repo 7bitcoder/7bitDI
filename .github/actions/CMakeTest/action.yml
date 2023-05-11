@@ -1,0 +1,50 @@
+name: Run CMake
+description: "Runs CMake"
+inputs:
+  args:
+    description: "Other arguments"
+    required: false
+    default: ""
+  cmake-version:
+    description: "The CMake version to run"
+    required: true
+  library-type:
+    description: "Library Type"
+    required: true
+  
+
+runs:
+  using: composite
+  steps:
+    - name: CMake ${{ inputs.cmake-version }}
+      uses: jwlawson/actions-setup-cmake@v1.13
+      with:
+        cmake-version: "${{ inputs.cmake-version }}"
+
+    - uses: actions/checkout@v3
+
+    - name: Install Conan
+      uses: turtlebrowser/get-conan@main
+
+    - name: Configure Conan
+      run: conan profile detect
+      shell: bash
+
+    - name: Install Conan Packages
+      run: conan install . --output-folder=${{github.workspace}}/build --build=missing
+      shell: bash
+
+    - name: Configure CMake
+      working-directory: ${{github.workspace}}/build
+      run: cmake .. -DLIBRARY_TYPE=${{ inputs.library-type }} -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS:BOOL=true -DBUILD_EXAMPLES:BOOL=true -DCMAKE_TOOLCHAIN_FILE:STRING="conan_toolchain.cmake" ${{ inputs.args }}
+      shell: bash
+
+    - name: Build
+      working-directory: ${{github.workspace}}/build
+      run: cmake --build . --config ${{ env.BUILD_TYPE }}
+      shell: bash
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      run: ctest -C ${{env.BUILD_TYPE}}
+      shell: bash

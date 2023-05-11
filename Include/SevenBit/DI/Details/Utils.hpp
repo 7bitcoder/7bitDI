@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cstddef>
 #include <memory>
 
@@ -37,5 +38,16 @@ namespace sb::di::details::utils
     template <class TService, class TImplementation> static void inheritCheck()
     {
         static_assert(std::is_base_of_v<TService, TImplementation>, "Type TImplementation must inherit from TService");
+    }
+
+    template <class ForwardIt, class UnaryPredicate>
+    ForwardIt removeIf(ForwardIt first, ForwardIt last, UnaryPredicate p)
+    {
+        first = std::find_if(first, last, p);
+        if (first != last)
+            for (ForwardIt i = first; ++i != last;)
+                if (!p(*i))
+                    *first++ = std::move(*i);
+        return first;
     }
 } // namespace sb::di::details::utils
