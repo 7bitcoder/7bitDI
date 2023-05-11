@@ -11,7 +11,7 @@ namespace sb::di::details
                                     std::unordered_set<TypeId> &typeIdsUnderConstruction)
         : _typeIdUnderConstruction(typeIdUnderConstruction), _typeIdsUnderConstruction(typeIdsUnderConstruction)
     {
-        if (_typeIdsUnderConstruction.contains(_typeIdUnderConstruction))
+        if (auto it = _typeIdsUnderConstruction.find(_typeIdUnderConstruction); it != _typeIdsUnderConstruction.end())
         {
             throw CircularDependencyException{_typeIdUnderConstruction};
         }

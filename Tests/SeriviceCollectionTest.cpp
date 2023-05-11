@@ -350,9 +350,10 @@ TEST_F(SeriviceCollectionTest, ShouldRemoveIf)
     services.addTransient<TestClass1>();
     services.addTransient<TestInheritClass1, TestInheritClass5>();
 
-    services.removeIf([](sb::di::ServiceDescriptor &descriptor) {
-        return descriptor.getServiceTypeId() == typeid(TestInheritClass1);
-    });
+    EXPECT_EQ((services.removeIf([](sb::di::ServiceDescriptor &descriptor) {
+                  return descriptor.getServiceTypeId() == typeid(TestInheritClass1);
+              })),
+              3);
     EXPECT_EQ(services.size(), 3);
 }
 
@@ -369,7 +370,7 @@ TEST_F(SeriviceCollectionTest, ShouldRemoveAll)
     services.addTransient<TestClass1>();
     services.addTransient<TestInheritClass1, TestInheritClass5>();
 
-    services.removeAll<TestInheritClass1>();
+    EXPECT_EQ(services.removeAll<TestInheritClass1>(), 3);
     EXPECT_EQ(services.size(), 3);
 }
 
@@ -386,7 +387,7 @@ TEST_F(SeriviceCollectionTest, ShouldRemoveSpecific)
     services.addTransient<TestClass1>();
     services.addTransient<TestInheritClass1, TestInheritClass5>();
 
-    services.remove<TestInheritClass1, TestInheritClass5>();
+    EXPECT_EQ((services.remove<TestInheritClass1, TestInheritClass5>()), 3);
     EXPECT_EQ(services.size(), 3);
 }
 

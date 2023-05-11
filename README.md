@@ -1,4 +1,4 @@
-[![CI](https://github.com/7bitcoder/7bitinjector/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/7bitcoder/7bitinjector/actions/workflows/CI.ym)
+[![CI](https://github.com/7bitcoder/7bitinjector/actions/workflows/BasicTest.yml/badge.svg?branch=dev)](https://github.com/7bitcoder/7bitinjector/actions/workflows/BasicTest.ym)
 <div align="center">
 
   <img src="Docs/_static/logo.svg" alt="logo" width="500" height="auto" />

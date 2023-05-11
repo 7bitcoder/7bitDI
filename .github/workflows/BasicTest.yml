@@ -1,14 +1,13 @@
-name: CI
+name: BasicTest
 
 on:
   push:
-    branches: ["master"]
+    branches: ["dev"]
   pull_request:
-    branches: ["master"]
+    branches: ["dev"]
 
 env:
   BUILD_TYPE: Release
-  BUILD_FLAGS: -DBUILD_TESTS:BOOL=true -DBUILD_EXAMPLES:BOOL=true -DCMAKE_TOOLCHAIN_FILE:STRING="conan_toolchain.cmake"
   BUILD_DIR: ${{github.workspace}}/build
 
 jobs:
@@ -16,16 +15,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        libraryType: [HeaderOnly, Static]
-        os:
-          [
-            ubuntu-20.04,
-            ubuntu-22.04,
-            macos-11,
-            macos-12,
-            windows-2019,
-            windows-2022,
-          ]
+        libraryType: [Static]
+        os: [ubuntu-22.04, macos-12, windows-2022]
 
     runs-on: ${{matrix.os}}
 
@@ -43,7 +34,7 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{ env.BUILD_DIR }}
-        run: cmake .. ${{ env.BUILD_FLAGS }} -DLIBRARY_TYPE=${{ matrix.libraryType }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+        run: cmake .. -DLIBRARY_TYPE=${{ matrix.libraryType }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DBUILD_TESTS:BOOL=true -DBUILD_EXAMPLES:BOOL=true -DCMAKE_TOOLCHAIN_FILE:STRING="conan_toolchain.cmake"
 
       - name: Build
         working-directory: ${{ env.BUILD_DIR }}
