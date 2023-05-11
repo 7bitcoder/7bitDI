@@ -12,7 +12,7 @@
   </p>
    
 <h4>
-    <a href="#">Documentation & Tutorials</a>
+    <a href="https://7bitinjector.readthedocs.io/en/latest/index.html">Documentation & Examples</a>
 </div>
 
 <br />
@@ -88,7 +88,7 @@ Output
 actionA, actionB executed.
 ```
 
-More examples and tutorials available on the [documentation](#) page
+More examples and tutorials are available on the [Documentation & Examples]([#](https://7bitinjector.readthedocs.io/en/latest/index.html)) page
 
 @7bitcoder Sylwester Dawida 2023
 

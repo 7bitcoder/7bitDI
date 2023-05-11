@@ -1,10 +1,15 @@
 find_package(Sphinx REQUIRED)
 
 file(GLOB_RECURSE EXAMPLES ../Examples/*.hpp)
+file(GLOB_RECURSE SOURCES ../Include/*.hpp)
 file(GLOB_RECURSE SHPHINX_RST_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.rst)
 set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR})
-set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/sphinx/${SEVEN_BIT_INJECTOR_VERSION})
+set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/sphinx/)
 set(SPHINX_INDEX_FILE ${SPHINX_BUILD}/index.html)
+set(SPHINX_IN ${SPHINX_SOURCE}/conf.in.py)
+set(SPHINX_OUT ${SPHINX_SOURCE}/conf.py)
+
+configure_file(${SPHINX_IN} ${SPHINX_OUT} @ONLY)
 
 add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
         COMMAND
@@ -12,10 +17,10 @@ add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
         ${SPHINX_SOURCE} ${SPHINX_BUILD}
         WORKING_DIRECTORY ${SPHINX_SOURCE}
         DEPENDS
-        ${CMAKE_CURRENT_SOURCE_DIR}/index.rst
         ${SHPHINX_RST_FILES}
         ${EXAMPLES}
-        MAIN_DEPENDENCY ${SPHINX_SOURCE}/conf.py
+        ${SOURCES}
+        MAIN_DEPENDENCY ${SPHINX_OUT}
         COMMENT "Generating documentation with Sphinx")
 
 add_custom_target(GenerateDoc

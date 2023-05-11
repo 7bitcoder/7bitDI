@@ -10,10 +10,10 @@ def createIfNotExists(path):
         os.makedirs(path)
 
 
-project = "7bitInjector"
+project = "@CMAKE_PROJECT_NAME@"
 copyright = "2023, 7BitCoder Sylwester Dawida"
 author = "Sylwester Dawida"
-version = "0.1.0"
+version = "@SEVEN_BIT_INJECTOR_VERSION@"
 
 extensions = [
     "sphinx.ext.autodoc",
