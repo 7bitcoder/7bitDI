@@ -27,9 +27,9 @@ runs:
     - name: Configure CMake
       working-directory: ${{ inputs.build-dir }}
       run: cmake .. -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} -DLIBRARY_TYPE=${{ inputs.library-type }} -DCMAKE_TOOLCHAIN_FILE:STRING="${{ inputs.toolchain }}" ${{ inputs.args }}
-      shell: bash
+      shell: pwsh
 
     - name: Build
       working-directory: ${{ inputs.build-dir }}
       run: cmake --build . --config ${{ inputs.build-type }}
-      shell: bash
+      shell: pwsh
