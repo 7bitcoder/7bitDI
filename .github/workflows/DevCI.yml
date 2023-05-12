@@ -33,6 +33,7 @@ jobs:
         with:
           build-dir: ${{ env.BUILD_DIR }}
           build-type: ${{ env.BUILD_TYPE }}
+          library-type: ${{ matrix.libraryType }}
 
       - name: Test
         working-directory: ${{ env.BUILD_DIR }}
