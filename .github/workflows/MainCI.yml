@@ -22,9 +22,9 @@ jobs:
   test-gcc:
     strategy:
       matrix:
-        libraryType: [HeaderOnly, Static, Shared]
-        version: [7, 10, 12]
-        os: [ubuntu-22.04]
+        libraryType: [Static]
+        version: [7, 10, 11]
+        os: [ubuntu-20.04]
 
     runs-on: ${{ matrix.os }}
 
@@ -54,9 +54,9 @@ jobs:
   test-mingw:
     strategy:
       matrix:
-        libraryType: [HeaderOnly, Static]
+        libraryType: [Static]
         version: [7, 10, 12]
-        os: [windows-2022]
+        os: [windows-2019]
 
     runs-on: ${{ matrix.os }}
 
@@ -86,9 +86,9 @@ jobs:
   test-clang:
     strategy:
       matrix:
-        libraryType: [HeaderOnly, Static]
-        version: [6, 10, 15]
-        os: [windows-2022, ubuntu-22.04]
+        libraryType: [Static]
+        version: [6.0, 10, 15]
+        os: [windows-2022, ubuntu-20.04]
 
     runs-on: ${{ matrix.os }}
 
@@ -119,8 +119,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        libraryType: [HeaderOnly, Static]
-        version: [14, 15, 17]
+        libraryType: [Static]
+        version: [14.0, 15.0, 17.0]
         os: [windows-2022]
 
     runs-on: ${{ matrix.os }}

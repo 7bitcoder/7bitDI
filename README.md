@@ -1,6 +1,5 @@
-[![DevCI](https://github.com/7bitcoder/7bitinjector/actions/workflows/DevCI.yml/badge.svg?branch=dev)](https://github.com/7bitcoder/7bitinjector/actions/workflows/DevCI.ym)
-
-[![MainCI](https://github.com/7bitcoder/7bitinjector/actions/workflows/MainCI.yml/badge.svg?branch=main)](https://github.com/7bitcoder/7bitinjector/actions/workflows/MainCI.ym)
+[![DevCI](https://github.com/7bitcoder/7bitinjector/actions/workflows/DevCI.yml/badge.svg?branch=dev)](https://github.com/7bitcoder/7bitinjector/actions/workflows/DevCI.yml)
+[![MainCI](https://github.com/7bitcoder/7bitinjector/actions/workflows/MainCI.yml/badge.svg?branch=main)](https://github.com/7bitcoder/7bitinjector/actions/workflows/MainCI.yml)
 <div align="center">
 
   <img src="Docs/_static/logo.svg" alt="logo" width="500" height="auto" />
