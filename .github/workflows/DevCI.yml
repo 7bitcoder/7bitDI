@@ -15,8 +15,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        libraryType: [Static]
-        os: [windows-2022]
+        libraryType: [HeaderOnly, Static, Shared]
+        os: [ubuntu-22.04, macos-12, windows-2022]
 
     runs-on: ${{matrix.os}}
 
