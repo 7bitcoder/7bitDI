@@ -2,9 +2,17 @@ name: MainCI
 
 on:
   push:
-    branches: ["main"]
+    branches: ["dev"]
+    paths-ignore:
+      - "Docs/**"
+      - ".readthedocs.yaml"
+      - "Readme.md"
   pull_request:
-    branches: ["main"]
+    branches: ["dev"]
+    paths-ignore:
+      - "Docs/**"
+      - ".readthedocs.yaml"
+      - "Readme.md"
 
 env:
   BUILD_TYPE: Release
