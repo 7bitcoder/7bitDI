@@ -30,8 +30,6 @@ namespace sb::di::details
 
         ServiceList *getList(TypeId serviceTypeId);
 
-        const ServiceList *getList(TypeId serviceTypeId) const;
-
         void clear();
 
         ~ServicesMap();

@@ -27,11 +27,6 @@ namespace sb::di::details
         return it != _serviceListMap.end() ? &it->second : nullptr;
     }
 
-    INLINE const ServiceList *ServicesMap::getList(TypeId serviceTypeId) const
-    {
-        auto it = _serviceListMap.find(serviceTypeId);
-        return it != _serviceListMap.end() ? &it->second : nullptr;
-    }
     INLINE void ServicesMap::clear()
     {
         if (_strongDestructionOrder)
