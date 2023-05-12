@@ -2,13 +2,13 @@ name: MainCI
 
 on:
   push:
-    branches: ["dev"]
+    branches: ["main"]
     paths-ignore:
       - "Docs/**"
       - ".readthedocs.yaml"
       - "Readme.md"
   pull_request:
-    branches: ["dev"]
+    branches: ["main"]
     paths-ignore:
       - "Docs/**"
       - ".readthedocs.yaml"
