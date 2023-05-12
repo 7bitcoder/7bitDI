@@ -15,6 +15,6 @@ runs:
       run: conan profile detect
       shell: bash
 
-    - name: Install Conan Packages in ${{ install-dir }}
-      run: conan install . --output-folder=${{ install-dir }} --build=missing
+    - name: Install Conan Packages in ${{ inputs.install-dir }}
+      run: conan install . --output-folder=${{ inputs.install-dir }} --build=missing
       shell: bash
