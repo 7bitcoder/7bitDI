@@ -13,8 +13,8 @@ runs:
 
     - name: Configure Conan
       run: conan profile detect
-      shell: bash
+      shell: pwsh
 
     - name: Install Conan Packages in ${{ inputs.install-dir }}
       run: conan install . --output-folder=${{ inputs.install-dir }} --build=missing
-      shell: bash
+      shell: pwsh

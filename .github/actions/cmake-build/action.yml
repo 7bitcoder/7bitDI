@@ -25,9 +25,11 @@ runs:
   using: composite
   steps:
     - name: Configure CMake
-      run: cd ${{ inputs.build-dir }} && cmake .. -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} -DLIBRARY_TYPE=${{ inputs.library-type }} -DCMAKE_TOOLCHAIN_FILE:STRING="${{ inputs.toolchain }}" ${{ inputs.args }}
+      working-directory: ${{ inputs.build-dir }}
+      run: cmake .. -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} -DLIBRARY_TYPE=${{ inputs.library-type }} -DCMAKE_TOOLCHAIN_FILE:STRING="${{ inputs.toolchain }}" ${{ inputs.args }}
       shell: pwsh
 
     - name: Build
-      run: cd ${{ inputs.build-dir }} && cmake --build . --config ${{ inputs.build-type }}
+      working-directory: ${{ inputs.build-dir }}
+      run: cmake --build . --config ${{ inputs.build-type }}
       shell: pwsh
