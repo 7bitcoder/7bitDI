@@ -1,0 +1,47 @@
+name: DevCI
+
+on:
+  push:
+    branches: ["dev"]
+    paths-ignore:
+      - "Docs/**"
+      - ".readthedocs.yaml"
+      - "Readme.md"
+  pull_request:
+    branches: ["dev"]
+    paths-ignore:
+      - "Docs/**"
+      - ".readthedocs.yaml"
+      - "Readme.md"
+env:
+  BUILD_TYPE: Release
+  BUILD_DIR: ${{github.workspace}}/build
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        libraryType: [HeaderOnly, Static, Shared]
+        os: [ubuntu-22.04, macos-12, windows-2022]
+
+    runs-on: ${{matrix.os}}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Conan Packages
+        uses: ./.github/actions/conan-install
+        with:
+          install-dir: ${{ env.BUILD_DIR }}
+
+      - name: CMake Build
+        uses: ./.github/actions/cmake-build
+        with:
+          build-dir: ${{ env.BUILD_DIR }}
+          build-type: ${{ env.BUILD_TYPE }}
+          library-type: ${{ matrix.libraryType }}
+
+      - name: Test
+        working-directory: ${{ env.BUILD_DIR }}
+        run: ctest -C ${{env.BUILD_TYPE}}

@@ -20,9 +20,12 @@ namespace sb::di::details
       public:
         ServiceList() = default;
 
+        // fix compilation errors should not be used!!
+        ServiceList(const ServiceList &) {};
         ServiceList(ServiceList &&) = default;
-        ServiceList(const ServiceList &) = delete;
-        ServiceList &operator=(const ServiceList &) = delete;
+
+        // fix compilation errors should not be used!!
+        ServiceList &operator=(const ServiceList &) { return *this; };
         ServiceList &operator=(ServiceList &&) = default;
 
         auto begin() const { return _services.begin(); }

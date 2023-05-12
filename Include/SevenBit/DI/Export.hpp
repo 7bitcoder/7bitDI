@@ -7,9 +7,11 @@
 
 #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 //  Microsoft
-#if defined(SevenBitInjector_EXPORTS)
+#ifdef SevenBitInjector_EXPORTS
+/* We are building this library */
 #define EXPORT __declspec(dllexport)
 #else
+/* We are using this library */
 #define EXPORT __declspec(dllimport)
 #endif
 

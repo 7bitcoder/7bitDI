@@ -19,10 +19,11 @@ namespace sb::di::details
       public:
         ServiceDescriptorList() = default;
 
-        ServiceDescriptorList(ServiceDescriptorList &&) = default;
         ServiceDescriptorList(const ServiceDescriptorList &) = delete;
-        ServiceDescriptorList &operator=(const ServiceDescriptorList &) = delete;
+        ServiceDescriptorList(ServiceDescriptorList &&) = default;
+
         ServiceDescriptorList &operator=(ServiceDescriptorList &&) = default;
+        ServiceDescriptorList &operator=(const ServiceDescriptorList &) = delete;
 
         auto begin() const { return _serviceDescriptors.begin(); }
         auto end() const { return _serviceDescriptors.end(); }

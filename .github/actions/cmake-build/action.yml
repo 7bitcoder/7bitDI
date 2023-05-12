@@ -1,0 +1,35 @@
+name: Run CMake
+description: "Runs CMake"
+inputs:
+  args:
+    description: "Other arguments"
+    required: false
+    default:  -DBUILD_TESTS:BOOL=true -DBUILD_EXAMPLES:BOOL=true
+  build-type:
+    description: "Build type"
+    required: false
+    default: Release
+  toolchain:
+    description: "Toolchain file"
+    required: false
+    default: conan_toolchain.cmake
+  library-type:
+    description: "Library type"
+    required: false
+    default: Static
+  build-dir:
+    description: "Build directory"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Configure CMake
+      working-directory: ${{ inputs.build-dir }}
+      run: cmake .. -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} -DLIBRARY_TYPE=${{ inputs.library-type }} -DCMAKE_TOOLCHAIN_FILE:STRING="${{ inputs.toolchain }}" ${{ inputs.args }}
+      shell: pwsh
+
+    - name: Build
+      working-directory: ${{ inputs.build-dir }}
+      run: cmake --build . --config ${{ inputs.build-type }}
+      shell: pwsh
