@@ -1,4 +1,6 @@
-[![CI](https://github.com/7bitcoder/7bitinjector/actions/workflows/BasicTest.yml/badge.svg?branch=dev)](https://github.com/7bitcoder/7bitinjector/actions/workflows/BasicTest.ym)
+[![DevCI](https://github.com/7bitcoder/7bitinjector/actions/workflows/DevCI.yml/badge.svg?branch=dev)](https://github.com/7bitcoder/7bitinjector/actions/workflows/DevCI.ym)
+
+[![MainCI](https://github.com/7bitcoder/7bitinjector/actions/workflows/MainCI.yml/badge.svg?branch=main)](https://github.com/7bitcoder/7bitinjector/actions/workflows/MainCI.ym)
 <div align="center">
 
   <img src="Docs/_static/logo.svg" alt="logo" width="500" height="auto" />
