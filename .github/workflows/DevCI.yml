@@ -35,4 +35,5 @@ jobs:
           build-type: ${{ env.BUILD_TYPE }}
 
       - name: Test
+        working-directory: ${{ env.BUILD_DIR }}
         run: ctest -C ${{env.BUILD_TYPE}}
