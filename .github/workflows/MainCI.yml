@@ -88,7 +88,7 @@ jobs:
       fail-fast: false
       matrix:
         libraryType: [Static]
-        version: ["2015", "2017", "2019", "2022"]
+        version: ["[14.0,14.9)", "[15.0,15.9)", "[16.0,16.9)", "[17.0,17.9)"]
         os: [windows-2022]
 
     runs-on: ${{ matrix.os }}
@@ -97,9 +97,9 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Install Msvc
-        uses: ilammy/msvc-dev-cmd@v1.12.1
+        uses: microsoft/setup-msbuild@v1.1
         with:
-          vsversion: ${{ matrix.version }}
+          vs-version: ${{ matrix.version }}
 
       - name: Install Conan Packages
         uses: ./.github/actions/conan-install
