@@ -11,8 +11,8 @@ This example shows the main purpose of this library, injecting services into ser
    * Singleton/scoped service should be injected using pointners (references are not allowed due to library limitations, it might be fixed in the future) 
    * Transient services should be injected using std::unique_ptr 
 
-.. literalinclude:: ../../Examples/InjectingServices.cpp
-   :caption: Examples/InjectingServices
+.. literalinclude:: ../../Examples/Guides/InjectingServices.cpp
+   :caption: Examples/Guides/InjectingServices
    :language: C++
 
 .. code-block:: console

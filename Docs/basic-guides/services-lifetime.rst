@@ -20,8 +20,8 @@ Service can be registered as singleton, scoped or transient.
   
    Only singleton/scoped services can be accessed using the getService method otherwise the method will throw an exception 
 
-.. literalinclude:: ../../Examples/ServicesLifeTime.cpp
-   :caption: Examples/ServicesLifeTime
+.. literalinclude:: ../../Examples/Guides/ServicesLifeTime.cpp
+   :caption: Examples/Guides/ServicesLifeTime
    :language: C++
 
 .. code-block:: console

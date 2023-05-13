@@ -14,8 +14,8 @@ Multiple services can inherit one interface and can be injected using a vector.
    * Transient services should be injected using std::vector<std::unique_ptr> 
 
 
-.. literalinclude:: ../../Examples/InjectingMultipleServices.cpp
-   :caption: Examples/InjectingMultipleServices
+.. literalinclude:: ../../Examples/Guides/InjectingMultipleServices.cpp
+   :caption: Examples/Guides/InjectingMultipleServices
    :language: C++
 
 .. code-block:: console

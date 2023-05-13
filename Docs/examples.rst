@@ -5,8 +5,8 @@ Examples
    :maxdepth: 2
    :titlesonly:
 
-   examples/using-factories
-   examples/external-singleton
+   examples/simple
+   examples/cli
    
    
    

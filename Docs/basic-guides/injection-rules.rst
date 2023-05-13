@@ -26,8 +26,8 @@ Injecting Services
   * Transient (std::vector<std::unique_ptr<T>>)
   * Singleton/scoped (std::vector<T*>)
 
-.. literalinclude:: ../../Examples/InjectionRules.cpp
-   :caption: Examples/InjectionRules
+.. literalinclude:: ../../Examples/Guides/InjectionRules.cpp
+   :caption: Examples/Guides/InjectionRules
    :language: C++
 
 
