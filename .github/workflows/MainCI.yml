@@ -23,7 +23,7 @@ jobs:
     strategy:
       matrix:
         libraryType: [Static]
-        version: [7, 10, 11]
+        version: [7, 8, 10, 11]
         os: [ubuntu-20.04]
 
     runs-on: ${{ matrix.os }}
@@ -51,44 +51,12 @@ jobs:
         working-directory: ${{ env.BUILD_DIR }}
         run: ctest -C ${{env.BUILD_TYPE}}
 
-  test-mingw:
-    strategy:
-      matrix:
-        libraryType: [Static]
-        version: [7, 10, 12]
-        os: [windows-2019]
-
-    runs-on: ${{ matrix.os }}
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Install MinGW
-        uses: egor-tensin/setup-mingw@v2.2.0
-        with:
-          version: ${{ matrix.version }}
-
-      - name: Install Conan Packages
-        uses: ./.github/actions/conan-install
-        with:
-          install-dir: ${{ env.BUILD_DIR }}
-
-      - name: CMake Build
-        uses: ./.github/actions/cmake-build
-        with:
-          build-dir: ${{ env.BUILD_DIR }}
-          build-type: ${{ env.BUILD_TYPE }}
-
-      - name: Test
-        working-directory: ${{ env.BUILD_DIR }}
-        run: ctest -C ${{env.BUILD_TYPE}}
-
   test-clang:
     strategy:
       matrix:
         libraryType: [Static]
-        version: [6.0, 10, 15]
-        os: [windows-2022, ubuntu-20.04]
+        version: [6, 13, 14, 15]
+        os: [ubuntu-20.04]
 
     runs-on: ${{ matrix.os }}
 
@@ -120,7 +88,7 @@ jobs:
       fail-fast: false
       matrix:
         libraryType: [Static]
-        version: [14.0, 15.0, 17.0]
+        version: [14.0, 15.0, 16.0, 17.0]
         os: [windows-2022]
 
     runs-on: ${{ matrix.os }}
@@ -128,11 +96,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install MSVC
-        uses: TheMrMilchmann/setup-msvc-dev@v2.0.0
+      - name: Enable Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1.12.1
         with:
           toolset: ${{ matrix.version }}
-          arch: x64
 
       - name: Install Conan Packages
         uses: ./.github/actions/conan-install
