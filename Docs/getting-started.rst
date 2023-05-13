@@ -16,8 +16,8 @@ Library is officially supported on the following platforms:
 
 **Compilers:**
 
-* gcc 5.0+
-* clang 5.0+
+* gcc 7.0+
+* clang 6.0+
 * MSVC 2015+
 
 If you notice any problems/bugs, please file an issue on the 7bitInjector_ GitHub Issue Tracker. Pull requests containing fixes are welcome!
