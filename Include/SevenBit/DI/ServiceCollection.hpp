@@ -173,20 +173,26 @@ namespace sb::di
 
         /**
          * @brief Cheks if contains descriptor matching requirement
-         * @details descriptor.getServiceTypeId() == typeid(TService)
+         * @code {.cpp}
+         * descriptor.getServiceTypeId() == typeid(TService)
+         * @endcode
          */
         template <class TService> bool contains() const { return contains(typeid(TService)); }
 
         /**
          * @brief Cheks if contains descriptor matching requirement
-         * @details descriptor.getServiceTypeId() == serviceTypeId
+         * @code {.cpp}
+         * descriptor.getServiceTypeId() == serviceTypeId
+         * @endcode
          */
         bool contains(TypeId serviceTypeId) const;
 
         /**
          * @brief Cheks if contains descriptor matching requirement
-         * @details descriptor.getImplementationTypeId() == typeid(TImplementation) && descriptor.getServiceTypeId() ==
+         * @code {.cpp}
+         * descriptor.getImplementationTypeId() == typeid(TImplementation) && descriptor.getServiceTypeId() ==
          * typeid(TService)
+         * @endcode
          */
         template <class TService, class TImplementation = TService> bool containsExact() const
         {
@@ -195,13 +201,16 @@ namespace sb::di
 
         /**
          * @brief Cheks if contains descriptor matching requirement
-         * @details descriptor.getImplementationTypeId() == implementationTypeId && descriptor.getServiceTypeId() ==
+         * @code {.cpp}
+         * descriptor.getImplementationTypeId() == implementationTypeId && descriptor.getServiceTypeId() ==
+         * @endcode
          * serviceTypeId
          */
         bool containsExact(TypeId serviceTypeId, TypeId implementationTypeId) const;
 
         /**
          * @brief Inserts descriptor before giver iterator
+         * @details Returns iterator pointing to the inserted
          */
         Iterator insert(ConstIterator pos, ServiceDescriptor descriptor);
 
@@ -217,25 +226,30 @@ namespace sb::di
 
         /**
          * @brief Removes descriptor with given iterator
+         * @details Returns iterator following the last removed element
          */
         Iterator remove(Iterator pos);
         /**
          * @brief Removes descriptor with given iterator
+         * @details Returns iterator following the last removed element
          */
         Iterator remove(ConstIterator pos);
 
         /**
          * @brief Removes descriptors between given iterators
+         * @details Returns iterator following the last removed element
          */
         Iterator removeRange(Iterator begin, Iterator end);
         /**
          * @brief Removes descriptors between given iterators
+         * @details Returns iterator following the last removed element
          */
         Iterator removeRange(ConstIterator begin, ConstIterator end);
 
         /**
          * @brief Removes all descriptors meeting TPred requirement
          * @tparam TPred is functor with this sheme: (const ServiceDescriptor&) -> bool
+         * @details Returns number of removed elements
          */
         template <class TPred> size_t removeIf(const TPred &pred)
         {
@@ -247,20 +261,29 @@ namespace sb::di
 
         /**
          * @brief Removes all descriptors meeting requirement
-         * @details descriptor.getServiceTypeId() == typeid(TService)
+         * @code {.cpp}
+         * descriptor.getServiceTypeId() == typeid(TService)
+         * @endcode
+         * @details Returns number of removed elements
          */
         template <class TService> size_t removeAll() { return removeAll(typeid(TService)); }
 
         /**
          * @brief Removes all descriptors meeting requirement
-         * @details descriptor.getServiceTypeId() == serviceTypeId
+         * @code {.cpp}
+         * descriptor.getServiceTypeId() == serviceTypeId
+         * @endcode
+         * @details Returns number of removed elements
          */
         size_t removeAll(TypeId serviceTypeId);
 
         /**
          * @brief Removes all descriptors meeting requirement
-         * @details descriptor.getImplementationTypeId() == typeid(TImplementation) && descriptor.getServiceTypeId() ==
+         * @code {.cpp}
+         * descriptor.getImplementationTypeId() == typeid(TImplementation) && descriptor.getServiceTypeId() ==
          * typeid(TService)
+         * @endcode
+         * @details Returns number of removed elements
          */
         template <class TService, class TImplementation = TService> size_t remove()
         {
@@ -269,8 +292,11 @@ namespace sb::di
 
         /**
          * @brief Removes all descriptors meeting requirement
-         * @details descriptor.getImplementationTypeId() == implementationTypeId && descriptor.getServiceTypeId() ==
+         * @code {.cpp}
+         * descriptor.getImplementationTypeId() == implementationTypeId && descriptor.getServiceTypeId() ==
          * serviceTypeId
+         * @endcode
+         * @details Returns number of removed elements
          */
         size_t remove(TypeId serviceTypeId, TypeId implementationTypeId);
 

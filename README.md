@@ -89,7 +89,8 @@ Output
 actionA, actionB executed.
 ```
 
-More examples and tutorials are available on the [Documentation & Examples]([#](https://7bitinjector.readthedocs.io/en/latest/index.html)) page
+More examples and tutorials are available on the 
+[Documentation & Examples](https://7bitinjector.readthedocs.io/en/latest/index.html) page
 
 @7bitcoder Sylwester Dawida 2023
 

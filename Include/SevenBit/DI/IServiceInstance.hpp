@@ -37,7 +37,7 @@ namespace sb::di
          * @warning Using this method might couse memory leaks, client is responsible for managing this pointner
          * lifetime, the best approach is to imediatly wrap this poinrner with proper std::unique_ptr<T>
          * @code {.cpp}
-         * std::unique_ptr<T> service{static_cast<T *>(moveOut())};
+         * std::unique_ptr<T> service{static_cast<T *>(instance->moveOut())};
          * @endcode
          */
         [[nodiscard]] virtual void *moveOut() = 0;
@@ -50,7 +50,7 @@ namespace sb::di
          * @warning Using this method might couse memory leaks, clietn is responsible for managing this pointner
          * lifetime, the best approach is to imediatly wrap this poinrner with proper std::unique_ptr<T>
          * @code {.cpp}
-         * std::unique_ptr<T> service{moveOutAs<T>()};
+         * std::unique_ptr<T> service{instance->moveOutAs<T>()};
          * @endcode
          */
         template <class T> [[nodiscard]] T *moveOutAs() { return static_cast<T *>(moveOut()); };
