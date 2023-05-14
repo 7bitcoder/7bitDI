@@ -13,7 +13,7 @@ def createIfNotExists(path):
 project = "7bitInjector"
 copyright = "2023, 7BitCoder Sylwester Dawida"
 author = "Sylwester Dawida"
-version = "0.1.0"
+version = "1.0.0"
 
 extensions = [
     "sphinx.ext.autodoc",

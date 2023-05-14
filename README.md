@@ -1,5 +1,6 @@
 [![DevCI](https://github.com/7bitcoder/7bitinjector/actions/workflows/DevCI.yml/badge.svg?branch=dev)](https://github.com/7bitcoder/7bitinjector/actions/workflows/DevCI.yml)
 [![MainCI](https://github.com/7bitcoder/7bitinjector/actions/workflows/MainCI.yml/badge.svg?branch=main)](https://github.com/7bitcoder/7bitinjector/actions/workflows/MainCI.yml)
+
 <div align="center">
 
   <img src="Docs/_static/logo.svg" alt="logo" width="500" height="auto" />
@@ -20,10 +21,9 @@
 
 ### Built With
 
-* [Google Test](https://github.com/google/googletest)
-  
-### Simple Usage
+- [Google Test](https://github.com/google/googletest)
 
+### Sample Usage
 
 ```cpp
 #include <SevenBit/DI.hpp>
@@ -83,14 +83,14 @@ int main()
     return 0;
 }
 ```
+
 Output
 
 ```console
 actionA, actionB executed.
 ```
 
-More examples and tutorials are available on the 
+More examples and tutorials are available on the
 [Documentation & Examples](https://7bitinjector.readthedocs.io/en/latest/index.html) page
 
 @7bitcoder Sylwester Dawida 2023
-

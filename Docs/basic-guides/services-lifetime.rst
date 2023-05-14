@@ -9,7 +9,7 @@ Service providers can create scoped service providers:
    
    IServiceProvider::Ptr scoped = provider->createScope()
 
-Service can be registered as singleton, scoped or transient.
+Service can be registered as a singleton, scoped, or transient.
 
 * Singleton: service provider will create only one instance of this service (accessible via the getService method) 
 * Scoped: service provider will create only one instance of this service for each scope (accessible via the getService method) 

@@ -3,13 +3,13 @@ Build Library
 
 The library can be built locally using Cmake_ (`Cmake Installation`_)
 
-Create build directory and navigate to it:
+Create a build directory and navigate to it:
 
 .. code-block:: sh
 
     mkdir build && cd build
 
-Configure cmake project
+Configure CMake project
 
 .. code-block:: sh
 
@@ -24,7 +24,7 @@ Using this command several cache variables can be set:
 * BUILD_EXAMPLES: [true, false] (false) - Turn on to build examples
 
 to set cache variable pass additional option: -D<variable cache name>=[value] 
-for example this command will set library type to Static and will force examples built
+for example, this command will set the library type to Static and will force examples built
 
 .. code-block:: sh
 
@@ -41,7 +41,7 @@ Build Library With Conan
 ^^^^^^^^^^^^^^^
 
 Gtest_ library is added to project using Conan_ package manager (`Conan Installation`_), 
-If conan was fresh installed run detect command:
+If Conan was freshly installed run detect command:
 
 .. code-block:: sh
 
@@ -53,13 +53,13 @@ To install Conan packages run this command in the library root folder:
 
     conan install . --output-folder=build --build=missing
 
-Navigate to build directory:
+Navigate to the build directory:
 
 .. code-block:: sh
 
     cd build
 
-Configure cmake project, add also toolchain file as a CMAKE_TOOLCHAIN_FILE cache variable:
+Configure the CMake project, and add also toolchain file as a CMAKE_TOOLCHAIN_FILE cache variable:
 
 .. code-block:: sh
 
