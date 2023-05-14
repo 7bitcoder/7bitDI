@@ -19,15 +19,15 @@ Injecting Services
   * Pointers: (T*)
   * Const pointner: (T* const)
   * Pointner to const object: (const T*)
-  * Const pointner to const object: (const T* const)
+  * Const pointer to const object: (const T* const)
 * Transient services can be injected using std::unique_ptr: (unique_ptr<T>)
 * Multiple services implementing specified interface can be injected using std::vector:
 
   * Transient (std::vector<std::unique_ptr<T>>)
   * Singleton/scoped (std::vector<T*>)
 
-.. literalinclude:: ../../Examples/InjectionRules.cpp
-   :caption: Examples/InjectionRules
+.. literalinclude:: ../../Examples/Guides/InjectionRules.cpp
+   :caption: Examples/Guides/InjectionRules
    :language: C++
 
 

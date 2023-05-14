@@ -9,6 +9,6 @@ The library relies on two core classes:
 .. _ServiceCollection: ../reference/di/servicecollection.html
 .. _IServiceProvider: ../reference/di/iserviceprovider.html
 
-.. literalinclude:: ../../Examples/CoreClasses.cpp
-   :caption: Examples/Basic
+.. literalinclude:: ../../Examples/Guides/CoreClasses.cpp
+   :caption: Examples/Guides/Basic
    :language: C++

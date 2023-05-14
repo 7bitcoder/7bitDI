@@ -6,7 +6,7 @@ Supported Platforms
 
 7bitInjector requires client code and compiler compatible with the C++17 standard or newer.
 
-Library is officially supported on the following platforms:
+The library is officially supported on the following platforms:
 
 **Operating systems:**
 
@@ -55,8 +55,8 @@ Example Usage
 -----------------
 The next chapters will in detail, step by step explain what is going on in this example
 
-.. literalinclude:: ../Examples/InjectingServices.cpp
-   :caption: Examples/InjectingServices
+.. literalinclude:: ../Examples/Guides/InjectingServices.cpp
+   :caption: Examples/Guides/InjectingServices
    :language: C++
 
 
