@@ -10,6 +10,8 @@ else()
   )
 endif()
 
+add_library(7BitDI::7BitDI ALIAS 7BitDI)
+
 target_compile_definitions(7BitDI PUBLIC SEVEN_BIT_DI_COMPILED_LIB)
 
 target_include_directories(7BitDI INTERFACE "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/Include>"
@@ -19,6 +21,7 @@ set_target_properties(7BitDI PROPERTIES VERSION ${SEVEN_BIT_DI_VERSION})
 set_target_properties(7BitDI PROPERTIES DEBUG_POSTFIX d)
 
 add_library(7BitDI_header_only INTERFACE)
+add_library(7BitDI::7BitDI_header_only ALIAS 7BitDI_header_only)
 
 target_include_directories(7BitDI_header_only INTERFACE "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/Include>"
   "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")

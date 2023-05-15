@@ -8,6 +8,10 @@ set(SEVEN_BIT_DI_VERSION_PATCH 0)
 
 set(SEVEN_BIT_DI_VERSION ${SEVEN_BIT_DI_VERSION_MAJOR}.${SEVEN_BIT_DI_VERSION_MINOR}.${SEVEN_BIT_DI_VERSION_PATCH})
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose Release or Debug" FORCE)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -59,6 +63,12 @@ option(SEVEN_BIT_DI_BUILD_DOCS "Turn on to build documentation" OFF)
 if(SEVEN_BIT_DI_BUILD_PIC)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
+
+set(PROJECT_CONFIG_IN ${CMAKE_SOURCE_DIR}/Cmake/7bitDIConfig.cmake.in)
+set(PROJECT_CONFIG_OUT ${CMAKE_BINARY_DIR}/7bitDIConfig.cmake)
+set(CONFIG_TARGETS_FILE 7bitDIConfigTargets.cmake)
+set(VERSIONS_CONFIG_FILE ${CMAKE_BINARY_DIR}/7bitDIConfigVersion.cmake)
+set(EXPORT_DEST_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/7bitDI)
 
 configure_file(${CMAKE_SOURCE_DIR}/Include/SevenBit/DI/Version.hpp.input ${CMAKE_SOURCE_DIR}/Include/SevenBit/DI/Version.hpp)
 

@@ -25,21 +25,23 @@ runs:
   using: composite
   steps:
     - name: Configure CMake
-      if: ${{ inputs.library-type }} == "Static"
-      working-directory: ${{ inputs.build-dir }}
-      run: cmake .. -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} -DCMAKE_TOOLCHAIN_FILE:STRING="${{ inputs.toolchain }}" -DBUILD_TESTS:BOOL=true -DBUILD_EXAMPLES:BOOL=true ${{ inputs.args }}
-      shell: pwsh
-
-    - name: Configure CMake
-      if: ${{ inputs.library-type }} == "Shared"
-      working-directory: ${{ inputs.build-dir }}
-      run: cmake .. -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} -DSEVEN_BIT_DI_BUILD_SHARED=ON -DCMAKE_TOOLCHAIN_FILE:STRING="${{ inputs.toolchain }}" -DBUILD_TESTS:BOOL=true -DBUILD_EXAMPLES:BOOL=true ${{ inputs.args }}
-      shell: pwsh
-
-    - name: Configure CMake
-      if: ${{ inputs.library-type }} == "HeaderOnly"
-      working-directory: ${{ inputs.build-dir }}
-      run: cmake .. -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} -DCMAKE_TOOLCHAIN_FILE:STRING="${{ inputs.toolchain }}" -DSEVEN_BIT_DI_BUILD_TESTS_HO:BOOL=ON -DSEVEN_BIT_DI_BUILD_EXAMPLES_HO:BOOL=ON -DBUILD_TESTS:BOOL=true -DBUILD_EXAMPLES:BOOL=true ${{ inputs.args }}
+      working-directory: ${{ inputs.library-type }}
+      with:
+        key: "${{ inputs.build-type }}"
+        map: |
+          {
+            "Static": {
+              "args": ""
+            },
+            "Shared": {
+              "args": "-DSEVEN_BIT_DI_BUILD_SHARED=ON"
+            },
+            "HeaderOnly": {
+              "args": "-DSEVEN_BIT_DI_BUILD_TESTS_HO:BOOL=ON -DSEVEN_BIT_DI_BUILD_EXAMPLES_HO:BOOL=ON"
+            }
+          }
+        export_to: env
+      run: cmake .. -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} .env.$args  -DCMAKE_TOOLCHAIN_FILE:STRING="${{ inputs.toolchain }}" -DBUILD_TESTS:BOOL=true -DBUILD_EXAMPLES:BOOL=true ${{ inputs.args }}
       shell: pwsh
 
     - name: Build
