@@ -14,61 +14,80 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/lib)
 
-set(CPACK_PROJECT_NAME ${SEVEN_BIT_DI_PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${SEVEN_BIT_DI_VERSION})
+set(CPACK_PROJECT_NAME ${CMAKE_PROJECT_NAME})
+set(CPACK_PROJECT_VERSION ${_7BIT_DI_VERSION})
+set(CPACK_PACKAGE_VENDOR "github.com/7bitcoder/7bitDI")
+set(CPACK_PACKAGE_CONTACT "https://${CPACK_PACKAGE_VENDOR}")
+set(CPACK_PACKAGE_VERSION_MAJOR ${_7BIT_DI_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${_7BIT_DI_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${_7BIT_DI_VERSION_PATCH})
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "7bitInjector is a simple C++ dependency injection library")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
+set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
 
 set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/publish)
 
 set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH}:\$ORIGIN/../bin:\$ORIGIN)
 
-set(SEVEN_BIT_DI_HEADERS_DIR "${CMAKE_SOURCE_DIR}/Include")
+set(_7BIT_DI_HEADERS_DIR "${CMAKE_SOURCE_DIR}/Include")
 
-file(GLOB SEVEN_BIT_DI_TOP_HEADERS "${SEVEN_BIT_DI_HEADERS_DIR}/SevenBit/DI/*.hpp")
-file(GLOB SEVEN_BIT_DI_DETAILS_HEADERS "${SEVEN_BIT_DI_HEADERS_DIR}/SevenBit/DI/Details/*.hpp")
-file(GLOB SEVEN_BIT_DI_IMPL_HEADERS "${SEVEN_BIT_DI_HEADERS_DIR}/SevenBit/DI/Impl/*.hpp")
-set(SEVEN_BIT_DI_ALL_HEADERS ${SEVEN_BIT_DI_TOP_HEADERS} ${SEVEN_BIT_DI_DETAILS_HEADERS} ${SEVEN_BIT_DI_IMPL_HEADERS})
+file(GLOB _7BIT_DI_TOP_HEADERS "${_7BIT_DI_HEADERS_DIR}/SevenBit/DI/*.hpp")
+file(GLOB _7BIT_DI_DETAILS_HEADERS "${_7BIT_DI_HEADERS_DIR}/SevenBit/DI/Details/*.hpp")
+file(GLOB _7BIT_DI_IMPL_HEADERS "${_7BIT_DI_HEADERS_DIR}/SevenBit/DI/Impl/*.hpp")
+set(_7BIT_DI_ALL_HEADERS ${_7BIT_DI_TOP_HEADERS} ${_7BIT_DI_DETAILS_HEADERS} ${_7BIT_DI_IMPL_HEADERS})
 
-source_group("Header Files\\SevenBit" FILES ${SEVEN_BIT_DI_TOP_HEADERS})
-source_group("Header Files\\SevenBit\\Details" FILES ${SEVEN_BIT_DI_DETAILS_HEADERS})
-source_group("Header Files\\SevenBit\\Details\\Impl" FILES ${SEVEN_BIT_DI_IMPL_HEADERS})
+source_group("Header Files\\SevenBit" FILES ${_7BIT_DI_TOP_HEADERS})
+source_group("Header Files\\SevenBit\\Details" FILES ${_7BIT_DI_DETAILS_HEADERS})
+source_group("Header Files\\SevenBit\\Details\\Impl" FILES ${_7BIT_DI_IMPL_HEADERS})
 
-# build shared option
-option(SEVEN_BIT_DI_BUILD_SHARED "Build shared library" OFF)
+option(_7BIT_DI_LIBRARY_TYPE "Library build type: Shared;Static;HeaderOnly" "Static")
 
-# build position independent code
-option(SEVEN_BIT_DI_BUILD_PIC "Build position independent code (-fPIC)" OFF)
+option(_7BIT_DI_LIBRARY_TYPE_VALUES "List of possible BUILD_LIBRARY_Type values" "Shared;Static;HeaderOnly")
 
-# example options
-option(SEVEN_BIT_DI_BUILD_EXAMPLES "Build example" OFF)
-option(SEVEN_BIT_DI_BUILD_EXAMPLES_HO "Build header only example" OFF)
+set_property(CACHE _7BIT_DI_LIBRARY_TYPE PROPERTY STRINGS ${_7BIT_DI_LIBRARY_TYPE_VALUES})
 
-# testing options
-option(SEVEN_BIT_DI_BUILD_TESTS "Build tests" OFF)
-option(SEVEN_BIT_DI_BUILD_TESTS_HO "Build tests using the header only version" OFF)
+option(_7BIT_DI_BUILD_SHARED "Build shared library" OFF)
 
-# build documentation option (requires sphinx and doxygen installed)
-option(SEVEN_BIT_DI_BUILD_DOCS "Turn on to build documentation" OFF)
+option(_7BIT_DI_BUILD_PIC "Build position independent code (-fPIC)" OFF)
 
-if(SEVEN_BIT_DI_BUILD_PIC)
+option(_7BIT_DI_BUILD_EXAMPLES "Build example" OFF)
+
+option(_7BIT_DI_BUILD_TESTS "Build tests" OFF)
+
+option(_7BIT_DI_BUILD_DOCS "Turn on to build documentation (requires sphinx and doxygen installed)" OFF)
+
+option(_7BIT_DI_INSTALL "Installs 7bitDI" OFF)
+
+if(_7BIT_DI_BUILD_PIC)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif()
+
+if(_7BIT_DI_LIBRARY_TYPE STREQUAL "Shared")
+    set(_7BIT_DI_BUILD_LIBRARY_TYPE "Shared")
+    set(_7BIT_DI_SHARED_LIB true)
+elseif(_7BIT_DI_LIBRARY_TYPE STREQUAL "HeaderOnly")
+    set(_7BIT_DI_BUILD_LIBRARY_TYPE "HeaderOnly")
+    set(_7BIT_DI_HEADER_ONLY_LIB true)
+else()
+    set(_7BIT_DI_BUILD_LIBRARY_TYPE "Static")
+    set(_7BIT_DI_STATIC_LIB true)
 endif()
 
 set(PROJECT_CONFIG_IN ${CMAKE_SOURCE_DIR}/Cmake/7bitDIConfig.cmake.in)
 set(PROJECT_CONFIG_OUT ${CMAKE_BINARY_DIR}/7bitDIConfig.cmake)
 set(CONFIG_TARGETS_FILE 7bitDIConfigTargets.cmake)
 set(VERSIONS_CONFIG_FILE ${CMAKE_BINARY_DIR}/7bitDIConfigVersion.cmake)
-set(EXPORT_DEST_DIR cmake/7bitDI)
+set(EXPORT_DEST_DIR lib/cmake/7bitDI)
 
-configure_file(${CMAKE_SOURCE_DIR}/Include/SevenBit/DI/Version.hpp.input ${CMAKE_SOURCE_DIR}/Include/SevenBit/DI/Version.hpp)
+configure_file(${CMAKE_SOURCE_DIR}/Include/SevenBit/DI/CmakeDef.hpp.input ${CMAKE_SOURCE_DIR}/Include/SevenBit/DI/CmakeDef.hpp)
 
 set(INFOS
-    "${SEVEN_BIT_DI_PROJECT_NAME} version: ${SEVEN_BIT_DI_VERSION}"
-    "${SEVEN_BIT_DI_PROJECT_NAME} build as shared library ${SEVEN_BIT_DI_BUILD_SHARED} "
+    "${CMAKE_PROJECT_NAME} version: ${_7BIT_DI_VERSION}"
+    "${CMAKE_PROJECT_NAME} build as ${_7BIT_DI_BUILD_LIBRARY_TYPE} library"
     "=================================================="
-    "Build tests: ${SEVEN_BIT_DI_BUILD_TESTS}"
-    "Build tests header only: ${SEVEN_BIT_DI_BUILD_TESTS_HO}"
-    "Build examples: ${SEVEN_BIT_DI_BUILD_EXAMPLES}"
-    "Build examples header only: ${SEVEN_BIT_DI_BUILD_EXAMPLES_HO}"
-    "Build documentation: ${SEVEN_BIT_DI_BUILD_DOCS}"
+    "Build tests: ${_7BIT_DI_BUILD_TESTS}"
+    "Build examples: ${_7BIT_DI_BUILD_EXAMPLES}"
+    "Build documentation: ${_7BIT_DI_BUILD_DOCS}"
 )
 printInfo("${INFOS}" = 50 7 0)

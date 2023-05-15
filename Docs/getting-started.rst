@@ -41,7 +41,7 @@ Installation
 
 #. Building library as Static/Shared
     Download source code from the most recent release,
-    build the project using CMake_, set CMake cache var "SEVEN_BIT_DI_BUILD_SHARED" to build Shared library,
+    build the project using CMake_, set CMake cache var "_7BIT_DI_BUILD_SHARED" to build Shared library,
     run install command 
 
     .. code-block:: sh

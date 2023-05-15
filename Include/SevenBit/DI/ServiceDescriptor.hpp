@@ -77,6 +77,6 @@ namespace sb::di
     };
 } // namespace sb::di
 
-#ifdef SEVEN_BIT_DI_ADD_IMPL
+#ifdef _7BIT_DI_ADD_IMPL
 #include "SevenBit/DI/Details/Impl/ServiceDescriptor.hpp"
 #endif

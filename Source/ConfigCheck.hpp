@@ -2,8 +2,8 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#ifndef SEVEN_BIT_DI_ADD_IMPL
-#define SEVEN_BIT_DI_ADD_IMPL
+#ifndef _7BIT_DI_ADD_IMPL
+#define _7BIT_DI_ADD_IMPL
 #endif
 
 #ifdef INLINE

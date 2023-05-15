@@ -29,7 +29,7 @@ add_custom_target(GenerateDoc
         ${SHPHINX_RST_FILES}
 )
 
-include(GNUInstallDirs)
-
-install(DIRECTORY ${SPHINX_BUILD}
-        DESTINATION doc)
+if(_7BIT_DI_INSTALL)
+        install(DIRECTORY ${SPHINX_BUILD}
+                DESTINATION doc)
+endif()

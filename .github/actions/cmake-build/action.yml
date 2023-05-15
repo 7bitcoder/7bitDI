@@ -4,7 +4,7 @@ inputs:
   args:
     description: "Other arguments"
     required: false
-    default: ""
+    default:  -D_7BIT_DI_BUILD_TESTS:BOOL=true -D_7BIT_DI_BUILD_EXAMPLES:BOOL=true
   build-type:
     description: "Build type"
     required: false
@@ -13,10 +13,10 @@ inputs:
     description: "Toolchain file"
     required: false
     default: conan_toolchain.cmake
-  shared-lib:
-    description: "Shared lib"
+  library-type:
+    description: "Library type"
     required: false
-    default: "OFF"
+    default: Static
   build-dir:
     description: "Build directory"
     required: true
@@ -26,7 +26,7 @@ runs:
   steps:
     - name: Configure CMake
       working-directory: ${{ inputs.build-dir }}
-      run: cmake .. -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} -DSEVEN_BIT_DI_BUILD_SHARED:STRING="${{ inputs.shared-lib }}" -DCMAKE_TOOLCHAIN_FILE:STRING="${{ inputs.toolchain }}" -DSEVEN_BIT_DI_BUILD_TESTS:BOOL=true -DSEVEN_BIT_DI_BUILD_EXAMPLES:BOOL=true ${{ inputs.args }}
+      run: cmake .. -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} -D_7BIT_DI_LIBRARY_TYPE=${{ inputs.library-type }} -DCMAKE_TOOLCHAIN_FILE:STRING="${{ inputs.toolchain }}" ${{ inputs.args }}
       shell: pwsh
 
     - name: Build

@@ -1,16 +1,14 @@
 cmake_minimum_required(VERSION 3.15.0)
 
-set(SEVEN_BIT_DI_PROJECT_NAME 7bitDI)
+set(_7BIT_DI_VERSION_MAJOR 1)
+set(_7BIT_DI_VERSION_MINOR 0)
+set(_7BIT_DI_VERSION_PATCH 0)
 
-set(SEVEN_BIT_DI_VERSION_MAJOR 1)
-set(SEVEN_BIT_DI_VERSION_MINOR 0)
-set(SEVEN_BIT_DI_VERSION_PATCH 0)
+set(_7BIT_DI_VERSION ${_7BIT_DI_VERSION_MAJOR}.${_7BIT_DI_VERSION_MINOR}.${_7BIT_DI_VERSION_PATCH})
 
-set(SEVEN_BIT_DI_VERSION ${SEVEN_BIT_DI_VERSION_MAJOR}.${SEVEN_BIT_DI_VERSION_MINOR}.${SEVEN_BIT_DI_VERSION_PATCH})
+project(7bitDI LANGUAGES CXX VERSION ${_7BIT_DI_VERSION})
 
-project(${SEVEN_BIT_DI_PROJECT_NAME} VERSION ${SEVEN_BIT_DI_VERSION})
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/Cmake)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Cmake")
 
 include_directories(Include)
 include(Setup)
@@ -20,33 +18,46 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(Source)
 
-if(SEVEN_BIT_DI_BUILD_DOCS)
+if(_7BIT_DI_BUILD_DOCS)
         add_subdirectory(Docs)
 endif()
 
-if(SEVEN_BIT_DI_BUILD_TESTS OR SEVEN_BIT_DI_BUILD_TESTS_HO)
+if(_7BIT_DI_BUILD_TESTS)
         include(GoogleTest)
-        include(CPack)
         enable_testing()
 
         add_subdirectory(Tests)
 endif()
 
-if(SEVEN_BIT_DI_BUILD_EXAMPLES OR SEVEN_BIT_DI_BUILD_EXAMPLE_HO)
+if(_7BIT_DI_BUILD_EXAMPLES)
         add_subdirectory(Examples)
 endif()
 
-install(DIRECTORY ${SEVEN_BIT_DI_HEADERS_DIR}/ DESTINATION include)
+if(_7BIT_DI_INSTALL)
+        install(DIRECTORY ${_7BIT_DI_HEADERS_DIR}/ DESTINATION include)
 
-export(
-        TARGETS 7BitDI
-        NAMESPACE 7BitDI::
-        FILE ${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_TARGETS_FILE})
-install(EXPORT 7BitDI DESTINATION ${EXPORT_DEST_DIR} NAMESPACE 7BitDI:: FILE ${CONFIG_TARGETS_FILE})
+        export(
+                TARGETS 7BitDI
+                NAMESPACE 7BitDI::
+                FILE ${CONFIG_TARGETS_FILE})
 
-include(CMakePackageConfigHelpers)
-configure_package_config_file(${PROJECT_CONFIG_IN} ${PROJECT_CONFIG_OUT}
-        INSTALL_DESTINATION ${EXPORT_DEST_DIR})
+        install(
+                EXPORT 7BitDI
+                DESTINATION ${EXPORT_DEST_DIR}
+                NAMESPACE 7BitDI::
+                FILE ${CONFIG_TARGETS_FILE})
 
-write_basic_package_version_file(${VERSIONS_CONFIG_FILE} COMPATIBILITY SameMajorVersion)
-install(FILES ${PROJECT_CONFIG_OUT} ${VERSIONS_CONFIG_FILE} DESTINATION ${EXPORT_DEST_DIR})
+        include(CMakePackageConfigHelpers)
+
+        configure_package_config_file(${PROJECT_CONFIG_IN} ${PROJECT_CONFIG_OUT}
+                INSTALL_DESTINATION ${EXPORT_DEST_DIR})
+
+        write_basic_package_version_file(${VERSIONS_CONFIG_FILE} COMPATIBILITY SameMajorVersion)
+        install(FILES ${PROJECT_CONFIG_OUT} ${VERSIONS_CONFIG_FILE} DESTINATION ${EXPORT_DEST_DIR})
+
+        include(7bitDIGeneratePkgConfig)
+
+        export(PACKAGE 7bitDI)
+
+        include(CPack)
+endif()
