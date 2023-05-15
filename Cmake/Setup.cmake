@@ -1,19 +1,8 @@
 include(Functions)
 
-set(SEVEN_BIT_DI_PROJECT_NAME 7bitDI)
-
-set(SEVEN_BIT_DI_VERSION_MAJOR 1)
-set(SEVEN_BIT_DI_VERSION_MINOR 0)
-set(SEVEN_BIT_DI_VERSION_PATCH 0)
-
-set(SEVEN_BIT_DI_VERSION ${SEVEN_BIT_DI_VERSION_MAJOR}.${SEVEN_BIT_DI_VERSION_MINOR}.${SEVEN_BIT_DI_VERSION_PATCH})
-
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose Release or Debug" FORCE)
 endif()
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin)
@@ -73,8 +62,8 @@ set(EXPORT_DEST_DIR cmake/7bitDI)
 configure_file(${CMAKE_SOURCE_DIR}/Include/SevenBit/DI/Version.hpp.input ${CMAKE_SOURCE_DIR}/Include/SevenBit/DI/Version.hpp)
 
 set(INFOS
-    "${CMAKE_PROJECT_NAME} version: ${SEVEN_BIT_DI_VERSION}"
-    "${CMAKE_PROJECT_NAME} build as shared library ${SEVEN_BIT_DI_BUILD_SHARED} "
+    "${SEVEN_BIT_DI_PROJECT_NAME} version: ${SEVEN_BIT_DI_VERSION}"
+    "${SEVEN_BIT_DI_PROJECT_NAME} build as shared library ${SEVEN_BIT_DI_BUILD_SHARED} "
     "=================================================="
     "Build tests: ${SEVEN_BIT_DI_BUILD_TESTS}"
     "Build tests header only: ${SEVEN_BIT_DI_BUILD_TESTS_HO}"
