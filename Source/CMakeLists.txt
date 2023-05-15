@@ -1,12 +1,15 @@
 
-if(SEVEB_BIT_DI_BUILD_SHARED OR BUILD_SHARED_LIBS)
+include(GenerateExportHeader)
+
+if(SEVEN_BIT_DI_BUILD_SHARED OR BUILD_SHARED_LIBS)
   add_library(7BitDI SHARED
-    Source.cpp ${SEVEB_BIT_DI_ALL_HEADERS}
+    Source.cpp ${SEVEN_BIT_DI_ALL_HEADERS}
   )
-  target_compile_definitions(7BitDI PUBLIC SEVEB_BIT_DI_BUILD_SHARED)
+  GENERATE_EXPORT_HEADER(7BitDI)
+  target_compile_definitions(7BitDI PUBLIC SEVEN_BIT_DI_BUILD_SHARED)
 else()
   add_library(7BitDI STATIC
-    Source.cpp ${SEVEB_BIT_DI_ALL_HEADERS}
+    Source.cpp ${SEVEN_BIT_DI_ALL_HEADERS}
   )
 endif()
 

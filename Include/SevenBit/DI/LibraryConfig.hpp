@@ -2,17 +2,13 @@
 
 #include "SevenBit/DI/Version.hpp"
 
-#define SEVEN_BIT_DI_HEADER_ONLY
 
-#ifdef SEVEN_BIT_DI_COMPILED_LIB
-#undef SEVEN_BIT_DI_HEADER_ONLY
-
-#ifdef SEVEB_BIT_DI_BUILD_SHARED
+#ifdef SEVEN_BIT_DI_BUILD_SHARED 
 //!!! cmake when compiling shared lib sets <target_name>_EXPORTS
 
 #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 //  Microsoft
-#ifdef SevenBitDI_EXPORTS
+#ifdef _7BitDI_EXPORTS
 /* We are building this library */
 #define EXPORT __declspec(dllexport)
 #else
@@ -22,7 +18,7 @@
 
 #elif defined(__linux__) || defined(UNIX) || defined(__unix__) || defined(LINUX)
 //  GCC
-#if defined(SevenBitDI_EXPORTS)
+#if defined(_7BitDI_EXPORTS)
 #define EXPORT __attribute__((visibility("default")))
 #else
 #define EXPORT
@@ -35,19 +31,19 @@
 #endif
 
 #else
-// Static lib
-#define EXPORT
-#endif
-#endif
 
-#ifdef SEVEN_BIT_DI_HEADER_ONLY
+// Static lib or header only lib
+#define EXPORT
+
+#ifdef SEVEN_BIT_DI_COMPILED_LIB // Static lib
+#define INLINE 
+
+#else // header only lib
 
 #define SEVEN_BIT_DI_ADD_IMPL
 #define INLINE inline
-#define EXPORT
-
-#else
-
-#define INLINE
 
 #endif
+
+#endif
+

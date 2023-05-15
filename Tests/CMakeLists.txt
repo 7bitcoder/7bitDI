@@ -21,6 +21,8 @@ else()
     )
 endif()
 
+install(TARGETS Tests)
+
 gtest_discover_tests(Tests
     WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     PROPERTIES TIMEOUT 10)
