@@ -1,4 +1,3 @@
-#include "SevenBit/DI/Version.hpp"
 #include <SevenBit/DI.hpp>
 #include <iostream>
 

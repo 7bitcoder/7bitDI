@@ -11,15 +11,9 @@ target_link_libraries(Tests PUBLIC
     GTest::gmock
 )
 
-if(SEVEN_BIT_DI_BUILD_TESTS_HO)
-    target_link_libraries(Tests PUBLIC
-        7BitDI_header_only
-    )
-else()
-    target_link_libraries(Tests PUBLIC
-        7BitDI
-    )
-endif()
+target_link_libraries(Tests PUBLIC
+    7BitDI
+)
 
 install(TARGETS Tests)
 

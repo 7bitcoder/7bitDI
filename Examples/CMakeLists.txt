@@ -8,15 +8,11 @@ foreach(SOURCE ${SOURCES})
         ${SOURCE}
     )
 
-    if(SEVEN_BIT_DI_BUILD_EXAMPLE_HO)
-        target_link_libraries(${FILE_NAME}
-            7BitDI_header_only
-        )
-    else()
-        target_link_libraries(${FILE_NAME}
-            7BitDI
-        )
-    endif()
+    target_link_libraries(${FILE_NAME}
+        7BitDI
+    )
 
-    install(TARGETS ${FILE_NAME})
+    if(_7BIT_DI_INSTALL)
+        install(TARGETS ${FILE_NAME})
+    endif()
 endforeach()
