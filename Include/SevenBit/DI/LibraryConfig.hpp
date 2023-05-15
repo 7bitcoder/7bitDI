@@ -1,25 +1,50 @@
 #pragma once
 
-#include "SevenBit/DI/CmakeDef.hpp"
-#include "SevenBit/DI/Export.hpp"
+#include "SevenBit/DI/Version.hpp"
 
-#ifndef SEVEN_BIT_INJECTOR_VERSION
+#define SEVEN_BIT_DI_HEADER_ONLY
 
-#define SEVEN_BIT_INJECTOR_VERSION "0.0.0"
+#ifdef SEVEN_BIT_DI_COMPILED_LIB
+#undef SEVEN_BIT_DI_HEADER_ONLY
 
+#ifdef SEVEB_BIT_DI_BUILD_SHARED
+//!!! cmake when compiling shared lib sets <target_name>_EXPORTS
+
+#if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+//  Microsoft
+#ifdef SevenBitDI_EXPORTS
+/* We are building this library */
+#define EXPORT __declspec(dllexport)
+#else
+/* We are using this library */
+#define EXPORT __declspec(dllimport)
 #endif
 
-#if !defined SEVEN_BIT_INJECTOR_SHARED_LIB && !defined SEVEN_BIT_INJECTOR_STATIC_LIB &&                                \
-    !defined SEVEN_BIT_INJECTOR_HEADER_ONLY_LIB
-
-#define SEVEN_BIT_INJECTOR_HEADER_ONLY_LIB
-
+#elif defined(__linux__) || defined(UNIX) || defined(__unix__) || defined(LINUX)
+//  GCC
+#if defined(SevenBitDI_EXPORTS)
+#define EXPORT __attribute__((visibility("default")))
+#else
+#define EXPORT
 #endif
 
-#ifdef SEVEN_BIT_INJECTOR_HEADER_ONLY_LIB
+#else
+// do nothing and hope for the best?
+#define EXPORT
+#pragma WARNING : Unknown dynamic link import / export semantics.
+#endif
 
-#define SEVEN_BIT_INJECTOR_ADD_IMPL
+#else
+// Static lib
+#define EXPORT
+#endif
+#endif
+
+#ifdef SEVEN_BIT_DI_HEADER_ONLY
+
+#define SEVEN_BIT_DI_ADD_IMPL
 #define INLINE inline
+#define EXPORT
 
 #else
 

@@ -37,6 +37,6 @@ namespace sb::di::details
 
 } // namespace sb::di::details
 
-#ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
+#ifdef SEVEN_BIT_DI_ADD_IMPL
 #include "SevenBit/DI/Details/Impl/ServicesMap.hpp"
 #endif

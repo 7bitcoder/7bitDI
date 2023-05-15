@@ -11,9 +11,15 @@ target_link_libraries(Tests PUBLIC
     GTest::gmock
 )
 
-target_link_libraries(Tests PUBLIC
-    SevenBitInjector
-)
+if(SEVEN_BIT_DI_BUILD_TESTS_HO)
+    target_link_libraries(Tests PUBLIC
+        SevenBitDI_header_only
+    )
+else()
+    target_link_libraries(Tests PUBLIC
+        SevenBitDI
+    )
+endif()
 
 gtest_discover_tests(Tests
     WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}

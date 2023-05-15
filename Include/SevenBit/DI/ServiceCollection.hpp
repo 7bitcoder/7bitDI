@@ -611,6 +611,6 @@ namespace sb::di
     };
 } // namespace sb::di
 
-#ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
+#ifdef SEVEN_BIT_DI_ADD_IMPL
 #include "SevenBit/DI/Details/Impl/ServiceCollection.hpp"
 #endif

@@ -4,7 +4,7 @@ Getting Started
 Supported Platforms
 --------------------
 
-7bitInjector requires client code and compiler compatible with the C++17 standard or newer.
+7bitDI requires client code and compiler compatible with the C++17 standard or newer.
 
 The library is officially supported on the following platforms:
 
@@ -20,7 +20,7 @@ The library is officially supported on the following platforms:
 * clang 6.0+
 * MSVC 2015+
 
-If you notice any problems/bugs, please file an issue on the 7bitInjector_ GitHub Issue Tracker. Pull requests containing fixes are welcome!
+If you notice any problems/bugs, please file an issue on the 7bitDI_ GitHub Issue Tracker. Pull requests containing fixes are welcome!
 
 Installation
 --------------------
@@ -32,12 +32,12 @@ Installation
 #. Header only
     Download source code from the most recent release, 
     copy include folder into your project location,
-    for example copy into the '/SevenBitInjector' folder. 
+    for example copy into the '/SevenBitDI' folder. 
     Include this folder into the project, with CMake_, u can use: 
 
     .. code-block:: CMake
 
-        include_directories(/SevenBitInjector/include)
+        include_directories(/SevenBitDI/include)
 
 #. Building library as Static/Shared
     Download source code from the most recent release,
@@ -67,5 +67,5 @@ The next chapters will in detail, step by step explain what is going on in this 
 
 
 .. _CMake: https://cmake.org/
-.. _7bitInjector: https://github.com/7bitcoder/7bitInjector
+.. _7bitDI: https://github.com/7bitcoder/7bitDI
 .. _`Building Library`: advanced-guides/building-library.html

@@ -1,30 +1,29 @@
 cmake_minimum_required(VERSION 3.15.0)
-project(7bitInjector VERSION 1.0.0)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/Cmake)
 
-include(GoogleTest)
-include(CPack)
-enable_testing()
-
 include(Setup)
+
+project(${SEVEN_BIT_DI_PROJECT_NAME} VERSION ${SEVEN_BIT_DI_VERSION})
 
 include_directories(Include)
 
 add_subdirectory(Source)
 
-if(BUILD_DOCS)
+if(SEVEN_BIT_DI_BUILD_DOCS)
         add_subdirectory(Docs)
 endif()
 
-if(BUILD_TESTS)
+if(SEVEN_BIT_DI_BUILD_TESTS OR SEVEN_BIT_DI_BUILD_TESTS_HO)
+        include(GoogleTest)
+        include(CPack)
+        enable_testing()
+
         add_subdirectory(Tests)
 endif()
 
-if(BUILD_EXAMPLES)
+if(SEVEN_BIT_DI_BUILD_EXAMPLES OR SEVEN_BIT_DI_BUILD_EXAMPLE_HO)
         add_subdirectory(Examples)
 endif()
 
-install(DIRECTORY Include/ DESTINATION include)
+install(DIRECTORY ${SEVEN_BIT_DI_HEADERS_DIR}/ DESTINATION include)

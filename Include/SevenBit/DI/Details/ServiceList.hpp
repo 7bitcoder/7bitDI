@@ -21,7 +21,7 @@ namespace sb::di::details
         ServiceList() = default;
 
         // fix compilation errors should not be used!!
-        ServiceList(const ServiceList &) {};
+        ServiceList(const ServiceList &){};
         ServiceList(ServiceList &&) = default;
 
         // fix compilation errors should not be used!!
@@ -54,6 +54,6 @@ namespace sb::di::details
     };
 } // namespace sb::di::details
 
-#ifdef SEVEN_BIT_INJECTOR_ADD_IMPL
+#ifdef SEVEN_BIT_DI_ADD_IMPL
 #include "SevenBit/DI/Details/Impl/ServiceList.hpp"
 #endif

@@ -1,3 +1,4 @@
+#include "SevenBit/DI/Version.hpp"
 #include <SevenBit/DI.hpp>
 #include <iostream>
 
@@ -51,6 +52,5 @@ int main()
                                          .buildServiceProvider();
 
     Application &app = provider->getService<Application>();
-
     return app.run();
 }
