@@ -31,12 +31,12 @@ install(DIRECTORY ${SEVEN_BIT_DI_HEADERS_DIR}/ DESTINATION include)
 export(
         TARGETS 7BitDI
         NAMESPACE 7BitDI::
-        FILE ${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_TARGETS_FILE})
-install(EXPORT 7BitDI DESTINATION ${EXPORT_DEST_DIR} NAMESPACE 7BitDI:: FILE ${CONFIG_TARGETS_FILE})
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/${config_targets_file})
+install(EXPORT 7BitDI DESTINATION ${export_dest_dir} NAMESPACE 7BitDI:: FILE ${config_targets_file})
 
 include(CMakePackageConfigHelpers)
-configure_package_config_file(${PROJECT_CONFIG_IN} ${PROJECT_CONFIG_OUT}
-        INSTALL_DESTINATION ${EXPORT_DEST_DIR})
+configure_package_config_file(${project_config_in} ${project_config_out}
+        INSTALL_DESTINATION ${export_dest_dir})
 
-write_basic_package_version_file(${VERSIONS_CONFIG_FILE} COMPATIBILITY SameMajorVersion)
-install(FILES ${PROJECT_CONFIG_OUT} ${VERSIONS_CONFIG_FILE} DESTINATION ${EXPORT_DEST_DIR})
+write_basic_package_version_file(${version_config_file} COMPATIBILITY SameMajorVersion)
+install(FILES ${project_config_out} ${version_config_file} DESTINATION ${export_dest_dir})

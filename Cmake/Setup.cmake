@@ -54,11 +54,11 @@ if(SEVEN_BIT_DI_BUILD_PIC)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
 
-set(PROJECT_CONFIG_IN ${CMAKE_SOURCE_DIR}/Cmake/7bitDIConfig.cmake.in)
-set(PROJECT_CONFIG_OUT ${CMAKE_BINARY_DIR}/7bitDIConfig.cmake)
-set(CONFIG_TARGETS_FILE 7bitDIConfigTargets.cmake)
-set(VERSIONS_CONFIG_FILE ${CMAKE_BINARY_DIR}/7bitDIConfigVersion.cmake)
-set(EXPORT_DEST_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/7bitDI)
+set(project_config_in ${CMAKE_SOURCE_DIR}/Cmake/7bitDIConfig.cmake.in)
+set(project_config_out ${CMAKE_BINARY_DIR}/7bitDIConfig.cmake)
+set(config_targets_file 7bitDIConfigTargets.cmake)
+set(version_config_file ${CMAKE_BINARY_DIR}/7bitDIConfigVersion.cmake)
+set(export_dest_dir ${CMAKE_INSTALL_LIBDIR}/cmake/7bitDI)
 configure_file(${CMAKE_SOURCE_DIR}/Include/SevenBit/DI/Version.hpp.input ${CMAKE_SOURCE_DIR}/Include/SevenBit/DI/Version.hpp)
 
 set(INFOS
