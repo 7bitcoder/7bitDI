@@ -1,5 +1,5 @@
-[![DevCI](https://github.com/7bitcoder/7bitinjector/actions/workflows/DevCI.yml/badge.svg?branch=dev)](https://github.com/7bitcoder/7bitinjector/actions/workflows/DevCI.yml)
-[![MainCI](https://github.com/7bitcoder/7bitinjector/actions/workflows/MainCI.yml/badge.svg?branch=main)](https://github.com/7bitcoder/7bitinjector/actions/workflows/MainCI.yml)
+[![DevCI](https://github.com/7bitcoder/7bitDI/actions/workflows/DevCI.yml/badge.svg?branch=dev)](https://github.com/7bitcoder/7bitDI/actions/workflows/DevCI.yml)
+[![MainCI](https://github.com/7bitcoder/7bitDI/actions/workflows/MainCI.yml/badge.svg?branch=main)](https://github.com/7bitcoder/7bitDI/actions/workflows/MainCI.yml)
 
 <div align="center">
 
@@ -10,11 +10,11 @@
   </h4>
 
   <p>
-    7bitInjector is a simple C++ dependency injection library, designed to be as easy to use as possible, the main inspiration was the asp net core dependency injection system. 
+    7bitDI is a simple C++ dependency injection library, designed to be as easy to use as possible, the main inspiration was the asp net core dependency injection system. 
   </p>
    
 <h4>
-    <a href="https://7bitinjector.readthedocs.io/en/latest/index.html">Documentation & Examples</a>
+    <a href="https://7bitDI.readthedocs.io/en/latest/index.html">Documentation & Examples</a>
 </div>
 
 <br />
@@ -90,7 +90,7 @@ Output
 actionA, actionB executed.
 ```
 
-More examples and tutorials are available on the
-[Documentation & Examples](https://7bitinjector.readthedocs.io/en/latest/index.html) page
+More examples and tutorials are available on the 
+[Documentation & Examples](https://7bitDI.readthedocs.io/en/latest/index.html) page
 
 @7bitcoder Sylwester Dawida 2023

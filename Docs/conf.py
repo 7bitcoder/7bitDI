@@ -10,7 +10,7 @@ def createIfNotExists(path):
         os.makedirs(path)
 
 
-project = "7bitInjector"
+project = "7bitDI"
 copyright = "2023, 7BitCoder Sylwester Dawida"
 author = "Sylwester Dawida"
 version = "1.0.0"
@@ -33,8 +33,8 @@ createIfNotExists(pathSphinx)
 
 subprocess.call("doxygen ./Doxyfile", shell=True)
 
-breathe_projects = {"7bitInjector": pathDoxygen + "/xml"}
-breathe_default_project = "7bitInjector"
+breathe_projects = {"7bitDI": pathDoxygen + "/xml"}
+breathe_default_project = "7bitDI"
 
 html_title = f"{project} v{version}"
 html_theme = "furo"

@@ -10,10 +10,10 @@ def createIfNotExists(path):
         os.makedirs(path)
 
 
-project = "@CMAKE_PROJECT_NAME@"
+project = "@SEVEN_BIT_DI_PROJECT_NAME@"
 copyright = "2023, 7BitCoder Sylwester Dawida"
 author = "Sylwester Dawida"
-version = "@SEVEN_BIT_INJECTOR_VERSION@"
+version = "@SEVEN_BIT_DI_VERSION@"
 
 extensions = [
     "sphinx.ext.autodoc",
@@ -33,8 +33,8 @@ createIfNotExists(pathSphinx)
 
 subprocess.call("doxygen ./Doxyfile", shell=True)
 
-breathe_projects = {"7bitInjector": pathDoxygen + "/xml"}
-breathe_default_project = "7bitInjector"
+breathe_projects = {"7bitDI": pathDoxygen + "/xml"}
+breathe_default_project = "7bitDI"
 
 html_title = f"{project} v{version}"
 html_theme = "furo"

@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        libraryType: [HeaderOnly, Static, Shared]
+        shared-lib: ["ON", "OFF"]
         os: [ubuntu-22.04, macos-12, windows-2022]
 
     runs-on: ${{matrix.os}}
@@ -35,7 +35,7 @@ jobs:
         with:
           build-dir: ${{ env.BUILD_DIR }}
           build-type: ${{ env.BUILD_TYPE }}
-          library-type: ${{ matrix.libraryType }}
+          shared-lib: ${{ matrix.shared-lib }}
 
       - name: Test
         working-directory: ${{ env.BUILD_DIR }}

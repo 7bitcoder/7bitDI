@@ -8,13 +8,15 @@ foreach(SOURCE ${SOURCES})
         ${SOURCE}
     )
 
-    target_link_libraries(${FILE_NAME}
-        SevenBitInjector
-    )
+    if(SEVEN_BIT_DI_BUILD_EXAMPLE_HO)
+        target_link_libraries(${FILE_NAME}
+            7BitDI_header_only
+        )
+    else()
+        target_link_libraries(${FILE_NAME}
+            7BitDI
+        )
+    endif()
 
-    install(TARGETS ${FILE_NAME} DESTINATION examples)
+    install(TARGETS ${FILE_NAME})
 endforeach()
-
-if(SEVEN_BIT_INJECTOR_SHARED_LIB)
-    install(TARGETS SevenBitInjector DESTINATION examples)
-endif()

@@ -16,7 +16,6 @@ jobs:
   test-gcc:
     strategy:
       matrix:
-        libraryType: [Static]
         version: [7, 8, 10, 11]
         os: [ubuntu-20.04]
 
@@ -48,7 +47,6 @@ jobs:
   test-clang:
     strategy:
       matrix:
-        libraryType: [Static]
         version: [6, 13, 14, 15]
         os: [ubuntu-20.04]
 

@@ -1,30 +1,52 @@
 cmake_minimum_required(VERSION 3.15.0)
-project(7bitInjector VERSION 1.0.0)
+
+set(SEVEN_BIT_DI_PROJECT_NAME 7bitDI)
+
+set(SEVEN_BIT_DI_VERSION_MAJOR 1)
+set(SEVEN_BIT_DI_VERSION_MINOR 0)
+set(SEVEN_BIT_DI_VERSION_PATCH 0)
+
+set(SEVEN_BIT_DI_VERSION ${SEVEN_BIT_DI_VERSION_MAJOR}.${SEVEN_BIT_DI_VERSION_MINOR}.${SEVEN_BIT_DI_VERSION_PATCH})
+
+project(${SEVEN_BIT_DI_PROJECT_NAME} VERSION ${SEVEN_BIT_DI_VERSION})
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/Cmake)
+
+include_directories(Include)
+include(Setup)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/Cmake)
-
-include(GoogleTest)
-include(CPack)
-enable_testing()
-
-include(Setup)
-
-include_directories(Include)
 
 add_subdirectory(Source)
 
-if(BUILD_DOCS)
+if(SEVEN_BIT_DI_BUILD_DOCS)
         add_subdirectory(Docs)
 endif()
 
-if(BUILD_TESTS)
+if(SEVEN_BIT_DI_BUILD_TESTS OR SEVEN_BIT_DI_BUILD_TESTS_HO)
+        include(GoogleTest)
+        include(CPack)
+        enable_testing()
+
         add_subdirectory(Tests)
 endif()
 
-if(BUILD_EXAMPLES)
+if(SEVEN_BIT_DI_BUILD_EXAMPLES OR SEVEN_BIT_DI_BUILD_EXAMPLE_HO)
         add_subdirectory(Examples)
 endif()
 
-install(DIRECTORY Include/ DESTINATION include)
+install(DIRECTORY ${SEVEN_BIT_DI_HEADERS_DIR}/ DESTINATION include)
+
+export(
+        TARGETS 7BitDI
+        NAMESPACE 7BitDI::
+        FILE ${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_TARGETS_FILE})
+install(EXPORT 7BitDI DESTINATION ${EXPORT_DEST_DIR} NAMESPACE 7BitDI:: FILE ${CONFIG_TARGETS_FILE})
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(${PROJECT_CONFIG_IN} ${PROJECT_CONFIG_OUT}
+        INSTALL_DESTINATION ${EXPORT_DEST_DIR})
+
+write_basic_package_version_file(${VERSIONS_CONFIG_FILE} COMPATIBILITY SameMajorVersion)
+install(FILES ${PROJECT_CONFIG_OUT} ${VERSIONS_CONFIG_FILE} DESTINATION ${EXPORT_DEST_DIR})

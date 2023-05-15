@@ -1,16 +1,34 @@
 
-if(LIBRARY_TYPE STREQUAL "Shared")
-  add_library(SevenBitInjector SHARED
-    Source.cpp
+include(GenerateExportHeader)
+
+if(SEVEN_BIT_DI_BUILD_SHARED OR BUILD_SHARED_LIBS)
+  add_library(7BitDI SHARED
+    Source.cpp ${SEVEN_BIT_DI_ALL_HEADERS}
   )
-elseif(LIBRARY_TYPE STREQUAL "Static")
-  add_library(SevenBitInjector STATIC
-    Source.cpp
+  GENERATE_EXPORT_HEADER(7BitDI)
+  target_compile_definitions(7BitDI PUBLIC SEVEN_BIT_DI_BUILD_SHARED)
+else()
+  add_library(7BitDI STATIC
+    Source.cpp ${SEVEN_BIT_DI_ALL_HEADERS}
   )
-elseif(LIBRARY_TYPE STREQUAL "HeaderOnly")
-  add_library(SevenBitInjector INTERFACE)
 endif()
 
-target_include_directories(SevenBitInjector INTERFACE ../Include)
+add_library(7BitDI::7BitDI ALIAS 7BitDI)
 
-install(TARGETS SevenBitInjector)
+target_compile_definitions(7BitDI PUBLIC SEVEN_BIT_DI_COMPILED_LIB)
+
+target_include_directories(7BitDI INTERFACE "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/Include>"
+  "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+
+set_target_properties(7BitDI PROPERTIES VERSION ${SEVEN_BIT_DI_VERSION})
+set_target_properties(7BitDI PROPERTIES DEBUG_POSTFIX d)
+
+add_library(7BitDI_header_only INTERFACE)
+add_library(7BitDI::7BitDI_header_only ALIAS 7BitDI_header_only)
+
+target_include_directories(7BitDI_header_only INTERFACE "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/Include>"
+  "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+
+install(
+  TARGETS 7BitDI 7BitDI_header_only
+  EXPORT 7BitDI)
