@@ -25,7 +25,7 @@ runs:
   using: composite
   steps:
     - name: Configure CMake
-      working-directory: ${{ inputs.library-type }}
+      working-directory: ${{ inputs.build-dir }}
       run: cmake .. -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} -DSEVEN_BIT_DI_BUILD_SHARED:STRING="${{ inputs.shared-lib }}" -DCMAKE_TOOLCHAIN_FILE:STRING="${{ inputs.toolchain }}" -DBUILD_TESTS:BOOL=true -DBUILD_EXAMPLES:BOOL=true ${{ inputs.args }}
       shell: pwsh
 
