@@ -37,11 +37,11 @@ Installation
 
     .. code-block:: CMake
 
-        include_directories(/SevenBitDI/include)
+        include_directories(/SevenBitDI/Include)
 
 #. Building library as Static/Shared
     Download source code from the most recent release,
-    build the project using CMake_, set CMake cache var "LIBRARY_TYPE" to "Static" or "Shared",
+    build the project using CMake_, set CMake cache var "SEVEN_BIT_DI_BUILD_SHARED" to build Shared library,
     run install command 
 
     .. code-block:: sh

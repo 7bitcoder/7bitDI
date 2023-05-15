@@ -13,11 +13,11 @@ target_link_libraries(Tests PUBLIC
 
 if(SEVEN_BIT_DI_BUILD_TESTS_HO)
     target_link_libraries(Tests PUBLIC
-        SevenBitDI_header_only
+        7BitDI_header_only
     )
 else()
     target_link_libraries(Tests PUBLIC
-        SevenBitDI
+        7BitDI
     )
 endif()
 

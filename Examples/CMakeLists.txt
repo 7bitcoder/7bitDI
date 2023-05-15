@@ -10,11 +10,11 @@ foreach(SOURCE ${SOURCES})
 
     if(SEVEN_BIT_DI_BUILD_EXAMPLE_HO)
         target_link_libraries(${FILE_NAME}
-            SevenBitDI_header_only
+            7BitDI_header_only
         )
     else()
         target_link_libraries(${FILE_NAME}
-            SevenBitDI
+            7BitDI
         )
     endif()
 

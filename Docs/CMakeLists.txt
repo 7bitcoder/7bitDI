@@ -30,5 +30,6 @@ add_custom_target(GenerateDoc
 )
 
 include(GNUInstallDirs)
+
 install(DIRECTORY ${SPHINX_BUILD}
-        DESTINATION ${CMAKE_INSTALL_DOCDIR})
+        DESTINATION doc)
