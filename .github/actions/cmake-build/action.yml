@@ -26,7 +26,7 @@ runs:
   steps:
     - name: Configure CMake
       working-directory: ${{ inputs.build-dir }}
-      run: cmake .. -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} -DSEVEN_BIT_DI_BUILD_SHARED:STRING="${{ inputs.shared-lib }}" -DCMAKE_TOOLCHAIN_FILE:STRING="${{ inputs.toolchain }}" -DBUILD_TESTS:BOOL=true -DBUILD_EXAMPLES:BOOL=true ${{ inputs.args }}
+      run: cmake .. -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} -DSEVEN_BIT_DI_BUILD_SHARED:STRING="${{ inputs.shared-lib }}" -DCMAKE_TOOLCHAIN_FILE:STRING="${{ inputs.toolchain }}" -DSEVEN_BIT_DI_BUILD_TESTS:BOOL=true -DSEVEN_BIT_DI_BUILD_EXAMPLES:BOOL=true ${{ inputs.args }}
       shell: pwsh
 
     - name: Build
