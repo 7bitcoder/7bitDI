@@ -24,6 +24,9 @@ if(_7BIT_DI_BUILD_DOCS)
 endif()
 
 if(_7BIT_DI_BUILD_TESTS)
+        include(GoogleTest)
+        enable_testing()
+
         add_subdirectory(Tests)
 endif()
 
