@@ -55,9 +55,8 @@ if(_7BIT_DI_INSTALL)
                 INSTALL_DESTINATION ${EXPORT_DEST_DIR})
 
         write_basic_package_version_file(${VERSIONS_CONFIG_FILE} COMPATIBILITY SameMajorVersion)
-        install(FILES ${PROJECT_CONFIG_OUT} ${VERSIONS_CONFIG_FILE} DESTINATION ${EXPORT_DEST_DIR})
 
-        include(7bitDIGeneratePkgConfig)
+        install(FILES ${PROJECT_CONFIG_OUT} ${VERSIONS_CONFIG_FILE} DESTINATION ${EXPORT_DEST_DIR})
 
         export(PACKAGE 7bitDI)
 
