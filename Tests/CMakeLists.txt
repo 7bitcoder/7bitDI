@@ -1,3 +1,6 @@
+include(GoogleTest)
+enable_testing()
+
 find_package(GTest REQUIRED)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS *.cpp)
@@ -15,7 +18,9 @@ target_link_libraries(Tests PUBLIC
     7BitDI
 )
 
-install(TARGETS Tests)
+if(_7BIT_DI_INSTALL)
+    install(TARGETS Tests)
+endif()
 
 gtest_discover_tests(Tests
     WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}

@@ -18,17 +18,19 @@ Configure CMake project
 Using this command several cache variables can be set:
 
 * <variable cache name>: [possible values] (default value) - Description
-* LIBRARY_TYPE: ["Shared", "Static", "HeaderOnly"] ("HeaderOnly") - Library build type
-* BUILD_DOCS: [true, false] (false) - Turn on to build documentation (requires Sphinx_, Breathe_ and Doxygen_ installed)
-* BUILD_TESTS: [true, false] (false) - Turn on to build tests (requires Gtest_ to be installed, see `Build Library With Conan`_)
-* BUILD_EXAMPLES: [true, false] (false) - Turn on to build examples
+* _7BIT_DI_LIBRARY_TYPE: ["Shared", "Static", "HeaderOnly"] ("Static") - Library build type
+* _7BIT_DI_BUILD_DOCS: ["ON", "OFF"] ("OFF") - Turn on to build documentation (requires Sphinx_, Breathe_ and Doxygen_ to be installed)
+* _7BIT_DI_BUILD_TESTS: ["ON", "OFF"] ("OFF") - Turn on to build tests (requires Gtest_ to be installed, see `Build Library With Conan`_)
+* _7BIT_DI_BUILD_EXAMPLES: ["ON", "OFF"] ("OFF") - Turn on to build examples
+* _7BIT_DI_BUILD_SINGLE_HEADER: ["ON", "OFF"] ("OFF") - Turn on to build single header SevenBitDI.hpp (requires Quom_ to be installed)
+* _7BIT_DI_INSTALL: ["ON", "OFF"] ("OFF") - Turn on to install the library (output is in build/publish)
 
 to set cache variable pass additional option: -D<variable cache name>=[value] 
 for example, this command will set the library type to Static and will force examples built
 
 .. code-block:: sh
 
-    cmake .. -DCMAKE_BUILD_TYPE=Release -DLIBRARY_TYPE=Static -DBUILD_EXAMPLES=true
+    cmake .. -DCMAKE_BUILD_TYPE=Release -D_7BIT_DI_INSTALL=ON -D_7BIT_DI_LIBRARY_TYPE=Static -D_7BIT_DI_BUILD_EXAMPLES=true
 
 Build the library using the command:
 
@@ -38,7 +40,7 @@ Build the library using the command:
 
 
 Build Library With Conan
-^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Gtest_ library is added to project using Conan_ package manager (`Conan Installation`_), 
 If Conan was freshly installed run detect command:
@@ -63,7 +65,7 @@ Configure the CMake project, and add also toolchain file as a CMAKE_TOOLCHAIN_FI
 
 .. code-block:: sh
 
-    cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=true -DCMAKE_TOOLCHAIN_FILE:STRING="conan_toolchain.cmake"
+    cmake .. -DCMAKE_TOOLCHAIN_FILE:PATH="./conan_toolchain.cmake" -DCMAKE_BUILD_TYPE=Release -D_7BIT_DI_BUILD_TESTS=ON -D_7BIT_DI_INSTALL=ON
 
 Build the library using the command:
 
@@ -78,4 +80,5 @@ Build the library using the command:
 .. _Doxygen: https://www.doxygen.nl/
 .. _Gtest: https://google.github.io/googletest/
 .. _Conan: https://conan.io/
+.. _Quom: https://pypi.org/project/quom/
 .. _`Conan Installation`: https://conan.io/downloads.html

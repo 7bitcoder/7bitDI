@@ -10,11 +10,12 @@ project(7bitDI LANGUAGES CXX VERSION ${_7BIT_DI_VERSION})
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Cmake")
 
-include_directories(Include)
 include(Setup)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+include_directories(${CMAKE_SOURCE_DIR}/Include)
 
 add_subdirectory(Source)
 
@@ -23,14 +24,15 @@ if(_7BIT_DI_BUILD_DOCS)
 endif()
 
 if(_7BIT_DI_BUILD_TESTS)
-        include(GoogleTest)
-        enable_testing()
-
         add_subdirectory(Tests)
 endif()
 
 if(_7BIT_DI_BUILD_EXAMPLES)
         add_subdirectory(Examples)
+endif()
+
+if(_7BIT_DI_BUILD_SINGLE_HEADER)
+        add_subdirectory(SingleHeader)
 endif()
 
 if(_7BIT_DI_INSTALL)
