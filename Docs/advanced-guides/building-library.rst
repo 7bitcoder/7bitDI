@@ -23,7 +23,7 @@ Using this command several cache variables can be set:
 * _7BIT_DI_BUILD_TESTS: ["ON", "OFF"] ("OFF") - Turn on to build tests (requires Gtest_ to be installed, see `Build Library With Conan`_)
 * _7BIT_DI_BUILD_EXAMPLES: ["ON", "OFF"] ("OFF") - Turn on to build examples
 * _7BIT_DI_BUILD_SINGLE_HEADER: ["ON", "OFF"] ("OFF") - Turn on to build single header SevenBitDI.hpp (requires Quom_ to be installed)
-* _7BIT_DI_INSTALL: ["ON", "OFF"] ("OFF") - Turn on to install library (output is in build/publish)
+* _7BIT_DI_INSTALL: ["ON", "OFF"] ("OFF") - Turn on to install the library (output is in build/publish)
 
 to set cache variable pass additional option: -D<variable cache name>=[value] 
 for example, this command will set the library type to Static and will force examples built
