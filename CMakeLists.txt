@@ -39,14 +39,14 @@ if(_7BIT_DI_INSTALL)
         install(DIRECTORY ${_7BIT_DI_HEADERS_DIR}/ DESTINATION include)
 
         export(
-                TARGETS 7BitDI
-                NAMESPACE 7BitDI::
+                TARGETS 7bitDI
+                NAMESPACE 7bitDI::
                 FILE ${CONFIG_TARGETS_FILE})
 
         install(
-                EXPORT 7BitDI
+                EXPORT 7bitDI
                 DESTINATION ${EXPORT_DEST_DIR}
-                NAMESPACE 7BitDI::
+                NAMESPACE 7bitDI::
                 FILE ${CONFIG_TARGETS_FILE})
 
         include(CMakePackageConfigHelpers)

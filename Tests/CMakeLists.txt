@@ -15,7 +15,7 @@ target_link_libraries(Tests PUBLIC
 )
 
 target_link_libraries(Tests PUBLIC
-    7BitDI
+    7bitDI
 )
 
 if(_7BIT_DI_INSTALL)
