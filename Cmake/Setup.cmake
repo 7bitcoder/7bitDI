@@ -32,32 +32,27 @@ set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH}:\$ORIGIN/../bin:\$ORIGIN)
 
 set(_7BIT_DI_HEADERS_DIR "${CMAKE_SOURCE_DIR}/Include")
 
+set(_7BIT_DI_MAIN_HEADER "${_7BIT_DI_HEADERS_DIR}/SevenBit/DI.hpp")
 file(GLOB _7BIT_DI_TOP_HEADERS "${_7BIT_DI_HEADERS_DIR}/SevenBit/DI/*.hpp")
 file(GLOB _7BIT_DI_DETAILS_HEADERS "${_7BIT_DI_HEADERS_DIR}/SevenBit/DI/Details/*.hpp")
 file(GLOB _7BIT_DI_IMPL_HEADERS "${_7BIT_DI_HEADERS_DIR}/SevenBit/DI/Impl/*.hpp")
-set(_7BIT_DI_ALL_HEADERS ${_7BIT_DI_TOP_HEADERS} ${_7BIT_DI_DETAILS_HEADERS} ${_7BIT_DI_IMPL_HEADERS})
+set(_7BIT_DI_ALL_HEADERS ${_7BIT_DI_MAIN_HEADER} ${_7BIT_DI_TOP_HEADERS} ${_7BIT_DI_DETAILS_HEADERS} ${_7BIT_DI_IMPL_HEADERS})
 
 source_group("Header Files\\SevenBit" FILES ${_7BIT_DI_TOP_HEADERS})
 source_group("Header Files\\SevenBit\\Details" FILES ${_7BIT_DI_DETAILS_HEADERS})
 source_group("Header Files\\SevenBit\\Details\\Impl" FILES ${_7BIT_DI_IMPL_HEADERS})
 
-option(_7BIT_DI_LIBRARY_TYPE "Library build type: Shared;Static;HeaderOnly" "Static")
+set(_7BIT_DI_LIBRARY_TYPE "Static" CACHE STRING "Library build type: Shared;Static;HeaderOnly")
+set(_7BIT_DI_LIBRARY_TYPE_VALUES "Shared;Static;HeaderOnly" CACHE STRING "List of possible _7BIT_DI_LIBRARY_TYPE values")
 
-option(_7BIT_DI_LIBRARY_TYPE_VALUES "List of possible BUILD_LIBRARY_Type values" "Shared;Static;HeaderOnly")
-
-set_property(CACHE _7BIT_DI_LIBRARY_TYPE PROPERTY STRINGS ${_7BIT_DI_LIBRARY_TYPE_VALUES})
-
-option(_7BIT_DI_BUILD_SHARED "Build shared library" OFF)
+set_property(CACHE _7BIT_DI_LIBRARY_TYPE PROPERTY STRINGS Shared Static HeaderOnly)
 
 option(_7BIT_DI_BUILD_PIC "Build position independent code (-fPIC)" OFF)
-
 option(_7BIT_DI_BUILD_EXAMPLES "Build example" OFF)
-
 option(_7BIT_DI_BUILD_TESTS "Build tests" OFF)
-
 option(_7BIT_DI_BUILD_DOCS "Turn on to build documentation (requires sphinx and doxygen installed)" OFF)
-
 option(_7BIT_DI_INSTALL "Installs 7bitDI" OFF)
+option(_7BIT_DI_BUILD_SINGLE_HEADER "Builds single header SevenBitDI.hpp" OFF)
 
 if(_7BIT_DI_BUILD_PIC)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -89,5 +84,7 @@ set(INFOS
     "Build tests: ${_7BIT_DI_BUILD_TESTS}"
     "Build examples: ${_7BIT_DI_BUILD_EXAMPLES}"
     "Build documentation: ${_7BIT_DI_BUILD_DOCS}"
+    "Build single header: ${_7BIT_DI_BUILD_SINGLE_HEADER}"
+    "Install project: ${_7BIT_DI_INSTALL}"
 )
 printInfo("${INFOS}" = 50 7 0)

@@ -1,8 +1,16 @@
 #pragma once
 
+#ifndef _7BIT_DI_SHARED_LIB
 #cmakedefine _7BIT_DI_SHARED_LIB 
-#cmakedefine _7BIT_DI_STATIC_LIB 
+#endif
+
+#ifndef _7BIT_DI_STATIC_LIB
+#cmakedefine _7BIT_DI_STATIC_LIB
+#endif
+
+#ifndef _7BIT_DI_HEADER_ONLY_LIB
 #cmakedefine _7BIT_DI_HEADER_ONLY_LIB 
+#endif
 
 
 #cmakedefine _7BIT_DI_VERSION_MAJOR @_7BIT_DI_VERSION_MAJOR@

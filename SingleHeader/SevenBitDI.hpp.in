@@ -1,0 +1,5 @@
+#pragma once
+
+#define _7BIT_DI_HEADER_ONLY_LIB
+
+#include "SevenBit/DI.hpp"

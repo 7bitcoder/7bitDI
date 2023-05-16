@@ -39,17 +39,14 @@ Installation
 
         include_directories(/SevenBitDI/Include)
 
+#. Header only - Single file
+    Download SevenBitDI.hpp header file from the most recent release, 
+    copy this file into your project location and include it.
+
 #. Building library as Static/Shared
-    Download source code from the most recent release,
-    build the project using CMake_, set CMake cache var "_7BIT_DI_BUILD_SHARED" to build Shared library,
-    run install command 
-
-    .. code-block:: sh
-
-        cmake --build ./build --target install
-
-    library files are located in the build/publish folder, include those files in your project, 
-    for more details see the `Building Library`_ guide
+    Download source code from the most recent release, build or install the project using CMake_,
+    library files are located in the build/publish folder,
+    for more details see the `Building Library`_ guide.
 
 Example Usage
 -----------------
