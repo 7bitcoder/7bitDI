@@ -1,6 +1,3 @@
-include(GoogleTest)
-enable_testing()
-
 find_package(GTest REQUIRED)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS *.cpp)
@@ -15,7 +12,7 @@ target_link_libraries(Tests PUBLIC
 )
 
 target_link_libraries(Tests PUBLIC
-    7BitDI
+    7bitDI
 )
 
 if(_7BIT_DI_INSTALL)
