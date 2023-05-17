@@ -7,7 +7,7 @@
 
 #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 //  Microsoft
-#ifdef _7BitDI_EXPORTS
+#ifdef _7bitDI_EXPORTS
 /* We are building this library */
 #define EXPORT __declspec(dllexport)
 #else
@@ -17,7 +17,7 @@
 
 #elif defined(__linux__) || defined(UNIX) || defined(__unix__) || defined(LINUX)
 //  GCC
-#if defined(_7BitDI_EXPORTS)
+#if defined(_7bitDI_EXPORTS)
 #define EXPORT __attribute__((visibility("default")))
 #else
 #define EXPORT

@@ -15,12 +15,8 @@ target_link_libraries(Tests PUBLIC
 )
 
 target_link_libraries(Tests PUBLIC
-    7BitDI
+    7bitDI
 )
-
-if(_7BIT_DI_INSTALL)
-    install(TARGETS Tests)
-endif()
 
 gtest_discover_tests(Tests
     WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}

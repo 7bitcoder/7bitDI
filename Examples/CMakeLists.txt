@@ -9,10 +9,6 @@ foreach(SOURCE ${SOURCES})
     )
 
     target_link_libraries(${FILE_NAME}
-        7BitDI
+        7bitDI
     )
-
-    if(_7BIT_DI_INSTALL)
-        install(TARGETS ${FILE_NAME})
-    endif()
 endforeach()

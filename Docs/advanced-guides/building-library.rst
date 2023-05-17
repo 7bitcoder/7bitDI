@@ -23,14 +23,14 @@ Using this command several cache variables can be set:
 * _7BIT_DI_BUILD_TESTS: ["ON", "OFF"] ("OFF") - Turn on to build tests (requires Gtest_ to be installed, see `Build Library With Conan`_)
 * _7BIT_DI_BUILD_EXAMPLES: ["ON", "OFF"] ("OFF") - Turn on to build examples
 * _7BIT_DI_BUILD_SINGLE_HEADER: ["ON", "OFF"] ("OFF") - Turn on to build single header SevenBitDI.hpp (requires Quom_ to be installed)
-* _7BIT_DI_INSTALL: ["ON", "OFF"] ("OFF") - Turn on to install the library (output is in build/publish)
+* _7BIT_DI_INSTALL: ["ON", "OFF"] ("OFF") - Turn on to install the library
 
 to set cache variable pass additional option: -D<variable cache name>=[value] 
 for example, this command will set the library type to Static and will force examples built
 
 .. code-block:: sh
 
-    cmake .. -DCMAKE_BUILD_TYPE=Release -D_7BIT_DI_INSTALL=ON -D_7BIT_DI_LIBRARY_TYPE=Static -D_7BIT_DI_BUILD_EXAMPLES=true
+    cmake .. -DCMAKE_BUILD_TYPE=Release -D_7BIT_DI_LIBRARY_TYPE=Static -D_7BIT_DI_BUILD_EXAMPLES=true
 
 Build the library using the command:
 
@@ -65,13 +65,23 @@ Configure the CMake project, and add also toolchain file as a CMAKE_TOOLCHAIN_FI
 
 .. code-block:: sh
 
-    cmake .. -DCMAKE_TOOLCHAIN_FILE:PATH="./conan_toolchain.cmake" -DCMAKE_BUILD_TYPE=Release -D_7BIT_DI_BUILD_TESTS=ON -D_7BIT_DI_INSTALL=ON
+    cmake .. -DCMAKE_TOOLCHAIN_FILE:PATH="./conan_toolchain.cmake" -DCMAKE_BUILD_TYPE=Release -D_7BIT_DI_BUILD_TESTS=ON
 
 Build the library using the command:
 
 .. code-block:: sh
 
     cmake --build .
+
+
+Install Library
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To install the library set additional cache variables _7BIT_DI_BUILD_TESTS=ON and specify installation dir with CMAKE_INSTALL_PREFIX, then run the command
+
+.. code-block:: sh
+
+    cmake --build . --config Release --target install
 
 .. _Cmake: https://cmake.org/
 .. _`Cmake Installation`: https://cmake.org/download/
