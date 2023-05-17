@@ -1,6 +1,3 @@
-include(GoogleTest)
-enable_testing()
-
 find_package(GTest REQUIRED)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS *.cpp)

@@ -25,6 +25,9 @@ if(_7BIT_DI_BUILD_DOCS)
 endif()
 
 if(_7BIT_DI_BUILD_TESTS)
+        include(GoogleTest)
+        enable_testing()
+
         add_subdirectory(Tests)
 endif()
 
@@ -59,7 +62,9 @@ if(_7BIT_DI_INSTALL)
 
         install(
                 EXPORT 7bitDI
+                EXPORT 7bitDI
                 DESTINATION ${EXPORT_DEST_DIR}
+                NAMESPACE 7bitDI::
                 NAMESPACE 7bitDI::
                 FILE ${CONFIG_TARGETS_FILE})
 
@@ -69,9 +74,8 @@ if(_7BIT_DI_INSTALL)
                 INSTALL_DESTINATION ${EXPORT_DEST_DIR})
 
         write_basic_package_version_file(${VERSIONS_CONFIG_FILE} COMPATIBILITY SameMajorVersion)
-        install(FILES ${PROJECT_CONFIG_OUT} ${VERSIONS_CONFIG_FILE} DESTINATION ${EXPORT_DEST_DIR})
 
-        include(7bitDIGeneratePkgConfig)
+        install(FILES ${PROJECT_CONFIG_OUT} ${VERSIONS_CONFIG_FILE} DESTINATION ${EXPORT_DEST_DIR})
 
         export(PACKAGE 7bitDI)
 
