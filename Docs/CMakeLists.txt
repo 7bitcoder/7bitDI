@@ -28,8 +28,3 @@ add_custom_target(GenerateDoc
         ${SPHINX_INDEX_FILE}
         ${SHPHINX_RST_FILES}
 )
-
-if(_7BIT_DI_INSTALL)
-        install(DIRECTORY ${SPHINX_BUILD}
-                DESTINATION doc)
-endif()

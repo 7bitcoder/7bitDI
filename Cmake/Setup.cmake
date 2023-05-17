@@ -26,10 +26,6 @@ set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
 set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
 
-set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/publish)
-
-set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH}:\$ORIGIN/../bin:\$ORIGIN)
-
 set(_7BIT_DI_HEADERS_DIR "${CMAKE_SOURCE_DIR}/Include")
 
 set(_7BIT_DI_MAIN_HEADER "${_7BIT_DI_HEADERS_DIR}/SevenBit/DI.hpp")
@@ -69,16 +65,11 @@ else()
     set(_7BIT_DI_STATIC_LIB true)
 endif()
 
-set(PROJECT_CONFIG_IN ${CMAKE_SOURCE_DIR}/Cmake/7bitDIConfig.cmake.in)
-set(PROJECT_CONFIG_OUT ${CMAKE_BINARY_DIR}/7bitDIConfig.cmake)
-set(CONFIG_TARGETS_FILE 7bitDIConfigTargets.cmake)
-set(VERSIONS_CONFIG_FILE ${CMAKE_BINARY_DIR}/7bitDIConfigVersion.cmake)
-set(EXPORT_DEST_DIR lib/cmake/7bitDI)
-
 configure_file(${CMAKE_SOURCE_DIR}/Include/SevenBit/DI/CmakeDef.hpp.input ${CMAKE_SOURCE_DIR}/Include/SevenBit/DI/CmakeDef.hpp)
 
 set(INFOS
     "${CMAKE_PROJECT_NAME} version: ${_7BIT_DI_VERSION}"
+    "${CMAKE_PROJECT_NAME} build type: ${CMAKE_BUILD_TYPE} "
     "${CMAKE_PROJECT_NAME} build as ${_7BIT_DI_BUILD_LIBRARY_TYPE} library"
     "=================================================="
     "Build tests: ${_7BIT_DI_BUILD_TESTS}"

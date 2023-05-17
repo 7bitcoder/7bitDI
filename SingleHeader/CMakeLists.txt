@@ -15,8 +15,3 @@ add_custom_target(GenerateSingleHeader
     ${_7BIT_DI_SINGLE_OUT}
     ${_7BIT_DI_MAIN_HEADER}
 )
-
-if(_7BIT_DI_INSTALL)
-    install(FILES ${_7BIT_DI_SINGLE_OUT}
-        DESTINATION single-header)
-endif()

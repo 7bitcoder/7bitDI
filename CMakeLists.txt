@@ -11,6 +11,7 @@ project(7bitDI LANGUAGES CXX VERSION ${_7BIT_DI_VERSION})
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Cmake")
 
 include(Setup)
+include(GNUInstallDirs)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -39,16 +40,31 @@ if(_7BIT_DI_BUILD_SINGLE_HEADER)
 endif()
 
 if(_7BIT_DI_INSTALL)
-        install(DIRECTORY ${_7BIT_DI_HEADERS_DIR}/ DESTINATION include)
+        set(PROJECT_CONFIG_IN ${CMAKE_SOURCE_DIR}/Cmake/7bitDIConfig.cmake.in)
+        set(PROJECT_CONFIG_OUT ${CMAKE_BINARY_DIR}/7bitDIConfig.cmake)
+        set(CONFIG_TARGETS_FILE 7bitDIConfigTargets.cmake)
+        set(VERSIONS_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/7bitDIConfigVersion.cmake)
+        set(EXPORT_DEST_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/7bitDI)
+
+        install(DIRECTORY ${_7BIT_DI_HEADERS_DIR}/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+        install(
+                TARGETS 7bitDI
+                EXPORT 7bitDI
+                LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
         export(
                 TARGETS 7bitDI
                 NAMESPACE 7bitDI::
-                FILE ${CONFIG_TARGETS_FILE})
+                FILE ${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_TARGETS_FILE})
 
         install(
                 EXPORT 7bitDI
+                EXPORT 7bitDI
                 DESTINATION ${EXPORT_DEST_DIR}
+                NAMESPACE 7bitDI::
                 NAMESPACE 7bitDI::
                 FILE ${CONFIG_TARGETS_FILE})
 

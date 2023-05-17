@@ -15,14 +15,10 @@ endif()
 
 add_library(7bitDI::7bitDI ALIAS 7bitDI)
 
-target_include_directories(7bitDI INTERFACE "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/Include>"
-  "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+target_include_directories(
+  7bitDI INTERFACE
+  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/Include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 set_target_properties(7bitDI PROPERTIES VERSION ${_7BIT_DI_VERSION})
 set_target_properties(7bitDI PROPERTIES DEBUG_POSTFIX d)
-
-if(_7BIT_DI_INSTALL)
-  install(
-    TARGETS 7bitDI
-    EXPORT 7bitDI)
-endif()

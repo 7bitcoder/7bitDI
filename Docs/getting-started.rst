@@ -27,7 +27,18 @@ Installation
 **There are a few ways of installation:**
 
 #. Using Conan.io package manager - Recommended
-    Info soon...
+    Download and install Conan_, and create conanfile.txt in the root of your project for example:
+
+    .. code-block:: Txt
+
+        [requires]
+        7bitdi/1.0.0
+    
+    change the version to newer if available, then run the command:
+
+    .. code-block:: sh
+
+        conan install . --output-folder=build --build=missing
 
 #. Header only
     Download source code from the most recent release, 
@@ -45,7 +56,6 @@ Installation
 
 #. Building library as Static/Shared
     Download source code from the most recent release, build or install the project using CMake_,
-    library files are located in the build/publish folder,
     for more details see the `Building Library`_ guide.
 
 Example Usage
@@ -63,6 +73,7 @@ The next chapters will in detail, step by step explain what is going on in this 
    actionA, actionB executed.
 
 
+.. _Conan: https://conan.io/
 .. _CMake: https://cmake.org/
 .. _7bitDI: https://github.com/7bitcoder/7bitDI
 .. _`Building Library`: advanced-guides/building-library.html
