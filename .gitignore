@@ -1,6 +1,7 @@
 /build
 /.cache
 /.vscode
+/.idea
 .DS_Store
 CmakeUserPresets.json
 CmakePresets.json

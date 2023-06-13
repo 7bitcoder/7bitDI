@@ -256,7 +256,7 @@ namespace sb::di
         template <class TService, class FactoryFcn>
         static ServiceDescriptor describeFrom(ServiceLifeTime lifetime, FactoryFcn factoryFcn)
         {
-            return describeFromAutoFactory<TService, FactoryFcn>(lifetime, std::move(factoryFcn));
+            return describeFromFactory<TService, FactoryFcn>(lifetime, std::move(factoryFcn));
         }
 
         /**
@@ -351,55 +351,15 @@ namespace sb::di
         }
 
       private:
-        template <class... T> inline static constexpr bool notSupportedFactory = false;
-
-        template <class TService, class FactoryFcn>
-        static ServiceDescriptor describeFromAutoFactory(ServiceLifeTime lifetime, FactoryFcn factoryFcn)
-        {
-            checkCopyAndMove<FactoryFcn>();
-            if constexpr (std::is_invocable_v<FactoryFcn>)
-            {
-                return describeFromFactory<TService>(lifetime, [=](IServiceProvider &) { return factoryFcn(); });
-            }
-            else if constexpr (std::is_invocable_v<FactoryFcn, IServiceProvider &>)
-            {
-                return describeFromFactory<TService>(lifetime, std::move(factoryFcn));
-            }
-            else
-            {
-                badFactory<FactoryFcn>();
-            }
-        }
-
         template <class TService, class FactoryFcn>
         static ServiceDescriptor describeFromFactory(ServiceLifeTime lifetime, FactoryFcn factoryFcn)
         {
             using FactoryType = details::ServiceFcnFactory<FactoryFcn>;
-            if constexpr (!FactoryType::IsReturnTypeUniquePtr::value)
-            {
-                badFactory<FactoryFcn>();
-            }
             auto factory = std::make_unique<FactoryType>(std::move(factoryFcn));
 
             using Service =
                 typename std::conditional<std::is_void_v<TService>, typename FactoryType::ServiceType, TService>::type;
             return {typeid(Service), lifetime, std::move(factory)};
-        }
-
-        template <class FactoryFcn> static void checkCopyAndMove()
-        {
-            if constexpr (!std::is_copy_constructible_v<FactoryFcn> || !std::is_move_constructible_v<FactoryFcn>)
-            {
-                static_assert(notSupportedFactory<FactoryFcn>, "Factory function should be movable and copyable.");
-            }
-        }
-
-        template <class FactoryFcn> static void badFactory()
-        {
-            static_assert(notSupportedFactory<FactoryFcn>,
-                          "Factory function should have this scheme: (IServiceProvider &) -> std::unique_ptr<T> or () "
-                          "-> std::unique_ptr<T>, it should return std::unique_ptr<T> and optionally take as argument "
-                          "IServiceProvider &");
         }
     };
 } // namespace sb::di

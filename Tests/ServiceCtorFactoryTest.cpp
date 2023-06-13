@@ -39,15 +39,3 @@ TEST_F(ServiceCtorFactoryTest, ShouldCreateService)
 
     EXPECT_TRUE(instance);
 }
-
-TEST_F(ServiceCtorFactoryTest, ShouldCloneFactory)
-{
-    ServiceProviderMock mock;
-    sb::di::details::ServiceCtorFactory<TestClass1> factory{};
-
-    auto cloned = factory.clone();
-
-    EXPECT_TRUE(cloned);
-    EXPECT_TRUE(cloned->createInstance(mock));
-    EXPECT_NE(cloned.get(), &factory);
-}

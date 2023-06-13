@@ -21,7 +21,7 @@ namespace sb::di
 
         TypeId _serviceTypeId;
 
-        IServiceFactory::Ptr _implementationFactory;
+        IServiceFactory::SPtr _implementationFactory;
 
       public:
         using Ptr = std::unique_ptr<ServiceDescriptor>;
@@ -31,13 +31,12 @@ namespace sb::di
          * @details implementationFactory cannot be null, otherwise construcor will throw exception
          * @throws NullPointnerException if implementationFactory is null
          */
-        ServiceDescriptor(TypeId serviceTypeId, ServiceLifeTime lifetime, IServiceFactory::Ptr implementationFactory);
+        ServiceDescriptor(TypeId serviceTypeId, ServiceLifeTime lifetime, IServiceFactory::SPtr implementationFactory);
 
         /**
          * @brief Construct a new service descriptor copy
-         * @details Note that implementation factory must be clonable
          */
-        ServiceDescriptor(const ServiceDescriptor &other);
+        ServiceDescriptor(const ServiceDescriptor &other) = default;
 
         /**
          * @brief Construct a new service descriptor by move
@@ -46,9 +45,8 @@ namespace sb::di
 
         /**
          * @brief Assigns service descriptor
-         * @details Note that implementation factory must be clonable
          */
-        ServiceDescriptor &operator=(const ServiceDescriptor &other);
+        ServiceDescriptor &operator=(const ServiceDescriptor &other) = default;
 
         /**
          * @brief Assigns service descriptor by move

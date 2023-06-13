@@ -1,6 +1,4 @@
 from conan import ConanFile
-from conan.tools.build import check_min_cppstd
-
 
 class SevenBitDIRecipe(ConanFile):
     settings = "os", "compiler", "build_type", "arch"

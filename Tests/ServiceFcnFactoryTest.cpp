@@ -45,23 +45,10 @@ TEST_F(ServiceFcnFactoryTest, ShouldReturnProperTypeId)
 TEST_F(ServiceFcnFactoryTest, ShouldCreateService)
 {
     ServiceProviderMock mock;
-    auto fcn = [&](sb::di::IServiceProvider &) { return std::make_unique<TestClass1>(); };
+    auto fcn = [&]() { return std::make_unique<TestClass1>(); };
     sb::di::details::ServiceFcnFactory factory{fcn};
 
     auto instance = factory.createInstance(mock);
 
     EXPECT_TRUE(instance);
-}
-
-TEST_F(ServiceFcnFactoryTest, ShouldCloneFactory)
-{
-    ServiceProviderMock mock;
-    auto fcn = [&](sb::di::IServiceProvider &) { return std::make_unique<TestClass1>(); };
-    sb::di::details::ServiceFcnFactory factory{fcn};
-
-    auto cloned = factory.clone();
-
-    EXPECT_TRUE(cloned);
-    EXPECT_TRUE(cloned->createInstance(mock));
-    EXPECT_NE(cloned.get(), &factory);
 }

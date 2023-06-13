@@ -15,6 +15,7 @@ namespace sb::di
     struct IServiceFactory
     {
         using Ptr = std::unique_ptr<IServiceFactory>;
+        using SPtr = std::shared_ptr<IServiceFactory>;
 
         /**
          * @brief Get the TypeId of the service instances that the factory will create
@@ -25,12 +26,6 @@ namespace sb::di
          * @brief Create a service instance object
          */
         virtual IServiceInstance::Ptr createInstance(IServiceProvider &serviceProvider) const = 0;
-
-        /**
-         * @brief Returns copy of self factory
-         * @details Note that IServiceFactory implementation must be copyable
-         */
-        virtual IServiceFactory::Ptr clone() = 0;
 
         virtual ~IServiceFactory() = default;
     };
