@@ -354,16 +354,6 @@ namespace sb::di
         {
             return describeFrom<void, FactoryFcn>(lifetime, std::move(factoryFcn));
         }
-
-        template <class TService, class TImplementation = TService> static ServiceDescriptor describeAlias()
-        {
-            using FactoryType = details::ServiceFcnFactory<FactoryFcn>;
-            auto factory = std::make_unique<FactoryType>(std::move(factoryFcn));
-
-            using Service =
-                typename std::conditional<std::is_void_v<TService>, typename FactoryType::ServiceType, TService>::type;
-            return {typeid(Service), lifetime, std::move(factory)};
-        }
     };
 } // namespace sb::di
 
