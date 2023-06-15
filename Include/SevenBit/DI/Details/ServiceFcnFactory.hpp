@@ -26,13 +26,13 @@ namespace sb::di::details
       public:
         using ServiceType = typename FactoryWrapper::TService;
 
-        ServiceFcnFactory(FactoryFcn factoryFunction) : _wrapper{std::move(factoryFunction)} {}
+        ServiceFcnFactory(FactoryFcn &&factoryFunction) : _wrapper{std::move(factoryFunction)} {}
 
         TypeId getServiceTypeId() const { return typeid(ServiceType); }
 
         IServiceInstance::Ptr createInstance(IServiceProvider &serviceProvider) const
         {
-            return std::make_unique<ServiceOwner<ServiceType>>(_wrapper.call(serviceProvider));
+            return std::make_unique<ServiceOwner<ServiceType>>(_wrapper.invoke(serviceProvider));
         }
     };
 } // namespace sb::di::details

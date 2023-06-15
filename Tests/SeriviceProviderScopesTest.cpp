@@ -136,8 +136,11 @@ TEST_F(SeriviceProviderScopesTest, ShouldGetComplexServices)
                         .addSingleton<ITestComplexClass1, TestComplexClass1>()
                         .addScoped<ITestComplexClass2, TestComplexClass2>()
                         .addTransient<ITestComplexClass3, TestComplexClass3>()
-                        .addScoped<ITestComplexClass4, TestComplexClass4>()
                         .addScoped<ITestComplexClass5, TestComplexClass5>()
+                        .addScoped<ITestComplexClass4>([](ITestComplexClass1 &other1, ITestComplexClass2 *other2,
+                                                          std::unique_ptr<ITestComplexClass3> other3) {
+                            return std::make_unique<TestComplexClass4>(&other1, other2, std::move(other3));
+                        })
                         .buildServiceProvider();
 
     auto &singleton = provider->getService<ITestComplexClass1>();

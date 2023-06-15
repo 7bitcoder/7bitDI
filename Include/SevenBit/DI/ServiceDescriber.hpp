@@ -183,7 +183,7 @@ namespace sb::di
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
-        template <class TService, class FactoryFcn> static ServiceDescriptor describeSingletonFrom(FactoryFcn factory)
+        template <class TService, class FactoryFcn> static ServiceDescriptor describeSingletonFrom(FactoryFcn &&factory)
         {
             return describeFrom<TService, FactoryFcn>(ServiceLifeTime::singleton(), std::move(factory));
         }
@@ -206,7 +206,7 @@ namespace sb::di
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
-        template <class TService, class FactoryFcn> static ServiceDescriptor describeScopedFrom(FactoryFcn factory)
+        template <class TService, class FactoryFcn> static ServiceDescriptor describeScopedFrom(FactoryFcn &&factory)
         {
             return describeFrom<TService, FactoryFcn>(ServiceLifeTime::scoped(), std::move(factory));
         }
@@ -229,7 +229,7 @@ namespace sb::di
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
-        template <class TService, class FactoryFcn> static ServiceDescriptor describeTransientFrom(FactoryFcn factory)
+        template <class TService, class FactoryFcn> static ServiceDescriptor describeTransientFrom(FactoryFcn &&factory)
         {
             return describeFrom<TService, FactoryFcn>(ServiceLifeTime::transient(), std::move(factory));
         }
@@ -254,9 +254,14 @@ namespace sb::di
          * @endcode
          */
         template <class TService, class FactoryFcn>
-        static ServiceDescriptor describeFrom(ServiceLifeTime lifetime, FactoryFcn factoryFcn)
+        static ServiceDescriptor describeFrom(ServiceLifeTime lifetime, FactoryFcn &&factoryFcn)
         {
-            return describeFromFactory<TService, FactoryFcn>(lifetime, std::move(factoryFcn));
+            using FactoryType = details::ServiceFcnFactory<FactoryFcn>;
+            auto factory = std::make_unique<FactoryType>(std::move(factoryFcn));
+
+            using Service =
+                typename std::conditional<std::is_void_v<TService>, typename FactoryType::ServiceType, TService>::type;
+            return {typeid(Service), lifetime, std::move(factory)};
         }
 
         /**
@@ -277,7 +282,7 @@ namespace sb::di
          *       [](const ServiceDescriptor &) { return std::make_unique<TestClass>(); });
          * @endcode
          */
-        template <class FactoryFcn> static ServiceDescriptor describeSingletonFrom(FactoryFcn factory)
+        template <class FactoryFcn> static ServiceDescriptor describeSingletonFrom(FactoryFcn &&factory)
         {
             return describeFrom<void, FactoryFcn>(ServiceLifeTime::singleton(), std::move(factory));
         }
@@ -299,7 +304,7 @@ namespace sb::di
          *       [](const ServiceDescriptor &) { return std::make_unique<TestClass>(); });
          * @endcode
          */
-        template <class FactoryFcn> static ServiceDescriptor describeScopedFrom(FactoryFcn factory)
+        template <class FactoryFcn> static ServiceDescriptor describeScopedFrom(FactoryFcn &&factory)
         {
             return describeFrom<void, FactoryFcn>(ServiceLifeTime::scoped(), std::move(factory));
         }
@@ -321,7 +326,7 @@ namespace sb::di
          *       [](const ServiceDescriptor &) { return std::make_unique<TestClass>(); });
          * @endcode
          */
-        template <class FactoryFcn> static ServiceDescriptor describeTransientFrom(FactoryFcn factory)
+        template <class FactoryFcn> static ServiceDescriptor describeTransientFrom(FactoryFcn &&factory)
         {
             return describeFrom<void, FactoryFcn>(ServiceLifeTime::transient(), std::move(factory));
         }
@@ -345,14 +350,12 @@ namespace sb::di
          * @endcode
          */
         template <class FactoryFcn>
-        static ServiceDescriptor describeFrom(ServiceLifeTime lifetime, FactoryFcn factoryFcn)
+        static ServiceDescriptor describeFrom(ServiceLifeTime lifetime, FactoryFcn &&factoryFcn)
         {
             return describeFrom<void, FactoryFcn>(lifetime, std::move(factoryFcn));
         }
 
-      private:
-        template <class TService, class FactoryFcn>
-        static ServiceDescriptor describeFromFactory(ServiceLifeTime lifetime, FactoryFcn factoryFcn)
+        template <class TService, class TImplementation = TService> static ServiceDescriptor describeAlias()
         {
             using FactoryType = details::ServiceFcnFactory<FactoryFcn>;
             auto factory = std::make_unique<FactoryType>(std::move(factoryFcn));

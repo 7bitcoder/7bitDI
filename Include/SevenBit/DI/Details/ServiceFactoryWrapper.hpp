@@ -11,20 +11,22 @@
 
 namespace sb::di::details
 {
-    template <class R, class F, class... Args> struct ServiceFactoryWrapperImpl
+    template <class R, class F, class... Args> struct ServiceFactoryInvoker
     {
       private:
+        using IsUniquePtr = utils::IsUniquePtr<R>;
         mutable F _factory;
 
       public:
-        using TService = typename R::element_type;
+        using TService = typename IsUniquePtr::Type;
 
-        ServiceFactoryWrapperImpl(F &&factory) : _factory(std::move(factory))
+        ServiceFactoryInvoker(F &&factory) : _factory(std::move(factory))
         {
-            static_assert(utils::IsUniquePtrV<R>, "Factory return type must be std::unique_ptr<TService>");
+            static_assert(IsUniquePtr::value || notSupportedType<F>,
+                          "Factory return type must be std::unique_ptr<TService>");
         }
 
-        R call(sb::di::IServiceProvider &provider) const
+        R invoke(sb::di::IServiceProvider &provider) const
         {
             return _factory(ServiceParamProvider<Args>{}.getService(provider)...);
         }
@@ -36,22 +38,24 @@ namespace sb::di::details
 
         ServiceTraitsExtractor(F &&factory)
         {
-            static_assert(utils::notSupportedType<F>, "Factory function should have this scheme: (Services...) -> "
-                                                      "std::unique_ptr<T> it should return std::unique_ptr<T>");
+            static_assert(utils::notSupportedType<F>,
+                          "Factory function should have this scheme: (Services...) -> "
+                          "std::unique_ptr<T>, each service can be reference, pointner, std::unique_ptr<T> or vector "
+                          "containing pointners or std::unique_ptr<T>");
         }
 
-        int call(sb::di::IServiceProvider &provider) { return 0; }
+        std::unique_ptr<int> invoke(sb::di::IServiceProvider &provider) { return std::make_unique<int>(0); }
     };
 
     template <class R, class F, class... Args>
-    struct ServiceTraitsExtractor<R (F::*)(Args...) const> : public ServiceFactoryWrapperImpl<R, F, Args...>
+    struct ServiceTraitsExtractor<R (F::*)(Args...) const> : public ServiceFactoryInvoker<R, F, Args...>
     {
-        ServiceTraitsExtractor(F &&factory) : ServiceFactoryWrapperImpl<R, F, Args...>(std::move(factory)) {}
+        ServiceTraitsExtractor(F &&factory) : ServiceFactoryInvoker<R, F, Args...>(std::move(factory)) {}
     };
 
     template <class R, class F, class... Args> struct ServiceTraitsExtractor<R (F::*)(Args...)>
     {
-        ServiceTraitsExtractor(F &&factory) : ServiceFactoryWrapperImpl<R, F, Args...>(std::move(factory)) {}
+        ServiceTraitsExtractor(F &&factory) : ServiceFactoryInvoker<R, F, Args...>(std::move(factory)) {}
     };
 
     template <class F, typename = void> struct ServiceFactoryWrapper : public ServiceTraitsExtractor<F>

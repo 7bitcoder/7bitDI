@@ -27,17 +27,16 @@ class ServiceFcnFactoryTest : public testing::Test
 TEST_F(ServiceFcnFactoryTest, ShouldNotCompileWrongFactoryScheme)
 {
     // TestClass1 test;
-    // auto fcn = [&](sb::di::IServiceProvider &) { return test; };
+    // auto fcn = [&](auto f) { return std::make_unique<TestClass1>(); };
 
-    // sb::di::details::ServiceFcnFactory<TestClass1 *, decltype(fcn)> factory{sb::di::ServiceLifeTime::transient(),
-    // fcn};
+    // sb::di::details::ServiceFcnFactory factory{std::move(fcn)};
 }
 
 TEST_F(ServiceFcnFactoryTest, ShouldReturnProperTypeId)
 {
-    auto fcn = [&](sb::di::IServiceProvider &) { return std::make_unique<TestClass1>(); };
+    auto fcn = [&]() { return std::make_unique<TestClass1>(); };
 
-    sb::di::details::ServiceFcnFactory factory{fcn};
+    sb::di::details::ServiceFcnFactory factory{std::move(fcn)};
 
     EXPECT_EQ(factory.getServiceTypeId(), typeid(TestClass1));
 }
@@ -46,7 +45,7 @@ TEST_F(ServiceFcnFactoryTest, ShouldCreateService)
 {
     ServiceProviderMock mock;
     auto fcn = [&]() { return std::make_unique<TestClass1>(); };
-    sb::di::details::ServiceFcnFactory factory{fcn};
+    sb::di::details::ServiceFcnFactory factory{std::move(fcn)};
 
     auto instance = factory.createInstance(mock);
 
