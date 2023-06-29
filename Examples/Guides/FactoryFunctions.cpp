@@ -4,28 +4,40 @@
 
 using namespace sb::di;
 
-class Service
+class ServiceA
 {
   private:
     std::string _message;
 
   public:
-    Service(std::string message) { _message = message; }
+    ServiceA(std::string message) { _message = message; }
 
     std::string message() { return _message; }
 };
 
+class ServiceB
+{
+  private:
+    ServiceA &_serviceA;
+
+  public:
+    ServiceB(ServiceA *serviceA) : _serviceA(*serviceA) {}
+
+    std::string message() { return _serviceA.message(); }
+};
+
 int main()
 {
-    IServiceProvider::Ptr provider = ServiceCollection{}
-                                         .addSingleton<Service>([](IServiceProvider &provider) {
-                                             return std::make_unique<Service>("Hello from service!");
-                                         })
-                                         .buildServiceProvider();
+    IServiceProvider::Ptr provider =
+        ServiceCollection{}
+            .addSingleton<ServiceA>([]() { return std::make_unique<ServiceA>("Hello from service!"); })
+            .addSingleton<ServiceB>([](ServiceA *serviceA) { return std::make_unique<ServiceB>(serviceA); })
+            .buildServiceProvider();
 
-    Service &service = provider->getService<Service>();
+    ServiceA &serviceA = provider->getService<ServiceA>();
+    ServiceB &serviceB = provider->getService<ServiceB>();
 
-    std::cout << service.message();
+    std::cout << serviceB.message();
 
     return 0;
 }

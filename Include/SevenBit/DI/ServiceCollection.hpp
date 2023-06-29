@@ -438,10 +438,9 @@ namespace sb::di
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must inherit from TService and must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
+         * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
+         * pointners or unique pointners
          *
          * Example:
          * @code {.cpp}
@@ -461,10 +460,9 @@ namespace sb::di
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must inherit from TService and must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
+         * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
+         * pointners or unique pointners
          *
          * Example:
          * @code {.cpp}
@@ -483,10 +481,9 @@ namespace sb::di
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must inherit from TService and must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
+         * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
+         * pointners or unique pointners
          *
          * Example:
          * @code {.cpp}
@@ -505,10 +502,9 @@ namespace sb::di
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must inherit from TService and must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
+         * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
+         * pointners or unique pointners
          *
          * Example:
          * @code {.cpp}
@@ -528,10 +524,9 @@ namespace sb::di
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
+         * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
+         * pointners or unique pointners
          *
          * Example:
          * @code {.cpp}
@@ -550,10 +545,9 @@ namespace sb::di
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
+         * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
+         * pointners or unique pointners
          *
          * Example:
          * @code {.cpp}
@@ -572,10 +566,9 @@ namespace sb::di
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
+         * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
+         * pointners or unique pointners
          *
          * Example:
          * @code {.cpp}
@@ -594,10 +587,9 @@ namespace sb::di
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
+         * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
+         * pointners or unique pointners
          *
          * Example:
          * @code {.cpp}
