@@ -33,10 +33,7 @@ jobs:
       - name: CMake Build
         uses: ./.github/actions/cmake-build
         with:
-          build-dir: ${{ env.BUILD_DIR }}
-          build-type: ${{ env.BUILD_TYPE }}
           library-type: ${{ matrix.libraryType }}
 
       - name: Test
-        working-directory: ${{ env.BUILD_DIR }}
-        run: ctest -C ${{env.BUILD_TYPE}}
+        run: ctest -j 10 --preset conan-release

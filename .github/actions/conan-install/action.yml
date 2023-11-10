@@ -1,5 +1,5 @@
 name: Run CMake
-description: "Runs CMake"
+description: "Runs CMake Install"
 inputs:
   install-dir:
     description: "Installation directory"
@@ -11,10 +11,26 @@ runs:
     - name: Install Conan
       uses: turtlebrowser/get-conan@main
 
+    - name: Set Proper Conan Profile
+      uses: kanga333/variable-mapper@v0.3.0
+      with:
+        key: "${{ runner.os }}"
+        map: |
+          {
+            "Linux":{
+                "use_conan_profile":"linux-gcc-x86_64"
+            },
+            "macOS":{
+                "use_conan_profile":"mac-appple-clang-x86_64"
+            },
+            "Windows":{
+                "use_conan_profile":"windows-msvc-x86_64"
+            }
+          }
     - name: Configure Conan
-      run: conan profile detect
+      run: conan config install https://github.com/7bitcoder/conan-config.git
       shell: pwsh
 
     - name: Install Conan Packages in ${{ inputs.install-dir }}
-      run: conan install . --output-folder=${{ inputs.install-dir }} --build=missing
+      run: conan install . --output-folder=${{ inputs.install-dir }} --build=missing -pr=${{ env.use_conan_profile }} -pr:b=${{ env.use_conan_profile }}
       shell: pwsh

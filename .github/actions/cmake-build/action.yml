@@ -1,35 +1,36 @@
 name: Run CMake
-description: "Runs CMake"
+description: "Runs CMake Build"
 inputs:
   args:
     description: "Other arguments"
     required: false
     default:  -D_7BIT_DI_BUILD_TESTS:BOOL=true -D_7BIT_DI_BUILD_EXAMPLES:BOOL=true
-  build-type:
-    description: "Build type"
-    required: false
-    default: Release
-  toolchain:
-    description: "Toolchain file"
-    required: false
-    default: conan_toolchain.cmake
   library-type:
     description: "Library type"
     required: false
     default: Static
-  build-dir:
-    description: "Build directory"
-    required: true
 
 runs:
   using: composite
   steps:
+    - name: Set Proper Conan Profile
+      uses: kanga333/variable-mapper@v0.3.0
+      with:
+        key: "${{ runner.os }}"
+        map: |
+          {
+            "Windows":{
+                "initPreset": "conan-default"
+            },
+            ".*":{
+                "initPreset": "conan-release"
+            }
+          }
+
     - name: Configure CMake
-      working-directory: ${{ inputs.build-dir }}
-      run: cmake .. -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} -D_7BIT_DI_LIBRARY_TYPE=${{ inputs.library-type }} -DCMAKE_TOOLCHAIN_FILE:STRING="${{ inputs.toolchain }}" ${{ inputs.args }}
+      run: cmake --preset ${{ env.initPreset }} -D_7BIT_DI_LIBRARY_TYPE=${{ inputs.library-type }} ${{ inputs.args }}
       shell: pwsh
 
     - name: Build
-      working-directory: ${{ inputs.build-dir }}
-      run: cmake --build . --config ${{ inputs.build-type }}
+      run: cmake --build --preset conan-release
       shell: pwsh
