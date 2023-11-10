@@ -9,12 +9,8 @@ add_executable(Tests
 target_link_libraries(Tests PUBLIC
     GTest::gtest
     GTest::gmock
-)
-
-target_link_libraries(Tests PUBLIC
     7bitDI
 )
 
 gtest_discover_tests(Tests
-    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-    PROPERTIES TIMEOUT 10)
+    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

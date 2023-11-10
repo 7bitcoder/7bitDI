@@ -17,7 +17,7 @@ namespace sb::di::details
       public:
         using Ptr = std::unique_ptr<ExternalService<T>>;
 
-        ExternalService(T *service) : _service(service) {}
+        explicit ExternalService(T *service) : _service(service) {}
 
         ExternalService(const ExternalService &) = default;
         ExternalService(ExternalService &&) = default;
