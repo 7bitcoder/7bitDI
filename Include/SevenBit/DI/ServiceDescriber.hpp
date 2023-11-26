@@ -2,8 +2,8 @@
 
 #include <type_traits>
 
-#include "SevenBit/DI/IServiceProvider.hpp"
 #include "SevenBit/DI/LibraryConfig.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 
 #include "SevenBit/DI/Details/ExternalServiceFactory.hpp"
 #include "SevenBit/DI/Details/ServiceCtorFactory.hpp"

@@ -28,9 +28,9 @@ namespace sb::di::details
               _singletons(options.strongDestructionOrder)
         {
             IServiceFactory::Ptr factory{
-                new ExternalServiceFcnFactory{[](IServiceProvider &provider) { return &provider; }}};
+                new ExternalServiceFcnFactory{[](ServiceProvider &provider) { return &provider; }}};
             _descriptorsMap.add(
-                ServiceDescriptor{typeid(IServiceProvider), ServiceLifeTime::scoped(), std::move(factory)});
+                ServiceDescriptor{typeid(ServiceProvider), ServiceLifeTime::scoped(), std::move(factory)});
             _descriptorsMap.seal();
 
             if (options.prebuildSingeletons)

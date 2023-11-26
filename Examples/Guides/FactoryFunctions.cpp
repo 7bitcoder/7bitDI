@@ -28,7 +28,7 @@ class ServiceB
 
 int main()
 {
-    IServiceProvider::Ptr provider =
+    ServiceProvider::Ptr provider =
         ServiceCollection{}
             .addSingleton<ServiceA>([]() { return std::make_unique<ServiceA>("Hello from service!"); })
             .addSingleton<ServiceB>([](ServiceA *serviceA) { return std::make_unique<ServiceB>(serviceA); })

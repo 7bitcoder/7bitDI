@@ -14,16 +14,16 @@
 #include "SevenBit/DI/Details/ServicesMap.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
-#include "SevenBit/DI/IServiceProvider.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di::details
 {
-    class EXPORT DefaultServiceProvider : public IServiceProvider
+    class EXPORT DefaultServiceProvider : public ServiceProvider
     {
       public:
         using Ptr = std::unique_ptr<DefaultServiceProvider>;
@@ -42,15 +42,11 @@ namespace sb::di::details
         DefaultServiceProvider &operator=(const DefaultServiceProvider &) = delete;
         DefaultServiceProvider &operator=(DefaultServiceProvider &&) = delete;
 
-        IServiceProvider::Ptr createScope() override;
+        ServiceProvider::Ptr createScope() override;
 
-        const IServiceInstance *tryGetInstance(TypeId serviceTypeId) override;
-
-        const IServiceInstance &getInstance(TypeId serviceTypeId) override;
+        const IServiceInstance *getInstance(TypeId serviceTypeId) override;
 
         std::vector<const IServiceInstance *> getInstances(TypeId serviceTypeId) override;
-
-        IServiceInstance::Ptr tryCreateInstance(TypeId serviceTypeId) override;
 
         IServiceInstance::Ptr createInstance(TypeId serviceTypeId) override;
 

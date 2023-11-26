@@ -17,7 +17,7 @@ class Service
 int main()
 {
     Service externalSingleton{"Hello from service!"};
-    IServiceProvider::Ptr provider = ServiceCollection{}.addSingleton(&externalSingleton).buildServiceProvider();
+    ServiceProvider::Ptr provider = ServiceCollection{}.addSingleton(&externalSingleton).buildServiceProvider();
 
     Service &service = provider->getService<Service>();
 

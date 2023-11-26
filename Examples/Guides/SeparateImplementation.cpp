@@ -18,7 +18,7 @@ class Service final : public IService
 
 int main()
 {
-    IServiceProvider::Ptr provider = ServiceCollection{}.addSingleton<IService, Service>().buildServiceProvider();
+    ServiceProvider::Ptr provider = ServiceCollection{}.addSingleton<IService, Service>().buildServiceProvider();
 
     IService &service = provider->getService<IService>();
 

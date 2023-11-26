@@ -41,12 +41,12 @@ class ServiceExecutor
 };
 int main()
 {
-    IServiceProvider::Ptr provider = ServiceCollection{}
-                                         .addSingleton<IWorker, WorkerA>()
-                                         .addSingleton<IWorker, WorkerB>()
-                                         .addSingleton<IWorker, WorkerC>()
-                                         .addSingleton<ServiceExecutor>()
-                                         .buildServiceProvider();
+    ServiceProvider::Ptr provider = ServiceCollection{}
+                                        .addSingleton<IWorker, WorkerA>()
+                                        .addSingleton<IWorker, WorkerB>()
+                                        .addSingleton<IWorker, WorkerC>()
+                                        .addSingleton<ServiceExecutor>()
+                                        .buildServiceProvider();
 
     ServiceExecutor &consumer = provider->getService<ServiceExecutor>();
 

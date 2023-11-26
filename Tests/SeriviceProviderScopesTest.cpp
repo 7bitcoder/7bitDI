@@ -8,8 +8,8 @@
 #include "Classes/CirularDependency.hpp"
 #include "Classes/ComplexDependencies.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/IServiceProvider.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 
 class SeriviceProviderScopesTest : public testing::Test
 {
@@ -96,9 +96,9 @@ TEST_F(SeriviceProviderScopesTest, ShouldReturnProperSelfForScope)
     auto scoped2 = provider->createScope();
     auto scoped3 = provider->createScope();
 
-    EXPECT_EQ(provider->tryGetService<sb::di::IServiceProvider>(), provider.get());
-    EXPECT_EQ(scoped1->tryGetService<sb::di::IServiceProvider>(), scoped1.get());
-    EXPECT_EQ(scoped3->tryGetService<sb::di::IServiceProvider>(), scoped3.get());
+    EXPECT_EQ(provider->tryGetService<sb::di::ServiceProvider>(), provider.get());
+    EXPECT_EQ(scoped1->tryGetService<sb::di::ServiceProvider>(), scoped1.get());
+    EXPECT_EQ(scoped3->tryGetService<sb::di::ServiceProvider>(), scoped3.get());
 }
 
 TEST_F(SeriviceProviderScopesTest, ShouldGetServicesDeeperRefWithScopedProvider)

@@ -6,7 +6,7 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Utils.hpp"
-#include "SevenBit/DI/IServiceProvider.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 
 namespace sb::di::details
 {
@@ -15,7 +15,7 @@ namespace sb::di::details
 
     template <class T> struct ServiceParamProvider
     {
-        auto getService(IServiceProvider &provider)
+        auto getService(ServiceProvider &provider)
         {
             static_assert(
                 utils::notSupportedType<T>,
@@ -26,55 +26,55 @@ namespace sb::di::details
 
     template <class T> struct ServiceParamProvider<T *>
     {
-        T *getService(IServiceProvider &sp) { return &sp.getService<T>(); }
+        T *getService(ServiceProvider &sp) { return &sp.getService<T>(); }
     };
     template <class T> struct ServiceParamProvider<const T *>
     {
-        const T *getService(IServiceProvider &sp) { return &sp.getService<T>(); }
+        const T *getService(ServiceProvider &sp) { return &sp.getService<T>(); }
     };
     template <class T> struct ServiceParamProvider<T *const>
     {
-        T *const getService(IServiceProvider &sp) { return &sp.getService<T>(); }
+        T *const getService(ServiceProvider &sp) { return &sp.getService<T>(); }
     };
     template <class T> struct ServiceParamProvider<const T *const>
     {
-        const T *const getService(IServiceProvider &sp) { return &sp.getService<T>(); }
+        const T *const getService(ServiceProvider &sp) { return &sp.getService<T>(); }
     };
 
     template <class T> struct ServiceParamProvider<T &>
     {
-        T &getService(IServiceProvider &sp) { return sp.getService<T>(); }
+        T &getService(ServiceProvider &sp) { return sp.getService<T>(); }
     };
     template <class T> struct ServiceParamProvider<const T &>
     {
-        const T &getService(IServiceProvider &sp) { return sp.getService<T>(); }
+        const T &getService(ServiceProvider &sp) { return sp.getService<T>(); }
     };
 
     template <class T> struct ServiceParamProvider<std::unique_ptr<T>>
     {
-        std::unique_ptr<T> getService(IServiceProvider &sp) { return sp.createService<T>(); }
+        std::unique_ptr<T> getService(ServiceProvider &sp) { return sp.createService<T>(); }
     };
     template <class T> struct ServiceParamProvider<const std::unique_ptr<T>>
     {
-        const std::unique_ptr<T> getService(IServiceProvider &sp) { return sp.createService<T>(); }
+        const std::unique_ptr<T> getService(ServiceProvider &sp) { return sp.createService<T>(); }
     };
 
     template <class T> struct ServiceParamProvider<std::vector<T *>>
     {
-        std::vector<T *> getService(IServiceProvider &sp) { return sp.getServices<T>(); }
+        std::vector<T *> getService(ServiceProvider &sp) { return sp.getServices<T>(); }
     };
     template <class T> struct ServiceParamProvider<const std::vector<T *>>
     {
-        const std::vector<T *> getService(IServiceProvider &sp) { return sp.getServices<T>(); }
+        const std::vector<T *> getService(ServiceProvider &sp) { return sp.getServices<T>(); }
     };
 
     template <class T> struct ServiceParamProvider<std::vector<std::unique_ptr<T>>>
     {
-        std::vector<std::unique_ptr<T>> getService(IServiceProvider &sp) { return sp.createServices<T>(); }
+        std::vector<std::unique_ptr<T>> getService(ServiceProvider &sp) { return sp.createServices<T>(); }
     };
     template <class T> struct ServiceParamProvider<const std::vector<std::unique_ptr<T>>>
     {
-        const std::vector<std::unique_ptr<T>> getService(IServiceProvider &sp) { return sp.createServices<T>(); }
+        const std::vector<std::unique_ptr<T>> getService(ServiceProvider &sp) { return sp.createServices<T>(); }
     };
 
     template <class T> struct ServiceParamProvider<std::vector<T>>

@@ -12,7 +12,7 @@
   <p>
     7bitDI is a simple C++ dependency injection library, designed to be as easy to use as possible, the main inspiration was the asp net core dependency injection system. 
   </p>
-   
+
 <h4>
     <a href="https://7bitDI.readthedocs.io/en/latest/index.html">Documentation & Examples</a>
 </div>
@@ -71,7 +71,7 @@ class ServiceExecutor
 };
 int main()
 {
-    IServiceProvider::Ptr provider = ServiceCollection{}
+    ServiceProvider::Ptr provider = ServiceCollection{}
                                          .addSingleton<IServiceA, ServiceA>()
                                          .addTransient<IServiceB, ServiceB>()
                                          .addScoped<ServiceExecutor>()
@@ -90,7 +90,7 @@ Output
 actionA, actionB executed.
 ```
 
-More examples and tutorials are available on the 
+More examples and tutorials are available on the
 [Documentation & Examples](https://7bitDI.readthedocs.io/en/latest/index.html) page
 
 @7bitcoder Sylwester Dawida 2023

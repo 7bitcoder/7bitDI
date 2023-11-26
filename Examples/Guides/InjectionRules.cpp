@@ -24,12 +24,12 @@ class ServiceExecutor
 };
 int main()
 {
-    IServiceProvider::Ptr provider = ServiceCollection{}
-                                         .addSingleton<SingletonService>()
-                                         .addScoped<ScopedService>()
-                                         .addTransient<TransientService>()
-                                         .addScoped<ServiceExecutor>()
-                                         .buildServiceProvider();
+    ServiceProvider::Ptr provider = ServiceCollection{}
+                                        .addSingleton<SingletonService>()
+                                        .addScoped<ScopedService>()
+                                        .addTransient<TransientService>()
+                                        .addScoped<ServiceExecutor>()
+                                        .buildServiceProvider();
 
     ServiceExecutor &consumer = provider->getService<ServiceExecutor>();
 

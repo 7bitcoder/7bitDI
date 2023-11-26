@@ -5,7 +5,7 @@
 #include "Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/DI/Details/ExternalServiceFactory.hpp"
 #include "SevenBit/DI/Details/ServiceCtorFactory.hpp"
-#include "SevenBit/DI/IServiceProvider.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 
 class ServiceCtorFactoryTest : public testing::Test
 {

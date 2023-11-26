@@ -11,7 +11,7 @@
 #include "SevenBit/DI/Details/Utils.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
-#include "SevenBit/DI/IServiceProvider.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di::details
@@ -23,7 +23,7 @@ namespace sb::di::details
         FactoryFcn _factoryFunction;
 
       public:
-        using ReturnType = std::invoke_result_t<FactoryFcn, IServiceProvider &>;
+        using ReturnType = std::invoke_result_t<FactoryFcn, ServiceProvider &>;
         using IsReturnTypePtr = std::is_pointer<ReturnType>;
         using ServiceType = std::remove_pointer_t<ReturnType>;
 
@@ -31,7 +31,7 @@ namespace sb::di::details
 
         TypeId getServiceTypeId() const { return typeid(ServiceType); }
 
-        IServiceInstance::Ptr createInstance(IServiceProvider &serviceProvider) const
+        IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider) const
         {
             return std::make_unique<ExternalService<ServiceType>>(_factoryFunction(serviceProvider));
         }

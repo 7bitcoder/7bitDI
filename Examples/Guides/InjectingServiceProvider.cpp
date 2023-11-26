@@ -34,7 +34,7 @@ class ServiceExecutor
     std::unique_ptr<IServiceB> _serviceB;
 
   public:
-    ServiceExecutor(IServiceProvider *provider)
+    ServiceExecutor(ServiceProvider *provider)
     {
         _serviceA = &provider->getService<IServiceA>();
         _serviceB = provider->createService<IServiceB>();
@@ -44,11 +44,11 @@ class ServiceExecutor
 };
 int main()
 {
-    IServiceProvider::Ptr provider = ServiceCollection{}
-                                         .addSingleton<IServiceA, ServiceA>()
-                                         .addTransient<IServiceB, ServiceB>()
-                                         .addScoped<ServiceExecutor>()
-                                         .buildServiceProvider();
+    ServiceProvider::Ptr provider = ServiceCollection{}
+                                        .addSingleton<IServiceA, ServiceA>()
+                                        .addTransient<IServiceB, ServiceB>()
+                                        .addScoped<ServiceExecutor>()
+                                        .buildServiceProvider();
 
     ServiceExecutor &consumer = provider->getService<ServiceExecutor>();
 

@@ -43,11 +43,11 @@ class ServiceExecutor
 };
 int main()
 {
-    IServiceProvider::Ptr provider = ServiceCollection{}
-                                         .addSingleton<IServiceA, ServiceA>()
-                                         .addTransient<IServiceB, ServiceB>()
-                                         .addScoped<ServiceExecutor>()
-                                         .buildServiceProvider();
+    ServiceProvider::Ptr provider = ServiceCollection{}
+                                        .addSingleton<IServiceA, ServiceA>()
+                                        .addTransient<IServiceB, ServiceB>()
+                                        .addScoped<ServiceExecutor>()
+                                        .buildServiceProvider();
 
     ServiceExecutor &executor = provider->getService<ServiceExecutor>();
 

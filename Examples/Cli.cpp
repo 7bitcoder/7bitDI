@@ -127,13 +127,13 @@ class Application
 };
 int main(int argc, char *argv[])
 {
-    IServiceProvider::Ptr provider = ServiceCollection{}
-                                         .addSingleton<IOptionHandler, HelpOption>()
-                                         .addSingleton<IOptionHandler, InfoOption>()
-                                         .addSingleton<IOptionHandler, NumberOption>()
-                                         .addSingleton<CliHandler>()
-                                         .addScoped<Application>()
-                                         .buildServiceProvider();
+    ServiceProvider::Ptr provider = ServiceCollection{}
+                                        .addSingleton<IOptionHandler, HelpOption>()
+                                        .addSingleton<IOptionHandler, InfoOption>()
+                                        .addSingleton<IOptionHandler, NumberOption>()
+                                        .addSingleton<CliHandler>()
+                                        .addScoped<Application>()
+                                        .buildServiceProvider();
 
     Application &app = provider->getService<Application>();
     return app.run(argc, argv);

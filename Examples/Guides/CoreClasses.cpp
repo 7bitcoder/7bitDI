@@ -20,7 +20,7 @@ int main()
     services.addSingleton<ServiceB>();
     services.addSingleton<ServiceC>();
 
-    IServiceProvider::Ptr provider = services.buildServiceProvider();
+    ServiceProvider::Ptr provider = services.buildServiceProvider();
 
     // Accessing services
     ServiceA &serviceA = provider->getService<ServiceA>();

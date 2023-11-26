@@ -5,7 +5,7 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/IServiceInstance.hpp"
-#include "SevenBit/DI/IServiceProvider.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 
 namespace sb::di
 {
@@ -25,7 +25,7 @@ namespace sb::di
         /**
          * @brief Create a service instance object
          */
-        virtual IServiceInstance::Ptr createInstance(IServiceProvider &serviceProvider) const = 0;
+        virtual IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider) const = 0;
 
         virtual ~IServiceFactory() = default;
     };

@@ -44,11 +44,11 @@ class Application
 };
 int main()
 {
-    IServiceProvider::Ptr provider = ServiceCollection{}
-                                         .addSingleton<IAppPartA, AppPartA>()
-                                         .addSingleton<IAppPartB, AppPartB>()
-                                         .addSingleton<Application>()
-                                         .buildServiceProvider();
+    ServiceProvider::Ptr provider = ServiceCollection{}
+                                        .addSingleton<IAppPartA, AppPartA>()
+                                        .addSingleton<IAppPartB, AppPartB>()
+                                        .addSingleton<Application>()
+                                        .buildServiceProvider();
 
     Application &app = provider->getService<Application>();
     return app.run();

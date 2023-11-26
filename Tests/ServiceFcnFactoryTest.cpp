@@ -5,8 +5,8 @@
 #include "Classes/BasicTest.hpp"
 #include "Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/DI/Details/ServiceFcnFactory.hpp"
-#include "SevenBit/DI/IServiceProvider.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 
 class ServiceFcnFactoryTest : public testing::Test
 {

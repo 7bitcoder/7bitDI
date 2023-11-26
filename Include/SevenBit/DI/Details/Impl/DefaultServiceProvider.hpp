@@ -15,12 +15,12 @@ namespace sb::di::details
     {
     }
 
-    INLINE IServiceProvider::Ptr DefaultServiceProvider::createScope()
+    INLINE ServiceProvider::Ptr DefaultServiceProvider::createScope()
     {
         return std::unique_ptr<DefaultServiceProvider>(new DefaultServiceProvider{_root, _options});
     }
 
-    INLINE const IServiceInstance *DefaultServiceProvider::tryGetInstance(TypeId serviceTypeId)
+    INLINE const IServiceInstance *DefaultServiceProvider::getInstance(TypeId serviceTypeId)
     {
         if (auto list = getSingletons().getList(serviceTypeId))
         {
@@ -31,16 +31,6 @@ namespace sb::di::details
             return list->first().get();
         }
         return createAndRegister(serviceTypeId);
-    }
-
-    INLINE const IServiceInstance &DefaultServiceProvider::getInstance(TypeId serviceTypeId)
-    {
-        if (auto service = tryGetInstance(serviceTypeId))
-        {
-            return *service;
-        }
-        throw ServiceNotFoundException{serviceTypeId,
-                                       "Service was not registered or was registered as transient service"};
     }
 
     INLINE std::vector<const IServiceInstance *> DefaultServiceProvider::getInstances(TypeId serviceTypeId)
@@ -56,19 +46,9 @@ namespace sb::di::details
         return createAndRegisterAll(serviceTypeId);
     }
 
-    INLINE IServiceInstance::Ptr DefaultServiceProvider::tryCreateInstance(TypeId serviceTypeId)
-    {
-        return create(serviceTypeId);
-    }
-
     INLINE IServiceInstance::Ptr DefaultServiceProvider::createInstance(TypeId serviceTypeId)
     {
-        if (auto service = tryCreateInstance(serviceTypeId))
-        {
-            return service;
-        }
-        throw ServiceNotFoundException{serviceTypeId,
-                                       "Service was not registered or was registered as singleton/scoped service"};
+        return create(serviceTypeId);
     }
 
     INLINE std::vector<IServiceInstance::Ptr> DefaultServiceProvider::createInstances(TypeId serviceTypeId)

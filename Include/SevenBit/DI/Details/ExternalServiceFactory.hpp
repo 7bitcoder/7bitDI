@@ -22,7 +22,7 @@ namespace sb::di::details
 
         TypeId getServiceTypeId() const { return typeid(T); }
 
-        IServiceInstance::Ptr createInstance(IServiceProvider &serviceProvider) const
+        IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider) const
         {
             return std::make_unique<ExternalService<T>>(_service);
         }

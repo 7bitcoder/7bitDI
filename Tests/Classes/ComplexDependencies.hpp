@@ -3,7 +3,7 @@
 #include <memory>
 #include <string>
 
-#include "SevenBit/DI/IServiceProvider.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 
 struct TestDependencyClass1
 {
@@ -121,9 +121,9 @@ struct TestComplexClass5 : public ITestComplexClass5
 {
     ITestComplexClass1 *_test1;
     ITestComplexClass2 *_test2;
-    sb::di::IServiceProvider *_provider;
+    sb::di::ServiceProvider *_provider;
 
-    TestComplexClass5(ITestComplexClass1 *test1, ITestComplexClass2 *test2, sb::di::IServiceProvider *provider)
+    TestComplexClass5(ITestComplexClass1 *test1, ITestComplexClass2 *test2, sb::di::ServiceProvider *provider)
         : _test1(test1), _test2(test2), _provider(provider)
     {
     }

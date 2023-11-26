@@ -24,14 +24,14 @@ namespace sb::di::details
 
         TypeId getServiceTypeId() const { return typeid(T); }
 
-        IServiceInstance::Ptr createInstance(IServiceProvider &serviceProvider) const
+        IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider) const
         {
             return create(serviceProvider, Indices{});
         };
 
       private:
         template <size_t... Index>
-        typename ServiceOwner<T>::Ptr create(IServiceProvider &serviceProvider, std::index_sequence<Index...>) const
+        typename ServiceOwner<T>::Ptr create(ServiceProvider &serviceProvider, std::index_sequence<Index...>) const
         {
             auto servicePtr = std::make_unique<T>(
                 ServiceParamProvider<typename ConstructorTraits::template Arg<Index>::Type>{}.getService(

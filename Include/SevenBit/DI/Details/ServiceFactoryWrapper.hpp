@@ -26,7 +26,7 @@ namespace sb::di::details
                           "Factory return type must be std::unique_ptr<TService>");
         }
 
-        R invoke(sb::di::IServiceProvider &provider) const
+        R invoke(sb::di::ServiceProvider &provider) const
         {
             return _factory(ServiceParamProvider<Args>{}.getService(provider)...);
         }
@@ -44,7 +44,7 @@ namespace sb::di::details
                           "containing pointners or std::unique_ptr<T>");
         }
 
-        std::unique_ptr<int> invoke(sb::di::IServiceProvider &provider) { return std::make_unique<int>(0); }
+        std::unique_ptr<int> invoke(sb::di::ServiceProvider &provider) { return std::make_unique<int>(0); }
     };
 
     template <class R, class F, class... Args>

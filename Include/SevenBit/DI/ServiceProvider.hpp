@@ -5,27 +5,14 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/IServiceInstanceProvider.hpp"
-#include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di
 {
 
-    class ServiceProvider
+    struct ServiceProvider : public IServiceInstanceProvider
     {
-      private:
-        IServiceInstanceProvider::Ptr _instanceProvider;
-
-      public:
-        ServiceProvider(IServiceInstanceProvider::Ptr instanceProvider);
-
-        ServiceProvider(const ServiceProvider &) = delete;
-        ServiceProvider(ServiceProvider &&) = default;
-
-        ServiceProvider &operator=(const ServiceProvider &) = delete;
-        ServiceProvider &operator=(ServiceProvider &&) = default;
+        using Ptr = std::unique_ptr<ServiceProvider>;
 
         /**
          * @brief Create a scoped service provider
@@ -39,11 +26,7 @@ namespace sb::di
          * &scoped->getService<TestClass>() != &provider->getService<TestClass>(); // True
          * @endcode
          */
-        ServiceProvider createScope();
-
-        IServiceInstanceProvider &getInstanceProvider();
-
-        const IServiceInstanceProvider &getInstanceProvider() const;
+        virtual ServiceProvider::Ptr createScope() = 0;
 
         /**
          * @brief Returns service pointner, might be null
@@ -58,7 +41,7 @@ namespace sb::di
          */
         template <class TService> TService *tryGetService()
         {
-            auto instance = getInstanceProvider().get(typeid(TService));
+            auto instance = getInstance(typeid(TService));
             return instance && instance->isValid() ? instance->getAs<TService>() : nullptr;
         }
 
@@ -98,7 +81,7 @@ namespace sb::di
          */
         template <class TService> std::vector<TService *> getServices()
         {
-            auto instances = getInstanceProvider().getAll(typeid(TService));
+            auto instances = getInstances(typeid(TService));
             std::vector<TService *> result;
             result.reserve(instances.size());
             for (auto instance : instances)
@@ -124,7 +107,7 @@ namespace sb::di
          */
         template <class TService> std::unique_ptr<TService> tryCreateService()
         {
-            auto instance = getInstanceProvider().create(typeid(TService));
+            auto instance = createInstance(typeid(TService));
             return instance && instance->isValid() ? std::unique_ptr<TService>{instance->moveOutAs<TService>()}
                                                    : nullptr;
         }
@@ -144,7 +127,7 @@ namespace sb::di
         template <class TService> std::unique_ptr<TService> createService()
         {
             auto service = tryCreateService<TService>();
-            return service ? service
+            return service ? std::move(service)
                            : throw ServiceNotFoundException{
                                  typeid(TService),
                                  "Service was not registered or was registered as singleton/scoped service"};
@@ -166,7 +149,7 @@ namespace sb::di
          */
         template <class TService> std::vector<std::unique_ptr<TService>> createServices()
         {
-            auto instances = getInstanceProvider().createAll(typeid(TService));
+            auto instances = createInstances(typeid(TService));
             std::vector<std::unique_ptr<TService>> result;
             result.reserve(instances.size());
             for (auto &instance : instances)
@@ -178,11 +161,5 @@ namespace sb::di
             }
             return result;
         }
-
-        virtual ~ServiceProvider() = default;
     };
 } // namespace sb::di
-
-#ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Impl/ServiceProvider.hpp"
-#endif
