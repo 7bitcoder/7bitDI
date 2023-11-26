@@ -26,7 +26,7 @@ namespace sb::di::details
     class EXPORT ServiceInstanceProvider : public IServiceInstanceProvider
     {
       public:
-        using Ptr = std::unique_ptr<DefaultServiceProvider>;
+        using Ptr = std::unique_ptr<ServiceInstanceProvider>;
 
       private:
         IServiceProviderRoot &_root;
@@ -42,19 +42,15 @@ namespace sb::di::details
         ServiceInstanceProvider &operator=(const ServiceInstanceProvider &) = delete;
         ServiceInstanceProvider &operator=(ServiceInstanceProvider &&) = delete;
 
-        IServiceProvider::Ptr createScope() override;
+        IServiceInstanceProvider::Ptr createScope() override;
 
-        const IServiceInstance *tryGetInstance(TypeId serviceTypeId) override;
+        const IServiceInstance *get(TypeId serviceTypeId) override;
 
-        const IServiceInstance &getInstance(TypeId serviceTypeId) override;
+        std::vector<const IServiceInstance *> getAll(TypeId serviceTypeId) override;
 
-        std::vector<const IServiceInstance *> getInstances(TypeId serviceTypeId) override;
+        IServiceInstance::Ptr create(TypeId serviceTypeId) override;
 
-        IServiceInstance::Ptr tryCreateInstance(TypeId serviceTypeId) override;
-
-        IServiceInstance::Ptr createInstance(TypeId serviceTypeId) override;
-
-        std::vector<IServiceInstance::Ptr> createInstances(TypeId serviceTypeId) override;
+        std::vector<IServiceInstance::Ptr> createAll(TypeId serviceTypeId) override;
 
         void clear();
 
