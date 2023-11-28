@@ -22,13 +22,15 @@ namespace sb::di::details
       public:
         using Ptr = std::unique_ptr<ServicesMap>;
 
-        ServicesMap(bool strongDestructionOrder);
+        ServicesMap(bool strongDestructionOrder = false);
 
         ServiceList &add(TypeId serviceTypeId, IServiceInstance::Ptr service);
 
         ServiceList &operator[](TypeId serviceTypeId);
 
         ServiceList *getList(TypeId serviceTypeId);
+
+        bool empty();
 
         void clear();
 

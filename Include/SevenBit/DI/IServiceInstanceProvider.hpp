@@ -5,16 +5,29 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di
 {
-
     struct IServiceInstanceProvider
     {
         using Ptr = std::unique_ptr<IServiceInstanceProvider>;
+
+        /**
+         * @brief Returns service instance reference, might throw exception
+         * @details If service was not registered or was registered as transient, method throws exception
+         * @attention It is advised to use getService<T> method istead
+         * @throws ServiceNotFoundException service was not found
+         *
+         * Example:
+         * @code {.cpp}
+         * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
+         *
+         * const IServiceInstance & instance = provider->getInstance(typeid(TestClass));
+         * @endcode
+         */
+        virtual const IServiceInstance &getInstance(TypeId serviceTypeId) = 0;
 
         /**
          * @brief Returns service instance pointner, might be null
@@ -28,7 +41,7 @@ namespace sb::di
          * IServiceInstance * instance = provider->tryGetInstance(typeid(TestClass));
          * @endcode
          */
-        virtual const IServiceInstance *getInstance(TypeId serviceTypeId) = 0;
+        virtual const IServiceInstance *tryGetInstance(TypeId serviceTypeId) = 0;
 
         /**
          * @brief Returns service instances
@@ -48,6 +61,21 @@ namespace sb::di
         virtual std::vector<const IServiceInstance *> getInstances(TypeId serviceTypeId) = 0;
 
         /**
+         * @brief Creates service instance unique pointner, might throw exception
+         * @details If service was not registered or was registered as scoped/transient, method throws exception
+         * @attention It is advised to use createService<T> method istead
+         * @throws ServiceNotFoundException service was not found
+         *
+         * Example:
+         * @code {.cpp}
+         * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
+         *
+         * std::unique_ptr<IServiceInstance> instance = provider->createInstance(typeid(TestClass));
+         * @endcode
+         */
+        virtual std::unique_ptr<IServiceInstance> createInstance(TypeId serviceTypeId) = 0;
+
+        /**
          * @brief Creates service instance unique pointner, might be null
          * @details If service was not registered or was registered as scoped/transient, method returns null
          * @attention It is advised to use tryCreateService<T> method istead
@@ -59,7 +87,7 @@ namespace sb::di
          * std::unique_ptr<IServiceInstance> instance = provider->tryCreateInstance(typeid(TestClass));
          * @endcode
          */
-        virtual std::unique_ptr<IServiceInstance> createInstance(TypeId serviceTypeId) = 0;
+        virtual std::unique_ptr<IServiceInstance> tryCreateInstance(TypeId serviceTypeId) = 0;
 
         /**
          * @brief Creates service instances

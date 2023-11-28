@@ -5,14 +5,18 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Utils.hpp"
 #include "SevenBit/DI/IServiceInstanceProvider.hpp"
 
 namespace sb::di
 {
 
-    struct ServiceProvider : public IServiceInstanceProvider
+    class ServiceProvider : protected IServiceInstanceProvider
     {
+      public:
         using Ptr = std::unique_ptr<ServiceProvider>;
+
+        IServiceInstanceProvider &asInstanceProvider() { return *this; }
 
         /**
          * @brief Create a scoped service provider
@@ -29,7 +33,7 @@ namespace sb::di
         virtual ServiceProvider::Ptr createScope() = 0;
 
         /**
-         * @brief Returns service pointner, might be null
+         * @brief Returns service pointer, might be null
          * @details If service was not registered or was registered as transient, method returns null
          *
          * Example:
@@ -41,8 +45,11 @@ namespace sb::di
          */
         template <class TService> TService *tryGetService()
         {
-            auto instance = getInstance(typeid(TService));
-            return instance && instance->isValid() ? instance->getAs<TService>() : nullptr;
+            if (auto instance = tryGetInstance(typeid(TService)); instance && instance->isValid())
+            {
+                return instance->getAs<TService>();
+            }
+            return nullptr;
         }
 
         /**
@@ -59,10 +66,11 @@ namespace sb::di
          */
         template <class TService> TService &getService()
         {
-            auto service = tryGetService<TService>();
-            return service ? *service
-                           : throw ServiceNotFoundException{
-                                 typeid(TService), "Service was not registered or was registered as transient service"};
+            if (auto &instance = getInstance(typeid(TService)); instance.isValid())
+            {
+                return *instance.getAs<TService>();
+            }
+            throw ServiceNotFoundException{typeid(TService), "Service is invalid"};
         }
 
         /**
@@ -107,9 +115,11 @@ namespace sb::di
          */
         template <class TService> std::unique_ptr<TService> tryCreateService()
         {
-            auto instance = createInstance(typeid(TService));
-            return instance && instance->isValid() ? std::unique_ptr<TService>{instance->moveOutAs<TService>()}
-                                                   : nullptr;
+            if (auto instance = tryCreateInstance(typeid(TService)); instance && instance->isValid())
+            {
+                return std::unique_ptr<TService>(instance->moveOutAs<TService>());
+            }
+            return nullptr;
         }
 
         /**
@@ -126,11 +136,11 @@ namespace sb::di
          */
         template <class TService> std::unique_ptr<TService> createService()
         {
-            auto service = tryCreateService<TService>();
-            return service ? std::move(service)
-                           : throw ServiceNotFoundException{
-                                 typeid(TService),
-                                 "Service was not registered or was registered as singleton/scoped service"};
+            if (auto instance = createInstance(typeid(TService)); instance && instance->isValid())
+            {
+                return std::unique_ptr<TService>(instance->moveOutAs<TService>());
+            }
+            throw ServiceNotFoundException{typeid(TService), "Service is invalid"};
         }
 
         /**

@@ -3,53 +3,49 @@
 #include <memory>
 #include <vector>
 
-#include "SevenBit/DI/Details/DefaultServiceProvider.hpp"
-#include "SevenBit/DI/Details/IServiceProviderRoot.hpp"
+#include "SevenBit/DI/LibraryConfig.hpp"
+
+#include "SevenBit/DI/Details/ExternalServiceFcnFactory.hpp"
+#include "SevenBit/DI/Details/IServiceProviderCore.hpp"
 #include "SevenBit/DI/Details/ServiceDescriptorsMap.hpp"
 #include "SevenBit/DI/Details/ServicesMap.hpp"
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 
 namespace sb::di::details
 {
-    class EXPORT DefaultServiceProviderRoot : public DefaultServiceProvider, public IServiceProviderRoot
+    class EXPORT DefaultServiceProviderCore : public IServiceProviderCore
     {
-      public:
-        using Ptr = std::unique_ptr<DefaultServiceProviderRoot>;
-
       private:
         ServiceDescriptorsMap _descriptorsMap;
         ServicesMap _singletons;
+        ServiceProviderOptions _options;
 
       public:
+        using Ptr = std::unique_ptr<DefaultServiceProviderCore>;
+        using SPtr = std::shared_ptr<DefaultServiceProviderCore>;
+
         template <class TDescriptorIt>
-        DefaultServiceProviderRoot(TDescriptorIt begin, TDescriptorIt end, ServiceProviderOptions options = {})
-            : DefaultServiceProvider(*this, options), _descriptorsMap(begin, end),
-              _singletons(options.strongDestructionOrder)
+        DefaultServiceProviderCore(TDescriptorIt begin, TDescriptorIt end, ServiceProviderOptions options = {})
+            : _options(options), _descriptorsMap(begin, end), _singletons(options.strongDestructionOrder)
         {
             IServiceFactory::Ptr factory{
                 new ExternalServiceFcnFactory{[](ServiceProvider &provider) { return &provider; }}};
             _descriptorsMap.add(
                 ServiceDescriptor{typeid(ServiceProvider), ServiceLifeTime::scoped(), std::move(factory)});
             _descriptorsMap.seal();
-
-            if (options.prebuildSingeletons)
-            {
-                prebuildSingeletons();
-            }
         };
 
         const ServiceDescriptorsMap &getDescriptorsMap() override;
 
         ServicesMap &getSingletons() override;
 
-        ~DefaultServiceProviderRoot();
+        const ServiceProviderOptions &getOptions() override;
 
-      private:
-        void prebuildSingeletons();
+        ~DefaultServiceProviderCore() = default;
     };
 } // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Impl/DefaultServiceProviderRoot.hpp"
+#include "SevenBit/DI/Details/Impl/DefaultServiceProviderCore.hpp"
 #endif

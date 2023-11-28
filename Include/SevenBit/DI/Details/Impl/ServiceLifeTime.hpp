@@ -6,9 +6,9 @@
 
 namespace sb::di
 {
-    INLINE ServiceLifeTime ServiceLifeTime::singleton() { return {Type::Singleton}; }
-    INLINE ServiceLifeTime ServiceLifeTime::scoped() { return {Type::Scoped}; }
-    INLINE ServiceLifeTime ServiceLifeTime::transient() { return {Type::Transient}; }
+    INLINE ServiceLifeTime ServiceLifeTime::singleton() { return ServiceLifeTime{Type::Singleton}; }
+    INLINE ServiceLifeTime ServiceLifeTime::scoped() { return ServiceLifeTime{Type::Scoped}; }
+    INLINE ServiceLifeTime ServiceLifeTime::transient() { return ServiceLifeTime{Type::Transient}; }
 
     INLINE ServiceLifeTime::ServiceLifeTime(Type type) : _type(type) {}
 

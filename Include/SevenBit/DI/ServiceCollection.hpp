@@ -8,7 +8,6 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/DefaultServiceProviderRoot.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"

@@ -27,6 +27,8 @@ namespace sb::di::details
         return it != _serviceListMap.end() ? &it->second : nullptr;
     }
 
+    INLINE bool ServicesMap::empty() { return _serviceListMap.empty(); }
+
     INLINE void ServicesMap::clear()
     {
         if (_strongDestructionOrder)

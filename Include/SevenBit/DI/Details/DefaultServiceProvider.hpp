@@ -6,19 +6,14 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/CircularDependencyGuard.hpp"
-#include "SevenBit/DI/Details/ExternalServiceFactory.hpp"
-#include "SevenBit/DI/Details/ExternalServiceFcnFactory.hpp"
-#include "SevenBit/DI/Details/IServiceProviderRoot.hpp"
+#include "SevenBit/DI/Details/IServiceProviderCore.hpp"
 #include "SevenBit/DI/Details/ServiceDescriptorList.hpp"
-#include "SevenBit/DI/Details/ServiceDescriptorsMap.hpp"
 #include "SevenBit/DI/Details/ServicesMap.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
-#include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
-#include "SevenBit/DI/ServiceProviderOptions.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di::details
@@ -29,22 +24,29 @@ namespace sb::di::details
         using Ptr = std::unique_ptr<DefaultServiceProvider>;
 
       private:
-        IServiceProviderRoot &_root;
-        ServiceProviderOptions _options;
+        IServiceProviderCore::SPtr _sharedCore;
         ServicesMap _services;
         CircularDependencyGuard _guard;
 
       public:
-        DefaultServiceProvider(IServiceProviderRoot &root, ServiceProviderOptions options);
+        explicit DefaultServiceProvider(IServiceProviderCore::SPtr core);
+
         DefaultServiceProvider(const DefaultServiceProvider &) = delete;
         DefaultServiceProvider(DefaultServiceProvider &&) = delete;
 
         DefaultServiceProvider &operator=(const DefaultServiceProvider &) = delete;
         DefaultServiceProvider &operator=(DefaultServiceProvider &&) = delete;
 
+        void clear();
+
         ServiceProvider::Ptr createScope() override;
 
-        const IServiceInstance *getInstance(TypeId serviceTypeId) override;
+      protected:
+        const IServiceInstance &getInstance(TypeId serviceTypeId) override;
+
+        const IServiceInstance *tryGetInstance(TypeId serviceTypeId) override;
+
+        IServiceInstance::Ptr tryCreateInstance(TypeId serviceTypeId) override;
 
         std::vector<const IServiceInstance *> getInstances(TypeId serviceTypeId) override;
 
@@ -52,16 +54,10 @@ namespace sb::di::details
 
         std::vector<IServiceInstance::Ptr> createInstances(TypeId serviceTypeId) override;
 
-        void clear();
-
       private:
         const IServiceInstance *createAndRegister(TypeId typeId);
 
         std::vector<const IServiceInstance *> createAndRegisterAll(TypeId typeId);
-
-        IServiceInstance::Ptr create(TypeId typeId);
-
-        std::vector<IServiceInstance::Ptr> createAll(TypeId typeId);
 
         const IServiceInstance *createAndRegister(const ServiceDescriptor &descriptor);
 
@@ -80,6 +76,8 @@ namespace sb::di::details
         ServicesMap &getSingletons();
 
         const ServiceDescriptorsMap &getDescriptorsMap();
+
+        void prebuildSingletons();
     };
 } // namespace sb::di::details
 

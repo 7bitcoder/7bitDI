@@ -31,6 +31,7 @@ namespace sb::di::details
         ServiceDescriptorsMap() = default;
         ServiceDescriptorsMap(const ServiceDescriptorsMap &) = delete;
         ServiceDescriptorsMap(ServiceDescriptorsMap &&) = default;
+
         template <class TDescriptorIt> ServiceDescriptorsMap(TDescriptorIt begin, TDescriptorIt end)
         {
             for (auto it = begin; it != end; ++it)

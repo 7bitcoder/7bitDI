@@ -41,7 +41,7 @@ namespace sb::di
         /**
          * @brief Construct a new Service Life Time object with specified type
          */
-        ServiceLifeTime(Type type);
+        explicit ServiceLifeTime(Type type);
 
         ServiceLifeTime(const ServiceLifeTime &) = default;
         ServiceLifeTime &operator=(const ServiceLifeTime &) = default;
