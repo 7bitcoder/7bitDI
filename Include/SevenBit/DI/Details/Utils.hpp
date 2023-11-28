@@ -34,9 +34,15 @@ namespace sb::di::details::utils
     {
         first = std::find_if(first, last, p);
         if (first != last)
+        {
             for (ForwardIt i = first; ++i != last;)
+            {
                 if (!p(*i))
+                {
                     *first++ = std::move(*i);
+                }
+            }
+        }
         return first;
     }
 
