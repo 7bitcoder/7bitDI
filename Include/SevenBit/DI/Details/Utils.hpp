@@ -40,26 +40,6 @@ namespace sb::di::details::utils
         return first;
     }
 
-    template <class T>
-    static std::unique_ptr<T> assertPtrAndMove(std::unique_ptr<T> ptr, std::string_view failMessage = "")
-    {
-        assertPtr(ptr.get(), failMessage);
-        return ptr;
-    }
-
-    template <class T>
-    static std::shared_ptr<T> assertPtrAndMove(std::shared_ptr<T> ptr, std::string_view failMessage = "")
-    {
-        assertPt(ptr.get(), failMessage);
-        return ptr;
-    }
-
-    template <class T> static T *assertPtrAndMove(T *ptr, std::string_view failMessage = "")
-    {
-        assertPtr(ptr, failMessage);
-        return ptr;
-    }
-
     template <class T> static void assertPtr(const std::unique_ptr<T> &ptr, std::string_view failMessage = "")
     {
         assertPtr(ptr.get(), failMessage);
@@ -79,5 +59,25 @@ namespace sb::di::details::utils
                                : std::string{"Object of type: '"} + typeid(T).name() + "' cannot be null";
             throw NullPointnerException(message);
         }
+    }
+
+    template <class T>
+    static std::unique_ptr<T> assertPtrAndMove(std::unique_ptr<T> ptr, std::string_view failMessage = "")
+    {
+        assertPtr(ptr.get(), failMessage);
+        return ptr;
+    }
+
+    template <class T>
+    static std::shared_ptr<T> assertPtrAndMove(std::shared_ptr<T> ptr, std::string_view failMessage = "")
+    {
+        assertPtr(ptr.get(), failMessage);
+        return ptr;
+    }
+
+    template <class T> static T *assertPtrAndMove(T *ptr, std::string_view failMessage = "")
+    {
+        assertPtr(ptr, failMessage);
+        return ptr;
     }
 } // namespace sb::di::details::utils
