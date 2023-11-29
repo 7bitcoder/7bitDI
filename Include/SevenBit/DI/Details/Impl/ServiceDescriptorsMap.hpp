@@ -6,21 +6,29 @@
 
 namespace sb::di::details
 {
-    INLINE void ServiceDescriptorsMap::add(ServiceDescriptor descriptor)
+    INLINE ServiceDescriptorsMap::ServiceDescriptorsMap(bool checkDescriptorUniqueness)
+        : _checkDescriptorUniqueness(checkDescriptorUniqueness)
     {
-        checkIfAlreadyRegistered(descriptor);
-        _serviceCreatorsMap[descriptor.getServiceTypeId()].add(std::move(descriptor));
     }
 
-    INLINE void ServiceDescriptorsMap::seal()
+    INLINE void ServiceDescriptorsMap::add(ServiceDescriptor descriptor)
     {
-        for (auto &list : *this)
+        if (_checkDescriptorUniqueness)
         {
-            list.second.seal();
+            auto implementationTypeId = descriptor.getImplementationTypeId();
+            checkIfAlreadyRegistered(implementationTypeId);
+            addDescriptor(std::move(descriptor));
+            registerService(implementationTypeId);
+        }
+        else
+        {
+            addDescriptor(std::move(descriptor));
         }
     }
 
-    INLINE const ServiceDescriptorList *ServiceDescriptorsMap::getDescriptorsList(TypeId typeId) const
+    INLINE void ServiceDescriptorsMap::seal() { _registeredServices.clear(); }
+
+    INLINE const ServiceDescriptorList *ServiceDescriptorsMap::tryGetList(TypeId typeId) const
     {
         if (auto it = _serviceCreatorsMap.find(typeId); it != end())
         {
@@ -29,14 +37,30 @@ namespace sb::di::details
         return nullptr;
     }
 
-    INLINE void ServiceDescriptorsMap::checkIfAlreadyRegistered(ServiceDescriptor &descriptor)
+    INLINE void ServiceDescriptorsMap::addDescriptor(ServiceDescriptor &&descriptor)
     {
-        for (auto &[_, list] : _serviceCreatorsMap)
+        auto serviceTypeId = descriptor.getServiceTypeId();
+        if (auto it = _serviceCreatorsMap.find(serviceTypeId); it != _serviceCreatorsMap.end())
         {
-            if (list.contains(descriptor.getImplementationTypeId()))
-            {
-                throw ServiceAlreadyRegisteredException{descriptor.getImplementationTypeId()};
-            }
+            it->second.add(std::move(descriptor));
+        }
+        else
+        {
+            _serviceCreatorsMap.emplace(serviceTypeId, std::move(descriptor));
         }
     }
+
+    INLINE void ServiceDescriptorsMap::checkIfAlreadyRegistered(TypeId implementationTypeId)
+    {
+        if (auto it = _registeredServices.find(implementationTypeId); it != _registeredServices.end())
+        {
+            throw ServiceAlreadyRegisteredException{implementationTypeId};
+        }
+    }
+
+    INLINE void ServiceDescriptorsMap::registerService(TypeId implementationTypeId)
+    {
+        _registeredServices.insert(implementationTypeId);
+    }
+
 } // namespace sb::di::details

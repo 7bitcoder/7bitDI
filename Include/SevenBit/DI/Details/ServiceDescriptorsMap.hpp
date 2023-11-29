@@ -18,6 +18,8 @@ namespace sb::di::details
     {
       private:
         std::unordered_map<TypeId, ServiceDescriptorList> _serviceCreatorsMap;
+        std::unordered_set<TypeId> _registeredServices;
+        bool _checkDescriptorUniqueness = false;
 
       public:
         using Ptr = std::unique_ptr<ServiceDescriptorsMap>;
@@ -28,17 +30,20 @@ namespace sb::di::details
         auto begin() { return _serviceCreatorsMap.begin(); }
         auto end() { return _serviceCreatorsMap.end(); }
 
-        ServiceDescriptorsMap() = default;
-        ServiceDescriptorsMap(const ServiceDescriptorsMap &) = delete;
-        ServiceDescriptorsMap(ServiceDescriptorsMap &&) = default;
+        explicit ServiceDescriptorsMap(bool checkDescriptorUniqueness);
 
-        template <class TDescriptorIt> ServiceDescriptorsMap(TDescriptorIt begin, TDescriptorIt end)
+        template <class TDescriptorIt>
+        ServiceDescriptorsMap(TDescriptorIt begin, TDescriptorIt end, bool checkDescriptorUniqueness)
+            : ServiceDescriptorsMap(checkDescriptorUniqueness)
         {
             for (auto it = begin; it != end; ++it)
             {
                 add(*it);
             }
         }
+
+        ServiceDescriptorsMap(const ServiceDescriptorsMap &) = delete;
+        ServiceDescriptorsMap(ServiceDescriptorsMap &&) noexcept = default;
 
         ServiceDescriptorsMap &operator=(const ServiceDescriptorsMap &) = delete;
         ServiceDescriptorsMap &operator=(ServiceDescriptorsMap &&) = default;
@@ -47,10 +52,13 @@ namespace sb::di::details
 
         void seal();
 
-        const ServiceDescriptorList *getDescriptorsList(TypeId typeId) const;
+        [[nodiscard]] const ServiceDescriptorList *tryGetList(TypeId typeId) const;
 
       private:
-        void checkIfAlreadyRegistered(ServiceDescriptor &descriptor);
+        void addDescriptor(ServiceDescriptor &&descriptor);
+
+        void checkIfAlreadyRegistered(TypeId implementationTypeId);
+        void registerService(TypeId implementationTypeId);
     };
 } // namespace sb::di::details
 

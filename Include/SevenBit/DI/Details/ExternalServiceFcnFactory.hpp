@@ -27,11 +27,11 @@ namespace sb::di::details
         using IsReturnTypePtr = std::is_pointer<ReturnType>;
         using ServiceType = std::remove_pointer_t<ReturnType>;
 
-        ExternalServiceFcnFactory(FactoryFcn factoryFunction) : _factoryFunction{std::move(factoryFunction)} {}
+        explicit ExternalServiceFcnFactory(FactoryFcn factoryFunction) : _factoryFunction{std::move(factoryFunction)} {}
 
-        TypeId getServiceTypeId() const { return typeid(ServiceType); }
+        [[nodiscard]] TypeId getServiceTypeId() const override { return typeid(ServiceType); }
 
-        IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider) const
+        IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider) const override
         {
             return std::make_unique<ExternalService<ServiceType>>(_factoryFunction(serviceProvider));
         }

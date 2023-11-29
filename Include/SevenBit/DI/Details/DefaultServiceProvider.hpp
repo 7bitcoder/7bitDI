@@ -55,11 +55,11 @@ namespace sb::di::details
         std::vector<IServiceInstance::Ptr> createInstances(TypeId serviceTypeId) override;
 
       private:
-        const IServiceInstance *createAndRegister(TypeId typeId);
+        const IServiceInstance *createAndRegisterMain(TypeId serviceTypeId);
 
         std::vector<const IServiceInstance *> createAndRegisterAll(TypeId typeId);
 
-        const IServiceInstance *createAndRegister(const ServiceDescriptor &descriptor);
+        const IServiceInstance *createAndRegisterMain(const ServiceDescriptorList &descriptors);
 
         std::vector<const IServiceInstance *> createAndRegisterAll(const ServiceDescriptorList &descriptors);
 

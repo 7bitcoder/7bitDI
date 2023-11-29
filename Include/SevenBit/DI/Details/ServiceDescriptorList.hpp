@@ -12,27 +12,37 @@
 
 namespace sb::di::details
 {
-    class EXPORT ServiceDescriptorList : public OptimalList<ServiceDescriptor>
+    class EXPORT ServiceDescriptorList
     {
+      private:
+        OptimalList<ServiceDescriptor> _descriptors;
+
       public:
-        ServiceDescriptorList() = default;
-        ServiceDescriptorList() = default;
+        explicit ServiceDescriptorList(ServiceDescriptor &&descriptor);
 
-        ServiceDescriptorList(const ServiceDescriptorList &) = delete;
-        ServiceDescriptorList(ServiceDescriptorList &&) = default;
+        [[nodiscard]] auto begin() const { return _descriptors.getAsList().begin(); }
+        [[nodiscard]] auto end() const { return _descriptors.getAsList().end(); }
 
-        ServiceDescriptorList &operator=(ServiceDescriptorList &&) = default;
-        ServiceDescriptorList &operator=(const ServiceDescriptorList &) = delete;
+        [[nodiscard]] auto rBegin() const { return _descriptors.getAsList().rbegin(); }
+        [[nodiscard]] auto rEnd() const { return _descriptors.getAsList().rend(); }
 
-        const ServiceLifeTime &getLifeTime() const;
+        void add(ServiceDescriptor &&descriptor);
 
-        TypeId getServiceTypeId() const;
+        ServiceDescriptor &last();
 
-        bool contains(TypeId typeId);
+        [[nodiscard]] const ServiceDescriptor &last() const;
+
+        [[nodiscard]] const ServiceLifeTime &getLifeTime() const;
+
+        [[nodiscard]] TypeId getServiceTypeId() const;
+
+        [[nodiscard]] size_t size() const;
+
+        void seal();
 
       private:
-        void checkBaseType(ServiceDescriptor &descriptor);
-        void checkLifeTime(ServiceDescriptor &descriptor);
+        void checkBaseType(ServiceDescriptor &descriptor) const;
+        void checkLifeTime(ServiceDescriptor &descriptor) const;
     };
 
 } // namespace sb::di::details

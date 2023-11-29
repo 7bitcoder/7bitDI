@@ -19,6 +19,8 @@ namespace sb::di
          * @brief Set prebuilds singletons
          * @details If set to true when service provider is constructed it will also construct all singletons
          */
-        bool prebuildSingeletons = false;
+        bool prebuildSingletons = false;
+
+        bool checkServiceGlobalUniqueness = false;
     };
 } // namespace sb::di

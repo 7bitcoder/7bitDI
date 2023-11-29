@@ -73,7 +73,7 @@ TEST_F(ServiceDescriptorsMapTest, ShouldFindDescriptorList)
 
     sb::di::details::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end()};
 
-    auto first = map.getDescriptorsList(typeid(TestInheritClass2));
+    auto first = map.tryGetList(typeid(TestInheritClass2));
     EXPECT_TRUE(first);
     EXPECT_EQ(first->size(), 2);
     EXPECT_EQ(first->begin()->getServiceTypeId(), typeid(TestInheritClass2));
@@ -83,7 +83,7 @@ TEST_F(ServiceDescriptorsMapTest, ShouldFindDescriptorList)
     EXPECT_EQ(first->last().getImplementationTypeId(), typeid(TestInheritClass5));
     EXPECT_EQ(first->last().getLifeTime(), sb::di::ServiceLifeTime::scoped());
 
-    auto second = map.getDescriptorsList(typeid(TestInheritClass1));
+    auto second = map.tryGetList(typeid(TestInheritClass1));
     EXPECT_TRUE(second);
     EXPECT_EQ(second->size(), 2);
     EXPECT_EQ(second->begin()->getServiceTypeId(), typeid(TestInheritClass1));
@@ -93,5 +93,5 @@ TEST_F(ServiceDescriptorsMapTest, ShouldFindDescriptorList)
     EXPECT_EQ(second->last().getImplementationTypeId(), typeid(TestInheritClass6));
     EXPECT_EQ(second->last().getLifeTime(), sb::di::ServiceLifeTime::singleton());
 
-    EXPECT_FALSE(map.getDescriptorsList(typeid(TestInheritClass3)));
+    EXPECT_FALSE(map.tryGetList(typeid(TestInheritClass3)));
 }

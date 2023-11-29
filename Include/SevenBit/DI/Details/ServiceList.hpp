@@ -6,6 +6,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/OptimalList.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 
@@ -14,25 +15,23 @@ namespace sb::di::details
     class EXPORT ServiceList
     {
       private:
-        std::vector<IServiceInstance::Ptr> _services;
+        OptimalList<IServiceInstance::Ptr> _services;
         bool _sealed = false;
 
       public:
-        ServiceList() = default;
+        explicit ServiceList(IServiceInstance::Ptr instance);
 
-        // fix compilation errors should not be used!!
-        ServiceList(const ServiceList &){};
+        ServiceList(const ServiceList &) = delete;
         ServiceList(ServiceList &&) = default;
 
-        // fix compilation errors should not be used!!
-        ServiceList &operator=(const ServiceList &) { return *this; };
+        ServiceList &operator=(const ServiceList &) = delete;
         ServiceList &operator=(ServiceList &&) = default;
 
-        auto begin() const { return _services.begin(); }
-        auto end() const { return _services.end(); }
+        [[nodiscard]] auto begin() const { return _services.getAsList().begin(); }
+        [[nodiscard]] auto end() const { return _services.getAsList().end(); }
 
-        auto rBegin() const { return _services.rbegin(); }
-        auto rEnd() const { return _services.rend(); }
+        [[nodiscard]] auto rBegin() const { return _services.getAsList().rbegin(); }
+        [[nodiscard]] auto rEnd() const { return _services.getAsList().rend(); }
 
         ServiceList &add(IServiceInstance::Ptr service);
 
@@ -40,17 +39,17 @@ namespace sb::di::details
 
         IServiceInstance::Ptr &first();
 
-        IServiceInstance::Ptr &at(size_t index = 0);
+        [[nodiscard]] std::vector<const IServiceInstance *> getAllServices() const;
 
-        std::vector<const IServiceInstance *> getAllServices() const;
+        [[nodiscard]] size_t size() const;
 
-        bool empty() const;
+        [[nodiscard]] bool empty() const;
 
         void reserve(size_t size);
 
         void seal();
 
-        bool isSealed() const;
+        [[nodiscard]] bool isSealed() const;
     };
 } // namespace sb::di::details
 

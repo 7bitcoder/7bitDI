@@ -13,46 +13,119 @@ namespace sb::di::details
         std::variant<T, std::vector<T>> _variant;
 
       public:
-        OptimalList(size_t size) : _variant(std::vector<T>{}) { getAsList().reserve(size); }
-        OptimalList(T mainElement) : _variant(mainElement) {}
-        OptimalList(T &&mainElement) : _variant(std::move(mainElement)) {}
+        explicit OptimalList(size_t size) : _variant(std::vector<T>{}) { reserve(size); }
+        explicit OptimalList(T &&mainElement) : _variant(std::move(mainElement)) {}
 
         OptimalList(const OptimalList &) = delete;
         OptimalList(OptimalList &&) = default;
 
-        OptimalList &operator=(OptimalList &&) = default;
         OptimalList &operator=(const OptimalList &) = delete;
+        OptimalList &operator=(OptimalList &&) = default;
 
-        T &first() { return hasOne() ? getAsOne() : getAsList().front(); }
+        T &first()
+        {
+            if (auto single = tryGetAsSingle())
+            {
+                return *single;
+            }
+            return getAsList().front();
+        }
+        const T &first() const
+        {
+            if (auto single = tryGetAsSingle())
+            {
+                return *single;
+            }
+            return getAsList().front();
+        }
 
-        T &last() { return hasOne() ? getAsOne() : getAsList().back(); }
+        T &last()
+        {
+            if (auto single = tryGetAsSingle())
+            {
+                return *single;
+            }
+            return getAsList().back();
+        }
+        const T &last() const
+        {
+            if (auto single = tryGetAsSingle())
+            {
+                return *single;
+            }
+            return getAsList().back();
+        }
 
-        bool hasMany() { return std::holds_alternative<std::vector<T>>(_variant); }
-
-        bool hasOne() { return std::holds_alternative<T>(_variant); }
+        [[nodiscard]] bool isList() const { return std::holds_alternative<std::vector<T>>(_variant); }
 
         std::vector<T> &getAsList() { return std::get<std::vector<T>>(_variant); }
+        const std::vector<T> &getAsList() const { return std::get<std::vector<T>>(_variant); }
 
-        T &getAsOne() { return std::get<T>(_variant); }
+        T &getAsSingle() { return std::get<T>(_variant); }
+        const T &getAsSingle() const { return std::get<T>(_variant); }
 
-        void add(T element)
+        std::vector<T> *tryGetAsList() { return std::get_if<std::vector<T>>(&_variant); }
+        const std::vector<T> *tryGetAsList() const { return std::get_if<std::vector<T>>(&_variant); }
+
+        T *tryGetAsSingle() { return std::get_if<T>(&_variant); }
+        const T *tryGetAsSingle() const { return std::get_if<T>(&_variant); }
+
+        void add(T &&element)
         {
-            if (hasOne())
-            {
-                std::vector<T> vec;
-                vec.emplace_back(std::move(getAsOne()));
-                _variant = std::move(vec);
-            }
+            tryConvertToList();
             getAsList().emplace_back(std::move(element));
         }
 
-        size_t size() { hasMany() ? getAsList().size() : 1; }
+        T &operator[](size_t index)
+        {
+            if (auto single = tryGetAsSingle())
+            {
+                return *single;
+            }
+            return getAsList()[index];
+        }
+        const T &operator[](size_t index) const
+        {
+            if (auto single = tryGetAsSingle())
+            {
+                return *single;
+            }
+            return getAsList()[index];
+        }
+
+        [[nodiscard]] size_t size() const
+        {
+            if (auto list = tryGetAsList())
+            {
+                return list->size();
+            }
+            return 1;
+        }
+
+        [[nodiscard]] bool empty() const { return !size(); }
+
+        void reserve(size_t newCapacity)
+        {
+            tryConvertToList();
+            getAsList().reserve(newCapacity);
+        }
 
         void shrink()
         {
-            if (hasMany())
+            if (auto list = tryGetAsList())
             {
-                getAsList().shrink_to_fit();
+                list->shrink_to_fit();
+            }
+        }
+
+      private:
+        void tryConvertToList()
+        {
+            if (auto single = tryGetAsSingle())
+            {
+                std::vector<T> vec;
+                vec.emplace_back(std::move(*single));
+                _variant = std::move(vec);
             }
         }
     };

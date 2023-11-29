@@ -27,22 +27,21 @@ namespace sb::di::details
 
         template <class TDescriptorIt>
         DefaultServiceProviderCore(TDescriptorIt begin, TDescriptorIt end, ServiceProviderOptions options = {})
-            : _options(options), _descriptorsMap(begin, end), _singletons(options.strongDestructionOrder)
+            : _options(options), _descriptorsMap(begin, end, options.checkServiceGlobalUniqueness),
+              _singletons(options.strongDestructionOrder)
         {
             IServiceFactory::Ptr factory{
                 new ExternalServiceFcnFactory{[](ServiceProvider &provider) { return &provider; }}};
             _descriptorsMap.add(
                 ServiceDescriptor{typeid(ServiceProvider), ServiceLifeTime::scoped(), std::move(factory)});
             _descriptorsMap.seal();
-        };
+        }
 
         const ServiceDescriptorsMap &getDescriptorsMap() override;
 
         ServicesMap &getSingletons() override;
 
         const ServiceProviderOptions &getOptions() override;
-
-        ~DefaultServiceProviderCore() = default;
     };
 } // namespace sb::di::details
 

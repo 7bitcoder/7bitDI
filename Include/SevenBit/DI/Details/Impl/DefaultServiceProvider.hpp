@@ -14,10 +14,10 @@
 namespace sb::di::details
 {
     INLINE DefaultServiceProvider::DefaultServiceProvider(IServiceProviderCore::SPtr core)
-        : _sharedCore(utils::assertPtrAndMove(std::move(core))),
+        : _sharedCore(utils::Assert::ptrAndGet(std::move(core))),
           _services(_sharedCore->getOptions().strongDestructionOrder)
     {
-        if (_sharedCore->getOptions().prebuildSingeletons && getSingletons().empty())
+        if (_sharedCore->getOptions().prebuildSingletons && getSingletons().empty())
         {
             prebuildSingletons();
         }
@@ -40,26 +40,26 @@ namespace sb::di::details
 
     INLINE const IServiceInstance *DefaultServiceProvider::tryGetInstance(TypeId serviceTypeId)
     {
-        if (auto list = getSingletons().getList(serviceTypeId))
+        if (auto services = getSingletons().getList(serviceTypeId))
         {
-            return list->first().get();
+            return services->first().get();
         }
-        if (auto list = getScoped().getList(serviceTypeId))
+        if (auto services = getScoped().getList(serviceTypeId))
         {
-            return list->first().get();
+            return services->first().get();
         }
-        return createAndRegister(serviceTypeId);
+        return createAndRegisterMain(serviceTypeId);
     }
 
     INLINE std::vector<const IServiceInstance *> DefaultServiceProvider::getInstances(TypeId serviceTypeId)
     {
-        if (auto list = getSingletons().getList(serviceTypeId); list && list->isSealed())
+        if (auto services = getSingletons().getList(serviceTypeId); services && services->isSealed())
         {
-            return list->getAllServices();
+            return services->getAllServices();
         }
-        if (auto list = getScoped().getList(serviceTypeId); list && list->isSealed())
+        if (auto services = getScoped().getList(serviceTypeId); services && services->isSealed())
         {
-            return list->getAllServices();
+            return services->getAllServices();
         }
         return createAndRegisterAll(serviceTypeId);
     }
@@ -76,16 +76,16 @@ namespace sb::di::details
 
     INLINE IServiceInstance::Ptr DefaultServiceProvider::tryCreateInstance(TypeId serviceTypeId)
     {
-        if (auto descriptor = getDescriptorsMap().getDescriptorsList(serviceTypeId))
+        if (auto descriptors = getDescriptorsMap().tryGetList(serviceTypeId))
         {
-            return create(descriptor->last());
+            return create(descriptors->last());
         }
         return nullptr;
     }
 
     INLINE std::vector<IServiceInstance::Ptr> DefaultServiceProvider::createInstances(TypeId serviceTypeId)
     {
-        if (auto descriptors = getDescriptorsMap().getDescriptorsList(serviceTypeId))
+        if (auto descriptors = getDescriptorsMap().tryGetList(serviceTypeId))
         {
             return createAll(*descriptors);
         }
@@ -94,34 +94,41 @@ namespace sb::di::details
 
     INLINE void DefaultServiceProvider::clear() { _services.clear(); }
 
-    INLINE const IServiceInstance *DefaultServiceProvider::createAndRegister(TypeId serviceTypeId)
+    INLINE const IServiceInstance *DefaultServiceProvider::createAndRegisterMain(TypeId serviceTypeId)
     {
-        if (auto descriptor = getDescriptorsMap().getDescriptorsList(serviceTypeId))
+        if (auto descriptors = getDescriptorsMap().tryGetList(serviceTypeId))
         {
-            return createAndRegister(descriptor->last());
+            return createAndRegisterMain(*descriptors);
         }
         return nullptr;
     }
 
     INLINE std::vector<const IServiceInstance *> DefaultServiceProvider::createAndRegisterAll(TypeId serviceTypeId)
     {
-        if (auto descriptors = getDescriptorsMap().getDescriptorsList(serviceTypeId))
+        if (auto descriptors = getDescriptorsMap().tryGetList(serviceTypeId))
         {
             return createAndRegisterAll(*descriptors);
         }
         return {};
     }
 
-    INLINE const IServiceInstance *DefaultServiceProvider::createAndRegister(const ServiceDescriptor &descriptor)
+    INLINE const IServiceInstance *DefaultServiceProvider::createAndRegisterMain(
+        const ServiceDescriptorList &descriptors)
     {
-        auto &lifeTime = descriptor.getLifeTime();
+        auto &lifeTime = descriptors.getLifeTime();
         if (lifeTime.isTransient())
         {
             return nullptr;
         }
-        auto instance = createInstance(descriptor);
+        auto instance = createInstance(descriptors.last());
         auto &servicesMap = lifeTime.isSingleton() ? getSingletons() : getScoped();
-        return servicesMap[descriptor.getServiceTypeId()].add(std::move(instance)).first().get();
+        auto &services = servicesMap[descriptors.getServiceTypeId()];
+        auto instancePtr = services.add(std::move(instance)).first().get();
+        if (descriptors.size() == 1)
+        {
+            services.seal();
+        }
+        return instancePtr;
     }
 
     INLINE std::vector<const IServiceInstance *> DefaultServiceProvider::createAndRegisterAll(
@@ -141,7 +148,7 @@ namespace sb::di::details
             serviceList = &container[descriptors.getServiceTypeId()].add(std::move(instance));
         }
         serviceList->reserve(descriptors.size());
-        for (auto it = ++descriptors.rBegin(); it != descriptors.rEnd(); ++it) // skip main service
+        for (auto it = ++descriptors.rBegin(); it != descriptors.rEnd(); ++it) // skip main/last service
         {
             auto instance = createInstance(*it);
             serviceList->add(std::move(instance));
@@ -163,11 +170,11 @@ namespace sb::di::details
     INLINE std::vector<IServiceInstance::Ptr> DefaultServiceProvider::createAll(
         const ServiceDescriptorList &descriptors)
     {
-        std::vector<IServiceInstance::Ptr> result;
         if (!descriptors.getLifeTime().isTransient())
         {
-            return result;
+            return {};
         }
+        std::vector<IServiceInstance::Ptr> result;
         result.reserve(descriptors.size());
         for (auto &descriptor : descriptors)
         {

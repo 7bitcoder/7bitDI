@@ -7,6 +7,7 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Exceptions.hpp"
+#include "SevenBit/DI/IServiceInstance.hpp"
 
 namespace sb::di::details::utils
 {
@@ -30,7 +31,7 @@ namespace sb::di::details::utils
     }
 
     template <class ForwardIt, class UnaryPredicate>
-    static ForwardIt removeIf(ForwardIt first, ForwardIt last, UnaryPredicate p)
+    ForwardIt removeIf(ForwardIt first, ForwardIt last, UnaryPredicate p)
     {
         first = std::find_if(first, last, p);
         if (first != last)
@@ -46,44 +47,59 @@ namespace sb::di::details::utils
         return first;
     }
 
-    template <class T> static void assertPtr(const std::unique_ptr<T> &ptr, std::string_view failMessage = "")
+    struct EXPORT Assert
     {
-        assertPtr(ptr.get(), failMessage);
-    }
-
-    template <class T> static void assertPtr(const std::shared_ptr<T> &ptr, std::string_view failMessage = "")
-    {
-        assertPtr(ptr.get(), failMessage);
-    }
-
-    template <class T> static void assertPtr(const T *ptr, std::string_view failMessage = "")
-    {
-        if (!ptr)
+        template <class T>
+        static std::unique_ptr<T> &&ptrAndGet(std::unique_ptr<T> &&ptr, std::string_view failMessage = "")
         {
-            auto message = !failMessage.empty()
-                               ? std::string{failMessage}
-                               : std::string{"Object of type: '"} + typeid(T).name() + "' cannot be null";
-            throw NullPointnerException(message);
+            Assert::ptr(ptr.get(), failMessage);
+            return std::move(ptr);
         }
-    }
 
-    template <class T>
-    static std::unique_ptr<T> assertPtrAndMove(std::unique_ptr<T> ptr, std::string_view failMessage = "")
-    {
-        assertPtr(ptr.get(), failMessage);
-        return ptr;
-    }
+        template <class T>
+        static std::shared_ptr<T> &&ptrAndGet(std::shared_ptr<T> &&ptr, std::string_view failMessage = "")
+        {
+            Assert::ptr(ptr.get(), failMessage);
+            return std::move(ptr);
+        }
 
-    template <class T>
-    static std::shared_ptr<T> assertPtrAndMove(std::shared_ptr<T> ptr, std::string_view failMessage = "")
-    {
-        assertPtr(ptr.get(), failMessage);
-        return ptr;
-    }
+        template <class T> static T *ptrAndGet(T *ptr, std::string_view failMessage = "")
+        {
+            Assert::ptr(ptr, failMessage);
+            return ptr;
+        }
 
-    template <class T> static T *assertPtrAndMove(T *ptr, std::string_view failMessage = "")
-    {
-        assertPtr(ptr, failMessage);
-        return ptr;
-    }
+        template <class T> static void ptr(const std::unique_ptr<T> &ptr, std::string_view failMessage = "")
+        {
+            Assert::ptr(ptr.get(), failMessage);
+        }
+
+        template <class T> static void ptr(const std::shared_ptr<T> &ptr, std::string_view failMessage = "")
+        {
+            Assert::ptr(ptr.get(), failMessage);
+        }
+
+        template <class T> static void ptr(const T *ptr, std::string_view failMessage = "")
+        {
+            if (!ptr)
+            {
+                auto message = !failMessage.empty()
+                                   ? std::string{failMessage}
+                                   : std::string{"Object of type: '"} + typeid(T).name() + "' cannot be null";
+                throw NullPointnerException(message);
+            }
+        }
+
+        static IServiceInstance::Ptr &&serviceAndGet(IServiceInstance::Ptr &&service);
+
+        static IServiceInstance *serviceAndGet(IServiceInstance *service);
+
+        static void service(const IServiceInstance *service);
+
+        static void service(const IServiceInstance::Ptr &service);
+    };
 } // namespace sb::di::details::utils
+
+#ifdef _7BIT_DI_ADD_IMPL
+#include "SevenBit/DI/Details/Impl/Utils.hpp"
+#endif
