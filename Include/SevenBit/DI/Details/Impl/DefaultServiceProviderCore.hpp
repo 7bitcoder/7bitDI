@@ -6,10 +6,13 @@
 
 namespace sb::di::details
 {
-    INLINE const ServiceDescriptorsMap &DefaultServiceProviderCore::getDescriptorsMap() { return _descriptorsMap; }
+    INLINE const ServiceDescriptorsMap &DefaultServiceProviderCore::getDescriptorsMap() const
+    {
+        return _descriptorsMap;
+    }
 
     INLINE ServicesMap &DefaultServiceProviderCore::getSingletons() { return _singletons; }
 
-    INLINE const ServiceProviderOptions &DefaultServiceProviderCore::getOptions() { return _options; }
+    INLINE const ServiceProviderOptions &DefaultServiceProviderCore::getOptions() const { return _options; }
 
 } // namespace sb::di::details

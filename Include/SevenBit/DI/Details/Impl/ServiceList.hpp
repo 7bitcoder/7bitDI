@@ -14,7 +14,7 @@ namespace sb::di::details
     {
     }
 
-    INLINE ServiceList &ServiceList::add(IServiceInstance::Ptr service)
+    INLINE ServiceList &ServiceList::add(IServiceInstance::Ptr &&service)
     {
         utils::Assert::service(service);
         _services.add(std::move(service));

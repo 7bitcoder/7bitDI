@@ -16,9 +16,9 @@ namespace sb::di::details
         using Ptr = std::unique_ptr<IServiceProviderCore>;
         using SPtr = std::shared_ptr<IServiceProviderCore>;
 
-        virtual const ServiceProviderOptions &getOptions() = 0;
+        virtual const ServiceProviderOptions &getOptions() const = 0;
 
-        virtual const ServiceDescriptorsMap &getDescriptorsMap() = 0;
+        virtual const ServiceDescriptorsMap &getDescriptorsMap() const = 0;
 
         virtual ServicesMap &getSingletons() = 0;
 

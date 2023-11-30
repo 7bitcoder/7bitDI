@@ -1,9 +1,10 @@
 #pragma once
 
-#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/ServicesMap.hpp"
+#include "SevenBit/DI/Details/Utils.hpp"
+#include "SevenBit/DI/Exceptions.hpp"
 
 namespace sb::di::details
 {
@@ -11,15 +12,13 @@ namespace sb::di::details
 
     INLINE ServiceList &ServicesMap::add(TypeId serviceTypeId, IServiceInstance::Ptr service)
     {
-        auto &list = _serviceListMap[serviceTypeId].add(std::move(service));
+        ServiceList &list = insert(serviceTypeId, std::move(service));
         if (_strongDestructionOrder)
         {
             _constructionOrder.push_back(&list.last());
         }
         return list;
     }
-
-    INLINE ServiceList &ServicesMap::operator[](TypeId serviceTypeId) { return _serviceListMap[serviceTypeId]; }
 
     INLINE ServiceList *ServicesMap::getList(TypeId serviceTypeId)
     {
@@ -40,6 +39,15 @@ namespace sb::di::details
         }
         _constructionOrder.clear();
         _serviceListMap.clear();
+    }
+
+    INLINE ServiceList &ServicesMap::insert(TypeId serviceTypeId, IServiceInstance::Ptr &&service)
+    {
+        if (auto it = _serviceListMap.find(serviceTypeId); it != _serviceListMap.end())
+        {
+            return it->second.add(std::move(service));
+        }
+        return _serviceListMap.emplace(serviceTypeId, std::move(service)).first->second;
     }
 
     INLINE ServicesMap::~ServicesMap() { clear(); }

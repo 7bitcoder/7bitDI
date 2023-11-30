@@ -17,7 +17,12 @@ namespace sb::di::details
         : _sharedCore(utils::Assert::ptrAndGet(std::move(core))),
           _services(_sharedCore->getOptions().strongDestructionOrder)
     {
-        if (_sharedCore->getOptions().prebuildSingletons && getSingletons().empty())
+    }
+
+    INLINE DefaultServiceProvider::DefaultServiceProvider(IServiceProviderCore::Ptr core)
+        : DefaultServiceProvider(IServiceProviderCore::SPtr{std::move(core)})
+    {
+        if (_sharedCore->getOptions().prebuildSingletons)
         {
             prebuildSingletons();
         }
@@ -25,7 +30,7 @@ namespace sb::di::details
 
     INLINE ServiceProvider::Ptr DefaultServiceProvider::createScope()
     {
-        return std::make_unique<DefaultServiceProvider>(_sharedCore);
+        return ServiceProvider::Ptr{new DefaultServiceProvider{_sharedCore}};
     }
 
     INLINE const IServiceInstance &DefaultServiceProvider::getInstance(TypeId serviceTypeId)

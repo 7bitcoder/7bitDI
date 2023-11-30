@@ -28,8 +28,10 @@ namespace sb::di::details
         ServicesMap _services;
         CircularDependencyGuard _guard;
 
-      public:
         explicit DefaultServiceProvider(IServiceProviderCore::SPtr core);
+
+      public:
+        explicit DefaultServiceProvider(IServiceProviderCore::Ptr core);
 
         DefaultServiceProvider(const DefaultServiceProvider &) = delete;
         DefaultServiceProvider(DefaultServiceProvider &&) = delete;

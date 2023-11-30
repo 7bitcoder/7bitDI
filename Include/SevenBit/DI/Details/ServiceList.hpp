@@ -33,7 +33,7 @@ namespace sb::di::details
         [[nodiscard]] auto rBegin() const { return _services.getAsList().rbegin(); }
         [[nodiscard]] auto rEnd() const { return _services.getAsList().rend(); }
 
-        ServiceList &add(IServiceInstance::Ptr service);
+        ServiceList &add(IServiceInstance::Ptr &&service);
 
         IServiceInstance::Ptr &last();
 

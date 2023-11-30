@@ -37,11 +37,11 @@ namespace sb::di::details
             _descriptorsMap.seal();
         }
 
-        const ServiceDescriptorsMap &getDescriptorsMap() override;
+        [[nodiscard]] const ServiceDescriptorsMap &getDescriptorsMap() const override;
 
         ServicesMap &getSingletons() override;
 
-        const ServiceProviderOptions &getOptions() override;
+        [[nodiscard]] const ServiceProviderOptions &getOptions() const override;
     };
 } // namespace sb::di::details
 

@@ -22,40 +22,6 @@ namespace sb::di::details
         OptimalList &operator=(const OptimalList &) = delete;
         OptimalList &operator=(OptimalList &&) = default;
 
-        T &first()
-        {
-            if (auto single = tryGetAsSingle())
-            {
-                return *single;
-            }
-            return getAsList().front();
-        }
-        const T &first() const
-        {
-            if (auto single = tryGetAsSingle())
-            {
-                return *single;
-            }
-            return getAsList().front();
-        }
-
-        T &last()
-        {
-            if (auto single = tryGetAsSingle())
-            {
-                return *single;
-            }
-            return getAsList().back();
-        }
-        const T &last() const
-        {
-            if (auto single = tryGetAsSingle())
-            {
-                return *single;
-            }
-            return getAsList().back();
-        }
-
         [[nodiscard]] bool isList() const { return std::holds_alternative<std::vector<T>>(_variant); }
 
         std::vector<T> &getAsList() { return std::get<std::vector<T>>(_variant); }
@@ -76,13 +42,19 @@ namespace sb::di::details
             getAsList().emplace_back(std::move(element));
         }
 
+        T &first() { return (*this)[0]; }
+        const T &first() const { return (*this)[0]; }
+
+        T &last() { return (*this)[size() - 1]; }
+        const T &last() const { return (*this)[size() - 1]; }
+
         T &operator[](size_t index)
         {
             if (auto single = tryGetAsSingle())
             {
                 return *single;
             }
-            return getAsList()[index];
+            return getAsList().at(index);
         }
         const T &operator[](size_t index) const
         {
@@ -90,7 +62,7 @@ namespace sb::di::details
             {
                 return *single;
             }
-            return getAsList()[index];
+            return getAsList().at(index);
         }
 
         [[nodiscard]] size_t size() const
@@ -108,6 +80,12 @@ namespace sb::di::details
         {
             tryConvertToList();
             getAsList().reserve(newCapacity);
+        }
+
+        void resize(size_t size)
+        {
+            tryConvertToList();
+            getAsList().resize(size);
         }
 
         void shrink()
