@@ -50,14 +50,28 @@ namespace sb::di::details::utils
     struct EXPORT Assert
     {
         template <class T>
-        static std::unique_ptr<T> &&ptrAndGet(std::unique_ptr<T> &&ptr, std::string_view failMessage = "")
+        static std::unique_ptr<T> ptrAndGet(std::unique_ptr<T> ptr, std::string_view failMessage = "")
         {
             Assert::ptr(ptr.get(), failMessage);
             return std::move(ptr);
         }
 
         template <class T>
-        static std::shared_ptr<T> &&ptrAndGet(std::shared_ptr<T> &&ptr, std::string_view failMessage = "")
+        static std::shared_ptr<T> ptrAndGet(std::shared_ptr<T> ptr, std::string_view failMessage = "")
+        {
+            Assert::ptr(ptr.get(), failMessage);
+            return std::move(ptr);
+        }
+
+        template <class T>
+        static std::unique_ptr<T> &&ptrAndMove(std::unique_ptr<T> &&ptr, std::string_view failMessage = "")
+        {
+            Assert::ptr(ptr.get(), failMessage);
+            return std::move(ptr);
+        }
+
+        template <class T>
+        static std::shared_ptr<T> &&ptrAndMove(std::shared_ptr<T> &&ptr, std::string_view failMessage = "")
         {
             Assert::ptr(ptr.get(), failMessage);
             return std::move(ptr);
