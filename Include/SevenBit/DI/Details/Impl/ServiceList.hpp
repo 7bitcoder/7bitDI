@@ -9,6 +9,8 @@
 
 namespace sb::di::details
 {
+    INLINE ServiceList::ServiceList(size_t size) : _services(size) {}
+
     INLINE ServiceList::ServiceList(IServiceInstance::Ptr instance)
         : _services(utils::Assert::serviceAndGet(std::move(instance)))
     {
@@ -27,15 +29,17 @@ namespace sb::di::details
 
     INLINE std::vector<const IServiceInstance *> ServiceList::getAllServices() const
     {
-        std::vector<const IServiceInstance *> result;
-
-        result.reserve(_services.size());
-        for (auto it = rBegin(); it != rEnd(); ++it)
+        if (auto list = _services.tryGetAsList())
         {
-            auto &instance = *it;
-            result.push_back(instance.get());
+            std::vector<const IServiceInstance *> result;
+            result.reserve(_services.size());
+            for (auto &instance : *list)
+            {
+                result.push_back(instance.get());
+            }
+            return result;
         }
-        return result;
+        return {_services.first().get()};
     }
 
     INLINE size_t ServiceList::size() const { return _services.size(); }

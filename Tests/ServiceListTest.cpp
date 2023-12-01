@@ -33,10 +33,8 @@ class ServiceListTest : public testing::Test
 TEST_F(ServiceListTest, ShouldAddServices)
 {
     TestClass1 test;
-    sb::di::details::ServiceList list;
-
     sb::di::IServiceInstance::Ptr instance{new sb::di::details::ExternalService{&test}};
-    list.add(std::move(instance));
+    sb::di::details::ServiceList list{std::move(instance)};
 
     sb::di::IServiceInstance::Ptr instance2{new sb::di::details::ExternalService{&test}};
     list.add(std::move(instance2));
@@ -44,30 +42,25 @@ TEST_F(ServiceListTest, ShouldAddServices)
 
 TEST_F(ServiceListTest, ShouldFailAddNullService)
 {
-    sb::di::details::ServiceList list;
-
-    sb::di::IServiceInstance::Ptr instance{nullptr};
-    auto act = [&]() { list.add(std::move(instance)); };
+    auto act = [&]() { sb::di::details::ServiceList list{nullptr}; };
 
     EXPECT_THROW((act()), sb::di::NullPointnerException);
 }
 
 TEST_F(ServiceListTest, ShouldFailAddInvalidService)
 {
-    sb::di::details::ServiceList list;
-
-    sb::di::IServiceInstance::Ptr instance{new sb::di::details::ServiceOwner<TestClass1>{nullptr}};
-    auto act = [&]() { list.add(std::move(instance)); };
+    auto act = [&]() {
+        sb::di::IServiceInstance::Ptr instance{new sb::di::details::ServiceOwner<TestClass1>{nullptr}};
+        sb::di::details::ServiceList list{std::move(instance)};
+    };
 
     EXPECT_THROW((act()), sb::di::NullPointnerException);
 }
 TEST_F(ServiceListTest, ShouldGetAllServices)
 {
-    sb::di::details::ServiceList list;
-
     TestClass1 test;
     sb::di::IServiceInstance::Ptr instance{new sb::di::details::ExternalService{&test}};
-    list.add(std::move(instance));
+    sb::di::details::ServiceList list{std::move(instance)};
 
     TestClass1 test2;
     sb::di::IServiceInstance::Ptr instance2{new sb::di::details::ExternalService{&test2}};

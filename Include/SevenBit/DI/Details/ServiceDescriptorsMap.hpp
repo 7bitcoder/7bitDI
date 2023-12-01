@@ -33,7 +33,7 @@ namespace sb::di::details
         explicit ServiceDescriptorsMap(bool checkDescriptorUniqueness);
 
         template <class TDescriptorIt>
-        ServiceDescriptorsMap(TDescriptorIt begin, TDescriptorIt end, bool checkDescriptorUniqueness)
+        ServiceDescriptorsMap(TDescriptorIt begin, TDescriptorIt end, bool checkDescriptorUniqueness = false)
             : ServiceDescriptorsMap(checkDescriptorUniqueness)
         {
             for (auto it = begin; it != end; ++it)

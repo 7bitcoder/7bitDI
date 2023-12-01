@@ -28,10 +28,10 @@ class ServiceDescriptorListTest : public testing::Test
 
 TEST_F(ServiceDescriptorListTest, ShouldAddServiceDescriptors)
 {
-    sb::di::details::ServiceDescriptorList list;
+    sb::di::details::ServiceDescriptorList list(
+        sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
     auto act = [&]() {
-        list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
         list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
         list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
     };
@@ -41,9 +41,9 @@ TEST_F(ServiceDescriptorListTest, ShouldAddServiceDescriptors)
 
 TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorLifeTimeMismatch)
 {
-    sb::di::details::ServiceDescriptorList list;
+    sb::di::details::ServiceDescriptorList list(
+        sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
-    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
     auto act = [&]() { list.add(sb::di::ServiceDescriber::describeScoped<TestInheritClass1, TestInheritClass5>()); };
@@ -53,9 +53,9 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorLifeTimeMismatch
 
 TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorBaseTypeMismatch)
 {
-    sb::di::details::ServiceDescriptorList list;
+    sb::di::details::ServiceDescriptorList list(
+        sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
-    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
     auto act = [&]() { list.add(sb::di::ServiceDescriber::describeScoped<TestInheritClass2, TestInheritClass5>()); };
@@ -63,38 +63,13 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorBaseTypeMismatch
     EXPECT_THROW((act()), sb::di::ServiceBaseTypeMissmatchException);
 }
 
-TEST_F(ServiceDescriptorListTest, ShouldContainDescriptor)
-{
-    sb::di::details::ServiceDescriptorList list;
-
-    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
-    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
-    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
-
-    EXPECT_TRUE(list.contains(typeid(TestInheritClass5)));
-    EXPECT_TRUE(list.contains(typeid(TestInheritClass4)));
-    EXPECT_TRUE(list.contains(typeid(TestInheritClass3)));
-    EXPECT_FALSE(list.contains(typeid(TestInheritClass2)));
-}
-
 TEST_F(ServiceDescriptorListTest, ShouldReturnProperSize)
 {
-    sb::di::details::ServiceDescriptorList list;
+    sb::di::details::ServiceDescriptorList list(
+        sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
-    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
 
     EXPECT_EQ(list.size(), 3);
-}
-
-TEST_F(ServiceDescriptorListTest, ShouldReturnProperEmpty)
-{
-    sb::di::details::ServiceDescriptorList list;
-
-    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
-    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
-    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
-
-    EXPECT_FALSE(list.empty());
 }

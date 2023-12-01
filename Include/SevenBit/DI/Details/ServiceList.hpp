@@ -20,6 +20,7 @@ namespace sb::di::details
 
       public:
         explicit ServiceList(IServiceInstance::Ptr instance);
+        explicit ServiceList(size_t size);
 
         ServiceList(const ServiceList &) = delete;
         ServiceList(ServiceList &&) = default;

@@ -25,7 +25,7 @@ namespace sb::di::details
 
       private:
         IServiceProviderCore::SPtr _sharedCore;
-        ServicesMap _services;
+        ServicesMap _scoped;
         CircularDependencyGuard _guard;
 
         DefaultServiceProvider(const DefaultServiceProvider &);
@@ -56,21 +56,27 @@ namespace sb::di::details
         std::vector<IServiceInstance::Ptr> createInstances(TypeId serviceTypeId) override;
 
       private:
-        const IServiceInstance *createAndRegisterMain(TypeId serviceTypeId);
+        const IServiceInstance *tryCreateAndRegisterMain(TypeId serviceTypeId);
 
         std::vector<const IServiceInstance *> createAndRegisterAll(TypeId typeId);
 
-        const IServiceInstance *createAndRegisterMain(const ServiceDescriptorList &descriptors);
+        const IServiceInstance *createAndRegisterMainFrom(const ServiceDescriptorList &descriptors);
 
-        std::vector<const IServiceInstance *> createAndRegisterAll(const ServiceDescriptorList &descriptors);
+        std::vector<const IServiceInstance *> createAndRegisterAllFrom(const ServiceDescriptorList &descriptors);
+
+        std::vector<const IServiceInstance *> registerAll(TypeId serviceTypeId, ServiceList &services);
+
+        ServiceList &fillServiceListFrom(const ServiceDescriptorList &descriptors, ServiceList &services);
 
         IServiceInstance::Ptr create(const ServiceDescriptor &descriptor);
 
         std::vector<IServiceInstance::Ptr> createAll(const ServiceDescriptorList &descriptors);
 
-        IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor);
+        IServiceInstance::Ptr createInstanceFrom(const ServiceDescriptor &descriptor);
 
         const ServiceProviderOptions &getOptions();
+
+        ServicesMap *tryGetServicesMapFor(const ServiceLifeTime &lifeTime);
 
         ServicesMap &getScoped();
 

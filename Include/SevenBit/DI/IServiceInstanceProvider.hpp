@@ -70,7 +70,7 @@ namespace sb::di
          * @code {.cpp}
          * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
          *
-         * std::unique_ptr<IServiceInstance> instance = provider->createInstance(typeid(TestClass));
+         * std::unique_ptr<IServiceInstance> instance = provider->createInstanceFrom(typeid(TestClass));
          * @endcode
          */
         virtual std::unique_ptr<IServiceInstance> createInstance(TypeId serviceTypeId) = 0;

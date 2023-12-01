@@ -32,6 +32,8 @@ namespace sb::di::details
 
         [[nodiscard]] const ServiceDescriptor &last() const;
 
+        [[nodiscard]] const ServiceDescriptor &operator[](size_t index) const;
+
         [[nodiscard]] const ServiceLifeTime &getLifeTime() const;
 
         [[nodiscard]] TypeId getServiceTypeId() const;

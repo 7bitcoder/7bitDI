@@ -10,6 +10,11 @@ namespace sb::di::details
 {
     INLINE ServicesMap::ServicesMap(bool strongDestructionOrder) : _strongDestructionOrder(strongDestructionOrder) {}
 
+    INLINE ServiceList &ServicesMap::create(TypeId serviceTypeId, size_t size)
+    {
+        return _serviceListMap.emplace(serviceTypeId, size).first->second;
+    }
+
     INLINE ServiceList &ServicesMap::add(TypeId serviceTypeId, IServiceInstance::Ptr service)
     {
         ServiceList &list = insert(serviceTypeId, std::move(service));
@@ -20,13 +25,18 @@ namespace sb::di::details
         return list;
     }
 
+    INLINE bool ServicesMap::contains(TypeId serviceTypeId) const
+    {
+        return _serviceListMap.find(serviceTypeId) != _serviceListMap.end();
+    }
+
     INLINE ServiceList *ServicesMap::getList(TypeId serviceTypeId)
     {
         auto it = _serviceListMap.find(serviceTypeId);
         return it != _serviceListMap.end() ? &it->second : nullptr;
     }
 
-    INLINE bool ServicesMap::empty() { return _serviceListMap.empty(); }
+    INLINE bool ServicesMap::empty() const { return _serviceListMap.empty(); }
 
     INLINE void ServicesMap::clear()
     {

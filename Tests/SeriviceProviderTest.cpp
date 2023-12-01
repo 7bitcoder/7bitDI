@@ -468,7 +468,7 @@ TEST_F(SeriviceProviderTest, ShouldNotTryCreateSelf)
     EXPECT_FALSE(provider->tryCreateService<sb::di::ServiceProvider>());
 }
 
-// createInstance Tests
+// createInstanceFrom Tests
 
 TEST_F(SeriviceProviderTest, ShouldCreateInstance)
 {

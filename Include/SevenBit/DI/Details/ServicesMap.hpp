@@ -24,11 +24,15 @@ namespace sb::di::details
 
         explicit ServicesMap(bool strongDestructionOrder = false);
 
+        ServiceList &create(TypeId serviceTypeId, size_t size);
+
         ServiceList &add(TypeId serviceTypeId, IServiceInstance::Ptr service);
+
+        [[nodiscard]] bool contains(TypeId serviceTypeId) const;
 
         ServiceList *getList(TypeId serviceTypeId);
 
-        bool empty();
+        [[nodiscard]] bool empty() const;
 
         void clear();
 

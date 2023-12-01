@@ -16,6 +16,11 @@ namespace sb::di::details
     {
     }
 
+    INLINE const ServiceDescriptor &ServiceDescriptorList::operator[](size_t index) const
+    {
+        return _descriptors[index];
+    }
+
     INLINE const ServiceDescriptor &ServiceDescriptorList::last() const { return _descriptors.last(); }
 
     INLINE ServiceDescriptor &ServiceDescriptorList::last() { return _descriptors.last(); }
