@@ -64,7 +64,7 @@ namespace sb::di
         /**
          * @brief Creates service instance unique pointner, might throw exception
          * @details If service was not registered or was registered as scoped/transient, method throws exception
-         * @attention It is advised to use createService<T> method istead
+         * @attention It is advised to use createInstance<T> method istead
          * @throws ServiceNotFoundException service was not found
          *
          * Example:

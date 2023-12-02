@@ -506,7 +506,7 @@ TEST_F(SeriviceProviderTest, ShouldCreateInheritedInstance)
     EXPECT_THROW(instanceProvider.createInstance(typeid(TestInheritClass4)), sb::di::ServiceNotFoundException);
 }
 
-// createService Tests
+// createInstance Tests
 
 TEST_F(SeriviceProviderTest, ShouldCreateService)
 {

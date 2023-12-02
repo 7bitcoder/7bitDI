@@ -6,7 +6,7 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "ServiceDescriptorsMap.hpp"
-#include "ServicesMap.hpp"
+#include "ServiceInstancesMap.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 
 namespace sb::di::details
@@ -20,7 +20,7 @@ namespace sb::di::details
 
         virtual const ServiceDescriptorsMap &getDescriptorsMap() const = 0;
 
-        virtual ServicesMap &getSingletons() = 0;
+        virtual ServiceInstancesMap &getSingletons() = 0;
 
         virtual ~IServiceProviderCore() = default;
     };

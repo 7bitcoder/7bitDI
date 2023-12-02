@@ -2,17 +2,20 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/ServicesMap.hpp"
+#include "SevenBit/DI/Details/ServiceInstancesMap.hpp"
 #include "SevenBit/DI/Details/Utils.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 
 namespace sb::di::details
 {
-    INLINE ServicesMap::ServicesMap(bool strongDestructionOrder) : _strongDestructionOrder(strongDestructionOrder) {}
-
-    INLINE ServiceList &ServicesMap::insert(TypeId serviceTypeId, IServiceInstance::Ptr service)
+    INLINE ServiceInstancesMap::ServiceInstancesMap(bool strongDestructionOrder)
+        : _strongDestructionOrder(strongDestructionOrder)
     {
-        ServiceList &list = add(serviceTypeId, std::move(service));
+    }
+
+    INLINE ServiceInstanceList &ServiceInstancesMap::insert(TypeId serviceTypeId, IServiceInstance::Ptr service)
+    {
+        ServiceInstanceList &list = add(serviceTypeId, std::move(service));
         if (_strongDestructionOrder)
         {
             _constructionOrder.push_back(&list.last());
@@ -20,20 +23,20 @@ namespace sb::di::details
         return list;
     }
 
-    INLINE bool ServicesMap::contains(TypeId serviceTypeId) const
+    INLINE bool ServiceInstancesMap::contains(TypeId serviceTypeId) const
     {
         return _serviceListMap.find(serviceTypeId) != _serviceListMap.end();
     }
 
-    INLINE ServiceList *ServicesMap::findServices(TypeId serviceTypeId)
+    INLINE ServiceInstanceList *ServiceInstancesMap::findServices(TypeId serviceTypeId)
     {
         auto it = _serviceListMap.find(serviceTypeId);
         return it != _serviceListMap.end() ? &it->second : nullptr;
     }
 
-    INLINE bool ServicesMap::empty() const { return _serviceListMap.empty(); }
+    INLINE bool ServiceInstancesMap::empty() const { return _serviceListMap.empty(); }
 
-    INLINE void ServicesMap::clear()
+    INLINE void ServiceInstancesMap::clear()
     {
         if (_strongDestructionOrder)
         {
@@ -46,7 +49,7 @@ namespace sb::di::details
         _serviceListMap.clear();
     }
 
-    INLINE ServiceList &ServicesMap::add(TypeId serviceTypeId, IServiceInstance::Ptr &&service)
+    INLINE ServiceInstanceList &ServiceInstancesMap::add(TypeId serviceTypeId, IServiceInstance::Ptr &&service)
     {
         if (auto it = _serviceListMap.find(serviceTypeId); it != _serviceListMap.end())
         {
@@ -55,5 +58,5 @@ namespace sb::di::details
         return _serviceListMap.emplace(serviceTypeId, std::move(service)).first->second;
     }
 
-    INLINE ServicesMap::~ServicesMap() { clear(); }
+    INLINE ServiceInstancesMap::~ServiceInstancesMap() { clear(); }
 } // namespace sb::di::details

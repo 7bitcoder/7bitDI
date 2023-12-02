@@ -16,7 +16,7 @@ Service can be registered as a singleton, scoped, or transient.
 * Transient: services are always unique, a new instance is provided every time it is requested, and the service provider returns, in this case, std::unique_ptr (accessible via createService method)
 
 .. warning::
-   Only transient services can be created using createService method otherwise the method will throw an exception 
+   Only transient services can be created using createInstance method otherwise the method will throw an exception
   
    Only singleton/scoped services can be accessed using the getService method otherwise the method will throw an exception 
 

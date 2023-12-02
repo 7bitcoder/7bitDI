@@ -8,7 +8,7 @@
 #include "SevenBit/DI/Details/ExternalServiceFcnFactory.hpp"
 #include "SevenBit/DI/Details/IServiceProviderCore.hpp"
 #include "SevenBit/DI/Details/ServiceDescriptorsMap.hpp"
-#include "SevenBit/DI/Details/ServicesMap.hpp"
+#include "SevenBit/DI/Details/ServiceInstancesMap.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 
@@ -18,7 +18,7 @@ namespace sb::di::details
     {
       private:
         ServiceDescriptorsMap _descriptorsMap;
-        ServicesMap _singletons;
+        ServiceInstancesMap _singletons;
         ServiceProviderOptions _options;
 
       public:
@@ -39,7 +39,7 @@ namespace sb::di::details
 
         [[nodiscard]] const ServiceDescriptorsMap &getDescriptorsMap() const override;
 
-        ServicesMap &getSingletons() override;
+        ServiceInstancesMap &getSingletons() override;
 
         [[nodiscard]] const ServiceProviderOptions &getOptions() const override;
     };

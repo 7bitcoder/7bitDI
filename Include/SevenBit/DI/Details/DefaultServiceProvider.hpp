@@ -9,7 +9,7 @@
 #include "SevenBit/DI/Details/CircularDependencyGuard.hpp"
 #include "SevenBit/DI/Details/IServiceProviderCore.hpp"
 #include "SevenBit/DI/Details/ServiceDescriptorList.hpp"
-#include "SevenBit/DI/Details/ServicesMap.hpp"
+#include "SevenBit/DI/Details/ServiceInstancesMap.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
@@ -26,7 +26,7 @@ namespace sb::di::details
 
       private:
         IServiceProviderCore::SPtr _sharedCore;
-        ServicesMap _scoped;
+        ServiceInstancesMap _scoped;
         CircularDependencyGuard _guard;
 
         DefaultServiceProvider(const DefaultServiceProvider &);
@@ -44,30 +44,31 @@ namespace sb::di::details
         ServiceProvider::Ptr createScope() override;
 
       protected:
-        const IServiceInstance *tryGetInstance(TypeId serviceTypeId) override;
         const IServiceInstance &getInstance(TypeId serviceTypeId) override;
+        const IServiceInstance *tryGetInstance(TypeId serviceTypeId) override;
         const OneOrList<IServiceInstance::Ptr> *tryGetInstances(TypeId serviceTypeId) override;
 
-        IServiceInstance::Ptr tryCreateInstance(TypeId serviceTypeId) override;
         IServiceInstance::Ptr createInstance(TypeId serviceTypeId) override;
+        IServiceInstance::Ptr tryCreateInstance(TypeId serviceTypeId) override;
         std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateInstances(TypeId serviceTypeId) override;
 
       private:
         const IServiceInstance *tryCreateAndRegister(const ServiceDescriptorList &descriptors);
-        const ServiceList *tryCreateAndRegisterAll(const ServiceDescriptorList &descriptors);
+        const ServiceInstanceList *tryCreateAndRegisterAll(const ServiceDescriptorList &descriptors);
 
         IServiceInstance::Ptr tryCreate(const ServiceDescriptorList &descriptors);
         std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateAll(const ServiceDescriptorList &descriptors);
 
-        ServiceList &fillServicesWithAll(const ServiceDescriptorList &descriptors, ServiceList &services);
+        ServiceInstanceList &createRestInstances(const ServiceDescriptorList &descriptors,
+                                                 ServiceInstanceList &instances);
 
         IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor);
 
-        ServicesMap *tryGetServicesMap(const ServiceLifeTime &lifeTime);
+        ServiceInstancesMap *tryGetInstancesMap(const ServiceLifeTime &lifeTime);
 
-        ServiceList *findRegisteredServices(TypeId serviceTypeId);
+        ServiceInstanceList *findRegisteredInstances(TypeId serviceTypeId);
 
-        const ServiceDescriptorList *findDescriptors(TypeId serviceTypeId) const;
+        [[nodiscard]] const ServiceDescriptorList *findDescriptors(TypeId serviceTypeId) const;
 
         const ServiceProviderOptions &getOptions();
 

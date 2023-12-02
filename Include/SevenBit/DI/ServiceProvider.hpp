@@ -137,7 +137,7 @@ namespace sb::di
          * @code {.cpp}
          * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
          *
-         * std::unique_ptr<TestClass> service = provider->createService<TestClass>();
+         * std::unique_ptr<TestClass> service = provider->createInstance<TestClass>();
          * @endcode
          */
         template <class TService> std::unique_ptr<TService> createService()

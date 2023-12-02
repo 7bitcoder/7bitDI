@@ -7,7 +7,7 @@
 #include "Classes/BasicTest.hpp"
 #include "Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/DI/Details/ExternalService.hpp"
-#include "SevenBit/DI/Details/ServicesMap.hpp"
+#include "SevenBit/DI/Details/ServiceInstancesMap.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 
@@ -29,7 +29,7 @@ class ServicesMapTest : public testing::Test
 
 TEST_F(ServicesMapTest, ShouldAdd)
 {
-    sb::di::details::ServicesMap map{false};
+    sb::di::details::ServiceInstancesMap map{false};
 
     TestClass1 test;
     sb::di::IServiceInstance::Ptr instance{new sb::di::details::ExternalService{&test}};
@@ -40,7 +40,7 @@ TEST_F(ServicesMapTest, ShouldAdd)
 
 TEST_F(ServicesMapTest, ShouldFindList)
 {
-    sb::di::details::ServicesMap map{false};
+    sb::di::details::ServiceInstancesMap map{false};
 
     TestInheritClass3 test;
     sb::di::IServiceInstance::Ptr instance{new sb::di::details::ExternalService{&test}};
@@ -63,7 +63,7 @@ TEST_F(ServicesMapTest, ShouldFindList)
 TEST_F(ServicesMapTest, ShouldDestructInProperOrder)
 {
     ServiceProviderMock mock;
-    sb::di::details::ServicesMap map{true};
+    sb::di::details::ServiceInstancesMap map{true};
 
     struct DestructionOrderCheck
     {

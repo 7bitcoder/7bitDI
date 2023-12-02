@@ -1,7 +1,7 @@
 #pragma once
 
 #include "SevenBit/DI/Details/ServiceDescriptorsMap.hpp"
-#include "SevenBit/DI/Details/ServicesMap.hpp"
+#include "SevenBit/DI/Details/ServiceInstancesMap.hpp"
 
 namespace sb::di::details
 {
@@ -9,7 +9,7 @@ namespace sb::di::details
     {
         virtual const ServiceDescriptorsMap &getDescriptorsMap() = 0;
 
-        virtual ServicesMap &getSingletons() = 0;
+        virtual ServiceInstancesMap &getSingletons() = 0;
 
         virtual ~IServiceProviderRoot() = default;
     };

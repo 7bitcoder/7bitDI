@@ -11,7 +11,7 @@ namespace sb::di::details
         return _descriptorsMap;
     }
 
-    INLINE ServicesMap &DefaultServiceProviderCore::getSingletons() { return _singletons; }
+    INLINE ServiceInstancesMap &DefaultServiceProviderCore::getSingletons() { return _singletons; }
 
     INLINE const ServiceProviderOptions &DefaultServiceProviderCore::getOptions() const { return _options; }
 

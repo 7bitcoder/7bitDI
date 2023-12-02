@@ -12,19 +12,19 @@
 
 namespace sb::di::details
 {
-    class EXPORT ServiceList : public OneOrList<IServiceInstance::Ptr>
+    class EXPORT ServiceInstanceList : public OneOrList<IServiceInstance::Ptr>
     {
       private:
         bool _sealed = false;
 
       public:
-        explicit ServiceList(IServiceInstance::Ptr instance);
-        explicit ServiceList(size_t size);
+        explicit ServiceInstanceList(IServiceInstance::Ptr instance);
+        explicit ServiceInstanceList(size_t size);
 
-        ServiceList(const ServiceList &) = delete;
-        ServiceList(ServiceList &&) = default;
+        ServiceInstanceList(const ServiceInstanceList &) = delete;
+        ServiceInstanceList(ServiceInstanceList &&) = default;
 
-        ServiceList &add(IServiceInstance::Ptr &&service);
+        ServiceInstanceList &add(IServiceInstance::Ptr &&service);
 
         void seal();
 
@@ -33,5 +33,5 @@ namespace sb::di::details
 } // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Impl/ServiceList.hpp"
+#include "SevenBit/DI/Details/Impl/ServiceInstanceList.hpp"
 #endif
