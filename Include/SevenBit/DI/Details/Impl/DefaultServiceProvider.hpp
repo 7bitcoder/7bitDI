@@ -46,28 +46,36 @@ namespace sb::di::details
 
     INLINE const IServiceInstance *DefaultServiceProvider::tryGetInstance(TypeId serviceTypeId)
     {
-        if (auto services = getSingletons().getList(serviceTypeId))
+        if (auto services = getSingletons().tryGetList(serviceTypeId))
         {
             return services->first().get();
         }
-        if (auto services = getScoped().getList(serviceTypeId))
+        if (auto services = getScoped().tryGetList(serviceTypeId))
         {
             return services->first().get();
         }
-        return tryCreateAndRegisterMain(serviceTypeId);
+        if (auto descriptors = getDescriptorsMap().tryGetList(serviceTypeId))
+        {
+            return tryCreateAndRegisterFrom(*descriptors);
+        }
+        return nullptr;
     }
 
     INLINE std::vector<const IServiceInstance *> DefaultServiceProvider::getInstances(TypeId serviceTypeId)
     {
-        if (auto services = getSingletons().getList(serviceTypeId))
+        if (auto services = getSingletons().tryGetList(serviceTypeId))
         {
             return services->isSealed() ? services->getAllServices() : registerAll(serviceTypeId, *services);
         }
-        if (auto services = getScoped().getList(serviceTypeId))
+        if (auto services = getScoped().tryGetList(serviceTypeId))
         {
             return services->isSealed() ? services->getAllServices() : registerAll(serviceTypeId, *services);
         }
-        return createAndRegisterAll(serviceTypeId);
+        if (auto descriptors = getDescriptorsMap().tryGetList(serviceTypeId))
+        {
+            return tryCreateAndRegisterAllFrom(*descriptors);
+        }
+        return {};
     }
 
     INLINE IServiceInstance::Ptr DefaultServiceProvider::createInstance(TypeId serviceTypeId)
@@ -84,7 +92,7 @@ namespace sb::di::details
     {
         if (auto descriptors = getDescriptorsMap().tryGetList(serviceTypeId))
         {
-            return create(descriptors->last());
+            return tryCreateFrom(descriptors->last());
         }
         return nullptr;
     }
@@ -93,30 +101,12 @@ namespace sb::di::details
     {
         if (auto descriptors = getDescriptorsMap().tryGetList(serviceTypeId))
         {
-            return createAll(*descriptors);
+            return tryCreateAllFrom(*descriptors);
         }
         return {};
     }
 
     INLINE void DefaultServiceProvider::clear() { _scoped.clear(); }
-
-    INLINE const IServiceInstance *DefaultServiceProvider::tryCreateAndRegisterMain(TypeId serviceTypeId)
-    {
-        if (auto descriptors = getDescriptorsMap().tryGetList(serviceTypeId))
-        {
-            return createAndRegisterMainFrom(*descriptors);
-        }
-        return nullptr;
-    }
-
-    INLINE std::vector<const IServiceInstance *> DefaultServiceProvider::createAndRegisterAll(TypeId serviceTypeId)
-    {
-        if (auto descriptors = getDescriptorsMap().tryGetList(serviceTypeId))
-        {
-            return createAndRegisterAllFrom(*descriptors);
-        }
-        return {};
-    }
 
     INLINE std::vector<const IServiceInstance *> DefaultServiceProvider::registerAll(TypeId serviceTypeId,
                                                                                      ServiceList &services)
@@ -128,7 +118,7 @@ namespace sb::di::details
         return {};
     }
 
-    INLINE const IServiceInstance *DefaultServiceProvider::createAndRegisterMainFrom(
+    INLINE const IServiceInstance *DefaultServiceProvider::tryCreateAndRegisterFrom(
         const ServiceDescriptorList &descriptors)
     {
         if (auto servicesMap = tryGetServicesMapFor(descriptors.getLifeTime()))
@@ -143,7 +133,7 @@ namespace sb::di::details
         return nullptr;
     }
 
-    INLINE std::vector<const IServiceInstance *> DefaultServiceProvider::createAndRegisterAllFrom(
+    INLINE std::vector<const IServiceInstance *> DefaultServiceProvider::tryCreateAndRegisterAllFrom(
         const ServiceDescriptorList &descriptors)
     {
         if (auto servicesMap = tryGetServicesMapFor(descriptors.getLifeTime()))
@@ -178,7 +168,7 @@ namespace sb::di::details
         return services;
     }
 
-    INLINE IServiceInstance::Ptr DefaultServiceProvider::create(const ServiceDescriptor &descriptor)
+    INLINE IServiceInstance::Ptr DefaultServiceProvider::tryCreateFrom(const ServiceDescriptor &descriptor)
     {
         if (descriptor.getLifeTime().isTransient())
         {
@@ -187,7 +177,7 @@ namespace sb::di::details
         return nullptr;
     }
 
-    INLINE std::vector<IServiceInstance::Ptr> DefaultServiceProvider::createAll(
+    INLINE std::vector<IServiceInstance::Ptr> DefaultServiceProvider::tryCreateAllFrom(
         const ServiceDescriptorList &descriptors)
     {
         std::vector<IServiceInstance::Ptr> result;
@@ -237,9 +227,9 @@ namespace sb::di::details
 
     INLINE void DefaultServiceProvider::prebuildSingletons()
     {
-        for (auto &[serviceType, list] : getDescriptorsMap())
+        for (auto &[serviceType, descriptors] : getDescriptorsMap())
         {
-            if (list.getLifeTime().isSingleton())
+            if (descriptors.getLifeTime().isSingleton())
             {
                 getInstances(serviceType);
             }

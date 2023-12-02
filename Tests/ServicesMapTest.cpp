@@ -50,7 +50,7 @@ TEST_F(ServicesMapTest, ShouldFindList)
     sb::di::IServiceInstance::Ptr instance2{new sb::di::details::ExternalService{&test2}};
     map.add(typeid(TestInheritClass1), std::move(instance2));
 
-    auto list = map.getList(typeid(TestInheritClass1));
+    auto list = map.tryGetList(typeid(TestInheritClass1));
     EXPECT_TRUE(list);
     EXPECT_TRUE(list->first()->isValid());
     EXPECT_EQ(list->first()->get(), &test);

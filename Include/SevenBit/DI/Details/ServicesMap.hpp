@@ -30,7 +30,7 @@ namespace sb::di::details
 
         [[nodiscard]] bool contains(TypeId serviceTypeId) const;
 
-        ServiceList *getList(TypeId serviceTypeId);
+        ServiceList *tryGetList(TypeId serviceTypeId);
 
         [[nodiscard]] bool empty() const;
 

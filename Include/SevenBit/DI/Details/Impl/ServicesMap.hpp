@@ -30,7 +30,7 @@ namespace sb::di::details
         return _serviceListMap.find(serviceTypeId) != _serviceListMap.end();
     }
 
-    INLINE ServiceList *ServicesMap::getList(TypeId serviceTypeId)
+    INLINE ServiceList *ServicesMap::tryGetList(TypeId serviceTypeId)
     {
         auto it = _serviceListMap.find(serviceTypeId);
         return it != _serviceListMap.end() ? &it->second : nullptr;
