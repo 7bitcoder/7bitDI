@@ -28,7 +28,7 @@ namespace sb::di::details
 
     INLINE void ServiceDescriptorsMap::seal() { _registeredServices.clear(); }
 
-    INLINE const ServiceDescriptorList *ServiceDescriptorsMap::tryGetList(TypeId typeId) const
+    INLINE const ServiceDescriptorList *ServiceDescriptorsMap::findDescriptors(TypeId typeId) const
     {
         if (auto it = _serviceCreatorsMap.find(typeId); it != end())
         {

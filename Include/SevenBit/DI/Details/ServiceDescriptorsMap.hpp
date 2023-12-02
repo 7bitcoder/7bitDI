@@ -52,7 +52,7 @@ namespace sb::di::details
 
         void seal();
 
-        [[nodiscard]] const ServiceDescriptorList *tryGetList(TypeId typeId) const;
+        [[nodiscard]] const ServiceDescriptorList *findDescriptors(TypeId typeId) const;
 
       private:
         void addDescriptor(ServiceDescriptor &&descriptor);

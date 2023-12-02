@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <vector>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
@@ -33,7 +34,7 @@ namespace sb::di::details
       public:
         explicit DefaultServiceProvider(IServiceProviderCore::Ptr core);
 
-        DefaultServiceProvider(DefaultServiceProvider &&) = default;
+        DefaultServiceProvider(DefaultServiceProvider &&) noexcept = default;
 
         DefaultServiceProvider &operator=(const DefaultServiceProvider &) = delete;
         DefaultServiceProvider &operator=(DefaultServiceProvider &&) = default;
@@ -43,38 +44,32 @@ namespace sb::di::details
         ServiceProvider::Ptr createScope() override;
 
       protected:
-        const IServiceInstance &getInstance(TypeId serviceTypeId) override;
-
         const IServiceInstance *tryGetInstance(TypeId serviceTypeId) override;
+        const IServiceInstance &getInstance(TypeId serviceTypeId) override;
+        const OneOrList<IServiceInstance::Ptr> *tryGetInstances(TypeId serviceTypeId) override;
 
         IServiceInstance::Ptr tryCreateInstance(TypeId serviceTypeId) override;
-
-        std::vector<const IServiceInstance *> getInstances(TypeId serviceTypeId) override;
-
         IServiceInstance::Ptr createInstance(TypeId serviceTypeId) override;
-
-        std::vector<IServiceInstance::Ptr> createInstances(TypeId serviceTypeId) override;
+        std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateInstances(TypeId serviceTypeId) override;
 
       private:
-        const IServiceInstance *tryCreateAndRegisterFrom(const ServiceDescriptorList &descriptors);
+        const IServiceInstance *tryCreateAndRegister(const ServiceDescriptorList &descriptors);
+        const ServiceList *tryCreateAndRegisterAll(const ServiceDescriptorList &descriptors);
 
-        std::vector<const IServiceInstance *> tryCreateAndRegisterAllFrom(const ServiceDescriptorList &descriptors);
+        IServiceInstance::Ptr tryCreate(const ServiceDescriptorList &descriptors);
+        std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateAll(const ServiceDescriptorList &descriptors);
 
-        IServiceInstance::Ptr tryCreateFrom(const ServiceDescriptor &descriptor);
+        ServiceList &fillServicesWithAll(const ServiceDescriptorList &descriptors, ServiceList &services);
 
-        std::vector<IServiceInstance::Ptr> tryCreateAllFrom(const ServiceDescriptorList &descriptors);
+        IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor);
 
-        IServiceInstance::Ptr createInstanceFrom(const ServiceDescriptor &descriptor);
+        ServicesMap *tryGetServicesMap(const ServiceLifeTime &lifeTime);
+
+        ServiceList *findRegisteredServices(TypeId serviceTypeId);
+
+        const ServiceDescriptorList *findDescriptors(TypeId serviceTypeId) const;
 
         const ServiceProviderOptions &getOptions();
-
-        ServicesMap *tryGetServicesMapFor(const ServiceLifeTime &lifeTime);
-
-        ServicesMap &getScoped();
-
-        ServicesMap &getSingletons();
-
-        const ServiceDescriptorsMap &getDescriptorsMap();
 
         void prebuildSingletons();
     };

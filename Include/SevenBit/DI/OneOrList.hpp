@@ -5,22 +5,26 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-namespace sb::di::details
+namespace sb::di
 {
-    template <class T> class EXPORT OptimalList
+    template <class T> class OneOrList
     {
       private:
-        std::variant<T, std::vector<T>> _variant;
+        std::variant<std::vector<T>, T> _variant;
 
       public:
-        explicit OptimalList(size_t size) : _variant(std::vector<T>{}) { reserve(size); }
-        explicit OptimalList(T &&mainElement) : _variant(std::move(mainElement)) {}
+        explicit OneOrList(size_t size) : _variant(std::vector<T>{}) { reserve(size); }
+        explicit OneOrList(T &&mainElement) : _variant(std::move(mainElement)) {}
 
-        OptimalList(const OptimalList &) = delete;
-        OptimalList(OptimalList &&) = default;
+        OneOrList(const OneOrList &) = delete;
+        inline OneOrList(OneOrList &&other) noexcept : _variant(std::move(other._variant)) {}
 
-        OptimalList &operator=(const OptimalList &) = delete;
-        OptimalList &operator=(OptimalList &&) = default;
+        OneOrList &operator=(const OneOrList &) = delete;
+        OneOrList &operator=(OneOrList &&other) noexcept
+        {
+            _variant = std::move(other._variant);
+            return *this;
+        }
 
         [[nodiscard]] bool isList() const { return std::holds_alternative<std::vector<T>>(_variant); }
 
@@ -42,36 +46,43 @@ namespace sb::di::details
             getAsList().emplace_back(std::move(element));
         }
 
-        T &first() { return (*this)[0]; }
-        const T &first() const { return (*this)[0]; }
+        T &first()
+        {
+            auto single = tryGetAsSingle();
+            return single ? *single : getAsList().front();
+        }
+        const T &first() const
+        {
+            auto single = tryGetAsSingle();
+            return single ? *single : getAsList().front();
+        }
 
-        T &last() { return (*this)[size() - 1]; }
-        const T &last() const { return (*this)[size() - 1]; }
+        T &last()
+        {
+            auto single = tryGetAsSingle();
+            return single ? *single : getAsList().back();
+        }
+        const T &last() const
+        {
+            auto single = tryGetAsSingle();
+            return single ? *single : getAsList().back();
+        }
 
         T &operator[](size_t index)
         {
-            if (auto single = tryGetAsSingle())
-            {
-                return *single;
-            }
-            return getAsList().at(index);
+            auto single = tryGetAsSingle();
+            return single ? *single : getAsList().at(index);
         }
         const T &operator[](size_t index) const
         {
-            if (auto single = tryGetAsSingle())
-            {
-                return *single;
-            }
-            return getAsList().at(index);
+            auto single = tryGetAsSingle();
+            return single ? *single : getAsList().at(index);
         }
 
         [[nodiscard]] size_t size() const
         {
-            if (auto list = tryGetAsList())
-            {
-                return list->size();
-            }
-            return 1;
+            auto list = tryGetAsList();
+            return list ? list->size() : 1;
         }
 
         [[nodiscard]] bool empty() const { return !size(); }
@@ -82,12 +93,6 @@ namespace sb::di::details
             getAsList().reserve(newCapacity);
         }
 
-        void resize(size_t size)
-        {
-            tryConvertToList();
-            getAsList().resize(size);
-        }
-
         void shrink()
         {
             if (auto list = tryGetAsList())
@@ -95,6 +100,8 @@ namespace sb::di::details
                 list->shrink_to_fit();
             }
         }
+
+        inline ~OneOrList(){};
 
       private:
         void tryConvertToList()
@@ -108,4 +115,4 @@ namespace sb::di::details
         }
     };
 
-} // namespace sb::di::details
+} // namespace sb::di

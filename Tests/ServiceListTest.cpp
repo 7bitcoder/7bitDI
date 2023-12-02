@@ -54,21 +54,5 @@ TEST_F(ServiceListTest, ShouldFailAddInvalidService)
         sb::di::details::ServiceList list{std::move(instance)};
     };
 
-    EXPECT_THROW((act()), sb::di::NullPointnerException);
-}
-TEST_F(ServiceListTest, ShouldGetAllServices)
-{
-    TestClass1 test;
-    sb::di::IServiceInstance::Ptr instance{new sb::di::details::ExternalService{&test}};
-    sb::di::details::ServiceList list{std::move(instance)};
-
-    TestClass1 test2;
-    sb::di::IServiceInstance::Ptr instance2{new sb::di::details::ExternalService{&test2}};
-    list.add(std::move(instance2));
-
-    auto services = list.getAllServices();
-
-    EXPECT_EQ(services.size(), 2);
-    EXPECT_EQ(services[0]->get(), &test2);
-    EXPECT_EQ(services[1]->get(), &test);
+    EXPECT_THROW((act()), sb::di::InvalidServiceException);
 }

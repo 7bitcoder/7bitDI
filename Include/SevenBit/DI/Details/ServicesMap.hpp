@@ -24,13 +24,17 @@ namespace sb::di::details
 
         explicit ServicesMap(bool strongDestructionOrder = false);
 
-        ServiceList &create(TypeId serviceTypeId, size_t size);
+        ServicesMap(const ServicesMap &) = delete;
+        ServicesMap(ServicesMap &&) noexcept = default;
 
-        ServiceList &add(TypeId serviceTypeId, IServiceInstance::Ptr service);
+        ServicesMap &operator=(const ServicesMap &) = delete;
+        ServicesMap &operator=(ServicesMap &&) = default;
+
+        ServiceList &insert(TypeId serviceTypeId, IServiceInstance::Ptr service);
 
         [[nodiscard]] bool contains(TypeId serviceTypeId) const;
 
-        ServiceList *tryGetList(TypeId serviceTypeId);
+        ServiceList *findServices(TypeId serviceTypeId);
 
         [[nodiscard]] bool empty() const;
 
@@ -39,7 +43,7 @@ namespace sb::di::details
         ~ServicesMap();
 
       private:
-        ServiceList &insert(TypeId serviceTypeId, IServiceInstance::Ptr &&service);
+        ServiceList &add(TypeId serviceTypeId, IServiceInstance::Ptr &&service);
     };
 
 } // namespace sb::di::details

@@ -104,7 +104,9 @@ namespace sb::di::details::utils
             }
         }
 
-        static IServiceInstance::Ptr &&serviceAndGet(IServiceInstance::Ptr &&service);
+        static IServiceInstance::Ptr &&serviceAndMove(IServiceInstance::Ptr &&service);
+
+        static IServiceInstance::Ptr serviceAndGet(IServiceInstance::Ptr service);
 
         static IServiceInstance *serviceAndGet(IServiceInstance *service);
 

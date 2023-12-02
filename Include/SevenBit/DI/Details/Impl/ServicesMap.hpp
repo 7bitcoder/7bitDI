@@ -10,14 +10,9 @@ namespace sb::di::details
 {
     INLINE ServicesMap::ServicesMap(bool strongDestructionOrder) : _strongDestructionOrder(strongDestructionOrder) {}
 
-    INLINE ServiceList &ServicesMap::create(TypeId serviceTypeId, size_t size)
+    INLINE ServiceList &ServicesMap::insert(TypeId serviceTypeId, IServiceInstance::Ptr service)
     {
-        return _serviceListMap.emplace(serviceTypeId, size).first->second;
-    }
-
-    INLINE ServiceList &ServicesMap::add(TypeId serviceTypeId, IServiceInstance::Ptr service)
-    {
-        ServiceList &list = insert(serviceTypeId, std::move(service));
+        ServiceList &list = add(serviceTypeId, std::move(service));
         if (_strongDestructionOrder)
         {
             _constructionOrder.push_back(&list.last());
@@ -30,7 +25,7 @@ namespace sb::di::details
         return _serviceListMap.find(serviceTypeId) != _serviceListMap.end();
     }
 
-    INLINE ServiceList *ServicesMap::tryGetList(TypeId serviceTypeId)
+    INLINE ServiceList *ServicesMap::findServices(TypeId serviceTypeId)
     {
         auto it = _serviceListMap.find(serviceTypeId);
         return it != _serviceListMap.end() ? &it->second : nullptr;
@@ -51,7 +46,7 @@ namespace sb::di::details
         _serviceListMap.clear();
     }
 
-    INLINE ServiceList &ServicesMap::insert(TypeId serviceTypeId, IServiceInstance::Ptr &&service)
+    INLINE ServiceList &ServicesMap::add(TypeId serviceTypeId, IServiceInstance::Ptr &&service)
     {
         if (auto it = _serviceListMap.find(serviceTypeId); it != _serviceListMap.end())
         {

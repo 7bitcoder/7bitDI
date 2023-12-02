@@ -12,35 +12,24 @@ namespace sb::di::details
 {
 
     INLINE ServiceDescriptorList::ServiceDescriptorList(ServiceDescriptor &&descriptor)
-        : _descriptors(std::move(descriptor))
+        : OneOrList<ServiceDescriptor>(std::move(descriptor))
     {
     }
-
-    INLINE const ServiceDescriptor &ServiceDescriptorList::operator[](size_t index) const
-    {
-        return _descriptors[index];
-    }
-
-    INLINE const ServiceDescriptor &ServiceDescriptorList::last() const { return _descriptors.last(); }
-
-    INLINE ServiceDescriptor &ServiceDescriptorList::last() { return _descriptors.last(); }
-
-    INLINE const ServiceLifeTime &ServiceDescriptorList::getLifeTime() const { return last().getLifeTime(); }
-
-    INLINE TypeId ServiceDescriptorList::getServiceTypeId() const { return last().getServiceTypeId(); }
 
     INLINE void ServiceDescriptorList::add(ServiceDescriptor &&descriptor)
     {
         checkBaseType(descriptor);
         checkLifeTime(descriptor);
-        _descriptors.add(std::move(descriptor));
+        OneOrList<ServiceDescriptor>::add(std::move(descriptor));
     }
 
-    INLINE size_t ServiceDescriptorList::size() const { return _descriptors.size(); }
+    INLINE const ServiceLifeTime &ServiceDescriptorList::getLifeTime() const { return first().getLifeTime(); }
+
+    INLINE TypeId ServiceDescriptorList::getServiceTypeId() const { return first().getServiceTypeId(); }
 
     INLINE void ServiceDescriptorList::checkBaseType(ServiceDescriptor &descriptor) const
     {
-        if (!_descriptors.empty() && descriptor.getServiceTypeId() != getServiceTypeId())
+        if (!empty() && descriptor.getServiceTypeId() != getServiceTypeId())
         {
             throw ServiceBaseTypeMissmatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
         }
@@ -48,12 +37,12 @@ namespace sb::di::details
 
     INLINE void ServiceDescriptorList::checkLifeTime(ServiceDescriptor &descriptor) const
     {
-        if (!_descriptors.empty() && descriptor.getLifeTime() != getLifeTime())
+        if (!empty() && descriptor.getLifeTime() != getLifeTime())
         {
             throw ServiceLifeTimeMissmatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
         }
     }
 
-    INLINE void ServiceDescriptorList::seal() { _descriptors.shrink(); }
+    INLINE void ServiceDescriptorList::seal() { shrink(); }
 
 } // namespace sb::di::details

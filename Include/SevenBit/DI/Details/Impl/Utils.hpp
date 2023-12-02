@@ -7,7 +7,13 @@
 
 namespace sb::di::details::utils
 {
-    INLINE IServiceInstance::Ptr &&Assert::serviceAndGet(IServiceInstance::Ptr &&service)
+    INLINE IServiceInstance::Ptr &&Assert::serviceAndMove(IServiceInstance::Ptr &&service)
+    {
+        Assert::service(service.get());
+        return std::move(service);
+    }
+
+    INLINE IServiceInstance::Ptr Assert::serviceAndGet(IServiceInstance::Ptr service)
     {
         Assert::service(service.get());
         return std::move(service);

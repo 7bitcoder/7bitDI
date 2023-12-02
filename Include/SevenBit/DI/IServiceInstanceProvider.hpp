@@ -1,11 +1,13 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <vector>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/IServiceInstance.hpp"
+#include "SevenBit/DI/OneOrList.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di
@@ -47,8 +49,7 @@ namespace sb::di
          * @brief Returns service instances
          * @details If service was not registered or was registered as transient, method returns empty vector
          * @attention It is advised to use getServices<T> method istead
-         *
-         * Example:
+         * @example
          * @code {.cpp}
          * auto provider = ServiceCollection{}
          *              .addScoped<ITestClass, TestClass1>()
@@ -58,7 +59,7 @@ namespace sb::di
          * std::vector<const IServiceInstance *> instances = provider->getInstances(typeid(ITestClass));
          * @endcode
          */
-        virtual std::vector<const IServiceInstance *> getInstances(TypeId serviceTypeId) = 0;
+        virtual const OneOrList<IServiceInstance::Ptr> *tryGetInstances(TypeId serviceTypeId) = 0;
 
         /**
          * @brief Creates service instance unique pointner, might throw exception
@@ -70,10 +71,10 @@ namespace sb::di
          * @code {.cpp}
          * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
          *
-         * std::unique_ptr<IServiceInstance> instance = provider->createInstanceFrom(typeid(TestClass));
+         * std::unique_ptr<IServiceInstance> instance = provider->createInstance(typeid(TestClass));
          * @endcode
          */
-        virtual std::unique_ptr<IServiceInstance> createInstance(TypeId serviceTypeId) = 0;
+        virtual IServiceInstance::Ptr createInstance(TypeId serviceTypeId) = 0;
 
         /**
          * @brief Creates service instance unique pointner, might be null
@@ -87,7 +88,7 @@ namespace sb::di
          * std::unique_ptr<IServiceInstance> instance = provider->tryCreateInstance(typeid(TestClass));
          * @endcode
          */
-        virtual std::unique_ptr<IServiceInstance> tryCreateInstance(TypeId serviceTypeId) = 0;
+        virtual IServiceInstance::Ptr tryCreateInstance(TypeId serviceTypeId) = 0;
 
         /**
          * @brief Creates service instances
@@ -104,7 +105,7 @@ namespace sb::di
          * std::vector<std::unique_ptr<IServiceInstance>> instances = provider->createInstances(typeid(ITestClass));
          * @endcode
          */
-        virtual std::vector<std::unique_ptr<IServiceInstance>> createInstances(TypeId serviceTypeId) = 0;
+        virtual std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateInstances(TypeId serviceTypeId) = 0;
 
         virtual ~IServiceInstanceProvider() = default;
     };

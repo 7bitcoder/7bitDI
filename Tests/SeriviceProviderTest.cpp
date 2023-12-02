@@ -33,7 +33,9 @@ TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToAlreadyRegisteredService)
     collection.addSingleton<TestClass1>();
     collection.addSingleton<TestClass2>();
 
-    EXPECT_THROW((collection.buildServiceProvider()), sb::di::ServiceAlreadyRegisteredException);
+    sb::di::ServiceProviderOptions options;
+    options.checkServiceGlobalUniqueness = true;
+    EXPECT_THROW((collection.buildServiceProvider(options)), sb::di::ServiceAlreadyRegisteredException);
 }
 
 TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToAlreadyRegisteredInheritedService)
@@ -44,7 +46,9 @@ TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToAlreadyRegisteredInherited
     collection.addSingleton<TestInheritClass1, TestInheritClass2>();
     collection.addSingleton<TestInheritClass1, TestInheritClass4>();
 
-    EXPECT_THROW((collection.buildServiceProvider()), sb::di::ServiceAlreadyRegisteredException);
+    sb::di::ServiceProviderOptions options;
+    options.checkServiceGlobalUniqueness = true;
+    EXPECT_THROW((collection.buildServiceProvider(options)), sb::di::ServiceAlreadyRegisteredException);
 }
 
 TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToLifetimeMissmatchInheritedService)
@@ -281,10 +285,10 @@ TEST_F(SeriviceProviderTest, ShouldGetInstances)
                         .buildServiceProvider();
 
     auto &instanceProvider = provider->asInstanceProvider();
-    EXPECT_EQ(instanceProvider.getInstances(typeid(TestClass1)).size(), 1);
-    EXPECT_EQ(instanceProvider.getInstances(typeid(TestClass2)).size(), 1);
-    EXPECT_TRUE(instanceProvider.getInstances(typeid(TestClass3)).empty());
-    EXPECT_TRUE(instanceProvider.getInstances(typeid(TestClass4)).empty());
+    EXPECT_EQ(instanceProvider.tryGetInstances(typeid(TestClass1))->size(), 1);
+    EXPECT_EQ(instanceProvider.tryGetInstances(typeid(TestClass2))->size(), 1);
+    EXPECT_FALSE(instanceProvider.tryGetInstances(typeid(TestClass3)));
+    EXPECT_FALSE(instanceProvider.tryGetInstances(typeid(TestClass4)));
 }
 
 TEST_F(SeriviceProviderTest, ShouldGetInstancesInOrder)
@@ -297,7 +301,7 @@ TEST_F(SeriviceProviderTest, ShouldGetInstancesInOrder)
                         .addScoped<TestInheritClass1, TestInheritClass5>()
                         .buildServiceProvider();
 
-    auto services = provider->asInstanceProvider().getInstances(typeid(TestInheritClass1));
+    auto &services = *provider->asInstanceProvider().tryGetInstances(typeid(TestInheritClass1));
     EXPECT_EQ(services.size(), 5);
     EXPECT_EQ(static_cast<TestInheritClass1 *>(services[0]->get())->number(), 1);
     EXPECT_EQ(static_cast<TestInheritClass1 *>(services[1]->get())->number(), 2);
@@ -468,7 +472,7 @@ TEST_F(SeriviceProviderTest, ShouldNotTryCreateSelf)
     EXPECT_FALSE(provider->tryCreateService<sb::di::ServiceProvider>());
 }
 
-// createInstanceFrom Tests
+// createInstance Tests
 
 TEST_F(SeriviceProviderTest, ShouldCreateInstance)
 {
@@ -560,10 +564,10 @@ TEST_F(SeriviceProviderTest, ShouldCreateInstances)
                         .buildServiceProvider();
 
     auto &instanceProvider = provider->asInstanceProvider();
-    EXPECT_TRUE(instanceProvider.createInstances(typeid(TestClass1)).empty());
-    EXPECT_TRUE(instanceProvider.createInstances(typeid(TestClass2)).empty());
-    EXPECT_EQ(instanceProvider.createInstances(typeid(TestClass3)).size(), 1);
-    EXPECT_TRUE(instanceProvider.createInstances(typeid(TestClass4)).empty());
+    EXPECT_FALSE(instanceProvider.tryCreateInstances(typeid(TestClass1)));
+    EXPECT_FALSE(instanceProvider.tryCreateInstances(typeid(TestClass2)));
+    EXPECT_EQ(instanceProvider.tryCreateInstances(typeid(TestClass3))->size(), 1);
+    EXPECT_FALSE(instanceProvider.tryCreateInstances(typeid(TestClass4)));
 }
 
 TEST_F(SeriviceProviderTest, ShouldCreateInstancesInOrder)
@@ -576,7 +580,7 @@ TEST_F(SeriviceProviderTest, ShouldCreateInstancesInOrder)
                         .addTransient<TestInheritClass1, TestInheritClass5>()
                         .buildServiceProvider();
 
-    auto services = provider->asInstanceProvider().createInstances(typeid(TestInheritClass1));
+    auto services = *provider->asInstanceProvider().tryCreateInstances(typeid(TestInheritClass1));
     EXPECT_EQ(services.size(), 5);
     EXPECT_EQ(static_cast<TestInheritClass1 *>(services[0]->get())->number(), 1);
     EXPECT_EQ(static_cast<TestInheritClass1 *>(services[1]->get())->number(), 2);

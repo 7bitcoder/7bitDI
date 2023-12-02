@@ -89,11 +89,17 @@ namespace sb::di
          */
         template <class TService> std::vector<TService *> getServices()
         {
-            auto instances = getInstances(typeid(TService));
-            std::vector<TService *> result;
-            result.reserve(instances.size());
-            for (auto instance : instances)
+            auto instances = tryGetInstances(typeid(TService));
+            if (!instances)
             {
+                return {};
+            }
+            std::vector<TService *> result;
+            auto size = instances->size();
+            result.reserve(size);
+            for (auto i = 0; i < size; ++i)
+            {
+                auto &instance = (*instances)[i];
                 if (instance && instance->isValid())
                 {
                     result.emplace_back(instance->getAs<TService>());
@@ -159,11 +165,17 @@ namespace sb::di
          */
         template <class TService> std::vector<std::unique_ptr<TService>> createServices()
         {
-            auto instances = createInstances(typeid(TService));
-            std::vector<std::unique_ptr<TService>> result;
-            result.reserve(instances.size());
-            for (auto &instance : instances)
+            auto instances = tryCreateInstances(typeid(TService));
+            if (!instances)
             {
+                return {};
+            }
+            std::vector<std::unique_ptr<TService>> result;
+            auto size = instances->size();
+            result.reserve(size);
+            for (auto i = 0; i < size; ++i)
+            {
+                auto &instance = (*instances)[i];
                 if (instance && instance->isValid())
                 {
                     result.emplace_back(instance->moveOutAs<TService>());

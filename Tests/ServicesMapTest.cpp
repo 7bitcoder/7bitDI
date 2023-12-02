@@ -33,7 +33,7 @@ TEST_F(ServicesMapTest, ShouldAdd)
 
     TestClass1 test;
     sb::di::IServiceInstance::Ptr instance{new sb::di::details::ExternalService{&test}};
-    auto act = [&]() { map.add(typeid(TestClass1), std::move(instance)); };
+    auto act = [&]() { map.insert(typeid(TestClass1), std::move(instance)); };
 
     EXPECT_NO_THROW((act()));
 }
@@ -44,13 +44,13 @@ TEST_F(ServicesMapTest, ShouldFindList)
 
     TestInheritClass3 test;
     sb::di::IServiceInstance::Ptr instance{new sb::di::details::ExternalService{&test}};
-    map.add(typeid(TestInheritClass1), std::move(instance));
+    map.insert(typeid(TestInheritClass1), std::move(instance));
 
     TestInheritClass2 test2;
     sb::di::IServiceInstance::Ptr instance2{new sb::di::details::ExternalService{&test2}};
-    map.add(typeid(TestInheritClass1), std::move(instance2));
+    map.insert(typeid(TestInheritClass1), std::move(instance2));
 
-    auto list = map.tryGetList(typeid(TestInheritClass1));
+    auto list = map.findServices(typeid(TestInheritClass1));
     EXPECT_TRUE(list);
     EXPECT_TRUE(list->first()->isValid());
     EXPECT_EQ(list->first()->get(), &test);
@@ -81,22 +81,22 @@ TEST_F(ServicesMapTest, ShouldDestructInProperOrder)
     auto describer = sb::di::ServiceDescriber::describeSingletonFrom<TestInheritDestrClass1>([&]() {
         return std::make_unique<TestInheritDestrClass5<DestructionOrderCheck>>(DestructionOrderCheck{cnt, 4});
     });
-    map.add(describer.getServiceTypeId(), describer.getImplementationFactory().createInstance(mock));
+    map.insert(describer.getServiceTypeId(), describer.getImplementationFactory().createInstance(mock));
 
     auto describer2 = sb::di::ServiceDescriber::describeSingletonFrom<TestInheritDestrClass2>([&]() {
         return std::make_unique<TestInheritDestrClass5<DestructionOrderCheck>>(DestructionOrderCheck{cnt, 3});
     });
-    map.add(describer2.getServiceTypeId(), describer2.getImplementationFactory().createInstance(mock));
+    map.insert(describer2.getServiceTypeId(), describer2.getImplementationFactory().createInstance(mock));
 
     auto describer3 = sb::di::ServiceDescriber::describeSingletonFrom<TestInheritDestrClass3>([&]() {
         return std::make_unique<TestInheritDestrClass5<DestructionOrderCheck>>(DestructionOrderCheck{cnt, 2});
     });
-    map.add(describer3.getServiceTypeId(), describer3.getImplementationFactory().createInstance(mock));
+    map.insert(describer3.getServiceTypeId(), describer3.getImplementationFactory().createInstance(mock));
 
     auto describer4 = sb::di::ServiceDescriber::describeSingletonFrom<TestInheritDestrClass4>([&]() {
         return std::make_unique<TestInheritDestrClass5<DestructionOrderCheck>>(DestructionOrderCheck{cnt, 1});
     });
-    map.add(describer4.getServiceTypeId(), describer4.getImplementationFactory().createInstance(mock));
+    map.insert(describer4.getServiceTypeId(), describer4.getImplementationFactory().createInstance(mock));
 
     map.clear();
 }
