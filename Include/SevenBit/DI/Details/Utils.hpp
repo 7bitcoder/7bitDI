@@ -23,11 +23,23 @@ namespace sb::di::details::utils
         using Type = T;
     };
 
-    template <class T> bool IsUniquePtrV = IsUniquePtr<T>::value;
-
-    template <class TService, class TImplementation> static void inheritCheck()
+    template <class T>
+    struct IsInPlaceObject
+        : std::integral_constant<bool, (std::is_arithmetic_v<T> || std::is_array_v<T> || std::is_enum_v<T> ||
+                                        std::is_class_v<T>)&&!std::is_pointer_v<T> &&
+                                           !std::is_reference_v<T>>
     {
-        static_assert(std::is_base_of_v<TService, TImplementation>, "Type TImplementation must inherit from TService");
+    };
+
+    template <class TImplementation> void inPlaceCheck()
+    {
+        static_assert(IsInPlaceObject<TImplementation>::value, "Type TImplementation must inherit from TService");
+    }
+
+    template <class TService, class TImplementation> void inheritCheck()
+    {
+        static_assert(std::is_same_v<TService, TImplementation> || std::is_base_of_v<TService, TImplementation>,
+                      "Type TImplementation must inherit from TService");
     }
 
     template <class ForwardIt, class UnaryPredicate>

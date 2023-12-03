@@ -33,6 +33,15 @@ namespace sb::di::details
 
         IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, bool inPlace) const override
         {
+            if constexpr (FactoryWrapper::IsInPlaceObject::value && !FactoryWrapper::IsUniquePtr::value)
+            {
+                if (inPlace)
+                {
+                    return std::make_unique<ServiceOwner<ServiceType>>(_wrapper.invoke(serviceProvider));
+                }
+                auto service = std::make_unique<ServiceType>(_wrapper.invoke(serviceProvider));
+                return std::make_unique<ServiceUniquePtrOwner<ServiceType>>(std::move(service));
+            }
             return std::make_unique<ServiceUniquePtrOwner<ServiceType>>(_wrapper.invoke(serviceProvider));
         }
     };

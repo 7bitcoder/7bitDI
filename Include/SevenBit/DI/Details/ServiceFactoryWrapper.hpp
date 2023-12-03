@@ -13,17 +13,18 @@ namespace sb::di::details
 {
     template <class R, class F, class... Args> struct ServiceFactoryInvoker
     {
-      private:
+      public:
         using IsUniquePtr = utils::IsUniquePtr<R>;
+        using IsInPlaceObject = utils::IsInPlaceObject<R>;
+        using IsMovable = std::is_move_constructible<R>;
         mutable F _factory;
 
-      public:
         using TService = typename IsUniquePtr::Type;
 
         ServiceFactoryInvoker(F &&factory) : _factory(std::move(factory))
         {
-            static_assert(IsUniquePtr::value || notSupportedType<F>,
-                          "Factory return type must be std::unique_ptr<TService>");
+            static_assert(IsUniquePtr::value || (IsInPlaceObject::value && IsMovable::value) || notSupportedType<F>,
+                          "Factory return type must be std::unique_ptr<TService> or movable object");
         }
 
         R invoke(sb::di::ServiceProvider &provider) const
