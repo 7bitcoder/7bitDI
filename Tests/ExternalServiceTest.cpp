@@ -48,5 +48,5 @@ TEST_F(ExternalServiceTest, ShouldThrowOnMoveOut)
     TestClass1 test;
     sb::di::details::ExternalService external{&test};
 
-    EXPECT_THROW(external.moveOut(), sb::di::CannotMoveOutServiceException);
+    EXPECT_THROW(external.release(), sb::di::CannotMoveOutServiceException);
 }

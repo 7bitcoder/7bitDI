@@ -35,7 +35,7 @@ TEST_F(ServiceCtorFactoryTest, ShouldCreateService)
     ServiceProviderMock mock;
     sb::di::details::ServiceCtorFactory<TestClass1> factory{};
 
-    auto instance = factory.createInstance(mock);
+    auto instance = factory.createInstance(mock, false);
 
     EXPECT_TRUE(instance);
 }

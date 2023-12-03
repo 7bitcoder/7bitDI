@@ -31,11 +31,9 @@ namespace sb::di::details
 
         [[nodiscard]] TypeId getServiceTypeId() const override { return typeid(ServiceType); }
 
-        IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider) const override
+        IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, bool inPlace) const override
         {
             return std::make_unique<ExternalService<ServiceType>>(_factoryFunction(serviceProvider));
         }
-
-        IServiceFactory::Ptr clone() { return std::make_unique<ExternalServiceFcnFactory<FactoryFcn>>(*this); }
     };
 } // namespace sb::di::details

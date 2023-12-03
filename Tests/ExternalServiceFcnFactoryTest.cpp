@@ -50,21 +50,7 @@ TEST_F(ExternalServiceFcnFactoryTest, ShouldCreateService)
     auto fcn = [&](sb::di::ServiceProvider &) { return &test; };
     sb::di::details::ExternalServiceFcnFactory factory{fcn};
 
-    auto instance = factory.createInstance(mock);
+    auto instance = factory.createInstance(mock, false);
 
     EXPECT_TRUE(instance);
-}
-
-TEST_F(ExternalServiceFcnFactoryTest, ShouldCloneFactory)
-{
-    ServiceProviderMock mock;
-    TestClass1 test;
-    auto fcn = [&](sb::di::ServiceProvider &) { return &test; };
-    sb::di::details::ExternalServiceFcnFactory factory{fcn};
-
-    auto cloned = factory.clone();
-
-    EXPECT_TRUE(cloned);
-    EXPECT_TRUE(cloned->createInstance(mock));
-    EXPECT_NE(cloned.get(), &factory);
 }

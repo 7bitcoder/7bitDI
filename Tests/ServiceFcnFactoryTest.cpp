@@ -47,7 +47,7 @@ TEST_F(ServiceFcnFactoryTest, ShouldCreateService)
     auto fcn = [&]() { return std::make_unique<TestClass1>(); };
     sb::di::details::ServiceFcnFactory factory{std::move(fcn)};
 
-    auto instance = factory.createInstance(mock);
+    auto instance = factory.createInstance(mock, false);
 
     EXPECT_TRUE(instance);
 }

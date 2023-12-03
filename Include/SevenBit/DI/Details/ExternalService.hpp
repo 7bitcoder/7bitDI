@@ -27,7 +27,7 @@ namespace sb::di::details
 
         void *get() const final { return _service; }
 
-        void *moveOut() { throw CannotMoveOutServiceException{getTypeId(), "External service cannot be moved out."}; }
+        void *release() { throw CannotMoveOutServiceException{getTypeId(), "External service cannot be moved out."}; }
 
         TypeId getTypeId() const final { return typeid(T); }
 

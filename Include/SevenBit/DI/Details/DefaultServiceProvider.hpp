@@ -49,6 +49,7 @@ namespace sb::di::details
         const ServiceInstanceList *tryGetInstances(TypeId serviceTypeId) override;
 
         IServiceInstance::Ptr createInstance(TypeId serviceTypeId) override;
+        IServiceInstance::Ptr createInstanceInPlace(TypeId serviceTypeId) override;
         IServiceInstance::Ptr tryCreateInstance(TypeId serviceTypeId) override;
         std::optional<ServiceInstanceList> tryCreateInstances(TypeId serviceTypeId) override;
 
@@ -56,13 +57,13 @@ namespace sb::di::details
         const IServiceInstance *tryCreateAndRegister(const ServiceDescriptorList &descriptors);
         const ServiceInstanceList *tryCreateAndRegisterAll(const ServiceDescriptorList &descriptors);
 
-        IServiceInstance::Ptr tryCreate(const ServiceDescriptorList &descriptors);
+        IServiceInstance::Ptr tryCreate(const ServiceDescriptorList &descriptors, bool inPlace);
         std::optional<ServiceInstanceList> tryCreateAll(const ServiceDescriptorList &descriptors);
 
         ServiceInstanceList &createRestInstances(const ServiceDescriptorList &descriptors,
-                                                 ServiceInstanceList &instances);
+                                                 ServiceInstanceList &instances, bool inPlace);
 
-        IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor);
+        IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor, bool inPlace);
 
         ServiceInstancesMap *tryGetInstancesMap(const ServiceLifeTime &lifeTime);
 

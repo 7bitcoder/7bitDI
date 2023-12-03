@@ -35,20 +35,8 @@ TEST_F(ExternalServiceFactoryTest, ShouldCreateService)
     ServiceProviderMock mock;
     sb::di::details::ExternalServiceFactory<TestClass1> factory{&test};
 
-    auto instance = factory.createInstance(mock);
+    auto instance = factory.createInstance(mock, false);
 
     EXPECT_TRUE(instance);
     EXPECT_EQ(instance->get(), &test);
-}
-
-TEST_F(ExternalServiceFactoryTest, ShouldCloneFactory)
-{
-    TestClass1 test;
-
-    sb::di::details::ExternalServiceFactory<TestClass1> factory{&test};
-
-    auto cloned = factory.clone();
-
-    EXPECT_TRUE(cloned);
-    EXPECT_NE(cloned.get(), &factory);
 }

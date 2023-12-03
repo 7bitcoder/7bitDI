@@ -4,6 +4,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 
 namespace sb::di::details
@@ -11,25 +12,23 @@ namespace sb::di::details
     template <class T> class ServiceOwner final : public IServiceInstance
     {
       private:
-        std::unique_ptr<T> _service;
+        T _service;
 
       public:
-        using Ptr = std::unique_ptr<ServiceOwner<T>>;
-
-        ServiceOwner(std::unique_ptr<T> service) : _service(std::move(service)) {}
+        template <class... Args> explicit ServiceOwner(Args &&...args) : _service(std::forward<Args>(args)...) {}
 
         ServiceOwner(const ServiceOwner &) = delete;
-        ServiceOwner(ServiceOwner &&) = default;
+        ServiceOwner(ServiceOwner &&) = delete;
         ServiceOwner &operator=(const ServiceOwner &) = delete;
-        ServiceOwner &operator=(ServiceOwner &&) = default;
+        ServiceOwner &operator=(ServiceOwner &&) = delete;
 
-        void *get() const final { return _service.get(); }
+        void *get() const final { return const_cast<T *>(&_service); }
 
-        void *moveOut() { return _service.release(); }
+        void *release() { throw CannotMoveOutServiceException(getTypeId(), "Service cannot be moved out"); }
 
         TypeId getTypeId() const final { return typeid(T); }
 
-        bool isValid() const final { return bool{_service}; }
+        bool isValid() const final { return true; }
 
         operator bool() const { return isValid(); }
     };

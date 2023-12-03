@@ -37,14 +37,14 @@ namespace sb::di
          * @warning Using this method might couse memory leaks, client is responsible for managing this pointner
          * lifetime, the best approach is to imediatly wrap this poinrner with proper std::unique_ptr<T>
          * @code {.cpp}
-         * std::unique_ptr<T> service{static_cast<T *>(instance->moveOut())};
+         * std::unique_ptr<T> service{static_cast<T *>(instance->release())};
          * @endcode
          */
-        [[nodiscard]] virtual void *moveOut() = 0;
+        [[nodiscard]] virtual void *release() = 0;
 
         /**
          * @brief Moves out service pointner from instance as T *
-         * @details This method bahaves exactly the same as moveOut method except that its casting type, the client is
+         * @details This method bahaves exactly the same as release method except that its casting type, the client is
          * responsible for ensuring that the T type is correct
          * @throws CannotMoveOutServiceException cannot move out service
          * @warning Using this method might couse memory leaks, clietn is responsible for managing this pointner
@@ -53,7 +53,7 @@ namespace sb::di
          * std::unique_ptr<T> service{instance->moveOutAs<T>()};
          * @endcode
          */
-        template <class T> [[nodiscard]] T *moveOutAs() { return static_cast<T *>(moveOut()); };
+        template <class T> [[nodiscard]] T *moveOutAs() { return static_cast<T *>(release()); };
 
         /**
          * @brief Get the TypeId of service
