@@ -65,7 +65,6 @@ else ()
     set(_7BIT_DI_STATIC_LIB true)
 endif ()
 
-message("type ==================================" ${_7BIT_DI_SHARED_LIB})
 configure_file(${CMAKE_SOURCE_DIR}/Include/SevenBit/DI/CmakeDef.hpp.input ${CMAKE_SOURCE_DIR}/Include/SevenBit/DI/CmakeDef.hpp)
 
 set(INFOS

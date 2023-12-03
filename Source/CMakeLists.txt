@@ -5,7 +5,6 @@ if (_7BIT_DI_SHARED_LIB)
     add_library(7bitDI SHARED
             Source.cpp ${_7BIT_DI_ALL_HEADERS}
     )
-    message("----------------------------------------------------------------")
 elseif (_7BIT_DI_STATIC_LIB)
     add_library(7bitDI STATIC
             Source.cpp ${_7BIT_DI_ALL_HEADERS}
