@@ -8,10 +8,13 @@
 
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/OneOrList.hpp"
+#include "SevenBit/DI/ServiceInstanceList.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di
 {
+    template class OneOrList<IServiceInstance::Ptr>;
+
     struct IServiceInstanceProvider
     {
         using Ptr = std::unique_ptr<IServiceInstanceProvider>;
@@ -59,7 +62,7 @@ namespace sb::di
          * std::vector<const IServiceInstance *> instances = provider->getInstances(typeid(ITestClass));
          * @endcode
          */
-        virtual const OneOrList<IServiceInstance::Ptr> *tryGetInstances(TypeId serviceTypeId) = 0;
+        virtual const ServiceInstanceList *tryGetInstances(TypeId serviceTypeId) = 0;
 
         /**
          * @brief Creates service instance unique pointner, might throw exception
@@ -105,7 +108,7 @@ namespace sb::di
          * std::vector<std::unique_ptr<IServiceInstance>> instances = provider->createInstances(typeid(ITestClass));
          * @endcode
          */
-        virtual std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateInstances(TypeId serviceTypeId) = 0;
+        virtual std::optional<ServiceInstanceList> tryCreateInstances(TypeId serviceTypeId) = 0;
 
         virtual ~IServiceInstanceProvider() = default;
     };

@@ -9,12 +9,13 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/IServiceFactory.hpp"
+#include "SevenBit/DI/OneOrList.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 #include "SevenBit/DI/TypeId.hpp"
-
 namespace sb::di
 {
     class EXPORT ServiceCollection

@@ -4,7 +4,6 @@
 #include "Classes/BasicTest.hpp"
 #include "Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/DI/Details/ExternalServiceFactory.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
 
 class ExternalServiceFactoryTest : public testing::Test
 {

@@ -89,23 +89,11 @@ namespace sb::di
          */
         template <class TService> std::vector<TService *> getServices()
         {
-            auto instances = tryGetInstances(typeid(TService));
-            if (!instances)
+            if (auto instances = tryGetInstances(typeid(TService)))
             {
-                return {};
+                return instances->getServicesAs<TService>();
             }
-            std::vector<TService *> result;
-            auto size = instances->size();
-            result.reserve(size);
-            for (auto i = 0; i < size; ++i)
-            {
-                auto &instance = (*instances)[i];
-                if (instance && instance->isValid())
-                {
-                    result.emplace_back(instance->getAs<TService>());
-                }
-            }
-            return result;
+            return {};
         }
 
         /**
@@ -149,6 +137,16 @@ namespace sb::di
             throw ServiceNotFoundException{typeid(TService), "Service is invalid"};
         }
 
+        template <class TService> TService createServiceInPlace()
+        {
+            if (auto instance = createInstance(typeid(TService));
+                instance && instance->isValid() && instance->getTypeId() == typeid(TService))
+            {
+                return instance->moveOutInplace<TService>();
+            }
+            throw ServiceNotFoundException{typeid(TService), "Service is invalid or typeid is not matching"};
+        }
+
         /**
          * @brief Creates services
          * @details If service was not registered or was registered as scoped/transient, method returns empty vector
@@ -165,23 +163,11 @@ namespace sb::di
          */
         template <class TService> std::vector<std::unique_ptr<TService>> createServices()
         {
-            auto instances = tryCreateInstances(typeid(TService));
-            if (!instances)
+            if (auto instances = tryCreateInstances(typeid(TService)))
             {
-                return {};
+                return instances->moveServicesAs<TService>();
             }
-            std::vector<std::unique_ptr<TService>> result;
-            auto size = instances->size();
-            result.reserve(size);
-            for (auto i = 0; i < size; ++i)
-            {
-                auto &instance = (*instances)[i];
-                if (instance && instance->isValid())
-                {
-                    result.emplace_back(instance->moveOutAs<TService>());
-                }
-            }
-            return result;
+            return {};
         }
     };
 } // namespace sb::di

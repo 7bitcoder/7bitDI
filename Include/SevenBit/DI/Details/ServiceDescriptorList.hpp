@@ -12,12 +12,26 @@
 
 namespace sb::di::details
 {
-    class EXPORT ServiceDescriptorList : public OneOrList<ServiceDescriptor>
+    class EXPORT ServiceDescriptorList
     {
+      private:
+        OneOrList<ServiceDescriptor> _oneOrList;
+
       public:
         explicit ServiceDescriptorList(ServiceDescriptor &&descriptor);
 
         void add(ServiceDescriptor &&descriptor);
+
+        auto begin() const { return _oneOrList.getAsList().begin(); }
+        auto end() const { return _oneOrList.getAsList().end(); }
+
+        const ServiceDescriptor &first() const;
+
+        const ServiceDescriptor &last() const;
+
+        bool empty() const;
+
+        size_t size() const;
 
         [[nodiscard]] const ServiceLifeTime &getLifeTime() const;
 

@@ -53,7 +53,8 @@ namespace sb::di::details
     {
         if (auto it = _serviceListMap.find(serviceTypeId); it != _serviceListMap.end())
         {
-            return it->second.add(std::move(service));
+            it->second.add(std::move(service));
+            return it->second;
         }
         return _serviceListMap.emplace(serviceTypeId, std::move(service)).first->second;
     }

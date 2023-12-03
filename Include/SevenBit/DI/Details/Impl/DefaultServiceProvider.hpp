@@ -3,12 +3,12 @@
 #include <memory>
 #include <utility>
 
-#include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/DefaultServiceProvider.hpp"
 #include "SevenBit/DI/Details/IServiceProviderRoot.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
+#include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 
 namespace sb::di::details
@@ -52,7 +52,7 @@ namespace sb::di::details
         return descriptors ? tryCreateAndRegister(*descriptors) : nullptr;
     }
 
-    INLINE const OneOrList<IServiceInstance::Ptr> *DefaultServiceProvider::tryGetInstances(TypeId serviceTypeId)
+    INLINE const ServiceInstanceList *DefaultServiceProvider::tryGetInstances(TypeId serviceTypeId)
     {
         auto instances = findRegisteredInstances(serviceTypeId);
         if (!instances)
@@ -83,8 +83,7 @@ namespace sb::di::details
         return descriptors ? tryCreate(*descriptors) : nullptr;
     }
 
-    INLINE std::optional<OneOrList<IServiceInstance::Ptr>> DefaultServiceProvider::tryCreateInstances(
-        TypeId serviceTypeId)
+    INLINE std::optional<ServiceInstanceList> DefaultServiceProvider::tryCreateInstances(TypeId serviceTypeId)
     {
         auto descriptors = findDescriptors(serviceTypeId);
         return descriptors ? tryCreateAll(*descriptors) : std::nullopt;
@@ -125,8 +124,8 @@ namespace sb::di::details
         {
             instances.reserve(descriptors.size());
             auto realFirst = createInstance(descriptors.first());
-            auto end = --descriptors.getAsList().end();
-            for (auto it = ++descriptors.getAsList().begin(); it != end; ++it) // skip first and last
+            auto end = --descriptors.end();
+            for (auto it = ++descriptors.begin(); it != end; ++it) // skip first and last
             {
                 instances.add(createInstance(*it));
             }
@@ -142,14 +141,14 @@ namespace sb::di::details
         return descriptors.getLifeTime().isTransient() ? createInstance(descriptors.last()) : nullptr;
     }
 
-    INLINE std::optional<OneOrList<IServiceInstance::Ptr>> DefaultServiceProvider::tryCreateAll(
+    INLINE std::optional<ServiceInstanceList> DefaultServiceProvider::tryCreateAll(
         const ServiceDescriptorList &descriptors)
     {
         if (descriptors.getLifeTime().isTransient())
         {
             ServiceInstanceList instances{createInstance(descriptors.last())};
             createRestInstances(descriptors, instances);
-            return instances;
+            return std::move(instances);
         }
         return std::nullopt;
     }

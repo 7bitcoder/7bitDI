@@ -3,7 +3,6 @@
 #include <type_traits>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
 
 #include "SevenBit/DI/Details/ExternalServiceFactory.hpp"
 #include "SevenBit/DI/Details/ServiceCtorFactory.hpp"
@@ -12,6 +11,7 @@
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 
 namespace sb::di
 {
@@ -348,6 +348,3 @@ namespace sb::di
         }
     };
 } // namespace sb::di
-
-#ifdef _7BIT_DI_ADD_IMPL
-#endif

@@ -11,23 +11,23 @@
 #include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 
-class ServicesMapTest : public testing::Test
+class ServiceInstancesMapTest : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}
 
-    ServicesMapTest() {}
+    ServiceInstancesMapTest() {}
 
     void SetUp() override {}
 
     void TearDown() override {}
 
-    ~ServicesMapTest() {}
+    ~ServiceInstancesMapTest() {}
 
     static void TearDownTestSuite() {}
 };
 
-TEST_F(ServicesMapTest, ShouldAdd)
+TEST_F(ServiceInstancesMapTest, ShouldAdd)
 {
     sb::di::details::ServiceInstancesMap map{false};
 
@@ -38,7 +38,7 @@ TEST_F(ServicesMapTest, ShouldAdd)
     EXPECT_NO_THROW((act()));
 }
 
-TEST_F(ServicesMapTest, ShouldFindList)
+TEST_F(ServiceInstancesMapTest, ShouldFindList)
 {
     sb::di::details::ServiceInstancesMap map{false};
 
@@ -60,7 +60,7 @@ TEST_F(ServicesMapTest, ShouldFindList)
     EXPECT_EQ(list->last()->getTypeId(), typeid(TestInheritClass2));
 }
 
-TEST_F(ServicesMapTest, ShouldDestructInProperOrder)
+TEST_F(ServiceInstancesMapTest, ShouldDestructInProperOrder)
 {
     ServiceProviderMock mock;
     sb::di::details::ServiceInstancesMap map{true};

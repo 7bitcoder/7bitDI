@@ -4,10 +4,10 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/ServiceDescriptorList.hpp"
+#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
 #include "SevenBit/DI/TypeId.hpp"

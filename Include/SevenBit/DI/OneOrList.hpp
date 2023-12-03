@@ -10,26 +10,25 @@ namespace sb::di
     template <class T> class OneOrList
     {
       private:
-        std::variant<std::vector<T>, T> _variant;
+        std::variant<T, std::vector<T>> _variant;
 
       public:
         explicit OneOrList(size_t size) : _variant(std::vector<T>{}) { reserve(size); }
         explicit OneOrList(T &&mainElement) : _variant(std::move(mainElement)) {}
 
         OneOrList(const OneOrList &) = delete;
-        inline OneOrList(OneOrList &&other) noexcept : _variant(std::move(other._variant)) {}
+        OneOrList(OneOrList &&other) noexcept = default;
 
         OneOrList &operator=(const OneOrList &) = delete;
-        OneOrList &operator=(OneOrList &&other) noexcept
-        {
-            _variant = std::move(other._variant);
-            return *this;
-        }
+        OneOrList &operator=(OneOrList &&other) noexcept = default;
 
         [[nodiscard]] bool isList() const { return std::holds_alternative<std::vector<T>>(_variant); }
 
         std::vector<T> &getAsList() { return std::get<std::vector<T>>(_variant); }
         const std::vector<T> &getAsList() const { return std::get<std::vector<T>>(_variant); }
+
+        std::variant<T, std::vector<T>> &getVariant() { return _variant; }
+        const std::variant<T, std::vector<T>> &getVariant() const { return _variant; }
 
         T &getAsSingle() { return std::get<T>(_variant); }
         const T &getAsSingle() const { return std::get<T>(_variant); }
@@ -100,8 +99,6 @@ namespace sb::di
                 list->shrink_to_fit();
             }
         }
-
-        inline ~OneOrList(){};
 
       private:
         void tryConvertToList()

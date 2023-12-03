@@ -46,18 +46,18 @@ namespace sb::di::details
       protected:
         const IServiceInstance &getInstance(TypeId serviceTypeId) override;
         const IServiceInstance *tryGetInstance(TypeId serviceTypeId) override;
-        const OneOrList<IServiceInstance::Ptr> *tryGetInstances(TypeId serviceTypeId) override;
+        const ServiceInstanceList *tryGetInstances(TypeId serviceTypeId) override;
 
         IServiceInstance::Ptr createInstance(TypeId serviceTypeId) override;
         IServiceInstance::Ptr tryCreateInstance(TypeId serviceTypeId) override;
-        std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateInstances(TypeId serviceTypeId) override;
+        std::optional<ServiceInstanceList> tryCreateInstances(TypeId serviceTypeId) override;
 
       private:
         const IServiceInstance *tryCreateAndRegister(const ServiceDescriptorList &descriptors);
         const ServiceInstanceList *tryCreateAndRegisterAll(const ServiceDescriptorList &descriptors);
 
         IServiceInstance::Ptr tryCreate(const ServiceDescriptorList &descriptors);
-        std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateAll(const ServiceDescriptorList &descriptors);
+        std::optional<ServiceInstanceList> tryCreateAll(const ServiceDescriptorList &descriptors);
 
         ServiceInstanceList &createRestInstances(const ServiceDescriptorList &descriptors,
                                                  ServiceInstanceList &instances);

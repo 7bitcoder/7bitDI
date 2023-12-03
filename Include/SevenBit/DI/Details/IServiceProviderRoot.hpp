@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SevenBit/DI/LibraryConfig.hpp"
+
 #include "SevenBit/DI/Details/ServiceDescriptorsMap.hpp"
 #include "SevenBit/DI/Details/ServiceInstancesMap.hpp"
 
