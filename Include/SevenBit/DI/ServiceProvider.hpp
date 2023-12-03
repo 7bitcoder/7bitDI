@@ -137,15 +137,15 @@ namespace sb::di
             throw ServiceNotFoundException{typeid(TService), "Service is invalid"};
         }
 
-        template <class TService> TService createServiceInPlace()
-        {
-            if (auto instance = createInstance(typeid(TService));
-                instance && instance->isValid() && instance->getTypeId() == typeid(TService))
-            {
-                return instance->moveOutInplace<TService>();
-            }
-            throw ServiceNotFoundException{typeid(TService), "Service is invalid or typeid is not matching"};
-        }
+        //        template <class TService> TService createServiceInPlace()
+        //        {
+        //            if (auto instance = createInstance(typeid(TService));
+        //                instance && instance->isValid() && instance->getTypeId() == typeid(TService))
+        //            {
+        //                return instance->moveOutInplace<TService>();
+        //            }
+        //            throw ServiceNotFoundException{typeid(TService), "Service is invalid or typeid is not matching"};
+        //        }
 
         /**
          * @brief Creates services
