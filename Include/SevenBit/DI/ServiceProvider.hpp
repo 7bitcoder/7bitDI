@@ -5,6 +5,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstanceProvider.hpp"
 
 namespace sb::di
