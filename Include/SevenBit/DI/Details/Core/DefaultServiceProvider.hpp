@@ -25,7 +25,7 @@ namespace sb::di::details::core
         using Ptr = std::unique_ptr<DefaultServiceProvider>;
 
       private:
-        IServiceProviderData::SPtr _sharedCore;
+        IServiceProviderData::SPtr _sharedData;
         containers::ServiceInstancesMap _scoped;
         helpers::CircularDependencyGuard _guard;
 
@@ -46,28 +46,33 @@ namespace sb::di::details::core
       protected:
         const IServiceInstance &getInstance(TypeId serviceTypeId) override;
         const IServiceInstance *tryGetInstance(TypeId serviceTypeId) override;
-        const ServiceInstanceList *tryGetInstances(TypeId serviceTypeId) override;
+        const OneOrList<IServiceInstance::Ptr> *tryGetInstances(TypeId serviceTypeId) override;
 
         IServiceInstance::Ptr createInstance(TypeId serviceTypeId) override;
-        IServiceInstance::Ptr createInstanceInPlace(TypeId serviceTypeId) override;
         IServiceInstance::Ptr tryCreateInstance(TypeId serviceTypeId) override;
-        std::optional<ServiceInstanceList> tryCreateInstances(TypeId serviceTypeId) override;
+        std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateInstances(TypeId serviceTypeId) override;
+
+        IServiceInstance::Ptr createInstanceInPlace(TypeId serviceTypeId) override;
+        IServiceInstance::Ptr tryCreateInstanceInPlace(TypeId serviceTypeId) override;
 
       private:
         const IServiceInstance *tryCreateAndRegister(const containers::ServiceDescriptorList &descriptors);
-        const ServiceInstanceList *tryCreateAndRegisterAll(const containers::ServiceDescriptorList &descriptors);
+        const OneOrList<IServiceInstance::Ptr> *tryCreateAndRegisterAll(
+            const containers::ServiceDescriptorList &descriptors);
 
-        IServiceInstance::Ptr tryCreate(const containers::ServiceDescriptorList &descriptors, bool inPlace);
-        std::optional<ServiceInstanceList> tryCreateAll(const containers::ServiceDescriptorList &descriptors);
+        IServiceInstance::Ptr tryCreate(const ServiceDescriptor &descriptor, bool inPlaceRequest);
+        std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateAll(
+            const containers::ServiceDescriptorList &descriptors);
 
-        ServiceInstanceList &createRestInstances(const containers::ServiceDescriptorList &descriptors,
-                                                 ServiceInstanceList &instances, bool inPlace);
+        OneOrList<IServiceInstance::Ptr> &createRestInstances(const containers::ServiceDescriptorList &descriptors,
+                                                              containers::ServiceInstanceList &instances,
+                                                              bool inPlaceRequest);
 
-        IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor, bool inPlace);
+        IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor, bool inPlaceRequest);
 
         containers::ServiceInstancesMap *tryGetInstancesMap(const ServiceLifeTime &lifeTime);
 
-        ServiceInstanceList *findRegisteredInstances(TypeId serviceTypeId);
+        containers::ServiceInstanceList *findRegisteredInstances(TypeId serviceTypeId);
 
         [[nodiscard]] const containers::ServiceDescriptorList *findDescriptors(TypeId serviceTypeId) const;
 

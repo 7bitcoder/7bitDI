@@ -5,9 +5,9 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
-#include "SevenBit/DI/ServiceInstanceList.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di::details::containers

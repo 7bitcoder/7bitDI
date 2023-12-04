@@ -13,16 +13,16 @@
 namespace sb::di::details::core
 {
     INLINE DefaultServiceProvider::DefaultServiceProvider(const DefaultServiceProvider &provider)
-        : _sharedCore(utils::Check::notNullAndGet(provider._sharedCore)),
-          _scoped(_sharedCore->getOptions().strongDestructionOrder)
+        : _sharedData(utils::Check::notNullAndGet(provider._sharedData)),
+          _scoped(_sharedData->getOptions().strongDestructionOrder)
     {
     }
 
     INLINE DefaultServiceProvider::DefaultServiceProvider(IServiceProviderData::Ptr core)
-        : _sharedCore(utils::Check::notNullAndGet(std::move(core))),
-          _scoped(_sharedCore->getOptions().strongDestructionOrder)
+        : _sharedData(utils::Check::notNullAndGet(std::move(core))),
+          _scoped(_sharedData->getOptions().strongDestructionOrder)
     {
-        if (_sharedCore->getOptions().prebuildSingletons)
+        if (_sharedData->getOptions().prebuildSingletons)
         {
             prebuildSingletons();
         }
@@ -53,7 +53,7 @@ namespace sb::di::details::core
         return descriptors ? tryCreateAndRegister(*descriptors) : nullptr;
     }
 
-    INLINE const ServiceInstanceList *DefaultServiceProvider::tryGetInstances(TypeId serviceTypeId)
+    INLINE const OneOrList<IServiceInstance::Ptr> *DefaultServiceProvider::tryGetInstances(TypeId serviceTypeId)
     {
         auto instances = findRegisteredInstances(serviceTypeId);
         if (!instances)
@@ -66,7 +66,7 @@ namespace sb::di::details::core
             auto descriptors = findDescriptors(serviceTypeId);
             return descriptors ? &createRestInstances(*descriptors, *instances, true) : nullptr;
         }
-        return instances;
+        return &instances->getInnerList();
     }
 
     INLINE IServiceInstance::Ptr DefaultServiceProvider::createInstance(TypeId serviceTypeId)
@@ -79,23 +79,34 @@ namespace sb::di::details::core
                                        "Service was not registered or was registered as singleton/scoped service"};
     }
 
+    INLINE IServiceInstance::Ptr DefaultServiceProvider::tryCreateInstance(TypeId serviceTypeId)
+    {
+        auto descriptors = findDescriptors(serviceTypeId);
+        return descriptors ? tryCreate(descriptors->last(), false) : nullptr;
+    }
+
     INLINE IServiceInstance::Ptr DefaultServiceProvider::createInstanceInPlace(TypeId serviceTypeId)
     {
-        if (auto descriptors = findDescriptors(serviceTypeId))
+        if (auto instance = tryCreateInstanceInPlace(serviceTypeId))
         {
-            return tryCreate(*descriptors, true);
+            return instance;
         }
         throw ServiceNotFoundException{serviceTypeId,
                                        "Service was not registered or was registered as singleton/scoped service"};
     }
 
-    INLINE IServiceInstance::Ptr DefaultServiceProvider::tryCreateInstance(TypeId serviceTypeId)
+    INLINE IServiceInstance::Ptr DefaultServiceProvider::tryCreateInstanceInPlace(TypeId serviceTypeId)
     {
-        auto descriptors = findDescriptors(serviceTypeId);
-        return descriptors ? tryCreate(*descriptors, false) : nullptr;
+        if (auto descriptors = findDescriptors(serviceTypeId))
+        {
+            auto &descriptor = descriptors->last();
+            return descriptor.getImplementationTypeId() == serviceTypeId ? tryCreate(descriptor, true) : nullptr;
+        }
+        return nullptr;
     }
 
-    INLINE std::optional<ServiceInstanceList> DefaultServiceProvider::tryCreateInstances(TypeId serviceTypeId)
+    INLINE std::optional<OneOrList<IServiceInstance::Ptr>> DefaultServiceProvider::tryCreateInstances(
+        TypeId serviceTypeId)
     {
         auto descriptors = findDescriptors(serviceTypeId);
         return descriptors ? tryCreateAll(*descriptors) : std::nullopt;
@@ -119,7 +130,7 @@ namespace sb::di::details::core
         return nullptr;
     }
 
-    INLINE const ServiceInstanceList *DefaultServiceProvider::tryCreateAndRegisterAll(
+    INLINE const OneOrList<IServiceInstance::Ptr> *DefaultServiceProvider::tryCreateAndRegisterAll(
         const containers::ServiceDescriptorList &descriptors)
     {
         if (auto instancesMap = tryGetInstancesMap(descriptors.getLifeTime()))
@@ -131,54 +142,53 @@ namespace sb::di::details::core
         return nullptr;
     }
 
-    INLINE ServiceInstanceList &DefaultServiceProvider::createRestInstances(
-        const containers::ServiceDescriptorList &descriptors, ServiceInstanceList &instances, bool inPlace)
+    INLINE OneOrList<IServiceInstance::Ptr> &DefaultServiceProvider::createRestInstances(
+        const containers::ServiceDescriptorList &descriptors, containers::ServiceInstanceList &instances,
+        bool inPlaceRequest)
     {
         if (descriptors.size() > 1)
         {
             instances.reserve(descriptors.size());
-            auto realFirst = createInstance(descriptors.first(), inPlace);
+            auto realFirst = createInstance(descriptors.first(), inPlaceRequest);
             auto end = --descriptors.end();
             for (auto it = ++descriptors.begin(); it != end; ++it) // skip first and last
             {
-                instances.add(createInstance(*it, inPlace));
+                instances.add(createInstance(*it, inPlaceRequest));
             }
             instances.add(std::move(realFirst));
             instances.first().swap(instances.last());
         }
         instances.seal();
-        return instances;
+        return instances.getInnerList();
     }
 
-    INLINE IServiceInstance::Ptr DefaultServiceProvider::tryCreate(const containers::ServiceDescriptorList &descriptors,
-                                                                   bool inPlace)
+    INLINE IServiceInstance::Ptr DefaultServiceProvider::tryCreate(const ServiceDescriptor &descriptor,
+                                                                   bool inPlaceRequest)
     {
-        auto &descriptor = descriptors.last();
-        if (descriptor.getLifeTime().isTransient() &&
-            (!inPlace || descriptor.getImplementationTypeId() == descriptor.getServiceTypeId()))
+        if (descriptor.getLifeTime().isTransient())
         {
-            return createInstance(descriptors.last(), inPlace);
+            return createInstance(descriptor, inPlaceRequest);
         }
         return nullptr;
     }
 
-    INLINE std::optional<ServiceInstanceList> DefaultServiceProvider::tryCreateAll(
+    INLINE std::optional<OneOrList<IServiceInstance::Ptr>> DefaultServiceProvider::tryCreateAll(
         const containers::ServiceDescriptorList &descriptors)
     {
         if (descriptors.getLifeTime().isTransient())
         {
-            ServiceInstanceList instances{createInstance(descriptors.last(), false)};
+            containers::ServiceInstanceList instances{createInstance(descriptors.last(), false)};
             createRestInstances(descriptors, instances, false);
-            return std::move(instances);
+            return std::move(instances.getInnerList());
         }
         return std::nullopt;
     }
 
     INLINE IServiceInstance::Ptr DefaultServiceProvider::createInstance(const ServiceDescriptor &descriptor,
-                                                                        bool inPlace)
+                                                                        bool inPlaceRequest)
     {
         auto _ = _guard(descriptor.getImplementationTypeId());
-        auto instance = descriptor.getImplementationFactory().createInstance(*this, inPlace);
+        auto instance = descriptor.getImplementationFactory().createInstance(*this, inPlaceRequest);
         if (instance && instance->isValid())
         {
             return instance;
@@ -186,27 +196,27 @@ namespace sb::di::details::core
         throw InvalidServiceException{descriptor.getImplementationTypeId(), "Service instance is null or is invalid"};
     }
 
-    INLINE const ServiceProviderOptions &DefaultServiceProvider::getOptions() { return _sharedCore->getOptions(); }
+    INLINE const ServiceProviderOptions &DefaultServiceProvider::getOptions() { return _sharedData->getOptions(); }
 
-    INLINE ServiceInstanceList *DefaultServiceProvider::findRegisteredInstances(TypeId serviceTypeId)
+    INLINE containers::ServiceInstanceList *DefaultServiceProvider::findRegisteredInstances(TypeId serviceTypeId)
     {
-        auto singletons = _sharedCore->getSingletons().findServices(serviceTypeId);
+        auto singletons = _sharedData->getSingletons().findServices(serviceTypeId);
         return singletons ? singletons : _scoped.findServices(serviceTypeId);
     }
 
     INLINE containers::ServiceInstancesMap *DefaultServiceProvider::tryGetInstancesMap(const ServiceLifeTime &lifeTime)
     {
-        return lifeTime.isTransient() ? nullptr : (lifeTime.isSingleton() ? &_sharedCore->getSingletons() : &_scoped);
+        return lifeTime.isTransient() ? nullptr : (lifeTime.isSingleton() ? &_sharedData->getSingletons() : &_scoped);
     }
 
     INLINE const containers::ServiceDescriptorList *DefaultServiceProvider::findDescriptors(TypeId serviceTypeId) const
     {
-        return _sharedCore->getDescriptorsMap().findDescriptors(serviceTypeId);
+        return _sharedData->getDescriptorsMap().findDescriptors(serviceTypeId);
     }
 
     INLINE void DefaultServiceProvider::prebuildSingletons()
     {
-        for (auto &[_, descriptors] : _sharedCore->getDescriptorsMap())
+        for (auto &[_, descriptors] : _sharedData->getDescriptorsMap())
         {
             if (descriptors.getLifeTime().isSingleton())
             {

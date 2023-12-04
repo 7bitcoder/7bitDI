@@ -2,12 +2,12 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
 #include "SevenBit/DI/Details/Utils/Check.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
-#include "SevenBit/DI/ServiceInstanceList.hpp"
 
-namespace sb::di
+namespace sb::di::details::containers
 {
     INLINE ServiceInstanceList::ServiceInstanceList(size_t size) : _oneOrList(size) {}
 
@@ -52,4 +52,4 @@ namespace sb::di
 
     INLINE bool ServiceInstanceList::isSealed() const { return _sealed; }
 
-} // namespace sb::di
+} // namespace sb::di::details::containers

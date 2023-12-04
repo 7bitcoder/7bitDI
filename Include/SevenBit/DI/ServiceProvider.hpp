@@ -89,11 +89,30 @@ namespace sb::di
          */
         template <class TService> std::vector<TService *> getServices()
         {
-            if (auto instances = tryGetInstances(typeid(TService)))
+            auto instances = tryGetInstances(typeid(TService));
+            if (!instances)
             {
-                return instances->getServicesAs<TService>();
+                return {};
             }
-            return {};
+            std::vector<TService *> result;
+            if (auto instancePtr = instances->tryGetAsSingle())
+            {
+                auto &instance = *instancePtr;
+                if (instance && instance->isValid())
+                {
+                    result.emplace_back(instance->getAs<TService>());
+                }
+                return result;
+            }
+            result.reserve(instances->size());
+            for (auto &instance : instances->getAsList())
+            {
+                if (instance && instance->isValid())
+                {
+                    result.emplace_back(instance->getAs<TService>());
+                }
+            }
+            return result;
         }
 
         /**
@@ -162,11 +181,30 @@ namespace sb::di
          */
         template <class TService> std::vector<std::unique_ptr<TService>> createServices()
         {
-            if (auto instances = tryCreateInstances(typeid(TService)))
+            auto instances = tryCreateInstances(typeid(TService));
+            if (!instances)
             {
-                return instances->moveServicesAs<TService>();
+                return {};
             }
-            return {};
+            std::vector<std::unique_ptr<TService>> result;
+            if (auto instancePtr = instances->tryGetAsSingle())
+            {
+                auto &instance = *instancePtr;
+                if (instance && instance->isValid())
+                {
+                    result.emplace_back(instance->moveOutAsUniquePtr<TService>());
+                }
+                return result;
+            }
+            result.reserve(instances->size());
+            for (auto &instance : instances->getAsList())
+            {
+                if (instance && instance->isValid())
+                {
+                    result.emplace_back(instance->moveOutAsUniquePtr<TService>());
+                }
+            }
+            return result;
         }
     };
 } // namespace sb::di
