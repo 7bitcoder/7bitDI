@@ -74,5 +74,5 @@ namespace sb::di
 } // namespace sb::di
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Impl/ServiceLifeTime.hpp"
+#include "SevenBit/DI/Impl/ServiceLifeTime.hpp"
 #endif

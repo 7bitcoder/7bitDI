@@ -28,6 +28,11 @@ namespace sb::di
         ForbiddenServiceFactoryException(TypeId typeId, const std::string &reason);
     };
 
+    struct EXPORT CannotReleaseServiceException : public InjectorException
+    {
+        CannotReleaseServiceException(TypeId typeId, const std::string &reason);
+    };
+
     struct EXPORT CannotMoveOutServiceException : public InjectorException
     {
         CannotMoveOutServiceException(TypeId typeId, const std::string &reason);
@@ -65,5 +70,5 @@ namespace sb::di
 } // namespace sb::di
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Impl/Exceptions.hpp"
+#include "SevenBit/DI/Impl/Exceptions.hpp"
 #endif

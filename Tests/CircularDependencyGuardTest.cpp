@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "Classes/BasicTest.hpp"
-#include "SevenBit/DI/Details/CircularDependencyGuard.hpp"
+#include "SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 
 class CircularDependencyGuardTest : public testing::Test
@@ -23,7 +23,7 @@ class CircularDependencyGuardTest : public testing::Test
 
 TEST_F(CircularDependencyGuardTest, ShouldNotDetectCirtularDependency)
 {
-    sb::di::details::CircularDependencyGuard guard;
+    sb::di::details::helpers::CircularDependencyGuard guard;
     auto act = [&]() {
         auto _ = guard(typeid(TestClass1));
         {
@@ -39,7 +39,7 @@ TEST_F(CircularDependencyGuardTest, ShouldNotDetectCirtularDependency)
 
 TEST_F(CircularDependencyGuardTest, ShouldDetectCirtularDependency)
 {
-    sb::di::details::CircularDependencyGuard guard;
+    sb::di::details::helpers::CircularDependencyGuard guard;
     auto act = [&]() {
         auto _ = guard(typeid(TestClass1));
         {

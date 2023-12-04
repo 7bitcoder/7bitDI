@@ -8,7 +8,7 @@
 // #include "SevenBit/DI/Details/ServiceCtorFactory.hpp"
 // #include "SevenBit/DI/Details/ServiceDescriptorList.hpp"
 // #include "SevenBit/DI/Details/ServiceInstanceList.hpp"
-// #include "SevenBit/DI/Details/ServiceOwner.hpp"
+// #include "SevenBit/DI/Details/InPlaceService.hpp"
 // #include "SevenBit/DI/Exceptions.hpp"
 // #include "SevenBit/DI/IServiceFactory.hpp"
 // #include "SevenBit/DI/IServiceInstance.hpp"
@@ -50,7 +50,7 @@
 // TEST_F(ServiceInstanceListTest, ShouldFailAddInvalidService)
 //{
 //     auto act = [&]() {
-//         sb::di::IServiceInstance::Ptr instance{new sb::di::details::ServiceOwner<TestClass1>{nullptr}};
+//         sb::di::IServiceInstance::Ptr instance{new sb::di::details::InPlaceService<TestClass1>{nullptr}};
 //         sb::di::details::ServiceInstanceList list{std::move(instance)};
 //     };
 //

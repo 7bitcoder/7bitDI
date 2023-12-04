@@ -4,7 +4,7 @@
 
 #include "Classes/BasicTest.hpp"
 #include "Mocks/ServiceProviderMock.hpp"
-#include "SevenBit/DI/Details/ServiceFcnFactory.hpp"
+#include "SevenBit/DI/Details/Factories/ServiceFcnFactory.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 
@@ -36,7 +36,7 @@ TEST_F(ServiceFcnFactoryTest, ShouldReturnProperTypeId)
 {
     auto fcn = [&]() { return std::make_unique<TestClass1>(); };
 
-    sb::di::details::ServiceFcnFactory factory{std::move(fcn)};
+    sb::di::details::factories::ServiceFcnFactory factory{std::move(fcn)};
 
     EXPECT_EQ(factory.getServiceTypeId(), typeid(TestClass1));
 }
@@ -45,7 +45,7 @@ TEST_F(ServiceFcnFactoryTest, ShouldCreateService)
 {
     ServiceProviderMock mock;
     auto fcn = [&]() { return std::make_unique<TestClass1>(); };
-    sb::di::details::ServiceFcnFactory factory{std::move(fcn)};
+    sb::di::details::factories::ServiceFcnFactory factory{std::move(fcn)};
 
     auto instance = factory.createInstance(mock, false);
 

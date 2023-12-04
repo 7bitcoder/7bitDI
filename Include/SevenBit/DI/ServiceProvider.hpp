@@ -5,7 +5,6 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Utils.hpp"
 #include "SevenBit/DI/IServiceInstanceProvider.hpp"
 
 namespace sb::di
@@ -111,7 +110,7 @@ namespace sb::di
         {
             if (auto instance = tryCreateInstance(typeid(TService)); instance && instance->isValid())
             {
-                return std::unique_ptr<TService>(instance->moveOutAs<TService>());
+                return instance->moveOutAsUniquePtr<TService>();
             }
             return nullptr;
         }
@@ -132,7 +131,7 @@ namespace sb::di
         {
             if (auto instance = createInstance(typeid(TService)); instance && instance->isValid())
             {
-                return std::unique_ptr<TService>(instance->moveOutAs<TService>());
+                return instance->moveOutAsUniquePtr<TService>();
             }
             throw ServiceNotFoundException{typeid(TService), "Service is invalid"};
         }
@@ -141,7 +140,7 @@ namespace sb::di
         {
             if (auto instance = createInstanceInPlace(typeid(TService)); instance && instance->isValid())
             {
-                return std::move(*instance->getAs<TService>());
+                return std::move(instance->moveOutAs<TService>());
             }
             throw ServiceNotFoundException{typeid(TService), "Service is invalid or typeid is not matching"};
         }

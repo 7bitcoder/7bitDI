@@ -26,7 +26,7 @@ namespace sb::di
          * @brief Create a service instance object
          */
 
-        virtual IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, bool inPlace) const = 0;
+        virtual IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, bool inPlaceRequest) const = 0;
 
         virtual ~IServiceFactory() = default;
     };

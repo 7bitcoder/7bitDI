@@ -4,10 +4,10 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/ExternalServiceFactory.hpp"
-#include "SevenBit/DI/Details/ServiceCtorFactory.hpp"
-#include "SevenBit/DI/Details/ServiceFcnFactory.hpp"
-#include "SevenBit/DI/Details/Utils.hpp"
+#include "SevenBit/DI/Details/Factories/ExternalServiceFactory.hpp"
+#include "SevenBit/DI/Details/Factories/ServiceCtorFactory.hpp"
+#include "SevenBit/DI/Details/Factories/ServiceFcnFactory.hpp"
+#include "SevenBit/DI/Details/Utils/Check.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
@@ -106,8 +106,8 @@ namespace sb::di
         template <class TService, class TImplementation = TService>
         static ServiceDescriptor describe(ServiceLifeTime lifetime)
         {
-            details::utils::inheritCheck<TService, TImplementation>();
-            auto factory = std::make_unique<details::ServiceCtorFactory<TImplementation>>();
+            details::utils::Check::inherit<TService, TImplementation>();
+            auto factory = std::make_unique<details::factories::ServiceCtorFactory<TImplementation>>();
             return {typeid(TService), lifetime, std::move(factory)};
         }
 
@@ -159,8 +159,8 @@ namespace sb::di
         template <class TService, class TImplementation = TService>
         static ServiceDescriptor describeSingleton(TImplementation *service)
         {
-            details::utils::inheritCheck<TService, TImplementation>();
-            auto factory = std::make_unique<details::ExternalServiceFactory<TImplementation>>(service);
+            details::utils::Check::inherit<TService, TImplementation>();
+            auto factory = std::make_unique<details::factories::ExternalServiceFactory<TImplementation>>(service);
             return {typeid(TService), ServiceLifeTime::singleton(), std::move(factory)};
         }
 
@@ -252,7 +252,7 @@ namespace sb::di
         template <class TService, class FactoryFcn>
         static ServiceDescriptor describeFrom(ServiceLifeTime lifetime, FactoryFcn &&factoryFcn)
         {
-            using FactoryType = details::ServiceFcnFactory<FactoryFcn>;
+            using FactoryType = details::factories::ServiceFcnFactory<FactoryFcn>;
             auto factory = std::make_unique<FactoryType>(std::move(factoryFcn));
 
             using Service =

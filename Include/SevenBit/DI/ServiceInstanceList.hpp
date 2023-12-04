@@ -79,7 +79,7 @@ namespace sb::di
                 auto &instance = *instancePtr;
                 if (instance && instance->isValid())
                 {
-                    result.emplace_back(instance->moveOutAs<T>());
+                    result.emplace_back(instance->moveOutAsUniquePtr<T>());
                 }
                 return result;
             }
@@ -88,7 +88,7 @@ namespace sb::di
             {
                 if (instance && instance->isValid())
                 {
-                    result.emplace_back(instance->moveOutAs<T>());
+                    result.emplace_back(instance->moveOutAsUniquePtr<T>());
                 }
             }
             return result;
@@ -99,5 +99,5 @@ namespace sb::di
 } // namespace sb::di
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Impl/ServiceInstanceList.hpp"
+#include "SevenBit/DI/Impl/ServiceInstanceList.hpp"
 #endif

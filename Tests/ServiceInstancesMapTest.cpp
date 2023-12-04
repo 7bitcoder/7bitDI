@@ -6,8 +6,8 @@
 #include "Classes/BasicInheritDesctuction.hpp"
 #include "Classes/BasicTest.hpp"
 #include "Mocks/ServiceProviderMock.hpp"
-#include "SevenBit/DI/Details/ExternalService.hpp"
-#include "SevenBit/DI/Details/ServiceInstancesMap.hpp"
+#include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
+#include "SevenBit/DI/Details/Services/ExternalService.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 
@@ -29,10 +29,10 @@ class ServiceInstancesMapTest : public testing::Test
 
 TEST_F(ServiceInstancesMapTest, ShouldAdd)
 {
-    sb::di::details::ServiceInstancesMap map{false};
+    sb::di::details::containers::ServiceInstancesMap map{false};
 
     TestClass1 test;
-    sb::di::IServiceInstance::Ptr instance{new sb::di::details::ExternalService{&test}};
+    sb::di::IServiceInstance::Ptr instance{new sb::di::details::services::ExternalService{&test}};
     auto act = [&]() { map.insert(typeid(TestClass1), std::move(instance)); };
 
     EXPECT_NO_THROW((act()));
@@ -40,14 +40,14 @@ TEST_F(ServiceInstancesMapTest, ShouldAdd)
 
 TEST_F(ServiceInstancesMapTest, ShouldFindList)
 {
-    sb::di::details::ServiceInstancesMap map{false};
+    sb::di::details::containers::ServiceInstancesMap map{false};
 
     TestInheritClass3 test;
-    sb::di::IServiceInstance::Ptr instance{new sb::di::details::ExternalService{&test}};
+    sb::di::IServiceInstance::Ptr instance{new sb::di::details::services::ExternalService{&test}};
     map.insert(typeid(TestInheritClass1), std::move(instance));
 
     TestInheritClass2 test2;
-    sb::di::IServiceInstance::Ptr instance2{new sb::di::details::ExternalService{&test2}};
+    sb::di::IServiceInstance::Ptr instance2{new sb::di::details::services::ExternalService{&test2}};
     map.insert(typeid(TestInheritClass1), std::move(instance2));
 
     auto list = map.findServices(typeid(TestInheritClass1));
@@ -63,7 +63,7 @@ TEST_F(ServiceInstancesMapTest, ShouldFindList)
 TEST_F(ServiceInstancesMapTest, ShouldDestructInProperOrder)
 {
     ServiceProviderMock mock;
-    sb::di::details::ServiceInstancesMap map{true};
+    sb::di::details::containers::ServiceInstancesMap map{true};
 
     struct DestructionOrderCheck
     {

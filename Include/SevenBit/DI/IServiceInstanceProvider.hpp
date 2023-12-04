@@ -78,7 +78,7 @@ namespace sb::di
          * @endcode
          */
         virtual IServiceInstance::Ptr createInstance(TypeId serviceTypeId) = 0;
-        
+
         virtual IServiceInstance::Ptr createInstanceInPlace(TypeId serviceTypeId) = 0;
 
         /**

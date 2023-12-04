@@ -3,8 +3,8 @@
 
 #include "Classes/BasicInherit.hpp"
 #include "Classes/BasicTest.hpp"
-#include "SevenBit/DI/Details/ServiceCtorFactory.hpp"
-#include "SevenBit/DI/Details/ServiceDescriptorList.hpp"
+#include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
+#include "SevenBit/DI/Details/Factories/ServiceCtorFactory.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
@@ -28,7 +28,7 @@ class ServiceDescriptorListTest : public testing::Test
 
 TEST_F(ServiceDescriptorListTest, ShouldAddServiceDescriptors)
 {
-    sb::di::details::ServiceDescriptorList list(
+    sb::di::details::containers::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
     auto act = [&]() {
@@ -41,7 +41,7 @@ TEST_F(ServiceDescriptorListTest, ShouldAddServiceDescriptors)
 
 TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorLifeTimeMismatch)
 {
-    sb::di::details::ServiceDescriptorList list(
+    sb::di::details::containers::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
@@ -53,7 +53,7 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorLifeTimeMismatch
 
 TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorBaseTypeMismatch)
 {
-    sb::di::details::ServiceDescriptorList list(
+    sb::di::details::containers::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
@@ -65,7 +65,7 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorBaseTypeMismatch
 
 TEST_F(ServiceDescriptorListTest, ShouldReturnProperSize)
 {
-    sb::di::details::ServiceDescriptorList list(
+    sb::di::details::containers::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());

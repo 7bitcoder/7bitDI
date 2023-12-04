@@ -3,7 +3,7 @@
 
 #include "Classes/BasicTest.hpp"
 #include "Mocks/ServiceProviderMock.hpp"
-#include "SevenBit/DI/Details/ExternalServiceFactory.hpp"
+#include "SevenBit/DI/Details/Factories/ExternalServiceFactory.hpp"
 
 class ExternalServiceFactoryTest : public testing::Test
 {
@@ -24,7 +24,7 @@ class ExternalServiceFactoryTest : public testing::Test
 TEST_F(ExternalServiceFactoryTest, ShouldReturnProperTypeId)
 {
     TestClass1 test;
-    sb::di::details::ExternalServiceFactory<TestClass1> factory{&test};
+    sb::di::details::factories::ExternalServiceFactory<TestClass1> factory{&test};
 
     EXPECT_EQ(factory.getServiceTypeId(), typeid(TestClass1));
 }
@@ -33,7 +33,7 @@ TEST_F(ExternalServiceFactoryTest, ShouldCreateService)
 {
     TestClass1 test;
     ServiceProviderMock mock;
-    sb::di::details::ExternalServiceFactory<TestClass1> factory{&test};
+    sb::di::details::factories::ExternalServiceFactory<TestClass1> factory{&test};
 
     auto instance = factory.createInstance(mock, false);
 

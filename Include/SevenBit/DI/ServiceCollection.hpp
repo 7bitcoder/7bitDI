@@ -8,6 +8,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Utils/Container.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
 #include "SevenBit/DI/OneOrList.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
@@ -16,6 +17,7 @@
 #include "SevenBit/DI/ServiceProvider.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 #include "SevenBit/DI/TypeId.hpp"
+
 namespace sb::di
 {
     class EXPORT ServiceCollection
@@ -253,7 +255,7 @@ namespace sb::di
          */
         template <class TPred> size_t removeIf(const TPred &pred)
         {
-            auto it = details::utils::removeIf(begin(), end(), pred);
+            auto it = details::utils::Container::removeIf(begin(), end(), pred);
             auto r = std::distance(it, end());
             removeRange(it, end());
             return r;
@@ -604,5 +606,5 @@ namespace sb::di
 } // namespace sb::di
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Impl/ServiceCollection.hpp"
+#include "SevenBit/DI/Impl/ServiceCollection.hpp"
 #endif

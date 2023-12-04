@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "Classes/BasicTest.hpp"
-#include "SevenBit/DI/Details/ServiceCtorFactory.hpp"
+#include "SevenBit/DI/Details/Factories/ServiceCtorFactory.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
@@ -26,7 +26,7 @@ class ServiceDescriptorTest : public testing::Test
 
 TEST_F(ServiceDescriptorTest, ShouldConstructDescriptor)
 {
-    auto factory = std::make_unique<sb::di::details::ServiceCtorFactory<TestClass1>>();
+    auto factory = std::make_unique<sb::di::details::factories::ServiceCtorFactory<TestClass1>>();
     auto act = [&]() {
         sb::di::ServiceDescriptor descriptor{typeid(TestClass1), sb::di::ServiceLifeTime::singleton(),
                                              std::move(factory)};
@@ -46,7 +46,7 @@ TEST_F(ServiceDescriptorTest, ShouldFailConstructDescriptor)
 
 TEST_F(ServiceDescriptorTest, ShouldGetProperInfoFromDescriptor)
 {
-    auto factory = std::make_unique<sb::di::details::ServiceCtorFactory<TestClass1>>();
+    auto factory = std::make_unique<sb::di::details::factories::ServiceCtorFactory<TestClass1>>();
     auto factoryPtr = factory.get();
     sb::di::ServiceDescriptor descriptor{typeid(TestClass1), sb::di::ServiceLifeTime::singleton(), std::move(factory)};
 

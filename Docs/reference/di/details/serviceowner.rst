@@ -1,6 +1,6 @@
-ServiceOwner
+InPlaceService
 ========================================
 
-.. doxygenclass:: sb::di::details::ServiceOwner
+.. doxygenclass:: sb::di::details::InPlaceService
    :members:
    :undoc-members:
