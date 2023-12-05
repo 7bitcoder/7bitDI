@@ -5,7 +5,7 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Factories/ExternalServiceFactory.hpp"
-#include "SevenBit/DI/Details/Factories/ServiceCtorFactory.hpp"
+#include "SevenBit/DI/Details/Factories/ServiceFactory.hpp"
 #include "SevenBit/DI/Details/Factories/ServiceFcnFactory.hpp"
 #include "SevenBit/DI/Details/Utils/Assert.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
@@ -111,7 +111,7 @@ namespace sb::di
         static ServiceDescriptor describe(ServiceLifeTime lifetime)
         {
             details::utils::Assert::inheritance<TService, TImplementation>();
-            auto factory = std::make_unique<details::factories::ServiceCtorFactory<TImplementation>>();
+            auto factory = std::make_unique<details::factories::ServiceFactory<TImplementation>>();
             return {typeid(TService), lifetime, std::move(factory)};
         }
 

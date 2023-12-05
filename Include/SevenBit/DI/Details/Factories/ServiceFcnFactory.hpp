@@ -6,7 +6,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Helpers/ServiceFactoryWrapper.hpp"
+#include "SevenBit/DI/Details/Helpers/ServiceFactoryInvoker.hpp"
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 #include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
@@ -19,30 +19,31 @@ namespace sb::di::details::factories
     template <class FactoryFcn> class ServiceFcnFactory : public IServiceFactory
     {
       private:
-        using FactoryWrapper = helpers::ServiceFactoryWrapper<FactoryFcn>;
-        FactoryWrapper _wrapper;
+        mutable FactoryFcn _factoryFunction;
 
       public:
-        using ServiceType = typename FactoryWrapper::TService;
+        using ServiceFactoryInvoker = helpers::ServiceFactoryInvoker<FactoryFcn>;
+        using ServiceType = typename ServiceFactoryInvoker::TService;
 
-        explicit ServiceFcnFactory(FactoryFcn &&factoryFunction) : _wrapper{std::move(factoryFunction)} {}
+        explicit ServiceFcnFactory(FactoryFcn &&factoryFunction) : _factoryFunction{std::move(factoryFunction)} {}
 
         [[nodiscard]] TypeId getServiceTypeId() const override { return typeid(ServiceType); }
 
         IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, bool inPlaceRequest) const override
         {
-            if constexpr (FactoryWrapper::IsUniquePtr::value)
+            ServiceFactoryInvoker invoker{_factoryFunction, serviceProvider};
+            if constexpr (ServiceFactoryInvoker::IsUniquePtr::value)
             {
-                return std::make_unique<services::UniquePtrService<ServiceType>>(_wrapper.invoke(serviceProvider));
+                return std::make_unique<services::UniquePtrService<ServiceType>>(invoker.invoke());
             }
             else
             {
                 if (inPlaceRequest)
                 {
-                    return std::make_unique<services::InPlaceService<ServiceType>>(_wrapper.invoke(serviceProvider));
+                    return std::make_unique<services::InPlaceService<ServiceType>>(invoker.invoke());
                 }
-                auto service = std::make_unique<ServiceType>(_wrapper.invoke(serviceProvider));
-                return std::make_unique<services::UniquePtrService<ServiceType>>(std::move(service));
+                auto servicePtr = std::make_unique<ServiceType>(invoker.invoke());
+                return std::make_unique<services::UniquePtrService<ServiceType>>(std::move(servicePtr));
             }
         }
     };

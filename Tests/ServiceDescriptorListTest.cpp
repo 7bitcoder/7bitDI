@@ -4,7 +4,7 @@
 #include "Classes/BasicInherit.hpp"
 #include "Classes/BasicTest.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
-#include "SevenBit/DI/Details/Factories/ServiceCtorFactory.hpp"
+#include "SevenBit/DI/Details/Factories/ServiceFactory.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"

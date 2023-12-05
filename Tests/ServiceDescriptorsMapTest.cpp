@@ -3,7 +3,7 @@
 
 #include "Classes/BasicInherit.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorsMap.hpp"
-#include "SevenBit/DI/Details/Factories/ServiceCtorFactory.hpp"
+#include "SevenBit/DI/Details/Factories/ServiceFactory.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"

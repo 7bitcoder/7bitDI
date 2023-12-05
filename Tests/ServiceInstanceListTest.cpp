@@ -5,7 +5,7 @@
 // #include "Classes/BasicInherit.hpp"
 // #include "Classes/BasicTest.hpp"
 // #include "SevenBit/DI/Details/ExternalService.hpp"
-// #include "SevenBit/DI/Details/ServiceCtorFactory.hpp"
+// #include "SevenBit/DI/Details/ServiceFactory.hpp"
 // #include "SevenBit/DI/Details/ServiceDescriptorList.hpp"
 // #include "SevenBit/DI/Details/ServiceInstanceList.hpp"
 // #include "SevenBit/DI/Details/InPlaceService.hpp"

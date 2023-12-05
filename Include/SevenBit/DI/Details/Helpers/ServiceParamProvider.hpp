@@ -14,9 +14,9 @@ namespace sb::di::details::helpers
 
     template <class T> struct ServiceParamProvider
     {
-        auto getService(ServiceProvider &provider)
+        auto getParam(ServiceProvider &provider)
         {
-            if constexpr (utils::IsInPlaceObject<T>::value)
+            if constexpr (utils::IsInPlaceObjectV<T>)
             {
                 return provider.createServiceInPlace<T>();
             }
@@ -31,55 +31,55 @@ namespace sb::di::details::helpers
 
     template <class T> struct ServiceParamProvider<T *>
     {
-        T *getService(ServiceProvider &sp) { return &sp.getService<T>(); }
+        T *getParam(ServiceProvider &sp) { return &sp.getService<T>(); }
     };
     template <class T> struct ServiceParamProvider<const T *>
     {
-        const T *getService(ServiceProvider &sp) { return &sp.getService<T>(); }
+        const T *getParam(ServiceProvider &sp) { return &sp.getService<T>(); }
     };
     template <class T> struct ServiceParamProvider<T *const>
     {
-        T *const getService(ServiceProvider &sp) { return &sp.getService<T>(); }
+        T *const getParam(ServiceProvider &sp) { return &sp.getService<T>(); }
     };
     template <class T> struct ServiceParamProvider<const T *const>
     {
-        const T *const getService(ServiceProvider &sp) { return &sp.getService<T>(); }
+        const T *const getParam(ServiceProvider &sp) { return &sp.getService<T>(); }
     };
 
     template <class T> struct ServiceParamProvider<T &>
     {
-        T &getService(ServiceProvider &sp) { return sp.getService<T>(); }
+        T &getParam(ServiceProvider &sp) { return sp.getService<T>(); }
     };
     template <class T> struct ServiceParamProvider<const T &>
     {
-        const T &getService(ServiceProvider &sp) { return sp.getService<T>(); }
+        const T &getParam(ServiceProvider &sp) { return sp.getService<T>(); }
     };
 
     template <class T> struct ServiceParamProvider<std::unique_ptr<T>>
     {
-        std::unique_ptr<T> getService(ServiceProvider &sp) { return sp.createService<T>(); }
+        std::unique_ptr<T> getParam(ServiceProvider &sp) { return sp.createService<T>(); }
     };
     template <class T> struct ServiceParamProvider<const std::unique_ptr<T>>
     {
-        const std::unique_ptr<T> getService(ServiceProvider &sp) { return sp.createService<T>(); }
+        const std::unique_ptr<T> getParam(ServiceProvider &sp) { return sp.createService<T>(); }
     };
 
     template <class T> struct ServiceParamProvider<std::vector<T *>>
     {
-        std::vector<T *> getService(ServiceProvider &sp) { return sp.getServices<T>(); }
+        std::vector<T *> getParam(ServiceProvider &sp) { return sp.getServices<T>(); }
     };
     template <class T> struct ServiceParamProvider<const std::vector<T *>>
     {
-        const std::vector<T *> getService(ServiceProvider &sp) { return sp.getServices<T>(); }
+        const std::vector<T *> getParam(ServiceProvider &sp) { return sp.getServices<T>(); }
     };
 
     template <class T> struct ServiceParamProvider<std::vector<std::unique_ptr<T>>>
     {
-        std::vector<std::unique_ptr<T>> getService(ServiceProvider &sp) { return sp.createServices<T>(); }
+        std::vector<std::unique_ptr<T>> getParam(ServiceProvider &sp) { return sp.createServices<T>(); }
     };
     template <class T> struct ServiceParamProvider<const std::vector<std::unique_ptr<T>>>
     {
-        const std::vector<std::unique_ptr<T>> getService(ServiceProvider &sp) { return sp.createServices<T>(); }
+        const std::vector<std::unique_ptr<T>> getParam(ServiceProvider &sp) { return sp.createServices<T>(); }
     };
 
     template <class T> struct ServiceParamProvider<std::vector<T>>
