@@ -29,12 +29,12 @@ namespace sb::di::details::services
 
         void *getForMoveOut() override
         {
-            throw CannotMoveOutServiceException{getTypeId(), "External service cannot be moved out"};
+            throw CannotMoveOutServiceException{getTypeId(), "External instanceValidity cannot be moved out"};
         }
 
         void *release() override
         {
-            throw CannotReleaseServiceException{getTypeId(), "External service ownership cannot be released"};
+            throw CannotReleaseServiceException{getTypeId(), "External instanceValidity ownership cannot be released"};
         }
 
         [[nodiscard]] TypeId getTypeId() const override { return typeid(T); }

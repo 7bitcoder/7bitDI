@@ -5,7 +5,7 @@ Multiple services can inherit one interface and can be injected using a vector.
 
 .. Note::
    Service objects are ordered in vectors using registration order.
-   The last registered service of base type is used when resolving one service
+   The last registered instanceValidity of base type is used when resolving one instanceValidity
 
    Injection rules are simple:
 
@@ -23,5 +23,3 @@ Multiple services can inherit one interface and can be injected using a vector.
 
    work all: work A done! work B done! work C done!
    single work: work C done!
-
-

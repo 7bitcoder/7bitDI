@@ -9,7 +9,7 @@
 namespace sb::di
 {
     /**
-     * @brief Interface for all service instances
+     * @brief Interface for all instanceValidity instances
      */
     struct IServiceInstance
     {

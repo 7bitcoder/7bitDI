@@ -6,6 +6,8 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Core/DefaultServiceProvider.hpp"
+#include "SevenBit/DI/Details/Utils/Check.hpp"
+#include "SevenBit/DI/Details/Utils/Require.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
@@ -13,13 +15,13 @@
 namespace sb::di::details::core
 {
     INLINE DefaultServiceProvider::DefaultServiceProvider(const DefaultServiceProvider &provider)
-        : _sharedData(utils::Check::notNullAndGet(provider._sharedData)),
+        : _sharedData(utils::Require::notNullAndGet(IServiceProviderData::SPtr{provider._sharedData})),
           _scoped(_sharedData->getOptions().strongDestructionOrder)
     {
     }
 
     INLINE DefaultServiceProvider::DefaultServiceProvider(IServiceProviderData::Ptr core)
-        : _sharedData(utils::Check::notNullAndGet(std::move(core))),
+        : _sharedData(utils::Require::notNullAndGet(std::move(core))),
           _scoped(_sharedData->getOptions().strongDestructionOrder)
     {
         if (_sharedData->getOptions().prebuildSingletons)
@@ -35,12 +37,12 @@ namespace sb::di::details::core
 
     INLINE const IServiceInstance &DefaultServiceProvider::getInstance(TypeId serviceTypeId)
     {
-        if (auto instance = tryGetInstance(serviceTypeId))
+        if (auto instance = tryGetInstance(serviceTypeId); utils::Check::instanceValidity(instance))
         {
             return *instance;
         }
         throw ServiceNotFoundException{serviceTypeId,
-                                       "Service was not registered or was registered as transient service"};
+                                       "Service was not registered or was registered as transient instance"};
     }
 
     INLINE const IServiceInstance *DefaultServiceProvider::tryGetInstance(TypeId serviceTypeId)
@@ -71,12 +73,12 @@ namespace sb::di::details::core
 
     INLINE IServiceInstance::Ptr DefaultServiceProvider::createInstance(TypeId serviceTypeId)
     {
-        if (auto instance = tryCreateInstance(serviceTypeId))
+        if (auto instance = tryCreateInstance(serviceTypeId); utils::Check::instanceValidity(instance))
         {
             return instance;
         }
         throw ServiceNotFoundException{serviceTypeId,
-                                       "Service was not registered or was registered as singleton/scoped service"};
+                                       "Service was not registered or was registered as singleton/scoped instance"};
     }
 
     INLINE IServiceInstance::Ptr DefaultServiceProvider::tryCreateInstance(TypeId serviceTypeId)
@@ -85,31 +87,32 @@ namespace sb::di::details::core
         return descriptors ? tryCreate(descriptors->last(), false) : nullptr;
     }
 
-    INLINE IServiceInstance::Ptr DefaultServiceProvider::createInstanceInPlace(TypeId serviceTypeId)
-    {
-        if (auto instance = tryCreateInstanceInPlace(serviceTypeId))
-        {
-            return instance;
-        }
-        throw ServiceNotFoundException{serviceTypeId,
-                                       "Service was not registered or was registered as singleton/scoped service"};
-    }
-
-    INLINE IServiceInstance::Ptr DefaultServiceProvider::tryCreateInstanceInPlace(TypeId serviceTypeId)
-    {
-        if (auto descriptors = findDescriptors(serviceTypeId))
-        {
-            auto &descriptor = descriptors->last();
-            return descriptor.getImplementationTypeId() == serviceTypeId ? tryCreate(descriptor, true) : nullptr;
-        }
-        return nullptr;
-    }
-
     INLINE std::optional<OneOrList<IServiceInstance::Ptr>> DefaultServiceProvider::tryCreateInstances(
         TypeId serviceTypeId)
     {
         auto descriptors = findDescriptors(serviceTypeId);
         return descriptors ? tryCreateAll(*descriptors) : std::nullopt;
+    }
+
+    INLINE IServiceInstance::Ptr DefaultServiceProvider::createInstanceInPlace(TypeId serviceTypeId)
+    {
+        if (auto instance = tryCreateInstanceInPlace(serviceTypeId); utils::Check::instanceValidity(instance))
+        {
+            return instance;
+        }
+        throw ServiceNotFoundException{serviceTypeId,
+                                       "Service was not registered, typeid does not match implementationId or was "
+                                       "registered as singleton/scoped instance"};
+    }
+
+    INLINE IServiceInstance::Ptr DefaultServiceProvider::tryCreateInstanceInPlace(TypeId serviceTypeId)
+    {
+        if (auto descriptors = findDescriptors(serviceTypeId);
+            descriptors && descriptors->last().getImplementationTypeId() == serviceTypeId)
+        {
+            return tryCreate(descriptors->last(), true);
+        }
+        return nullptr;
     }
 
     INLINE void DefaultServiceProvider::clear() { _scoped.clear(); }
@@ -165,11 +168,7 @@ namespace sb::di::details::core
     INLINE IServiceInstance::Ptr DefaultServiceProvider::tryCreate(const ServiceDescriptor &descriptor,
                                                                    bool inPlaceRequest)
     {
-        if (descriptor.getLifeTime().isTransient())
-        {
-            return createInstance(descriptor, inPlaceRequest);
-        }
-        return nullptr;
+        return descriptor.getLifeTime().isTransient() ? createInstance(descriptor, inPlaceRequest) : nullptr;
     }
 
     INLINE std::optional<OneOrList<IServiceInstance::Ptr>> DefaultServiceProvider::tryCreateAll(
@@ -188,12 +187,8 @@ namespace sb::di::details::core
                                                                         bool inPlaceRequest)
     {
         auto _ = _guard(descriptor.getImplementationTypeId());
-        auto instance = descriptor.getImplementationFactory().createInstance(*this, inPlaceRequest);
-        if (instance && instance->isValid())
-        {
-            return instance;
-        }
-        throw InvalidServiceException{descriptor.getImplementationTypeId(), "Service instance is null or is invalid"};
+        return utils::Require::validInstanceAndGet(
+            descriptor.getImplementationFactory().createInstance(*this, inPlaceRequest));
     }
 
     INLINE const ServiceProviderOptions &DefaultServiceProvider::getOptions() { return _sharedData->getOptions(); }

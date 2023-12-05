@@ -39,7 +39,7 @@ namespace sb::di::details::containers
     {
         if (!empty() && descriptor.getServiceTypeId() != getServiceTypeId())
         {
-            throw ServiceBaseTypeMissmatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
+            throw ServiceBaseTypeMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
         }
     }
 
@@ -47,7 +47,7 @@ namespace sb::di::details::containers
     {
         if (!empty() && descriptor.getLifeTime() != getLifeTime())
         {
-            throw ServiceLifeTimeMissmatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
+            throw ServiceLifeTimeMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
         }
     }
 

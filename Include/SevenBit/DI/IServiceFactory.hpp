@@ -10,7 +10,7 @@
 namespace sb::di
 {
     /**
-     * @brief Interface for all service factories
+     * @brief Interface for all instanceValidity factories
      */
     struct IServiceFactory
     {
@@ -18,12 +18,12 @@ namespace sb::di
         using SPtr = std::shared_ptr<IServiceFactory>;
 
         /**
-         * @brief Get the TypeId of the service instances that the factory will create
+         * @brief Get the TypeId of the instanceValidity instances that the factory will create
          */
         virtual TypeId getServiceTypeId() const = 0;
 
         /**
-         * @brief Create a service instance object
+         * @brief Create a instanceValidity instanceValidity object
          */
 
         virtual IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, bool inPlaceRequest) const = 0;

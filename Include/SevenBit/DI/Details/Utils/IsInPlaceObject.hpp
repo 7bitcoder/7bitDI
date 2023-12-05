@@ -14,4 +14,16 @@ namespace sb::di::details::utils
                                            !std::is_reference_v<T>>
     {
     };
+
+    template <class T> inline constexpr bool IsInPlaceObjectV = IsInPlaceObject<T>::value;
+
+    template <class T>
+    struct IsInPlaceObjectConstructable
+        : std::integral_constant<bool, IsInPlaceObjectV<T> &&
+                                           (std::is_move_constructible_v<T> || std::is_copy_constructible_v<T>)>
+    {
+    };
+
+    template <class T> inline constexpr bool IsInPlaceObjectConstructableV = IsInPlaceObjectConstructable<T>::value;
+
 } // namespace sb::di::details::utils

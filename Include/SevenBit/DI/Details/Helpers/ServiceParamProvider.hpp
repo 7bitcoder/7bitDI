@@ -5,22 +5,27 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Utils/IsInPlaceObject.hpp"
 #include "SevenBit/DI/Details/Utils/NotSupportedType.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 
 namespace sb::di::details::helpers
 {
 
-    template <class... T> inline constexpr bool notSupportedType = false;
-
     template <class T> struct ServiceParamProvider
     {
         auto getService(ServiceProvider &provider)
         {
-            static_assert(
-                utils::notSupportedType<T>,
-                "Type is not supported as function argument parameter, use "
-                "pointers, references, std::unique_ptr<T>, std::vector containing pointers or std::unique_ptr<T>");
+            if constexpr (utils::IsInPlaceObject<T>::value)
+            {
+                return provider.createServiceInPlace<T>();
+            }
+            else
+            {
+                static_assert(utils::notSupportedType<T>,
+                              "Type is not supported as function argument parameter use objects, pointers, references, "
+                              "std::unique_ptr<T>, std::vector containing pointers or std::unique_ptr<T>");
+            }
         }
     };
 
@@ -79,7 +84,7 @@ namespace sb::di::details::helpers
 
     template <class T> struct ServiceParamProvider<std::vector<T>>
     {
-        static_assert(notSupportedType<T>,
-                      "Vector should contain pointners or unique pointners for transient services");
+        static_assert(utils::notSupportedType<T>,
+                      "Vector should contain pointers or unique pointers for transient services");
     };
 } // namespace sb::di::details::helpers

@@ -59,7 +59,7 @@ TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToLifetimeMissmatchInherited
     collection.addSingleton<TestInheritClass1, TestInheritClass5>();
     collection.addTransient<TestInheritClass1, TestInheritClass4>();
 
-    EXPECT_THROW((collection.buildServiceProvider()), sb::di::ServiceLifeTimeMissmatchException);
+    EXPECT_THROW((collection.buildServiceProvider()), sb::di::ServiceLifeTimeMismatchException);
 }
 
 // tryGetInstance Tests

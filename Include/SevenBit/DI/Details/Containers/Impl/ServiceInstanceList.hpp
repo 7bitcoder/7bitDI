@@ -3,7 +3,7 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
-#include "SevenBit/DI/Details/Utils/Check.hpp"
+#include "SevenBit/DI/Details/Utils/Require.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 
@@ -12,13 +12,13 @@ namespace sb::di::details::containers
     INLINE ServiceInstanceList::ServiceInstanceList(size_t size) : _oneOrList(size) {}
 
     INLINE ServiceInstanceList::ServiceInstanceList(IServiceInstance::Ptr instance)
-        : _oneOrList(details::utils::Check::serviceAndGet(std::move(instance)))
+        : _oneOrList(details::utils::Require::validInstanceAndGet(std::move(instance)))
     {
     }
 
     INLINE void ServiceInstanceList::add(IServiceInstance::Ptr &&service)
     {
-        _oneOrList.add(details::utils::Check::serviceAndMove(std::move(service)));
+        _oneOrList.add(details::utils::Require::validInstanceAndGet(std::move(service)));
     }
 
     INLINE OneOrList<IServiceInstance::Ptr> &ServiceInstanceList::getInnerList() { return _oneOrList; }

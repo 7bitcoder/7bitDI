@@ -13,7 +13,7 @@ namespace sb::di
     {
         if (!_implementationFactory)
         {
-            throw NullPointnerException{"Implementation factory cannot be null"};
+            throw NullPointerException{"Implementation factory cannot be null"};
         }
     }
 

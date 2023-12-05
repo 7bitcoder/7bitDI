@@ -24,7 +24,8 @@ namespace sb::di::details::helpers
 
         ServiceFactoryInvoker(F &&factory) : _factory(std::move(factory))
         {
-            static_assert(IsUniquePtr::value || (IsInPlaceObject::value && IsMovable::value) || notSupportedType<F>,
+            static_assert(IsUniquePtr::value || (IsInPlaceObject::value && IsMovable::value) ||
+                              utils::notSupportedType<F>,
                           "Factory return type must be std::unique_ptr<TService> or movable object");
         }
 

@@ -10,26 +10,28 @@ namespace sb::di
 {
     INLINE InjectorException::InjectorException(const std::string &error) : std::runtime_error{error} {}
 
-    INLINE NullPointnerException::NullPointnerException(const std::string &why) : InjectorException{why} {}
+    INLINE NullPointerException::NullPointerException(const std::string &why) : InjectorException{why} {}
+
+    INLINE InvalidServiceException::InvalidServiceException(TypeId typeId)
+        : InjectorException{std::string{"Service: '"} + typeId.name() + "' is in not valid state."}
+    {
+    }
 
     INLINE ForbiddenServiceFactoryException::ForbiddenServiceFactoryException(TypeId typeId, const std::string &reason)
-        : InjectorException{std::string{"Forbidden service: '"} + typeId.name() + "' factory, reason: " + reason + "."}
+        : InjectorException{std::string{"Forbidden instanceValidity: '"} + typeId.name() +
+                            "' factory, reason: " + reason + "."}
     {
     }
 
     INLINE CannotReleaseServiceException::CannotReleaseServiceException(TypeId typeId, const std::string &reason)
-        : InjectorException{std::string{"Cannot release ownership of service: '"} + typeId.name() +
+        : InjectorException{std::string{"Cannot release ownership of instanceValidity: '"} + typeId.name() +
                             "', reason: " + reason + "."}
     {
     }
 
     INLINE CannotMoveOutServiceException::CannotMoveOutServiceException(TypeId typeId, const std::string &reason)
-        : InjectorException{std::string{"Cannot move out service: '"} + typeId.name() + "', reason: " + reason + "."}
-    {
-    }
-
-    INLINE InvalidServiceException::InvalidServiceException(TypeId typeId, const std::string &reason)
-        : InjectorException{std::string{"Service: '"} + typeId.name() + "' is invalid, reason: " + reason + "."}
+        : InjectorException{std::string{"Cannot move out instanceValidity: '"} + typeId.name() +
+                            "', reason: " + reason + "."}
     {
     }
 
@@ -39,8 +41,8 @@ namespace sb::di
     }
 
     INLINE CircularDependencyException::CircularDependencyException(TypeId typeIndex)
-        : InjectorException{std::string{"Circular dependency detected while creating service: '"} + typeIndex.name() +
-                            "'."}
+        : InjectorException{std::string{"Circular dependency detected while creating instanceValidity: '"} +
+                            typeIndex.name() + "'."}
     {
     }
 
@@ -49,13 +51,13 @@ namespace sb::di
     {
     }
 
-    INLINE ServiceBaseTypeMissmatchException::ServiceBaseTypeMissmatchException(TypeId typeIndex, TypeId interface)
+    INLINE ServiceBaseTypeMismatchException::ServiceBaseTypeMismatchException(TypeId typeIndex, TypeId interface)
         : InjectorException{std::string{"Service: '"} + typeIndex.name() + "' should implement this base type '" +
                             interface.name() + "' ."}
     {
     }
 
-    INLINE ServiceLifeTimeMissmatchException::ServiceLifeTimeMissmatchException(TypeId typeIndex, TypeId interface)
+    INLINE ServiceLifeTimeMismatchException::ServiceLifeTimeMismatchException(TypeId typeIndex, TypeId interface)
         : InjectorException{std::string{"Service: '"} + typeIndex.name() +
                             "' should have same scope as other services implementing this interface '" +
                             interface.name() + "' that are already registered."}

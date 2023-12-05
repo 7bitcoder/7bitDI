@@ -7,32 +7,10 @@
 
 namespace sb::di::details::utils
 {
-    INLINE IServiceInstance::Ptr &&Check::serviceAndMove(IServiceInstance::Ptr &&service)
+    INLINE bool Check::instanceValidity(const IServiceInstance::Ptr &instance)
     {
-        Check::service(service.get());
-        return std::move(service);
+        return instanceValidity(instance.get());
     }
 
-    INLINE IServiceInstance::Ptr Check::serviceAndGet(IServiceInstance::Ptr service)
-    {
-        Check::service(service.get());
-        return std::move(service);
-    }
-
-    INLINE IServiceInstance *Check::serviceAndGet(IServiceInstance *service)
-    {
-        Check::service(service);
-        return service;
-    }
-
-    INLINE void Check::service(const IServiceInstance::Ptr &service) { Check::service(service.get()); }
-
-    INLINE void Check::service(const IServiceInstance *service)
-    {
-        Check::notNull(service);
-        if (!service->isValid())
-        {
-            throw InvalidServiceException{service->getTypeId(), ""};
-        }
-    }
+    INLINE bool Check::instanceValidity(const IServiceInstance *instance) { return instance && instance->isValid(); }
 } // namespace sb::di::details::utils

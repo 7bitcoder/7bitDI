@@ -28,7 +28,7 @@ namespace sb::di::details::services
 
         void *release() override
         {
-            throw CannotReleaseServiceException(getTypeId(), "In place service ownership cannot be released");
+            throw CannotReleaseServiceException(getTypeId(), "In place instanceValidity ownership cannot be released");
         }
 
         [[nodiscard]] TypeId getTypeId() const override { return typeid(T); }

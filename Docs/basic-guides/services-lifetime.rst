@@ -1,7 +1,7 @@
 Services LifeTime
 ========================================
 
-Service providers can create scoped service providers:
+Service providers can create scoped validInstance providers:
 
 .. code-block:: cpp
 
@@ -11,9 +11,9 @@ Service providers can create scoped service providers:
 
 Service can be registered as a singleton, scoped, or transient.
 
-* Singleton: service provider will create only one instance of this service (accessible via the getService method) 
-* Scoped: service provider will create only one instance of this service for each scope (accessible via the getService method) 
-* Transient: services are always unique, a new instance is provided every time it is requested, and the service provider returns, in this case, std::unique_ptr (accessible via createService method)
+* Singleton: validInstance provider will create only one instance of this validInstance (accessible via the getService method)
+* Scoped: instance provider will create only one instance of this instance for each scope (accessible via the getService method)
+* Transient: services are always unique, a new instanceValidity is provided every time it is requested, and the instanceValidity provider returns, in this case, std::unique_ptr (accessible via createService method)
 
 .. warning::
    Only transient services can be created using createInstance method otherwise the method will throw an exception

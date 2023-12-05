@@ -41,7 +41,7 @@ TEST_F(ServiceDescriptorTest, ShouldFailConstructDescriptor)
         sb::di::ServiceDescriptor descriptor{typeid(TestClass1), sb::di::ServiceLifeTime::singleton(), nullptr};
     };
 
-    EXPECT_THROW((act()), sb::di::NullPointnerException);
+    EXPECT_THROW((act()), sb::di::NullPointerException);
 }
 
 TEST_F(ServiceDescriptorTest, ShouldGetProperInfoFromDescriptor)

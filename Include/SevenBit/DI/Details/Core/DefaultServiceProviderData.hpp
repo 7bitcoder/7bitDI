@@ -46,5 +46,5 @@ namespace sb::di::details::core
 } // namespace sb::di::details::core
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Core/Impl/DefaultServiceProviderCore.hpp"
+#include "SevenBit/DI/Details/Core/Impl/DefaultServiceProviderData.hpp"
 #endif

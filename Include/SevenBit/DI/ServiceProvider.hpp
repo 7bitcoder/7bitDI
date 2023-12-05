@@ -5,6 +5,8 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Utils/Check.hpp"
+#include "SevenBit/DI/Details/Utils/Require.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstanceProvider.hpp"
 
@@ -19,8 +21,8 @@ namespace sb::di
         IServiceInstanceProvider &asInstanceProvider() { return *this; }
 
         /**
-         * @brief Create a scoped service provider
-         * @details Scoped service provider creates/holds its own scoped services
+         * @brief Create a scoped instanceValidity provider
+         * @details Scoped instanceValidity provider creates/holds its own scoped services
          *
          * Example:
          * @code {.cpp}
@@ -33,19 +35,19 @@ namespace sb::di
         virtual ServiceProvider::Ptr createScope() = 0;
 
         /**
-         * @brief Returns service pointer, might be null
-         * @details If service was not registered or was registered as transient, method returns null
+         * @brief Returns instanceValidity pointer, might be null
+         * @details If instanceValidity was not registered or was registered as transient, method returns null
          *
          * Example:
          * @code {.cpp}
          * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
          *
-         * TestClass * service = provider->tryGetService<TestClass>();
+         * TestClass * instanceValidity = provider->tryGetService<TestClass>();
          * @endcode
          */
         template <class TService> TService *tryGetService()
         {
-            if (auto instance = tryGetInstance(typeid(TService)); instance && instance->isValid())
+            if (auto instance = tryGetInstance(typeid(TService)); details::utils::Check::instanceValidity(instance))
             {
                 return instance->getAs<TService>();
             }
@@ -53,29 +55,27 @@ namespace sb::di
         }
 
         /**
-         * @brief Returns service reference, might throw exception
-         * @details If service was not registered or was registered as transient, method throws exception
-         * @throws ServiceNotFoundException service was not found
+         * @brief Returns instanceValidity reference, might throw exception
+         * @details If instanceValidity was not registered or was registered as transient, method throws exception
+         * @throws ServiceNotFoundException instanceValidity was not found
          *
          * Example:
          * @code {.cpp}
          * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
          *
-         * TestClass & service = provider->getService<TestClass>();
+         * TestClass & instanceValidity = provider->getService<TestClass>();
          * @endcode
          */
         template <class TService> TService &getService()
         {
-            if (auto &instance = getInstance(typeid(TService)); instance.isValid())
-            {
-                return *instance.getAs<TService>();
-            }
-            throw ServiceNotFoundException{typeid(TService), "Service is invalid"};
+            auto &instance = getInstance(typeid(TService));
+            details::utils::Require::validInstance(&instance);
+            return *instance.getAs<TService>();
         }
 
         /**
          * @brief Returns services
-         * @details If service was not registered or was registered as transient, method returns empty vector
+         * @details If instanceValidity was not registered or was registered as transient, method returns empty vector
          *
          * Example:
          * @code {.cpp}
@@ -89,46 +89,28 @@ namespace sb::di
          */
         template <class TService> std::vector<TService *> getServices()
         {
-            auto instances = tryGetInstances(typeid(TService));
-            if (!instances)
+            if (auto instances = tryGetInstances(typeid(TService)))
             {
-                return {};
+                return mapValidInstances(
+                    *instances, [](const IServiceInstance::Ptr &instance) { return instance->getAs<TService>(); });
             }
-            std::vector<TService *> result;
-            if (auto instancePtr = instances->tryGetAsSingle())
-            {
-                auto &instance = *instancePtr;
-                if (instance && instance->isValid())
-                {
-                    result.emplace_back(instance->getAs<TService>());
-                }
-                return result;
-            }
-            result.reserve(instances->size());
-            for (auto &instance : instances->getAsList())
-            {
-                if (instance && instance->isValid())
-                {
-                    result.emplace_back(instance->getAs<TService>());
-                }
-            }
-            return result;
+            return {};
         }
 
         /**
-         * @brief Creates service unique pointner, might be null
-         * @details If service was not registered or was registered as scoped/transient, method returns null
+         * @brief Creates instanceValidity unique pointner, might be null
+         * @details If instanceValidity was not registered or was registered as scoped/transient, method returns null
          *
          * Example:
          * @code {.cpp}
          * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
          *
-         * std::unique_ptr<TestClass> service = provider->tryCreateService<TestClass>();
+         * std::unique_ptr<TestClass> instanceValidity = provider->tryCreateService<TestClass>();
          * @endcode
          */
         template <class TService> std::unique_ptr<TService> tryCreateService()
         {
-            if (auto instance = tryCreateInstance(typeid(TService)); instance && instance->isValid())
+            if (auto instance = tryCreateInstance(typeid(TService)); details::utils::Check::instanceValidity(instance))
             {
                 return instance->moveOutAsUniquePtr<TService>();
             }
@@ -136,38 +118,36 @@ namespace sb::di
         }
 
         /**
-         * @brief Creates service unique pointner, might throw exception
-         * @details If service was not registered or was registered as scoped/transient, method throws exception
-         * @throws ServiceNotFoundException service was not found
+         * @brief Creates instanceValidity unique pointner, might throw exception
+         * @details If instanceValidity was not registered or was registered as scoped/transient, method throws
+         * exception
+         * @throws ServiceNotFoundException instanceValidity was not found
          *
          * Example:
          * @code {.cpp}
          * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
          *
-         * std::unique_ptr<TestClass> service = provider->createInstance<TestClass>();
+         * std::unique_ptr<TestClass> instanceValidity = provider->createInstance<TestClass>();
          * @endcode
          */
         template <class TService> std::unique_ptr<TService> createService()
         {
-            if (auto instance = createInstance(typeid(TService)); instance && instance->isValid())
-            {
-                return instance->moveOutAsUniquePtr<TService>();
-            }
-            throw ServiceNotFoundException{typeid(TService), "Service is invalid"};
+            auto instance = createInstance(typeid(TService));
+            details::utils::Require::validInstance(instance);
+            return instance->moveOutAsUniquePtr<TService>();
         }
 
         template <class TService> TService createServiceInPlace()
         {
-            if (auto instance = createInstanceInPlace(typeid(TService)); instance && instance->isValid())
-            {
-                return std::move(instance->moveOutAs<TService>());
-            }
-            throw ServiceNotFoundException{typeid(TService), "Service is invalid or typeid is not matching"};
+            auto instance = createInstanceInPlace(typeid(TService));
+            details::utils::Require::validInstance(instance);
+            return instance->moveOutAs<TService>();
         }
 
         /**
          * @brief Creates services
-         * @details If service was not registered or was registered as scoped/transient, method returns empty vector
+         * @details If instanceValidity was not registered or was registered as scoped/transient, method returns empty
+         * vector
          *
          * Example:
          * @code {.cpp}
@@ -181,27 +161,34 @@ namespace sb::di
          */
         template <class TService> std::vector<std::unique_ptr<TService>> createServices()
         {
-            auto instances = tryCreateInstances(typeid(TService));
-            if (!instances)
+            if (auto instances = tryCreateInstances(typeid(TService)))
             {
-                return {};
+                return mapValidInstances(*instances, [](IServiceInstance::Ptr &instance) {
+                    return instance->moveOutAsUniquePtr<TService>();
+                });
             }
-            std::vector<std::unique_ptr<TService>> result;
-            if (auto instancePtr = instances->tryGetAsSingle())
+            return {};
+        }
+
+      private:
+        template <class OneOrList, class TFunc> auto mapValidInstances(OneOrList &instances, TFunc mapFunction)
+        {
+            std::vector<decltype(mapFunction(instances.first()))> result;
+            if (auto instance = instances.tryGetAsSingle())
             {
-                auto &instance = *instancePtr;
-                if (instance && instance->isValid())
+                if (details::utils::Check::instanceValidity(*instance))
                 {
-                    result.emplace_back(instance->moveOutAsUniquePtr<TService>());
+                    result.reserve(1);
+                    result.emplace_back(mapFunction(*instance));
                 }
                 return result;
             }
-            result.reserve(instances->size());
-            for (auto &instance : instances->getAsList())
+            result.reserve(instances.size());
+            for (auto &instance : instances.getAsList())
             {
-                if (instance && instance->isValid())
+                if (details::utils::Check::instanceValidity(instance))
                 {
-                    result.emplace_back(instance->moveOutAsUniquePtr<TService>());
+                    result.emplace_back(mapFunction(instance));
                 }
             }
             return result;

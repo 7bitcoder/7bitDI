@@ -11,9 +11,4 @@ Basic Guides
    basic-guides/injecting-services
    basic-guides/injecting-multiple-services
    basic-guides/injection-rules
-   basic-guides/injecting-service-provider
-   
-   
-   
-
-
+   basic-guides/injecting-instanceValidity-provider
