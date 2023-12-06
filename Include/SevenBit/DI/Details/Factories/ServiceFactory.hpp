@@ -16,9 +16,10 @@ namespace sb::di::details::factories
 {
     template <class T> class ServiceFactory : public IServiceFactory
     {
-      public:
+      private:
         using ServiceCtorInvoker = helpers::ServiceCtorInvoker<T>;
 
+      public:
         [[nodiscard]] TypeId getServiceTypeId() const override { return typeid(T); }
 
         IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, bool inPlaceRequest) const override

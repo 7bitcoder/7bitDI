@@ -13,25 +13,26 @@
 
 namespace sb::di::details::helpers
 {
-    template <class F> struct ServiceFactoryInvoker
+    template <class FactoryFcn> struct ServiceFactoryInvoker
     {
       private:
-        using FunctorTraits = FunctorTraits<F>;
+        using FunctorTraits = utils::FunctorTraits<FactoryFcn>;
+        using IsUniquePtr = utils::IsUniquePtr<typename FunctorTraits::ReturnType>;
         template <size_t Index>
         using ParamProvider = helpers::ServiceParamProvider<typename FunctorTraits::template Arg<Index>::Type>;
 
-        F &_factory;
+        FactoryFcn &_factory;
         ServiceProvider &_serviceProvider;
 
       public:
-        using IsUniquePtr = utils::IsUniquePtr<typename FunctorTraits::ReturnType>;
+        static constexpr bool IsReturnTypeUniquePtr = IsUniquePtr::value;
         using TService = typename IsUniquePtr::Type;
 
-        ServiceFactoryInvoker(F &factory, ServiceProvider &serviceProvider)
+        ServiceFactoryInvoker(FactoryFcn &factory, ServiceProvider &serviceProvider)
             : _factory(factory), _serviceProvider(serviceProvider)
         {
-            static_assert(IsUniquePtr::value || utils::IsInPlaceObjectConstructableV<TService> ||
-                              utils::notSupportedType<F>,
+            static_assert(IsReturnTypeUniquePtr || utils::IsInPlaceObjectConstructableV<TService> ||
+                              utils::notSupportedType<FactoryFcn>,
                           "Factory return type must be std::unique_ptr<TService> or movable/copyable object");
         }
 

@@ -19,10 +19,11 @@ namespace sb::di::details::factories
     template <class FactoryFcn> class ServiceFcnFactory : public IServiceFactory
     {
       private:
+        using ServiceFactoryInvoker = helpers::ServiceFactoryInvoker<FactoryFcn>;
+
         mutable FactoryFcn _factoryFunction;
 
       public:
-        using ServiceFactoryInvoker = helpers::ServiceFactoryInvoker<FactoryFcn>;
         using ServiceType = typename ServiceFactoryInvoker::TService;
 
         explicit ServiceFcnFactory(FactoryFcn &&factoryFunction) : _factoryFunction{std::move(factoryFunction)} {}
@@ -32,7 +33,7 @@ namespace sb::di::details::factories
         IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, bool inPlaceRequest) const override
         {
             ServiceFactoryInvoker invoker{_factoryFunction, serviceProvider};
-            if constexpr (ServiceFactoryInvoker::IsUniquePtr::value)
+            if constexpr (ServiceFactoryInvoker::IsReturnTypeUniquePtr)
             {
                 return std::make_unique<services::UniquePtrService<ServiceType>>(invoker.invoke());
             }

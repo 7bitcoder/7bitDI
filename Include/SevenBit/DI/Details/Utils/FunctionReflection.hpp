@@ -10,7 +10,7 @@
 #include "SevenBit/DI/Details/Utils/IsUniquePtr.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
-namespace sb::di::details::helpers
+namespace sb::di::details::utils
 {
     template <class F> struct TraitsInfo
     {
@@ -38,7 +38,7 @@ namespace sb::di::details::helpers
         using Function = F;
         using ReturnType = typename Info::ReturnType;
         using TupleArgs = typename Info::TupleArgs;
-        
+
         static constexpr size_t ArgsSize = std::tuple_size_v<TupleArgs>;
 
         template <size_t I> struct Arg
@@ -46,4 +46,4 @@ namespace sb::di::details::helpers
             using Type = typename std::tuple_element<I, TupleArgs>::type;
         };
     };
-} // namespace sb::di::details::helpers
+} // namespace sb::di::details::utils
