@@ -1,18 +1,16 @@
 #include <utility>
 
+#include "SevenBit/DI/LibraryConfig.hpp"
+
 #include "SevenBit/DI/Details/Helpers/ServiceParamProvider.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 
 #define __7_BIT_DI_REQUIRES(...) typename std::enable_if<__VA_ARGS__, int>::type
 
-#ifndef _7_BIT_DI_CTOR_LIMIT_SIZE
-#define _7_BIT_DI_CTOR_LIMIT_SIZE 10
-#endif
-
 namespace sb::di::details::helpers
 {
 
-    namespace internals
+    namespace ServiceCtorInvokerInternals
     {
 
         template <class... Args> struct type_list
@@ -34,15 +32,15 @@ namespace sb::di::details::helpers
 
         template <class> struct any_type
         {
-            template <class T> operator T() { return ServiceParamProvider<T>{}.getParam(injector_); }
+            template <class T> operator T() { return ServiceParamProvider<T>{}.getParam(provider); }
 
-            template <class T> operator T *() { return ServiceParamProvider<T *>{}.getParam(injector_); }
+            template <class T> operator T *() { return ServiceParamProvider<T *>{}.getParam(provider); }
 
-            template <class T> operator T &() { return ServiceParamProvider<T &>{}.getParam(injector_); }
+            template <class T> operator T &() { return ServiceParamProvider<T &>{}.getParam(provider); }
 
-            template <class T> operator T &&() { return ServiceParamProvider<T>{}.getParam(injector_); }
+            template <class T> operator T &&() { return ServiceParamProvider<T>{}.getParam(provider); }
 
-            ServiceProvider &injector_;
+            ServiceProvider &provider;
         };
 
         template <class> struct any_type_fwd
@@ -77,37 +75,6 @@ namespace sb::di::details::helpers
         };
 
         template <class T, int> using get = T;
-
-        // template <template <class...> class, class, class, class = int> struct ctor_impl;
-        //
-        // template <template <class...> class TIsConstructible, class T>
-        // struct ctor_impl<TIsConstructible, T, std::index_sequence<>> : type_list<>
-        // {
-        // };
-        //
-        // template <template <class...> class TIsConstructible, class T>
-        // struct ctor_impl<TIsConstructible, T, std::index_sequence<0>,
-        //                  __7_BIT_DI_REQUIRES(TIsConstructible<T, any_type<T>>::value)> : type_list<any_type<T>>
-        // {
-        // };
-        //
-        // template <template <class...> class TIsConstructible, class T, int... Ns>
-        // struct ctor_impl<TIsConstructible, T, std::index_sequence<Ns...>,
-        //                  __7_BIT_DI_REQUIRES((sizeof...(Ns) > 1) &&
-        //                                      TIsConstructible<T, get<any_type<T>, Ns>...>::value)>
-        //     : type_list<get<any_type<T>, Ns>...>
-        // {
-        // };
-        //
-        // template <template <class...> class TIsConstructible, class T, int... Ns>
-        // struct ctor_impl<TIsConstructible, T, std::index_sequence<Ns...>,
-        //                  __7_BIT_DI_REQUIRES((sizeof...(Ns) > 1) &&
-        //                                      !TIsConstructible<T, get<any_type<T>, Ns>...>::value)>
-        //     : std::conditional<
-        //           TIsConstructible<T, get<any_type<T>, Ns>...>::value, type_list<get<any_type<T>, Ns>...>,
-        //           typename ctor_impl<TIsConstructible, T, std::make_index_sequence<sizeof...(Ns) - 1>>::type>
-        // {
-        // };
 
         template <template <class...> class, class, class, class = int> struct ctor_impl;
 
@@ -164,53 +131,41 @@ namespace sb::di::details::helpers
         {
         };
 
-        template <class T, class TInit, class... Ts> auto make_impl(std::pair<TInit, type_list<Ts...>>)
-        {
-            return new T{typename any<Ts, injector>::type{*this}...};
-        }
-
-        template <class T, class TBinding>
-        auto make(const TBinding &) -> decltype(make_impl<T>(typename ctor_traits<T>::type{}))
-        {
-            return make_impl<T>(typename ctor_traits<T>::type{});
-        }
-
         struct CtorInvoker
         {
             template <class T, class... TArgs> static auto invoke(TArgs &&...args)
             {
                 return T(static_cast<TArgs &&>(args)...);
             }
-
-            template <class T> static auto invoke() { return T(); }
         };
 
         template <class, class> struct Resolver;
 
         template <class T, template <class...> class TList, class... TCtor> struct Resolver<T, TList<TCtor...>>
         {
-            auto reolve() { return CtorInvoker::invoke<T>(TCtor{injector_}...); }
+            auto resolve() { return CtorInvoker::invoke<T>(TCtor{provider}...); }
 
-            ServiceProvider &injector_;
+            template <class TFunc> auto resolveWithCtorParams(TFunc &&func) { return func(TCtor{provider}...); }
+
+            ServiceProvider &provider;
         };
-
-        template <class T, template <class...> class TList> struct Resolver<T, TList<void>>
-        {
-            auto reolve() { return CtorInvoker::invoke<T>(); }
-
-            ServiceProvider &injector_;
-        };
-    } // namespace internals
+    } // namespace ServiceCtorInvokerInternals
 
     template <class T> struct ServiceCtorInvoker
     {
-        auto invoke() { return internals::Resolver<T, internals::ctor_traits<T>::type>{injector_}.reolve(); }
+        auto invoke()
+        {
+            using namespace ServiceCtorInvokerInternals;
+            return Resolver<T, typename ctor_traits<T>::type>{provider}.resolve();
+        }
 
         template <class TFunc> auto invokeWithCtorParams(TFunc &&func)
         {
-            // return func(ParamProvider<Index>{}.getParam(_serviceProvider)...);
+            using namespace ServiceCtorInvokerInternals;
+            return Resolver<T, typename ctor_traits<T>::type>{provider}.resolveWithCtorParams(
+                std::forward<TFunc>(func));
         }
 
-        ServiceProvider &injector_;
+        ServiceProvider &provider;
     };
 } // namespace sb::di::details::helpers

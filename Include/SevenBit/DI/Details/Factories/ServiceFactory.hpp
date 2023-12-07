@@ -24,16 +24,16 @@ namespace sb::di::details::factories
         IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, bool inPlaceRequest) const override
         {
             ServiceCtorInvoker invoker{serviceProvider};
-            // if (inPlaceRequest)
-            // {
-            //     return invoker.invokeWithCtorParams([](auto &&...params) -> IServiceInstance::Ptr {
-            //         return std::make_unique<services::InPlaceService<T>>(std::forward<decltype(params)>(params)...);
-            //     });
-            // }
-            // return invoker.invokeWithCtorParams([](auto &&...params) -> IServiceInstance::Ptr {
-            auto servicePtr = std::make_unique<T>(invoker.invoke());
-            return std::make_unique<services::UniquePtrService<T>>(std::move(servicePtr));
-            // });
+            if (inPlaceRequest)
+            {
+                return invoker.invokeWithCtorParams([](auto &&...params) -> IServiceInstance::Ptr {
+                    return std::make_unique<services::InPlaceService<T>>(std::forward<decltype(params)>(params)...);
+                });
+            }
+            return invoker.invokeWithCtorParams([](auto &&...params) -> IServiceInstance::Ptr {
+                auto servicePtr = std::make_unique<T>(std::forward<decltype(params)>(params)...);
+                return std::make_unique<services::UniquePtrService<T>>(std::move(servicePtr));
+            });
         }
     };
 

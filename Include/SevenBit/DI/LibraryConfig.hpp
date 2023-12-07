@@ -50,4 +50,8 @@
 
 #endif
 
+#ifndef _7_BIT_DI_CTOR_LIMIT_SIZE
+#define _7_BIT_DI_CTOR_LIMIT_SIZE 10
+#endif
+
 #include "SevenBit/DI/Export.hpp"
