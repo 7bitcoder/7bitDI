@@ -72,7 +72,9 @@ namespace sb::di::details::helpers
 
         template <class T, int> using get = T;
 
-        template <template <class...> class, class, class, class = int> struct ctor_impl;
+        template <template <class...> class, class, class, class = int> struct ctor_impl : type_list<>
+        {
+        };
 
         template <template <class...> class TIsConstructible, class T>
         struct ctor_impl<TIsConstructible, T, std::index_sequence<>> : type_list<>
