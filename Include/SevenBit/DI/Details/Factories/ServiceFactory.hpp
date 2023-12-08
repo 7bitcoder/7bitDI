@@ -17,6 +17,22 @@ namespace sb::di::details::factories
     {
       private:
         using ServiceCtorInvoker = helpers::ServiceCtorInvoker<T>;
+        struct InPlaceCreator
+        {
+            template <class... Args> IServiceInstance::Ptr operator()(Args &&...params)
+            {
+                return std::make_unique<services::InPlaceService<T>>(std::forward<Args>(params)...);
+            }
+        };
+
+        struct UniqueCreator
+        {
+            template <class... Args> IServiceInstance::Ptr operator()(Args &&...params)
+            {
+                auto servicePtr = std::make_unique<T>(std::forward<Args>(params)...);
+                return std::make_unique<services::UniquePtrService<T>>(std::move(servicePtr));
+            }
+        };
 
       public:
         [[nodiscard]] TypeId getServiceTypeId() const override { return typeid(T); }
@@ -26,14 +42,9 @@ namespace sb::di::details::factories
             ServiceCtorInvoker invoker{serviceProvider};
             if (inPlaceRequest)
             {
-                return invoker.invokeWithCtorParams([](auto &&...params) -> IServiceInstance::Ptr {
-                    return std::make_unique<services::InPlaceService<T>>(std::forward<decltype(params)>(params)...);
-                });
+                return invoker.invokeWithCtorParams(InPlaceCreator{});
             }
-            return invoker.invokeWithCtorParams([](auto &&...params) -> IServiceInstance::Ptr {
-                auto servicePtr = std::make_unique<T>(std::forward<decltype(params)>(params)...);
-                return std::make_unique<services::UniquePtrService<T>>(std::move(servicePtr));
-            });
+            return invoker.invokeWithCtorParams(UniqueCreator{});
         }
     };
 
