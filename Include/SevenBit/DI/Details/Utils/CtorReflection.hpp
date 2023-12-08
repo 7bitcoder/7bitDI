@@ -12,18 +12,31 @@ namespace sb::di::details::utils
 #pragma GCC diagnostic ignored "-Wnon-template-friend"
 #endif
 
+    template <class, class> struct is_copy_ctor__ : std::false_type
+    {
+    };
+
+    template <class T> struct is_copy_ctor__<T, T> : std::true_type
+    {
+    };
+
+    template <class T> struct is_copy_ctor__<T, const T> : std::true_type
+    {
+    };
+
     template <typename T, int N> struct Tag
     {
         friend auto loophole(Tag<T, N>);
         constexpr friend int cloophole(Tag<T, N>);
     };
 
-    template <typename T, typename U, int N, bool B,
-              typename = typename std::enable_if_t<!std::is_same_v<std::remove_cv_t<std::remove_reference_t<T>>,
-                                                                   std::remove_cv_t<std::remove_reference_t<U>>>>>
+    template <typename T, typename U, int N, bool B, typename = typename std::enable_if_t<!is_copy_ctor__<T, U>::value>>
     struct FnDef
     {
-        friend auto loophole(Tag<T, N>) { return U{}; }
+        friend auto loophole(Tag<T, N>)
+        {
+            return helpers::ServiceParamProvider<U>{}.getParam(*(static_cast<ServiceProvider *>(nullptr)));
+        }
         constexpr friend int cloophole(Tag<T, N>) { return 0; }
     };
 
@@ -46,7 +59,7 @@ namespace sb::di::details::utils
         return fieldsNumber<T, Ns..., sizeof...(Ns)>(0);
     }
 
-    template <typename T, int... Ns> constexpr auto fieldsNumberCtor(int) -> decltype(T(Cop<T, Ns>{}...), 0)
+    template <typename T, int... Ns> constexpr auto fieldsNumberCtor(int) -> decltype(T{Cop<T, Ns>{}...}, 0)
     {
         return sizeof...(Ns);
     }
@@ -64,7 +77,7 @@ namespace sb::di::details::utils
     };
 
     template <typename T>
-    using AsTuple = typename LoopholeTuple<T, std::make_integer_sequence<int, fieldsNumberCtor<T>(0)>>::Type;
+    using AsTuple = typename LoopholeTuple<T, std::make_integer_sequence<int, fieldsNumber<T>(0)>>::Type;
 
     template <class T> struct ConstructorTraits
     {

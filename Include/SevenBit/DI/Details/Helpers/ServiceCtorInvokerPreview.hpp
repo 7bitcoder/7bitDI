@@ -36,7 +36,7 @@ namespace sb::di::details::helpers
             ServiceProvider &provider;
 
           private:
-            template <class T> operator const T &() const { return ServiceParamProvider<T &>{}.getParam(provider); }
+            template <class T> operator T &() { return ServiceParamProvider<T &>{}.getParam(provider); }
         };
         template <class> struct any_type_ref_fwd
         {
@@ -54,8 +54,7 @@ namespace sb::di::details::helpers
             ServiceProvider &provider;
 
           private:
-            template <class T, class = __7_BIT_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
-            operator const T &() const
+            template <class T, class = __7_BIT_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)> operator T &()
             {
                 return ServiceParamProvider<T &>{}.getParam(provider);
             }
@@ -72,9 +71,7 @@ namespace sb::di::details::helpers
 
         template <class T, int> using get = T;
 
-        template <template <class...> class, class, class, class = int> struct ctor_impl : type_list<>
-        {
-        };
+        template <template <class...> class, class, class, class = int> struct ctor_impl;
 
         template <template <class...> class TIsConstructible, class T>
         struct ctor_impl<TIsConstructible, T, std::index_sequence<>> : type_list<>
