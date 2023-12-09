@@ -43,7 +43,7 @@ class CliHandler
     std::unordered_map<std::string, IOptionHandler *> _options;
 
   public:
-    explicit CliHandler(const std::vector<IOptionHandler *> &optionHandlers)
+    explicit CliHandler(std::vector<IOptionHandler *> optionHandlers)
     {
         for (const auto handler : optionHandlers)
         {
