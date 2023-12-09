@@ -25,6 +25,34 @@ class SeriviceProviderTest : public testing::Test
 
 // buildServiceProvider Tests
 
+struct U
+{
+};
+
+struct A
+{
+    int num;
+    A() { num = 123; }
+};
+
+struct B
+{
+    A _a;
+    B(A a, U& u) { _a = a; }
+};
+TEST_F(SeriviceProviderTest, EX)
+{
+    sb::di::ServiceCollection collection;
+
+    collection.addSingleton<U>();
+    collection.addTransient<A>();
+    collection.addTransient<B>();
+
+    auto provider = collection.buildServiceProvider();
+    auto b = provider->createServiceInPlace<B>();
+    auto gg = b._a.num;
+}
+
 TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToAlreadyRegisteredService)
 {
     sb::di::ServiceCollection collection;
