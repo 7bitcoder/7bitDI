@@ -7,25 +7,25 @@
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
 
-class SeriviceProviderTest : public testing::Test
+class ServiceProviderTest : public testing::Test
 {
   protected:
     static void SetUpTestSuite() {}
 
-    SeriviceProviderTest() {}
+    ServiceProviderTest() {}
 
     void SetUp() override {}
 
     void TearDown() override {}
 
-    ~SeriviceProviderTest() override = default;
+    ~ServiceProviderTest() override = default;
 
     static void TearDownTestSuite() {}
 };
 
 // buildServiceProvider Tests
 
-TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToAlreadyRegisteredService)
+TEST_F(ServiceProviderTest, ShouldFailGetServiceDueToAlreadyRegisteredService)
 {
     sb::di::ServiceCollection collection;
 
@@ -38,7 +38,7 @@ TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToAlreadyRegisteredService)
     EXPECT_THROW(collection.buildServiceProvider(options), sb::di::ServiceAlreadyRegisteredException);
 }
 
-TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToAlreadyRegisteredInheritedService)
+TEST_F(ServiceProviderTest, ShouldFailGetServiceDueToAlreadyRegisteredInheritedService)
 {
     sb::di::ServiceCollection collection;
 
@@ -51,7 +51,7 @@ TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToAlreadyRegisteredInherited
     EXPECT_THROW(collection.buildServiceProvider(options), sb::di::ServiceAlreadyRegisteredException);
 }
 
-TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToLifetimeMissmatchInheritedService)
+TEST_F(ServiceProviderTest, ShouldFailGetServiceDueToLifetimeMissmatchInheritedService)
 {
     sb::di::ServiceCollection collection;
 
@@ -64,7 +64,7 @@ TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToLifetimeMissmatchInherited
 
 // tryGetInstance Tests
 
-TEST_F(SeriviceProviderTest, ShouldTryGetInstance)
+TEST_F(ServiceProviderTest, ShouldTryGetInstance)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestClass1>()
@@ -79,7 +79,7 @@ TEST_F(SeriviceProviderTest, ShouldTryGetInstance)
     EXPECT_FALSE(instanceProvider.tryGetInstance(typeid(TestClass4)));
 }
 
-TEST_F(SeriviceProviderTest, ShouldTryGetInheritedInstance)
+TEST_F(ServiceProviderTest, ShouldTryGetInheritedInstance)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestInheritClass1, TestInheritClass2>()
@@ -96,7 +96,7 @@ TEST_F(SeriviceProviderTest, ShouldTryGetInheritedInstance)
 
 // tryGetService Tests
 
-TEST_F(SeriviceProviderTest, ShouldTryGetService)
+TEST_F(ServiceProviderTest, ShouldTryGetService)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestClass1>()
@@ -110,7 +110,7 @@ TEST_F(SeriviceProviderTest, ShouldTryGetService)
     EXPECT_FALSE(provider->tryGetService<TestClass4>());
 }
 
-TEST_F(SeriviceProviderTest, ShouldTryGetInheritedService)
+TEST_F(ServiceProviderTest, ShouldTryGetInheritedService)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestInheritClass1, TestInheritClass2>()
@@ -124,7 +124,7 @@ TEST_F(SeriviceProviderTest, ShouldTryGetInheritedService)
     EXPECT_FALSE(provider->tryGetService<TestInheritClass4>());
 }
 
-TEST_F(SeriviceProviderTest, ShouldTryGetOneLastServiceSingleton)
+TEST_F(ServiceProviderTest, ShouldTryGetOneLastServiceSingleton)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestInheritClass1, TestInheritClass2>()
@@ -136,7 +136,7 @@ TEST_F(SeriviceProviderTest, ShouldTryGetOneLastServiceSingleton)
     EXPECT_EQ(provider->tryGetService<TestInheritClass1>()->number(), 5);
 }
 
-TEST_F(SeriviceProviderTest, ShouldTryGetOneLastServiceScope)
+TEST_F(ServiceProviderTest, ShouldTryGetOneLastServiceScope)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addScoped<TestInheritClass1, TestInheritClass2>()
@@ -148,7 +148,7 @@ TEST_F(SeriviceProviderTest, ShouldTryGetOneLastServiceScope)
     EXPECT_EQ(provider->tryGetService<TestInheritClass1>()->number(), 5);
 }
 
-TEST_F(SeriviceProviderTest, ShouldFailTryGetServiceDueToCircularDependency)
+TEST_F(ServiceProviderTest, ShouldFailTryGetServiceDueToCircularDependency)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<CircularDependencyA>()
@@ -158,7 +158,7 @@ TEST_F(SeriviceProviderTest, ShouldFailTryGetServiceDueToCircularDependency)
     EXPECT_THROW(provider->tryGetService<CircularDependencyA>(), sb::di::CircularDependencyException);
 }
 
-TEST_F(SeriviceProviderTest, ShouldTryGetSelf)
+TEST_F(ServiceProviderTest, ShouldTryGetSelf)
 {
     const auto provider = sb::di::ServiceCollection{}.buildServiceProvider();
 
@@ -169,7 +169,7 @@ TEST_F(SeriviceProviderTest, ShouldTryGetSelf)
 
 // getInstance Tests
 
-TEST_F(SeriviceProviderTest, ShouldGetInstance)
+TEST_F(ServiceProviderTest, ShouldGetInstance)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestClass1>()
@@ -186,7 +186,7 @@ TEST_F(SeriviceProviderTest, ShouldGetInstance)
     EXPECT_THROW(instanceProvider.getInstance(typeid(TestClass4)), sb::di::ServiceNotFoundException);
 }
 
-TEST_F(SeriviceProviderTest, ShouldGetInheritedInstance)
+TEST_F(ServiceProviderTest, ShouldGetInheritedInstance)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestInheritClass1, TestInheritClass2>()
@@ -205,7 +205,7 @@ TEST_F(SeriviceProviderTest, ShouldGetInheritedInstance)
 
 // getService Tests
 
-TEST_F(SeriviceProviderTest, ShouldGetService)
+TEST_F(ServiceProviderTest, ShouldGetService)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestClass1>()
@@ -219,7 +219,7 @@ TEST_F(SeriviceProviderTest, ShouldGetService)
     EXPECT_THROW(provider->getService<TestClass4>(), sb::di::ServiceNotFoundException);
 }
 
-TEST_F(SeriviceProviderTest, ShouldGetInheritedService)
+TEST_F(ServiceProviderTest, ShouldGetInheritedService)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestInheritClass1, TestInheritClass2>()
@@ -233,7 +233,7 @@ TEST_F(SeriviceProviderTest, ShouldGetInheritedService)
     EXPECT_THROW(provider->getService<TestInheritClass4>(), sb::di::ServiceNotFoundException);
 }
 
-TEST_F(SeriviceProviderTest, ShouldGetOneLastServiceSingleton)
+TEST_F(ServiceProviderTest, ShouldGetOneLastServiceSingleton)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestInheritClass1, TestInheritClass2>()
@@ -244,7 +244,7 @@ TEST_F(SeriviceProviderTest, ShouldGetOneLastServiceSingleton)
     EXPECT_EQ(provider->getService<TestInheritClass1>().number(), 5);
 }
 
-TEST_F(SeriviceProviderTest, ShouldGetOneLastServiceScope)
+TEST_F(ServiceProviderTest, ShouldGetOneLastServiceScope)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addScoped<TestInheritClass1, TestInheritClass2>()
@@ -255,7 +255,7 @@ TEST_F(SeriviceProviderTest, ShouldGetOneLastServiceScope)
     EXPECT_EQ(provider->getService<TestInheritClass1>().number(), 5);
 }
 
-TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToCircularDependency)
+TEST_F(ServiceProviderTest, ShouldFailGetServiceDueToCircularDependency)
 {
 
     const auto provider = sb::di::ServiceCollection{}
@@ -266,7 +266,7 @@ TEST_F(SeriviceProviderTest, ShouldFailGetServiceDueToCircularDependency)
     EXPECT_THROW(provider->getService<CircularDependencyA>(), sb::di::CircularDependencyException);
 }
 
-TEST_F(SeriviceProviderTest, ShouldGetSelf)
+TEST_F(ServiceProviderTest, ShouldGetSelf)
 {
     const auto provider = sb::di::ServiceCollection{}.buildServiceProvider();
 
@@ -276,7 +276,7 @@ TEST_F(SeriviceProviderTest, ShouldGetSelf)
 
 // getInstances Tests
 
-TEST_F(SeriviceProviderTest, ShouldGetInstances)
+TEST_F(ServiceProviderTest, ShouldGetInstances)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestClass1>()
@@ -291,7 +291,7 @@ TEST_F(SeriviceProviderTest, ShouldGetInstances)
     EXPECT_FALSE(instanceProvider.tryGetInstances(typeid(TestClass4)));
 }
 
-TEST_F(SeriviceProviderTest, ShouldGetInstancesInOrder)
+TEST_F(ServiceProviderTest, ShouldGetInstancesInOrder)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addScoped<TestInheritClass1>()
@@ -312,7 +312,7 @@ TEST_F(SeriviceProviderTest, ShouldGetInstancesInOrder)
 
 // getServices Tests
 
-TEST_F(SeriviceProviderTest, ShouldGetInheritedServices)
+TEST_F(ServiceProviderTest, ShouldGetInheritedServices)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestInheritClass1, TestInheritClass2>()
@@ -326,7 +326,7 @@ TEST_F(SeriviceProviderTest, ShouldGetInheritedServices)
     EXPECT_TRUE(provider->getServices<TestInheritClass4>().empty());
 }
 
-TEST_F(SeriviceProviderTest, ShouldGetCastedServicesInOrder)
+TEST_F(ServiceProviderTest, ShouldGetCastedServicesInOrder)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addScoped<TestInheritClass1>()
@@ -345,7 +345,7 @@ TEST_F(SeriviceProviderTest, ShouldGetCastedServicesInOrder)
     EXPECT_EQ(services[4]->number(), 5);
 }
 
-TEST_F(SeriviceProviderTest, ShouldGetServicesInOrderAfterNormalGet)
+TEST_F(ServiceProviderTest, ShouldGetServicesInOrderAfterNormalGet)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addScoped<TestInheritClass1>()
@@ -366,7 +366,7 @@ TEST_F(SeriviceProviderTest, ShouldGetServicesInOrderAfterNormalGet)
     EXPECT_TRUE(provider->tryGetService<TestInheritClass1>());
 }
 
-TEST_F(SeriviceProviderTest, ShouldGetEmptyServicesForNotExisting)
+TEST_F(ServiceProviderTest, ShouldGetEmptyServicesForNotExisting)
 {
     const auto provider = sb::di::ServiceCollection{}.buildServiceProvider();
 
@@ -374,7 +374,7 @@ TEST_F(SeriviceProviderTest, ShouldGetEmptyServicesForNotExisting)
     EXPECT_TRUE(all.empty());
 }
 
-TEST_F(SeriviceProviderTest, ShouldFailGetServicesDueToCircularDependency)
+TEST_F(ServiceProviderTest, ShouldFailGetServicesDueToCircularDependency)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<CircularDependencyA>()
@@ -384,7 +384,7 @@ TEST_F(SeriviceProviderTest, ShouldFailGetServicesDueToCircularDependency)
     EXPECT_THROW(provider->getServices<CircularDependencyA>(), sb::di::CircularDependencyException);
 }
 
-TEST_F(SeriviceProviderTest, ShouldGetSelfServices)
+TEST_F(ServiceProviderTest, ShouldGetSelfServices)
 {
     const auto provider = sb::di::ServiceCollection{}.buildServiceProvider();
 
@@ -395,7 +395,7 @@ TEST_F(SeriviceProviderTest, ShouldGetSelfServices)
 
 // tryCreateInstance Tests
 
-TEST_F(SeriviceProviderTest, ShouldTryCreateInstance)
+TEST_F(ServiceProviderTest, ShouldTryCreateInstance)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestClass1>()
@@ -410,7 +410,7 @@ TEST_F(SeriviceProviderTest, ShouldTryCreateInstance)
     EXPECT_FALSE(instanceProvider.tryCreateInstance(typeid(TestClass4)));
 }
 
-TEST_F(SeriviceProviderTest, ShouldTryCreateInheritedInstance)
+TEST_F(ServiceProviderTest, ShouldTryCreateInheritedInstance)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestInheritClass1, TestInheritClass2>()
@@ -427,7 +427,7 @@ TEST_F(SeriviceProviderTest, ShouldTryCreateInheritedInstance)
 
 // tryCreateService Tests
 
-TEST_F(SeriviceProviderTest, ShouldTryCreateService)
+TEST_F(ServiceProviderTest, ShouldTryCreateService)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestClass1>()
@@ -441,7 +441,7 @@ TEST_F(SeriviceProviderTest, ShouldTryCreateService)
     EXPECT_FALSE(provider->tryCreateService<TestClass4>());
 }
 
-TEST_F(SeriviceProviderTest, ShouldTryCreateInheritedService)
+TEST_F(ServiceProviderTest, ShouldTryCreateInheritedService)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestInheritClass1, TestInheritClass2>()
@@ -455,7 +455,7 @@ TEST_F(SeriviceProviderTest, ShouldTryCreateInheritedService)
     EXPECT_FALSE(provider->tryCreateService<TestInheritClass4>());
 }
 
-TEST_F(SeriviceProviderTest, ShouldFailTryCreateServiceDueToCircularDependency)
+TEST_F(ServiceProviderTest, ShouldFailTryCreateServiceDueToCircularDependency)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addTransient<CircularDependencyUniqueA>()
@@ -465,7 +465,7 @@ TEST_F(SeriviceProviderTest, ShouldFailTryCreateServiceDueToCircularDependency)
     EXPECT_THROW(provider->tryCreateService<CircularDependencyUniqueA>(), sb::di::CircularDependencyException);
 }
 
-TEST_F(SeriviceProviderTest, ShouldNotTryCreateSelf)
+TEST_F(ServiceProviderTest, ShouldNotTryCreateSelf)
 {
     const auto provider = sb::di::ServiceCollection{}.buildServiceProvider();
 
@@ -474,7 +474,7 @@ TEST_F(SeriviceProviderTest, ShouldNotTryCreateSelf)
 
 // createInstance Tests
 
-TEST_F(SeriviceProviderTest, ShouldCreateInstance)
+TEST_F(ServiceProviderTest, ShouldCreateInstance)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestClass1>()
@@ -490,7 +490,7 @@ TEST_F(SeriviceProviderTest, ShouldCreateInstance)
     EXPECT_THROW(instanceProvider.createInstance(typeid(TestClass4)), sb::di::ServiceNotFoundException);
 }
 
-TEST_F(SeriviceProviderTest, ShouldCreateInheritedInstance)
+TEST_F(ServiceProviderTest, ShouldCreateInheritedInstance)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestInheritClass1, TestInheritClass2>()
@@ -508,7 +508,7 @@ TEST_F(SeriviceProviderTest, ShouldCreateInheritedInstance)
 
 // createInstance Tests
 
-TEST_F(SeriviceProviderTest, ShouldCreateService)
+TEST_F(ServiceProviderTest, ShouldCreateService)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestClass1>()
@@ -522,7 +522,7 @@ TEST_F(SeriviceProviderTest, ShouldCreateService)
     EXPECT_THROW(provider->createService<TestClass4>(), sb::di::ServiceNotFoundException);
 }
 
-TEST_F(SeriviceProviderTest, ShouldCreateInheritedService)
+TEST_F(ServiceProviderTest, ShouldCreateInheritedService)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestInheritClass1, TestInheritClass2>()
@@ -536,7 +536,7 @@ TEST_F(SeriviceProviderTest, ShouldCreateInheritedService)
     EXPECT_THROW(provider->createService<TestInheritClass4>(), sb::di::ServiceNotFoundException);
 }
 
-TEST_F(SeriviceProviderTest, ShouldFailCreateServiceDueToCircularDependency)
+TEST_F(ServiceProviderTest, ShouldFailCreateServiceDueToCircularDependency)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addTransient<CircularDependencyUniqueA>()
@@ -546,7 +546,7 @@ TEST_F(SeriviceProviderTest, ShouldFailCreateServiceDueToCircularDependency)
     EXPECT_THROW(provider->createService<CircularDependencyUniqueA>(), sb::di::CircularDependencyException);
 }
 
-TEST_F(SeriviceProviderTest, ShouldNotCreateSelfService)
+TEST_F(ServiceProviderTest, ShouldNotCreateSelfService)
 {
     const auto provider = sb::di::ServiceCollection{}.buildServiceProvider();
 
@@ -555,7 +555,7 @@ TEST_F(SeriviceProviderTest, ShouldNotCreateSelfService)
 
 // createInstances Tests
 
-TEST_F(SeriviceProviderTest, ShouldCreateInstances)
+TEST_F(ServiceProviderTest, ShouldCreateInstances)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestClass1>()
@@ -570,7 +570,7 @@ TEST_F(SeriviceProviderTest, ShouldCreateInstances)
     EXPECT_FALSE(instanceProvider.tryCreateInstances(typeid(TestClass4)));
 }
 
-TEST_F(SeriviceProviderTest, ShouldCreateInstancesInOrder)
+TEST_F(ServiceProviderTest, ShouldCreateInstancesInOrder)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addTransient<TestInheritClass1>()
@@ -591,7 +591,7 @@ TEST_F(SeriviceProviderTest, ShouldCreateInstancesInOrder)
 
 // createServices Tests
 
-TEST_F(SeriviceProviderTest, ShouldCreateInheritedServices)
+TEST_F(ServiceProviderTest, ShouldCreateInheritedServices)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addSingleton<TestInheritClass1, TestInheritClass2>()
@@ -605,7 +605,7 @@ TEST_F(SeriviceProviderTest, ShouldCreateInheritedServices)
     EXPECT_TRUE(provider->createServices<TestInheritClass4>().empty());
 }
 
-TEST_F(SeriviceProviderTest, ShouldCreateServicesInOrder)
+TEST_F(ServiceProviderTest, ShouldCreateServicesInOrder)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addTransient<TestInheritClass1>()
@@ -624,7 +624,7 @@ TEST_F(SeriviceProviderTest, ShouldCreateServicesInOrder)
     EXPECT_EQ(services[4]->number(), 5);
 }
 
-TEST_F(SeriviceProviderTest, ShouldCreateEmptyServicesForNotExisting)
+TEST_F(ServiceProviderTest, ShouldCreateEmptyServicesForNotExisting)
 {
     const auto provider = sb::di::ServiceCollection{}.buildServiceProvider();
 
@@ -632,7 +632,7 @@ TEST_F(SeriviceProviderTest, ShouldCreateEmptyServicesForNotExisting)
     EXPECT_TRUE(all.empty());
 }
 
-TEST_F(SeriviceProviderTest, ShouldFaildCreateServicesDueToCircularDependency)
+TEST_F(ServiceProviderTest, ShouldFaildCreateServicesDueToCircularDependency)
 {
     const auto provider = sb::di::ServiceCollection{}
                               .addTransient<CircularDependencyUniqueA>()
@@ -642,7 +642,7 @@ TEST_F(SeriviceProviderTest, ShouldFaildCreateServicesDueToCircularDependency)
     EXPECT_THROW(provider->createServices<CircularDependencyUniqueA>(), sb::di::CircularDependencyException);
 }
 
-TEST_F(SeriviceProviderTest, ShouldFailCreateSelfServices)
+TEST_F(ServiceProviderTest, ShouldFailCreateSelfServices)
 {
     const auto provider = sb::di::ServiceCollection{}.buildServiceProvider();
 

@@ -7,40 +7,40 @@
 #include "SevenBit/DI/ServiceCollection.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 
-class SeriviceProviderScopesTest : public testing::Test
+class ServiceProviderScopesTest : public testing::Test
 {
   protected:
     static void SetUpTestSuite() {}
 
-    SeriviceProviderScopesTest() {}
+    ServiceProviderScopesTest() {}
 
     void SetUp() override {}
 
     void TearDown() override {}
 
-    ~SeriviceProviderScopesTest() override = default;
+    ~ServiceProviderScopesTest() override = default;
 
     static void TearDownTestSuite() {}
 };
 
-TEST_F(SeriviceProviderScopesTest, ShouldMakeScopedProvider)
+TEST_F(ServiceProviderScopesTest, ShouldMakeScopedProvider)
 {
     const auto provider = sb::di::ServiceCollection{}
-                        .addSingleton<TestClass1>()
-                        .addSingleton<TestClass2>()
-                        .addSingleton<TestClass3>()
-                        .buildServiceProvider();
+                              .addSingleton<TestClass1>()
+                              .addSingleton<TestClass2>()
+                              .addSingleton<TestClass3>()
+                              .buildServiceProvider();
 
     EXPECT_NO_THROW(provider->createScope());
 }
 
-TEST_F(SeriviceProviderScopesTest, ShouldGetProperServicesRefWithScopedProvider)
+TEST_F(ServiceProviderScopesTest, ShouldGetProperServicesRefWithScopedProvider)
 {
     const auto provider = sb::di::ServiceCollection{}
-                        .addSingleton<TestClass1>()
-                        .addScoped<TestClass2>()
-                        .addTransient<TestClass3>()
-                        .buildServiceProvider();
+                              .addSingleton<TestClass1>()
+                              .addScoped<TestClass2>()
+                              .addTransient<TestClass3>()
+                              .buildServiceProvider();
 
     auto scoped1 = provider->createScope();
     auto scoped2 = provider->createScope();
@@ -80,13 +80,13 @@ TEST_F(SeriviceProviderScopesTest, ShouldGetProperServicesRefWithScopedProvider)
     EXPECT_NE(provider->createService<TestClass3>(), provider->createService<TestClass3>());
 }
 
-TEST_F(SeriviceProviderScopesTest, ShouldReturnProperSelfForScope)
+TEST_F(ServiceProviderScopesTest, ShouldReturnProperSelfForScope)
 {
-   const  auto provider = sb::di::ServiceCollection{}
-                        .addSingleton<TestClass1>()
-                        .addScoped<TestClass2>()
-                        .addTransient<TestClass3>()
-                        .buildServiceProvider();
+    const auto provider = sb::di::ServiceCollection{}
+                              .addSingleton<TestClass1>()
+                              .addScoped<TestClass2>()
+                              .addTransient<TestClass3>()
+                              .buildServiceProvider();
 
     const auto scoped1 = provider->createScope();
     const auto scoped2 = provider->createScope();
@@ -97,15 +97,15 @@ TEST_F(SeriviceProviderScopesTest, ShouldReturnProperSelfForScope)
     EXPECT_EQ(scoped3->tryGetService<sb::di::ServiceProvider>(), scoped3.get());
 }
 
-TEST_F(SeriviceProviderScopesTest, ShouldGetServicesDeeperRefWithScopedProvider)
+TEST_F(ServiceProviderScopesTest, ShouldGetServicesDeeperRefWithScopedProvider)
 {
     const auto provider = sb::di::ServiceCollection{}
-                        .addSingleton<TestDependencyClass1>()
-                        .addScoped<TestDependencyClass2>()
-                        .addTransient<TestDependencyClass3>()
-                        .buildServiceProvider();
+                              .addSingleton<TestDependencyClass1>()
+                              .addScoped<TestDependencyClass2>()
+                              .addTransient<TestDependencyClass3>()
+                              .buildServiceProvider();
 
-   const  auto scoped = provider->createScope();
+    const auto scoped = provider->createScope();
 
     auto &singletonFromTop = provider->getService<TestDependencyClass1>();
     auto &singletonFromScoped = scoped->getService<TestDependencyClass1>();
@@ -126,18 +126,18 @@ TEST_F(SeriviceProviderScopesTest, ShouldGetServicesDeeperRefWithScopedProvider)
     EXPECT_EQ(transientFromScoped->_test2, &scopedFromScoped);
 }
 
-TEST_F(SeriviceProviderScopesTest, ShouldGetComplexServices)
+TEST_F(ServiceProviderScopesTest, ShouldGetComplexServices)
 {
     const auto provider = sb::di::ServiceCollection{}
-                        .addSingleton<ITestComplexClass1, TestComplexClass1>()
-                        .addScoped<ITestComplexClass2, TestComplexClass2>()
-                        .addTransient<ITestComplexClass3, TestComplexClass3>()
-                        .addScoped<ITestComplexClass5, TestComplexClass5>()
-                        .addScoped<ITestComplexClass4>([](ITestComplexClass1 &other1, ITestComplexClass2 *other2,
-                                                          std::unique_ptr<ITestComplexClass3> other3) {
-                            return std::make_unique<TestComplexClass4>(&other1, other2, std::move(other3));
-                        })
-                        .buildServiceProvider();
+                              .addSingleton<ITestComplexClass1, TestComplexClass1>()
+                              .addScoped<ITestComplexClass2, TestComplexClass2>()
+                              .addTransient<ITestComplexClass3, TestComplexClass3>()
+                              .addScoped<ITestComplexClass5, TestComplexClass5>()
+                              .addScoped<ITestComplexClass4>([](ITestComplexClass1 &other1, ITestComplexClass2 *other2,
+                                                                std::unique_ptr<ITestComplexClass3> other3) {
+                                  return std::make_unique<TestComplexClass4>(&other1, other2, std::move(other3));
+                              })
+                              .buildServiceProvider();
 
     auto &singleton = provider->getService<ITestComplexClass1>();
     auto &scoped1 = provider->getService<ITestComplexClass2>();

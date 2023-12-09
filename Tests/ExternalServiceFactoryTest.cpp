@@ -3,6 +3,7 @@
 #include "Classes/BasicTest.hpp"
 #include "Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/DI/Details/Factories/ExternalServiceFactory.hpp"
+#include "SevenBit/DI/Exceptions.hpp"
 
 class ExternalServiceFactoryTest : public testing::Test
 {
@@ -20,14 +21,6 @@ class ExternalServiceFactoryTest : public testing::Test
     static void TearDownTestSuite() {}
 };
 
-TEST_F(ExternalServiceFactoryTest, ShouldReturnProperTypeId)
-{
-    TestClass1 test;
-    const sb::di::details::factories::ExternalServiceFactory factory{&test};
-
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestClass1));
-}
-
 TEST_F(ExternalServiceFactoryTest, ShouldCreateService)
 {
     TestClass1 test;
@@ -37,5 +30,26 @@ TEST_F(ExternalServiceFactoryTest, ShouldCreateService)
     const auto instance = factory.createInstance(mock, false);
 
     EXPECT_TRUE(instance);
+    EXPECT_TRUE(instance->isValid());
     EXPECT_EQ(instance->get(), &test);
+    EXPECT_THROW(instance->release(), sb::di::CannotReleaseServiceException);
+    EXPECT_THROW(instance->getForMoveOut(), sb::di::CannotMoveOutServiceException);
+    EXPECT_EQ(instance->getTypeId(), typeid(TestClass1));
+    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
+}
+
+TEST_F(ExternalServiceFactoryTest, ShouldCreateNullService)
+{
+    ServiceProviderMock mock;
+    const sb::di::details::factories::ExternalServiceFactory<TestClass1> factory{nullptr};
+
+    const auto instance = factory.createInstance(mock, false);
+
+    EXPECT_TRUE(instance);
+    EXPECT_FALSE(instance->isValid());
+    EXPECT_EQ(instance->get(), nullptr);
+    EXPECT_THROW(instance->release(), sb::di::CannotReleaseServiceException);
+    EXPECT_THROW(instance->getForMoveOut(), sb::di::CannotMoveOutServiceException);
+    EXPECT_EQ(instance->getTypeId(), typeid(TestClass1));
+    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }

@@ -31,15 +31,6 @@ TEST_F(ExternalServiceFcnFactoryTest, ShouldNotCompileWrongFactoryScheme)
     // fcn};
 }
 
-TEST_F(ExternalServiceFcnFactoryTest, ShouldReturnProperTypeId)
-{
-    TestClass1 test;
-    auto fcn = [&] { return &test; };
-    const sb::di::details::factories::ExternalServiceFcnFactory factory{fcn};
-
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestClass1));
-}
-
 TEST_F(ExternalServiceFcnFactoryTest, ShouldCreateService)
 {
     ServiceProviderMock mock;
@@ -50,4 +41,27 @@ TEST_F(ExternalServiceFcnFactoryTest, ShouldCreateService)
     const auto instance = factory.createInstance(mock, false);
 
     EXPECT_TRUE(instance);
+    EXPECT_TRUE(instance->isValid());
+    EXPECT_EQ(instance->get(), &test);
+    EXPECT_THROW(instance->release(), sb::di::CannotReleaseServiceException);
+    EXPECT_THROW(instance->getForMoveOut(), sb::di::CannotMoveOutServiceException);
+    EXPECT_EQ(instance->getTypeId(), typeid(TestClass1));
+    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
+}
+
+TEST_F(ExternalServiceFcnFactoryTest, ShouldCreateNullService)
+{
+    ServiceProviderMock mock;
+    auto fcn = [&]() -> TestClass1 * { return nullptr; };
+    const sb::di::details::factories::ExternalServiceFcnFactory factory{fcn};
+
+    const auto instance = factory.createInstance(mock, false);
+
+    EXPECT_TRUE(instance);
+    EXPECT_FALSE(instance->isValid());
+    EXPECT_FALSE(instance->get());
+    EXPECT_THROW(instance->release(), sb::di::CannotReleaseServiceException);
+    EXPECT_THROW(instance->getForMoveOut(), sb::di::CannotMoveOutServiceException);
+    EXPECT_EQ(instance->getTypeId(), typeid(TestClass1));
+    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }

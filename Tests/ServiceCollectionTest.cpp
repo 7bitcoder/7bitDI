@@ -7,23 +7,23 @@
 #include "Classes/ComplexDependencies.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
 
-class SeriviceCollectionTest : public testing::Test
+class ServiceCollectionTest : public testing::Test
 {
   protected:
     static void SetUpTestSuite() {}
 
-    SeriviceCollectionTest() {}
+    ServiceCollectionTest() {}
 
     void SetUp() override {}
 
     void TearDown() override {}
 
-    ~SeriviceCollectionTest() override = default;
+    ~ServiceCollectionTest() override = default;
 
     static void TearDownTestSuite() {}
 };
 
-TEST_F(SeriviceCollectionTest, ShouldAddServices)
+TEST_F(ServiceCollectionTest, ShouldAddServices)
 {
     sb::di::ServiceCollection services;
 
@@ -40,7 +40,7 @@ TEST_F(SeriviceCollectionTest, ShouldAddServices)
     EXPECT_NO_THROW(act());
 }
 
-TEST_F(SeriviceCollectionTest, ShouldGetAt)
+TEST_F(ServiceCollectionTest, ShouldGetAt)
 {
     sb::di::ServiceCollection services;
 
@@ -66,7 +66,7 @@ TEST_F(SeriviceCollectionTest, ShouldGetAt)
     EXPECT_ANY_THROW(services.at(10));
 }
 
-TEST_F(SeriviceCollectionTest, ShouldGetFirst)
+TEST_F(ServiceCollectionTest, ShouldGetFirst)
 {
     sb::di::ServiceCollection services;
 
@@ -82,7 +82,7 @@ TEST_F(SeriviceCollectionTest, ShouldGetFirst)
     EXPECT_EQ(first.getImplementationTypeId(), typeid(TestInheritClass5));
 }
 
-TEST_F(SeriviceCollectionTest, ShouldGetLast)
+TEST_F(ServiceCollectionTest, ShouldGetLast)
 {
     sb::di::ServiceCollection services;
 
@@ -98,7 +98,7 @@ TEST_F(SeriviceCollectionTest, ShouldGetLast)
     EXPECT_EQ(last.getImplementationTypeId(), typeid(TestInheritClass5));
 }
 
-TEST_F(SeriviceCollectionTest, ShouldGetWithIndexOperator)
+TEST_F(ServiceCollectionTest, ShouldGetWithIndexOperator)
 {
     sb::di::ServiceCollection services;
 
@@ -124,7 +124,7 @@ TEST_F(SeriviceCollectionTest, ShouldGetWithIndexOperator)
     EXPECT_ANY_THROW(services[10]);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldGetSize)
+TEST_F(ServiceCollectionTest, ShouldGetSize)
 {
     sb::di::ServiceCollection services;
 
@@ -143,7 +143,7 @@ TEST_F(SeriviceCollectionTest, ShouldGetSize)
     EXPECT_EQ(services.size(), 6);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldGetCount)
+TEST_F(ServiceCollectionTest, ShouldGetCount)
 {
     sb::di::ServiceCollection services;
 
@@ -162,7 +162,7 @@ TEST_F(SeriviceCollectionTest, ShouldGetCount)
     EXPECT_EQ(services.count(), 6);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldCheckIfEmptyAndClear)
+TEST_F(ServiceCollectionTest, ShouldCheckIfEmptyAndClear)
 {
     sb::di::ServiceCollection services;
 
@@ -177,7 +177,7 @@ TEST_F(SeriviceCollectionTest, ShouldCheckIfEmptyAndClear)
     EXPECT_TRUE(services.empty());
 }
 
-TEST_F(SeriviceCollectionTest, ShouldFindIf)
+TEST_F(ServiceCollectionTest, ShouldFindIf)
 {
     sb::di::ServiceCollection services;
 
@@ -204,7 +204,7 @@ TEST_F(SeriviceCollectionTest, ShouldFindIf)
     EXPECT_EQ(notfound, services.end());
 }
 
-TEST_F(SeriviceCollectionTest, ShouldCheckWithContainsIf)
+TEST_F(ServiceCollectionTest, ShouldCheckWithContainsIf)
 {
     sb::di::ServiceCollection services;
 
@@ -227,7 +227,7 @@ TEST_F(SeriviceCollectionTest, ShouldCheckWithContainsIf)
     EXPECT_FALSE(notContains);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldCheckWithContains)
+TEST_F(ServiceCollectionTest, ShouldCheckWithContains)
 {
     sb::di::ServiceCollection services;
 
@@ -245,7 +245,7 @@ TEST_F(SeriviceCollectionTest, ShouldCheckWithContains)
     EXPECT_FALSE(services.contains<TestInheritClass5>());
 }
 
-TEST_F(SeriviceCollectionTest, ShouldCheckWithContainsExact)
+TEST_F(ServiceCollectionTest, ShouldCheckWithContainsExact)
 {
     sb::di::ServiceCollection services;
 
@@ -263,7 +263,7 @@ TEST_F(SeriviceCollectionTest, ShouldCheckWithContainsExact)
     EXPECT_FALSE((services.containsExact<TestInheritClass2, TestInheritClass5>()));
 }
 
-TEST_F(SeriviceCollectionTest, ShouldInsert)
+TEST_F(ServiceCollectionTest, ShouldInsert)
 {
     sb::di::ServiceCollection services;
 
@@ -275,7 +275,7 @@ TEST_F(SeriviceCollectionTest, ShouldInsert)
     EXPECT_EQ(services[1].getImplementationTypeId(), typeid(TestClass1));
 }
 
-TEST_F(SeriviceCollectionTest, ShouldAddDescriptor)
+TEST_F(ServiceCollectionTest, ShouldAddDescriptor)
 {
     sb::di::ServiceCollection services;
 
@@ -293,7 +293,7 @@ TEST_F(SeriviceCollectionTest, ShouldAddDescriptor)
     EXPECT_NO_THROW(act());
 }
 
-TEST_F(SeriviceCollectionTest, ShouldRemove)
+TEST_F(ServiceCollectionTest, ShouldRemove)
 {
     sb::di::ServiceCollection services;
 
@@ -319,7 +319,7 @@ TEST_F(SeriviceCollectionTest, ShouldRemove)
     EXPECT_EQ(services.size(), 0);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldRemoveRange)
+TEST_F(ServiceCollectionTest, ShouldRemoveRange)
 {
     sb::di::ServiceCollection services;
 
@@ -336,7 +336,7 @@ TEST_F(SeriviceCollectionTest, ShouldRemoveRange)
     EXPECT_EQ(services.size(), 3);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldRemoveIf)
+TEST_F(ServiceCollectionTest, ShouldRemoveIf)
 {
     sb::di::ServiceCollection services;
 
@@ -356,7 +356,7 @@ TEST_F(SeriviceCollectionTest, ShouldRemoveIf)
     EXPECT_EQ(services.size(), 3);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldRemoveAll)
+TEST_F(ServiceCollectionTest, ShouldRemoveAll)
 {
     sb::di::ServiceCollection services;
 
@@ -373,7 +373,7 @@ TEST_F(SeriviceCollectionTest, ShouldRemoveAll)
     EXPECT_EQ(services.size(), 3);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldRemoveSpecific)
+TEST_F(ServiceCollectionTest, ShouldRemoveSpecific)
 {
     sb::di::ServiceCollection services;
 
@@ -390,7 +390,7 @@ TEST_F(SeriviceCollectionTest, ShouldRemoveSpecific)
     EXPECT_EQ(services.size(), 3);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldPop)
+TEST_F(ServiceCollectionTest, ShouldPop)
 {
     sb::di::ServiceCollection services;
 
@@ -411,7 +411,7 @@ TEST_F(SeriviceCollectionTest, ShouldPop)
     EXPECT_EQ(services.size(), 3);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldAddLifeTimeServices)
+TEST_F(ServiceCollectionTest, ShouldAddLifeTimeServices)
 {
     sb::di::ServiceCollection services;
 
@@ -425,7 +425,7 @@ TEST_F(SeriviceCollectionTest, ShouldAddLifeTimeServices)
     EXPECT_EQ(services.size(), 3);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldAddLifeTimeInheritedServices)
+TEST_F(ServiceCollectionTest, ShouldAddLifeTimeInheritedServices)
 {
     sb::di::ServiceCollection services;
 
@@ -437,7 +437,7 @@ TEST_F(SeriviceCollectionTest, ShouldAddLifeTimeInheritedServices)
     EXPECT_EQ(services.size(), 3);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldAddBasicServices)
+TEST_F(ServiceCollectionTest, ShouldAddBasicServices)
 {
     sb::di::ServiceCollection services;
 
@@ -451,7 +451,7 @@ TEST_F(SeriviceCollectionTest, ShouldAddBasicServices)
     EXPECT_EQ(services.size(), 3);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldAddInheritedServices)
+TEST_F(ServiceCollectionTest, ShouldAddInheritedServices)
 {
     sb::di::ServiceCollection services;
 
@@ -463,7 +463,7 @@ TEST_F(SeriviceCollectionTest, ShouldAddInheritedServices)
     EXPECT_EQ(services.size(), 3);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldAddExternalSingleton)
+TEST_F(ServiceCollectionTest, ShouldAddExternalSingleton)
 {
     sb::di::ServiceCollection services;
 
@@ -474,7 +474,7 @@ TEST_F(SeriviceCollectionTest, ShouldAddExternalSingleton)
     EXPECT_EQ(services.size(), 1);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldAddExternalInheritedSingleton)
+TEST_F(ServiceCollectionTest, ShouldAddExternalInheritedSingleton)
 {
     sb::di::ServiceCollection services;
 
@@ -485,7 +485,7 @@ TEST_F(SeriviceCollectionTest, ShouldAddExternalInheritedSingleton)
     EXPECT_EQ(services.size(), 1);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldAddLifeTimeServicesWithFactory)
+TEST_F(ServiceCollectionTest, ShouldAddLifeTimeServicesWithFactory)
 {
     sb::di::ServiceCollection services;
 
@@ -499,7 +499,7 @@ TEST_F(SeriviceCollectionTest, ShouldAddLifeTimeServicesWithFactory)
     EXPECT_EQ(services.size(), 3);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldAddLifeTimeInheritedServicesWithFactory)
+TEST_F(ServiceCollectionTest, ShouldAddLifeTimeInheritedServicesWithFactory)
 {
     sb::di::ServiceCollection services;
 
@@ -514,7 +514,7 @@ TEST_F(SeriviceCollectionTest, ShouldAddLifeTimeInheritedServicesWithFactory)
     EXPECT_EQ(services.size(), 3);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldAddBasicServicesWithFactory)
+TEST_F(ServiceCollectionTest, ShouldAddBasicServicesWithFactory)
 {
     sb::di::ServiceCollection services;
 
@@ -528,7 +528,7 @@ TEST_F(SeriviceCollectionTest, ShouldAddBasicServicesWithFactory)
     EXPECT_EQ(services.size(), 3);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldAddServicesWithComplexFactory)
+TEST_F(ServiceCollectionTest, ShouldAddServicesWithComplexFactory)
 {
     sb::di::ServiceCollection services;
 
@@ -550,7 +550,7 @@ TEST_F(SeriviceCollectionTest, ShouldAddServicesWithComplexFactory)
     EXPECT_EQ(services.size(), 4);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldAddInheritedServicesWithFactory)
+TEST_F(ServiceCollectionTest, ShouldAddInheritedServicesWithFactory)
 {
     sb::di::ServiceCollection services;
 
@@ -562,7 +562,7 @@ TEST_F(SeriviceCollectionTest, ShouldAddInheritedServicesWithFactory)
     EXPECT_EQ(services.size(), 3);
 }
 
-TEST_F(SeriviceCollectionTest, ShouldNotCompileDueToNotInheritedServices)
+TEST_F(ServiceCollectionTest, ShouldNotCompileDueToNotInheritedServices)
 {
     sb::di::ServiceCollection services;
 

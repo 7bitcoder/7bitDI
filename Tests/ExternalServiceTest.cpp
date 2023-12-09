@@ -23,29 +23,25 @@ class ExternalServiceTest : public testing::Test
 TEST_F(ExternalServiceTest, ShouldProperelyCreateExternalService)
 {
     TestClass1 test;
-    const sb::di::details::services::ExternalService external{&test};
+    sb::di::details::services::ExternalService external{&test};
 
     EXPECT_TRUE(external);
     EXPECT_TRUE(external.isValid());
     EXPECT_EQ(external.get(), &test);
+    EXPECT_THROW(external.release(), sb::di::CannotReleaseServiceException);
+    EXPECT_THROW(external.getForMoveOut(), sb::di::CannotMoveOutServiceException);
     EXPECT_EQ(external.getTypeId(), typeid(TestClass1));
 }
 
-TEST_F(ExternalServiceTest, ShouldProperelyCreateExternalNullService)
+TEST_F(ExternalServiceTest, ShouldFailCreateExternalNullService)
 {
     TestClass1 test;
-    const sb::di::details::services::ExternalService<TestClass1> external{nullptr};
+    sb::di::details::services::ExternalService<TestClass1> external{nullptr};
 
     EXPECT_FALSE(external);
     EXPECT_FALSE(external.isValid());
-    EXPECT_NE(external.get(), &test);
-    EXPECT_EQ(external.getTypeId(), typeid(TestClass1));
-}
-
-TEST_F(ExternalServiceTest, ShouldThrowOnMoveOut)
-{
-    TestClass1 test;
-    sb::di::details::services::ExternalService external{&test};
-
+    EXPECT_FALSE(external.get());
     EXPECT_THROW(external.release(), sb::di::CannotReleaseServiceException);
+    EXPECT_THROW(external.getForMoveOut(), sb::di::CannotMoveOutServiceException);
+    EXPECT_EQ(external.getTypeId(), typeid(TestClass1));
 }
