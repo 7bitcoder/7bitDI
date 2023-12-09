@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <iostream>
 
 #include "Classes/BasicInherit.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorsMap.hpp"
@@ -7,6 +6,7 @@
 #include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
+
 class ServiceDescriptorsMapTest : public testing::Test
 {
   protected:
@@ -18,7 +18,7 @@ class ServiceDescriptorsMapTest : public testing::Test
 
     void TearDown() override {}
 
-    ~ServiceDescriptorsMapTest() {}
+    ~ServiceDescriptorsMapTest() override = default;
 
     static void TearDownTestSuite() {}
 };
@@ -31,11 +31,11 @@ TEST_F(ServiceDescriptorsMapTest, ShouldAddDescriptors)
     _descriptors.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
     _descriptors.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass6>());
 
-    auto act = [&]() {
+    auto act = [&] {
         sb::di::details::containers::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end()};
     };
 
-    EXPECT_NO_THROW((act()));
+    EXPECT_NO_THROW(act());
 }
 
 TEST_F(ServiceDescriptorsMapTest, ShouldFailAddServiceDescriptorAlreadyRegistered)
@@ -46,11 +46,11 @@ TEST_F(ServiceDescriptorsMapTest, ShouldFailAddServiceDescriptorAlreadyRegistere
     _descriptors.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
     _descriptors.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass5>());
 
-    auto act = [&]() {
+    auto act = [&] {
         sb::di::details::containers::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end(), true};
     };
 
-    EXPECT_THROW((act()), sb::di::ServiceAlreadyRegisteredException);
+    EXPECT_THROW(act(), sb::di::ServiceAlreadyRegisteredException);
 }
 
 TEST_F(ServiceDescriptorsMapTest, ShouldSealDescriptors)
@@ -62,9 +62,9 @@ TEST_F(ServiceDescriptorsMapTest, ShouldSealDescriptors)
     _descriptors.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass6>());
 
     sb::di::details::containers::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end()};
-    auto act = [&]() { map.seal(); };
+    auto act = [&] { map.seal(); };
 
-    EXPECT_NO_THROW((act()));
+    EXPECT_NO_THROW(act());
 }
 
 TEST_F(ServiceDescriptorsMapTest, ShouldFindDescriptorList)

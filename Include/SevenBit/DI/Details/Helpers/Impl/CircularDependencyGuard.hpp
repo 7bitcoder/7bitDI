@@ -6,12 +6,12 @@
 
 namespace sb::di::details::helpers
 {
-    INLINE ScopedGuard CircularDependencyGuard::spawnGuard(TypeId typeIdUnderConstruction)
+    INLINE ScopedGuard CircularDependencyGuard::spawnGuard(const TypeId typeIdUnderConstruction)
     {
         return ScopedGuard{typeIdUnderConstruction, _typeIdsUnderConstruction};
     }
 
-    INLINE ScopedGuard CircularDependencyGuard::operator()(TypeId typeIdUnderConstruction)
+    INLINE ScopedGuard CircularDependencyGuard::operator()(const TypeId typeIdUnderConstruction)
     {
         return spawnGuard(typeIdUnderConstruction);
     }

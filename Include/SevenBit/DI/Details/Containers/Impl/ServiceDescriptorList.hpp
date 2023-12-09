@@ -1,7 +1,6 @@
 #pragma once
 
 #include <algorithm>
-#include <vector>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
@@ -35,7 +34,7 @@ namespace sb::di::details::containers
 
     INLINE TypeId ServiceDescriptorList::getServiceTypeId() const { return first().getServiceTypeId(); }
 
-    INLINE void ServiceDescriptorList::checkBaseType(ServiceDescriptor &descriptor) const
+    INLINE void ServiceDescriptorList::checkBaseType(const ServiceDescriptor &descriptor) const
     {
         if (!empty() && descriptor.getServiceTypeId() != getServiceTypeId())
         {
@@ -43,7 +42,7 @@ namespace sb::di::details::containers
         }
     }
 
-    INLINE void ServiceDescriptorList::checkLifeTime(ServiceDescriptor &descriptor) const
+    INLINE void ServiceDescriptorList::checkLifeTime(const ServiceDescriptor &descriptor) const
     {
         if (!empty() && descriptor.getLifeTime() != getLifeTime())
         {

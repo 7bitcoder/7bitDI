@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <iostream>
 
 #include "Classes/BasicTest.hpp"
 #include "SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp"
@@ -16,7 +15,7 @@ class CircularDependencyGuardTest : public testing::Test
 
     void TearDown() override {}
 
-    ~CircularDependencyGuardTest() {}
+    ~CircularDependencyGuardTest() override = default;
 
     static void TearDownTestSuite() {}
 };
@@ -24,34 +23,34 @@ class CircularDependencyGuardTest : public testing::Test
 TEST_F(CircularDependencyGuardTest, ShouldNotDetectCirtularDependency)
 {
     sb::di::details::helpers::CircularDependencyGuard guard;
-    auto act = [&]() {
-        auto _ = guard(typeid(TestClass1));
+    auto act = [&] {
+        auto a = guard(typeid(TestClass1));
         {
-            auto _ = guard(typeid(TestClass2));
+            auto b = guard(typeid(TestClass2));
             {
-                auto _ = guard(typeid(TestClass3));
+                auto c = guard(typeid(TestClass3));
             }
         }
     };
 
-    EXPECT_NO_THROW((act()));
+    EXPECT_NO_THROW(act());
 }
 
 TEST_F(CircularDependencyGuardTest, ShouldDetectCirtularDependency)
 {
     sb::di::details::helpers::CircularDependencyGuard guard;
-    auto act = [&]() {
-        auto _ = guard(typeid(TestClass1));
+    auto act = [&] {
+        auto a = guard(typeid(TestClass1));
         {
-            auto _ = guard(typeid(TestClass2));
+            auto b = guard(typeid(TestClass2));
             {
-                auto _ = guard(typeid(TestClass3));
+                auto c = guard(typeid(TestClass3));
                 {
-                    auto _ = guard(typeid(TestClass1));
+                    auto d = guard(typeid(TestClass1));
                 }
             }
         }
     };
 
-    EXPECT_THROW((act()), sb::di::CircularDependencyException);
+    EXPECT_THROW(act(), sb::di::CircularDependencyException);
 }

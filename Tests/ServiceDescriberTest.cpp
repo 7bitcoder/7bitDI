@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <iostream>
 #include <memory>
 
 #include "Classes/BasicInherit.hpp"
@@ -19,14 +18,14 @@ class ServiceDescriberTest : public testing::Test
 
     void TearDown() override {}
 
-    ~ServiceDescriberTest() {}
+    ~ServiceDescriberTest() override = default;
 
     static void TearDownTestSuite() {}
 };
 
 TEST_F(ServiceDescriberTest, ShouldDescribeSingletonCtorService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestClass1>();
+    const auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestClass1>();
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
@@ -35,7 +34,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeSingletonCtorService)
 
 TEST_F(ServiceDescriberTest, ShouldDescribeSingletonCtorInterfaceService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>();
+    const auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>();
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
@@ -44,7 +43,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeSingletonCtorInterfaceService)
 
 TEST_F(ServiceDescriberTest, ShouldDescribeScopedCtorService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeScoped<TestClass1>();
+    const auto descriptor = sb::di::ServiceDescriber::describeScoped<TestClass1>();
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::scoped());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
@@ -53,7 +52,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeScopedCtorService)
 
 TEST_F(ServiceDescriberTest, ShouldDescribeScopedCtorInterfaceService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeScoped<TestInheritClass1, TestInheritClass5>();
+    const auto descriptor = sb::di::ServiceDescriber::describeScoped<TestInheritClass1, TestInheritClass5>();
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::scoped());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
@@ -62,7 +61,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeScopedCtorInterfaceService)
 
 TEST_F(ServiceDescriberTest, ShouldDescribeTransientCtorService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeTransient<TestClass1>();
+    const auto descriptor = sb::di::ServiceDescriber::describeTransient<TestClass1>();
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::transient());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
@@ -71,7 +70,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeTransientCtorService)
 
 TEST_F(ServiceDescriberTest, ShouldDescribeTransientCtorInterfaceService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeTransient<TestInheritClass1, TestInheritClass5>();
+    const auto descriptor = sb::di::ServiceDescriber::describeTransient<TestInheritClass1, TestInheritClass5>();
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::transient());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
@@ -80,7 +79,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeTransientCtorInterfaceService)
 
 TEST_F(ServiceDescriberTest, ShouldDescribeSingletonFcnService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeSingletonFrom(
+    const auto descriptor = sb::di::ServiceDescriber::describeSingletonFrom(
         [](sb::di::ServiceProvider &) { return std::make_unique<TestClass1>(); });
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
@@ -90,7 +89,8 @@ TEST_F(ServiceDescriberTest, ShouldDescribeSingletonFcnService)
 
 TEST_F(ServiceDescriberTest, ShouldDescribeSingletonEmptyFcnService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeSingletonFrom([]() { return std::make_unique<TestClass1>(); });
+    const auto descriptor =
+        sb::di::ServiceDescriber::describeSingletonFrom([] { return std::make_unique<TestClass1>(); });
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
@@ -99,7 +99,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeSingletonEmptyFcnService)
 
 TEST_F(ServiceDescriberTest, ShouldDescribeSingletonFcnInterfaceService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeSingletonFrom<TestInheritClass1>(
+    const auto descriptor = sb::di::ServiceDescriber::describeSingletonFrom<TestInheritClass1>(
         [](sb::di::ServiceProvider &) { return std::make_unique<TestInheritClass5>(); });
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
@@ -109,8 +109,8 @@ TEST_F(ServiceDescriberTest, ShouldDescribeSingletonFcnInterfaceService)
 
 TEST_F(ServiceDescriberTest, ShouldDescribeSingletonEmptyFcnInterfaceService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeSingletonFrom<TestInheritClass1>(
-        []() { return std::make_unique<TestInheritClass5>(); });
+    const auto descriptor = sb::di::ServiceDescriber::describeSingletonFrom<TestInheritClass1>(
+        [] { return std::make_unique<TestInheritClass5>(); });
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
@@ -119,7 +119,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeSingletonEmptyFcnInterfaceService)
 
 TEST_F(ServiceDescriberTest, ShouldDescribeScopedFcnService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeScopedFrom(
+    const auto descriptor = sb::di::ServiceDescriber::describeScopedFrom(
         [](sb::di::ServiceProvider &) { return std::make_unique<TestClass1>(); });
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::scoped());
@@ -129,7 +129,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeScopedFcnService)
 
 TEST_F(ServiceDescriberTest, ShouldDescribeScopedEmptyFcnService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeScopedFrom([]() { return std::make_unique<TestClass1>(); });
+    const auto descriptor = sb::di::ServiceDescriber::describeScopedFrom([] { return std::make_unique<TestClass1>(); });
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::scoped());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
@@ -138,7 +138,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeScopedEmptyFcnService)
 
 TEST_F(ServiceDescriberTest, ShouldDescribeScopedFcnInterfaceService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeScopedFrom<TestInheritClass1>(
+    const auto descriptor = sb::di::ServiceDescriber::describeScopedFrom<TestInheritClass1>(
         [](sb::di::ServiceProvider &) { return std::make_unique<TestInheritClass5>(); });
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::scoped());
@@ -148,8 +148,8 @@ TEST_F(ServiceDescriberTest, ShouldDescribeScopedFcnInterfaceService)
 
 TEST_F(ServiceDescriberTest, ShouldDescribeScopedEmptyFcnInterfaceService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeScopedFrom<TestInheritClass1>(
-        []() { return std::make_unique<TestInheritClass5>(); });
+    const auto descriptor = sb::di::ServiceDescriber::describeScopedFrom<TestInheritClass1>(
+        [] { return std::make_unique<TestInheritClass5>(); });
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::scoped());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
@@ -158,7 +158,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeScopedEmptyFcnInterfaceService)
 
 TEST_F(ServiceDescriberTest, ShouldDescribeTransientFcnService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeTransientFrom(
+    const auto descriptor = sb::di::ServiceDescriber::describeTransientFrom(
         [](sb::di::ServiceProvider &) { return std::make_unique<TestClass1>(); });
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::transient());
@@ -168,7 +168,8 @@ TEST_F(ServiceDescriberTest, ShouldDescribeTransientFcnService)
 
 TEST_F(ServiceDescriberTest, ShouldDescribeEmptyTransientFcnService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeTransientFrom([]() { return std::make_unique<TestClass1>(); });
+    const auto descriptor =
+        sb::di::ServiceDescriber::describeTransientFrom([] { return std::make_unique<TestClass1>(); });
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::transient());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
@@ -177,7 +178,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeEmptyTransientFcnService)
 
 TEST_F(ServiceDescriberTest, ShouldDescribeTransientFcnInterfaceService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeTransientFrom<TestInheritClass1>(
+    const auto descriptor = sb::di::ServiceDescriber::describeTransientFrom<TestInheritClass1>(
         [](sb::di::ServiceProvider &) { return std::make_unique<TestInheritClass5>(); });
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::transient());
@@ -187,8 +188,8 @@ TEST_F(ServiceDescriberTest, ShouldDescribeTransientFcnInterfaceService)
 
 TEST_F(ServiceDescriberTest, ShouldDescribeTransientEmptyFcnInterfaceService)
 {
-    auto descriptor = sb::di::ServiceDescriber::describeTransientFrom<TestInheritClass1>(
-        []() { return std::make_unique<TestInheritClass5>(); });
+    const auto descriptor = sb::di::ServiceDescriber::describeTransientFrom<TestInheritClass1>(
+        [] { return std::make_unique<TestInheritClass5>(); });
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::transient());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
@@ -198,7 +199,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeTransientEmptyFcnInterfaceService)
 TEST_F(ServiceDescriberTest, ShouldDescribeSingletonExternalService)
 {
     TestClass1 test;
-    auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestClass1>(&test);
+    const auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestClass1>(&test);
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
@@ -208,7 +209,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeSingletonExternalService)
 TEST_F(ServiceDescriberTest, ShouldDescribeSingletonExternalInterfaceService)
 {
     TestInheritClass5 test;
-    auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestInheritClass1>(&test);
+    const auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestInheritClass1>(&test);
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));

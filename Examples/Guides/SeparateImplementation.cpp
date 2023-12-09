@@ -13,14 +13,14 @@ struct IService
 class Service final : public IService
 {
   public:
-    std::string helloFromService() { return "Hello from service."; }
+    std::string helloFromService() override { return "Hello from service."; }
 };
 
 int main()
 {
-    ServiceProvider::Ptr provider = ServiceCollection{}.addSingleton<IService, Service>().buildServiceProvider();
+    const ServiceProvider::Ptr provider = ServiceCollection{}.addSingleton<IService, Service>().buildServiceProvider();
 
-    IService &service = provider->getService<IService>();
+    auto &service = provider->getService<IService>();
 
     std::cout << service.helloFromService();
 

@@ -4,7 +4,6 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
 #include "SevenBit/DI/TypeId.hpp"
@@ -16,7 +15,6 @@ namespace sb::di
      */
     class EXPORT ServiceDescriptor
     {
-      private:
         ServiceLifeTime _lifetime;
 
         TypeId _serviceTypeId;
@@ -56,22 +54,22 @@ namespace sb::di
         /**
          * @brief Get the lifetime object
          */
-        const ServiceLifeTime &getLifeTime() const;
+        [[nodiscard]] const ServiceLifeTime &getLifeTime() const;
 
         /**
          * @brief Get the service TypeId
          */
-        TypeId getServiceTypeId() const;
+        [[nodiscard]] TypeId getServiceTypeId() const;
 
         /**
          * @brief Get the service implementation TypeId
          */
-        TypeId getImplementationTypeId() const;
+        [[nodiscard]] TypeId getImplementationTypeId() const;
 
         /**
          * @brief Get the service implementation factory
          */
-        const IServiceFactory &getImplementationFactory() const;
+        [[nodiscard]] const IServiceFactory &getImplementationFactory() const;
     };
 } // namespace sb::di
 

@@ -8,7 +8,7 @@
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorsMap.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
 #include "SevenBit/DI/Details/Core/IServiceProviderData.hpp"
-#include "SevenBit/DI/Details/Factories/ExternalServiceFcnFactory.hpp"
+#include "SevenBit/DI/Details/Factories/ServiceProviderSelfFactory.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 
@@ -16,7 +16,6 @@ namespace sb::di::details::core
 {
     class EXPORT DefaultServiceProviderData : public IServiceProviderData
     {
-      private:
         containers::ServiceDescriptorsMap _descriptorsMap;
         containers::ServiceInstancesMap _singletons;
         ServiceProviderOptions _options;
@@ -27,13 +26,11 @@ namespace sb::di::details::core
 
         template <class TDescriptorIt>
         DefaultServiceProviderData(TDescriptorIt begin, TDescriptorIt end, ServiceProviderOptions options = {})
-            : _options(options), _descriptorsMap(begin, end, options.checkServiceGlobalUniqueness),
-              _singletons(options.strongDestructionOrder)
+            : _descriptorsMap(begin, end, options.checkServiceGlobalUniqueness),
+              _singletons(options.strongDestructionOrder), _options(options)
         {
-            IServiceFactory::Ptr factory{
-                new factories::ExternalServiceFcnFactory{[](ServiceProvider &provider) { return &provider; }}};
-            _descriptorsMap.add(
-                ServiceDescriptor{typeid(ServiceProvider), ServiceLifeTime::scoped(), std::move(factory)});
+            _descriptorsMap.add(ServiceDescriptor{typeid(ServiceProvider), ServiceLifeTime::scoped(),
+                                                  std::make_unique<factories::ServiceProviderSelfFactory>()});
             _descriptorsMap.seal();
         }
 

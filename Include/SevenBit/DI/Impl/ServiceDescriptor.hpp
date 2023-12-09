@@ -7,9 +7,9 @@
 
 namespace sb::di
 {
-    INLINE ServiceDescriptor::ServiceDescriptor(TypeId serviceTypeId, ServiceLifeTime lifetime,
+    INLINE ServiceDescriptor::ServiceDescriptor(const TypeId serviceTypeId, const ServiceLifeTime lifetime,
                                                 IServiceFactory::SPtr implementationFactory)
-        : _serviceTypeId(serviceTypeId), _lifetime(lifetime), _implementationFactory(std::move(implementationFactory))
+        : _lifetime(lifetime), _serviceTypeId(serviceTypeId), _implementationFactory(std::move(implementationFactory))
     {
         if (!_implementationFactory)
         {

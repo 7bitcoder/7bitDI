@@ -11,7 +11,6 @@ namespace sb::di::details::services
 {
     template <class T> class ExternalService : public IServiceInstance
     {
-      private:
         T *_service = nullptr;
 
       public:

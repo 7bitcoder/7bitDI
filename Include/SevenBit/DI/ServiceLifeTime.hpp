@@ -49,19 +49,20 @@ namespace sb::di
         /**
          * @brief checks if lifetime is singleton
          */
-        bool isSingleton() const;
+        [[nodiscard]] bool isSingleton() const;
         /**
          * @brief checks if lifetime is scoped
          */
-        bool isScoped() const;
+        [[nodiscard]] bool isScoped() const;
         /**
          * @brief checks if lifetime is transient
          */
-        bool isTransient() const;
+        [[nodiscard]] bool isTransient() const;
+
         /**
          * @brief checks if lifetime is given type
          */
-        bool is(Type type) const;
+        [[nodiscard]] bool is(Type type) const;
 
         bool operator>(const ServiceLifeTime &scope) const;
         bool operator<(const ServiceLifeTime &scope) const;

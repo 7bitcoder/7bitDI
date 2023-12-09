@@ -3,14 +3,11 @@
 #include <algorithm>
 #include <cstddef>
 #include <memory>
-#include <unordered_map>
 #include <vector>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Utils/Container.hpp"
-#include "SevenBit/DI/IServiceFactory.hpp"
-#include "SevenBit/DI/OneOrList.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
@@ -22,7 +19,6 @@ namespace sb::di
 {
     class EXPORT ServiceCollection
     {
-      private:
         std::vector<ServiceDescriptor> _serviceDescriptors;
 
       public:
@@ -52,20 +48,20 @@ namespace sb::di
         Iterator begin() { return _serviceDescriptors.begin(); }
         Iterator end() { return _serviceDescriptors.end(); }
 
-        ConstIterator cBegin() const { return _serviceDescriptors.cbegin(); }
-        ConstIterator cEnd() const { return _serviceDescriptors.cend(); }
+        [[nodiscard]] ConstIterator cBegin() const { return _serviceDescriptors.cbegin(); }
+        [[nodiscard]] ConstIterator cEnd() const { return _serviceDescriptors.cend(); }
 
-        ConstIterator begin() const { return cBegin(); }
-        ConstIterator end() const { return cEnd(); }
+        [[nodiscard]] ConstIterator begin() const { return cBegin(); }
+        [[nodiscard]] ConstIterator end() const { return cEnd(); }
 
         ReverseIterator rBegin() { return _serviceDescriptors.rbegin(); }
         ReverseIterator rEnd() { return _serviceDescriptors.rend(); }
 
-        ConstReverseIterator crBegin() const { return _serviceDescriptors.crbegin(); }
-        ConstReverseIterator crEnd() const { return _serviceDescriptors.crend(); }
+        [[nodiscard]] ConstReverseIterator crBegin() const { return _serviceDescriptors.crbegin(); }
+        [[nodiscard]] ConstReverseIterator crEnd() const { return _serviceDescriptors.crend(); }
 
-        ConstReverseIterator rbegin() const { return crBegin(); }
-        ConstReverseIterator rend() const { return crEnd(); }
+        [[nodiscard]] ConstReverseIterator rbegin() const { return crBegin(); }
+        [[nodiscard]] ConstReverseIterator rend() const { return crEnd(); }
         /**
          * @brief Returns service descriptor at giver position
          * @details might throw exception
@@ -77,7 +73,7 @@ namespace sb::di
          * @details might throw exception
          * @throws std::out_of_range if index >= size()
          */
-        const ServiceDescriptor &at(size_t index) const;
+        [[nodiscard]] const ServiceDescriptor &at(size_t index) const;
 
         /**
          * @brief Returns first descriptor
@@ -90,7 +86,7 @@ namespace sb::di
          * @details might throw exception
          * @throws std::out_of_range if empty()
          */
-        const ServiceDescriptor &first() const;
+        [[nodiscard]] const ServiceDescriptor &first() const;
 
         /**
          * @brief Returns last descriptor
@@ -103,7 +99,7 @@ namespace sb::di
          * @details might throw exception
          * @throws std::out_of_range if empty()
          */
-        const ServiceDescriptor &last() const;
+        [[nodiscard]] const ServiceDescriptor &last() const;
 
         /**
          * @brief Returns service descriptor at giver position
@@ -121,21 +117,21 @@ namespace sb::di
         /**
          * @brief Returns number of stored descriptors
          */
-        size_t size() const;
+        [[nodiscard]] size_t size() const;
         /**
          * @brief Returns number of stored descriptors
          */
-        size_t count() const;
+        [[nodiscard]] size_t count() const;
 
         /**
          * @brief Returns true if there are no descriptors
          */
-        bool empty() const;
+        [[nodiscard]] bool empty() const;
 
         /**
          * @brief Returns capacity
          */
-        size_t capacity() const;
+        [[nodiscard]] size_t capacity() const;
 
         /**
          * @brief Reserves space for descriptors
@@ -156,22 +152,22 @@ namespace sb::di
          * @brief Find first descriptor meeting TPred requirement
          * @tparam TPred is functor with this sheme: (const ServiceDescriptor&) -> bool
          */
-        template <class TPred> Iterator findIf(const TPred &pred) { return std::find_if(begin(), end(), pred); }
+        template <class TPred> Iterator findIf(TPred pred) { return std::find_if(begin(), end(), std::move(pred)); }
 
         /**
          * @brief Find first descriptor meeting TPred requirement
          * @tparam TPred is functor with this sheme: (const ServiceDescriptor&) -> bool
          */
-        template <class TPred> ConstIterator findIf(const TPred &pred) const
+        template <class TPred> [[nodiscard]] ConstIterator findIf(TPred pred) const
         {
-            return std::find_if(begin(), end(), pred);
+            return std::find_if(begin(), end(), std::move(pred));
         }
 
         /**
          * @brief Cheks if contains descriptor meeting TPred requirement
          * @tparam TPred is functor with this sheme: (const ServiceDescriptor&) -> bool
          */
-        template <class TPred> bool containsIf(const TPred &pred) const { return findIf(pred) != end(); }
+        template <class TPred> [[nodiscard]] bool containsIf(TPred pred) const { return findIf(std::move(pred)) != end(); }
 
         /**
          * @brief Cheks if contains descriptor matching requirement
@@ -179,7 +175,7 @@ namespace sb::di
          * descriptor.getServiceTypeId() == typeid(TService)
          * @endcode
          */
-        template <class TService> bool contains() const { return contains(typeid(TService)); }
+        template <class TService> [[nodiscard]] bool contains() const { return contains(typeid(TService)); }
 
         /**
          * @brief Cheks if contains descriptor matching requirement
@@ -187,7 +183,7 @@ namespace sb::di
          * descriptor.getServiceTypeId() == serviceTypeId
          * @endcode
          */
-        bool contains(TypeId serviceTypeId) const;
+        [[nodiscard]] bool contains(TypeId serviceTypeId) const;
 
         /**
          * @brief Cheks if contains descriptor matching requirement
@@ -196,7 +192,7 @@ namespace sb::di
          * typeid(TService)
          * @endcode
          */
-        template <class TService, class TImplementation = TService> bool containsExact() const
+        template <class TService, class TImplementation = TService> [[nodiscard]] bool containsExact() const
         {
             return containsExact(typeid(TService), typeid(TImplementation));
         }
@@ -208,7 +204,7 @@ namespace sb::di
          * @endcode
          * serviceTypeId
          */
-        bool containsExact(TypeId serviceTypeId, TypeId implementationTypeId) const;
+        [[nodiscard]] bool containsExact(TypeId serviceTypeId, TypeId implementationTypeId) const;
 
         /**
          * @brief Inserts descriptor before giver iterator
@@ -253,9 +249,9 @@ namespace sb::di
          * @tparam TPred is functor with this sheme: (const ServiceDescriptor&) -> bool
          * @details Returns number of removed elements
          */
-        template <class TPred> size_t removeIf(const TPred &pred)
+        template <class TPred> size_t removeIf(TPred pred)
         {
-            auto it = details::utils::Container::removeIf(begin(), end(), pred);
+            auto it = details::utils::Container::removeIf(begin(), end(), std::move(pred));
             auto r = std::distance(it, end());
             removeRange(it, end());
             return r;
@@ -325,7 +321,8 @@ namespace sb::di
          * ServiceCollection{}.add<BaseClass, ImplementationClass>(ServiceLifeTime::transient());
          * @endcode
          */
-        template <class TService, class TImplementation = TService> ServiceCollection &add(ServiceLifeTime lifeTime)
+        template <class TService, class TImplementation = TService>
+        ServiceCollection &add(const ServiceLifeTime lifeTime)
         {
             return add(ServiceDescriber::describe<TService, TImplementation>(lifeTime));
         }
@@ -455,7 +452,8 @@ namespace sb::di
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
-        template <class TService, class FactoryFcn> ServiceCollection &add(ServiceLifeTime lifeTime, FactoryFcn factory)
+        template <class TService, class FactoryFcn>
+        ServiceCollection &add(const ServiceLifeTime lifeTime, FactoryFcn factory)
         {
             return add(ServiceDescriber::describeFrom<TService, FactoryFcn>(lifeTime, std::move(factory)));
         }
@@ -530,7 +528,6 @@ namespace sb::di
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base instanceValidity type
          * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
          * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
          * pointners or unique pointners
@@ -540,7 +537,7 @@ namespace sb::di
          * ServiceCollection{}.add(ServiceLifeTime::transient(), []() { return std::make_unique<TestClass>(); });
          * @endcode
          */
-        template <class FactoryFcn> ServiceCollection &add(ServiceLifeTime lifeTime, FactoryFcn factory)
+        template <class FactoryFcn> ServiceCollection &add(const ServiceLifeTime lifeTime, FactoryFcn factory)
         {
             return add(ServiceDescriber::describeFrom(lifeTime, std::move(factory)));
         }
@@ -551,7 +548,6 @@ namespace sb::di
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base instanceValidity type
          * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
          * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
          * pointners or unique pointners
@@ -572,7 +568,6 @@ namespace sb::di
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base instanceValidity type
          * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
          * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
          * pointners or unique pointners
@@ -593,7 +588,6 @@ namespace sb::di
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base instanceValidity type
          * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
          * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
          * pointners or unique pointners

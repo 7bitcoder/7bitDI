@@ -38,18 +38,18 @@ template <class TService, bool Get> void compareServices(ServiceProvider &root, 
 
 int main()
 {
-    ServiceProvider::Ptr rootProvider = ServiceCollection{}
-                                            .addSingleton<SingletonService>()
-                                            .addScoped<ScopedService>()
-                                            .addTransient<TransientService>()
-                                            .buildServiceProvider();
+    const ServiceProvider::Ptr rootProvider = ServiceCollection{}
+                                                  .addSingleton<SingletonService>()
+                                                  .addScoped<ScopedService>()
+                                                  .addTransient<TransientService>()
+                                                  .buildServiceProvider();
 
     // Accessing Services
-    SingletonService &singleton = rootProvider->getService<SingletonService>();
-    ScopedService &scoped = rootProvider->getService<ScopedService>();
+    auto &singleton = rootProvider->getService<SingletonService>();
+    auto &scoped = rootProvider->getService<ScopedService>();
     std::unique_ptr<TransientService> transient = rootProvider->createService<TransientService>();
 
-    ServiceProvider::Ptr scopedProvider = rootProvider->createScope();
+    const ServiceProvider::Ptr scopedProvider = rootProvider->createScope();
 
     std::cout << std::endl << "Singletons comparison" << std::endl;
     compareServices<SingletonService, true>(*rootProvider, *scopedProvider);

@@ -11,7 +11,6 @@ namespace sb::di::details::containers
 {
     class EXPORT ServiceInstanceList
     {
-      private:
         OneOrList<IServiceInstance::Ptr> _oneOrList;
         bool _sealed = false;
 

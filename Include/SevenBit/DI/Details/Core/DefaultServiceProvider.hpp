@@ -2,7 +2,6 @@
 
 #include <memory>
 #include <optional>
-#include <vector>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
@@ -10,7 +9,6 @@
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
 #include "SevenBit/DI/Details/Core/IServiceProviderData.hpp"
 #include "SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
@@ -21,23 +19,20 @@ namespace sb::di::details::core
 {
     class EXPORT DefaultServiceProvider : public ServiceProvider
     {
-      public:
-        using Ptr = std::unique_ptr<DefaultServiceProvider>;
-
-      private:
         IServiceProviderData::SPtr _sharedData;
         containers::ServiceInstancesMap _scoped;
         helpers::CircularDependencyGuard _guard;
 
-        DefaultServiceProvider(const DefaultServiceProvider &);
+        DefaultServiceProvider(const DefaultServiceProvider &provider);
 
       public:
+        using Ptr = std::unique_ptr<DefaultServiceProvider>;
+
         explicit DefaultServiceProvider(IServiceProviderData::Ptr core);
 
         DefaultServiceProvider(DefaultServiceProvider &&) noexcept = default;
 
         DefaultServiceProvider &operator=(const DefaultServiceProvider &) = delete;
-        DefaultServiceProvider &operator=(DefaultServiceProvider &&) = default;
 
         void clear();
 
@@ -76,7 +71,7 @@ namespace sb::di::details::core
 
         [[nodiscard]] const containers::ServiceDescriptorList *findDescriptors(TypeId serviceTypeId) const;
 
-        const ServiceProviderOptions &getOptions();
+        [[nodiscard]] const ServiceProviderOptions &getOptions() const;
 
         void prebuildSingletons();
     };

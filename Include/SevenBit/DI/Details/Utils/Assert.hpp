@@ -1,13 +1,9 @@
 #pragma once
 
-#include <algorithm>
 #include <cstddef>
-#include <memory>
+#include <type_traits>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
-
-#include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/IServiceInstance.hpp"
 
 namespace sb::di::details::utils
 {

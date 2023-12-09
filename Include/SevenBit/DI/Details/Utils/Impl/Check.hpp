@@ -3,7 +3,6 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Utils/Check.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
 
 namespace sb::di::details::utils
 {

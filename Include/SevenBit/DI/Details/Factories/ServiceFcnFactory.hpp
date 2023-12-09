@@ -1,6 +1,5 @@
 #pragma once
 
-#include <functional>
 #include <memory>
 #include <type_traits>
 
@@ -9,6 +8,7 @@
 #include "SevenBit/DI/Details/Helpers/ServiceFactoryInvoker.hpp"
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 #include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
+#include "SevenBit/DI/Details/Utils/IsUniquePtr.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
@@ -18,22 +18,29 @@ namespace sb::di::details::factories
 {
     template <class FactoryFcn> class ServiceFcnFactory : public IServiceFactory
     {
-      private:
         using ServiceFactoryInvoker = helpers::ServiceFactoryInvoker<FactoryFcn>;
+        using FactoryReturnType = typename ServiceFactoryInvoker::ReturnType;
+        using IsUniquePtr = utils::IsUniquePtr<FactoryReturnType>;
+        using TService = typename IsUniquePtr::Type;
 
         mutable FactoryFcn _factoryFunction;
 
       public:
-        using ServiceType = typename ServiceFactoryInvoker::TService;
+        using ServiceType = TService;
 
-        explicit ServiceFcnFactory(FactoryFcn &&factoryFunction) : _factoryFunction{std::move(factoryFunction)} {}
+        explicit ServiceFcnFactory(FactoryFcn &&factoryFunction) : _factoryFunction{std::move(factoryFunction)}
+        {
+            static_assert(IsUniquePtr::value || utils::IsInPlaceObjectConstructableV<TService> ||
+                              utils::notSupportedType<FactoryFcn>,
+                          "Service factory return type must be std::unique_ptr<TService> or movable/copyable object");
+        }
 
         [[nodiscard]] TypeId getServiceTypeId() const override { return typeid(ServiceType); }
 
-        IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, bool inPlaceRequest) const override
+        IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
             ServiceFactoryInvoker invoker{_factoryFunction, serviceProvider};
-            if constexpr (ServiceFactoryInvoker::IsReturnTypeUniquePtr)
+            if constexpr (IsUniquePtr::value)
             {
                 return std::make_unique<services::UniquePtrService<ServiceType>>(invoker.invoke());
             }

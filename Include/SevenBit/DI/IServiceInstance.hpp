@@ -27,13 +27,13 @@ namespace sb::di
 
         explicit operator bool() const { return isValid(); }
 
-        template <class T> [[nodiscard]] T *getAs() const { return static_cast<T *>(get()); };
+        template <class T> [[nodiscard]] T *getAs() const { return static_cast<T *>(get()); }
 
         template <class T> T *releaseAs() { return static_cast<T *>(release()); }
 
-        template <class T> std::unique_ptr<T> moveOutAsUniquePtr() { return std::unique_ptr<T>{releaseAs<T>()}; };
+        template <class T> std::unique_ptr<T> moveOutAsUniquePtr() { return std::unique_ptr<T>{releaseAs<T>()}; }
 
-        template <class T> T &&moveOutAs() { return std::move(*static_cast<T *>(getForMoveOut())); };
+        template <class T> T &&moveOutAs() { return std::move(*static_cast<T *>(getForMoveOut())); }
 
         virtual ~IServiceInstance() = default;
     };

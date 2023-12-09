@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <iostream>
 #include <memory>
 
 #include "Classes/BasicTest.hpp"
@@ -19,7 +18,7 @@ class ServiceDescriptorTest : public testing::Test
 
     void TearDown() override {}
 
-    ~ServiceDescriptorTest() {}
+    ~ServiceDescriptorTest() override = default;
 
     static void TearDownTestSuite() {}
 };
@@ -27,28 +26,29 @@ class ServiceDescriptorTest : public testing::Test
 TEST_F(ServiceDescriptorTest, ShouldConstructDescriptor)
 {
     auto factory = std::make_unique<sb::di::details::factories::ServiceFactory<TestClass1>>();
-    auto act = [&]() {
+    auto act = [&] {
         sb::di::ServiceDescriptor descriptor{typeid(TestClass1), sb::di::ServiceLifeTime::singleton(),
                                              std::move(factory)};
     };
 
-    EXPECT_NO_THROW((act()));
+    EXPECT_NO_THROW(act());
 }
 
 TEST_F(ServiceDescriptorTest, ShouldFailConstructDescriptor)
 {
-    auto act = [&]() {
+    auto act = [&] {
         sb::di::ServiceDescriptor descriptor{typeid(TestClass1), sb::di::ServiceLifeTime::singleton(), nullptr};
     };
 
-    EXPECT_THROW((act()), sb::di::NullPointerException);
+    EXPECT_THROW(act(), sb::di::NullPointerException);
 }
 
 TEST_F(ServiceDescriptorTest, ShouldGetProperInfoFromDescriptor)
 {
     auto factory = std::make_unique<sb::di::details::factories::ServiceFactory<TestClass1>>();
-    auto factoryPtr = factory.get();
-    sb::di::ServiceDescriptor descriptor{typeid(TestClass1), sb::di::ServiceLifeTime::singleton(), std::move(factory)};
+    const auto factoryPtr = factory.get();
+    const sb::di::ServiceDescriptor descriptor{typeid(TestClass1), sb::di::ServiceLifeTime::singleton(),
+                                               std::move(factory)};
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));

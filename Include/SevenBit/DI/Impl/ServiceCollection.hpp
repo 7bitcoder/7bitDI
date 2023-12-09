@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Core/DefaultServiceProvider.hpp"
@@ -15,8 +17,11 @@ namespace sb::di
         return std::make_unique<details::core::DefaultServiceProvider>(std::move(core));
     }
 
-    INLINE ServiceDescriptor &ServiceCollection::at(size_t index) { return _serviceDescriptors.at(index); }
-    INLINE const ServiceDescriptor &ServiceCollection::at(size_t index) const { return _serviceDescriptors.at(index); }
+    INLINE ServiceDescriptor &ServiceCollection::at(const size_t index) { return _serviceDescriptors.at(index); }
+    INLINE const ServiceDescriptor &ServiceCollection::at(const size_t index) const
+    {
+        return _serviceDescriptors.at(index);
+    }
 
     INLINE ServiceDescriptor &ServiceCollection::first() { return at(0); }
     INLINE const ServiceDescriptor &ServiceCollection::first() const { return at(0); }
@@ -24,8 +29,8 @@ namespace sb::di
     INLINE ServiceDescriptor &ServiceCollection::last() { return at(size() - 1); }
     INLINE const ServiceDescriptor &ServiceCollection::last() const { return at(size() - 1); }
 
-    INLINE ServiceDescriptor &ServiceCollection::operator[](size_t index) { return at(index); }
-    INLINE const ServiceDescriptor &ServiceCollection::operator[](size_t index) const { return at(index); }
+    INLINE ServiceDescriptor &ServiceCollection::operator[](const size_t index) { return at(index); }
+    INLINE const ServiceDescriptor &ServiceCollection::operator[](const size_t index) const { return at(index); }
 
     INLINE size_t ServiceCollection::size() const { return _serviceDescriptors.size(); }
     INLINE size_t ServiceCollection::count() const { return size(); }
@@ -34,7 +39,7 @@ namespace sb::di
 
     INLINE size_t ServiceCollection::capacity() const { return _serviceDescriptors.capacity(); }
 
-    INLINE void ServiceCollection::reserve(size_t space) { _serviceDescriptors.reserve(space); }
+    INLINE void ServiceCollection::reserve(const size_t space) { _serviceDescriptors.reserve(space); }
 
     INLINE void ServiceCollection::shrinkToFit() { _serviceDescriptors.shrink_to_fit(); }
 
@@ -55,7 +60,7 @@ namespace sb::di
 
     INLINE ServiceCollection::Iterator ServiceCollection::insert(ConstIterator pos, ServiceDescriptor descriptor)
     {
-        return _serviceDescriptors.insert(pos, std::move(descriptor));
+        return _serviceDescriptors.insert(std::move(pos), std::move(descriptor));
     }
 
     INLINE ServiceCollection &ServiceCollection::add(ServiceDescriptor descriptor)
@@ -76,20 +81,20 @@ namespace sb::di
 
     INLINE ServiceCollection::Iterator ServiceCollection::remove(Iterator pos)
     {
-        return _serviceDescriptors.erase(pos);
+        return _serviceDescriptors.erase(std::move(pos));
     }
     INLINE ServiceCollection::Iterator ServiceCollection::remove(ConstIterator pos)
     {
-        return _serviceDescriptors.erase(pos);
+        return _serviceDescriptors.erase(std::move(pos));
     }
 
     INLINE ServiceCollection::Iterator ServiceCollection::removeRange(Iterator begin, Iterator end)
     {
-        return _serviceDescriptors.erase(begin, end);
+        return _serviceDescriptors.erase(std::move(begin), std::move(end));
     }
     INLINE ServiceCollection::Iterator ServiceCollection::removeRange(ConstIterator begin, ConstIterator end)
     {
-        return _serviceDescriptors.erase(begin, end);
+        return _serviceDescriptors.erase(std::move(begin), std::move(end));
     }
 
     INLINE size_t ServiceCollection::removeAll(TypeId serviceTypeId)

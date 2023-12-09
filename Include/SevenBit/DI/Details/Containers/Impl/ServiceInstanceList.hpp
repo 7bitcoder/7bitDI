@@ -4,12 +4,11 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
 #include "SevenBit/DI/Details/Utils/Require.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 
 namespace sb::di::details::containers
 {
-    INLINE ServiceInstanceList::ServiceInstanceList(size_t size) : _oneOrList(size) {}
+    INLINE ServiceInstanceList::ServiceInstanceList(const size_t size) : _oneOrList(size) {}
 
     INLINE ServiceInstanceList::ServiceInstanceList(IServiceInstance::Ptr instance)
         : _oneOrList(details::utils::Require::validInstanceAndGet(std::move(instance)))
@@ -30,8 +29,8 @@ namespace sb::di::details::containers
     INLINE IServiceInstance::Ptr &ServiceInstanceList::last() { return _oneOrList.last(); }
     INLINE const IServiceInstance::Ptr &ServiceInstanceList::last() const { return _oneOrList.last(); }
 
-    INLINE IServiceInstance::Ptr &ServiceInstanceList::operator[](size_t index) { return _oneOrList[index]; }
-    INLINE const IServiceInstance::Ptr &ServiceInstanceList::operator[](size_t index) const
+    INLINE IServiceInstance::Ptr &ServiceInstanceList::operator[](const size_t index) { return _oneOrList[index]; }
+    INLINE const IServiceInstance::Ptr &ServiceInstanceList::operator[](const size_t index) const
     {
         return _oneOrList[index];
     }
@@ -40,7 +39,7 @@ namespace sb::di::details::containers
 
     INLINE bool ServiceInstanceList::empty() const { return _oneOrList.empty(); }
 
-    INLINE void ServiceInstanceList::reserve(size_t newCapacity) { return _oneOrList.reserve(newCapacity); }
+    INLINE void ServiceInstanceList::reserve(const size_t newCapacity) { return _oneOrList.reserve(newCapacity); }
 
     INLINE void ServiceInstanceList::shrink() { return _oneOrList.shrink(); }
 

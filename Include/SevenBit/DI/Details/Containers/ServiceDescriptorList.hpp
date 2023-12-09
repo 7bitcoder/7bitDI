@@ -1,6 +1,5 @@
 #pragma once
 
-#include <algorithm>
 #include <vector>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
@@ -14,7 +13,6 @@ namespace sb::di::details::containers
 {
     class EXPORT ServiceDescriptorList
     {
-      private:
         OneOrList<ServiceDescriptor> _oneOrList;
 
       public:
@@ -22,16 +20,16 @@ namespace sb::di::details::containers
 
         void add(ServiceDescriptor &&descriptor);
 
-        auto begin() const { return _oneOrList.getAsList().begin(); }
-        auto end() const { return _oneOrList.getAsList().end(); }
+        [[nodiscard]] auto begin() const { return _oneOrList.getAsList().begin(); }
+        [[nodiscard]] auto end() const { return _oneOrList.getAsList().end(); }
 
-        const ServiceDescriptor &first() const;
+        [[nodiscard]] const ServiceDescriptor &first() const;
 
-        const ServiceDescriptor &last() const;
+        [[nodiscard]] const ServiceDescriptor &last() const;
 
-        bool empty() const;
+        [[nodiscard]] bool empty() const;
 
-        size_t size() const;
+        [[nodiscard]] size_t size() const;
 
         [[nodiscard]] const ServiceLifeTime &getLifeTime() const;
 
@@ -40,8 +38,8 @@ namespace sb::di::details::containers
         void seal();
 
       private:
-        void checkBaseType(ServiceDescriptor &descriptor) const;
-        void checkLifeTime(ServiceDescriptor &descriptor) const;
+        void checkBaseType(const ServiceDescriptor &descriptor) const;
+        void checkLifeTime(const ServiceDescriptor &descriptor) const;
     };
 
 } // namespace sb::di::details::containers

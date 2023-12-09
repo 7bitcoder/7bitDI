@@ -1,8 +1,6 @@
 #include <algorithm>
 #include <gtest/gtest.h>
-#include <iostream>
 #include <memory>
-#include <thread>
 
 #include "Classes/BasicInherit.hpp"
 #include "Classes/BasicTest.hpp"
@@ -20,7 +18,7 @@ class SeriviceCollectionTest : public testing::Test
 
     void TearDown() override {}
 
-    ~SeriviceCollectionTest() {}
+    ~SeriviceCollectionTest() override = default;
 
     static void TearDownTestSuite() {}
 };
@@ -29,7 +27,7 @@ TEST_F(SeriviceCollectionTest, ShouldAddServices)
 {
     sb::di::ServiceCollection services;
 
-    auto act = [&]() {
+    auto act = [&] {
         services.addSingleton<TestClass1>();
         services.addSingleton<TestInheritClass1, TestInheritClass5>();
 
@@ -39,7 +37,7 @@ TEST_F(SeriviceCollectionTest, ShouldAddServices)
         services.addTransient<TestClass1>();
         services.addTransient<TestInheritClass1, TestInheritClass5>();
     };
-    EXPECT_NO_THROW((act()));
+    EXPECT_NO_THROW(act());
 }
 
 TEST_F(SeriviceCollectionTest, ShouldGetAt)
@@ -55,12 +53,12 @@ TEST_F(SeriviceCollectionTest, ShouldGetAt)
     services.addTransient<TestClass1>();
     services.addTransient<TestInheritClass1, TestInheritClass5>();
 
-    auto &first = services.at(0);
+    const auto &first = services.at(0);
     EXPECT_EQ(first.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(first.getServiceTypeId(), typeid(TestClass1));
     EXPECT_EQ(first.getImplementationTypeId(), typeid(TestClass1));
 
-    auto &four = services.at(3);
+    const auto &four = services.at(3);
     EXPECT_EQ(four.getLifeTime(), sb::di::ServiceLifeTime::scoped());
     EXPECT_EQ(four.getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(four.getImplementationTypeId(), typeid(TestInheritClass5));
@@ -72,13 +70,13 @@ TEST_F(SeriviceCollectionTest, ShouldGetFirst)
 {
     sb::di::ServiceCollection services;
 
-    EXPECT_ANY_THROW((services.first()));
+    EXPECT_ANY_THROW(services.first());
 
     services.addTransient<TestInheritClass1, TestInheritClass5>();
     services.addSingleton<TestClass1>();
     services.addScoped<TestClass1>();
 
-    auto &first = services.first();
+    const auto &first = services.first();
     EXPECT_EQ(first.getLifeTime(), sb::di::ServiceLifeTime::transient());
     EXPECT_EQ(first.getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(first.getImplementationTypeId(), typeid(TestInheritClass5));
@@ -88,13 +86,13 @@ TEST_F(SeriviceCollectionTest, ShouldGetLast)
 {
     sb::di::ServiceCollection services;
 
-    EXPECT_ANY_THROW((services.last()));
+    EXPECT_ANY_THROW(services.last());
 
     services.addSingleton<TestClass1>();
     services.addScoped<TestClass1>();
     services.addTransient<TestInheritClass1, TestInheritClass5>();
 
-    auto &last = services.last();
+    const auto &last = services.last();
     EXPECT_EQ(last.getLifeTime(), sb::di::ServiceLifeTime::transient());
     EXPECT_EQ(last.getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(last.getImplementationTypeId(), typeid(TestInheritClass5));
@@ -113,12 +111,12 @@ TEST_F(SeriviceCollectionTest, ShouldGetWithIndexOperator)
     services.addTransient<TestClass1>();
     services.addTransient<TestInheritClass1, TestInheritClass5>();
 
-    auto &first = services[0];
+    const auto &first = services[0];
     EXPECT_EQ(first.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(first.getServiceTypeId(), typeid(TestClass1));
     EXPECT_EQ(first.getImplementationTypeId(), typeid(TestClass1));
 
-    auto &four = services[3];
+    const auto &four = services[3];
     EXPECT_EQ(four.getLifeTime(), sb::di::ServiceLifeTime::scoped());
     EXPECT_EQ(four.getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(four.getImplementationTypeId(), typeid(TestInheritClass5));
@@ -192,7 +190,7 @@ TEST_F(SeriviceCollectionTest, ShouldFindIf)
     services.addTransient<TestClass1>();
     services.addTransient<TestInheritClass1, TestInheritClass5>();
 
-    auto it = services.findIf([](sb::di::ServiceDescriptor &descriptor) {
+    const auto it = services.findIf([](const sb::di::ServiceDescriptor &descriptor) {
         return descriptor.getServiceTypeId() == typeid(TestInheritClass1) && descriptor.getLifeTime().isSingleton();
     });
     EXPECT_NE(it, services.end());
@@ -200,7 +198,7 @@ TEST_F(SeriviceCollectionTest, ShouldFindIf)
     EXPECT_EQ(it->getImplementationTypeId(), typeid(TestInheritClass5));
     EXPECT_EQ(it->getLifeTime(), sb::di::ServiceLifeTime::singleton());
 
-    auto notfound = services.findIf([](sb::di::ServiceDescriptor &descriptor) {
+    const auto notfound = services.findIf([](const sb::di::ServiceDescriptor &descriptor) {
         return descriptor.getServiceTypeId() == typeid(TestInheritClass5) && descriptor.getLifeTime().isSingleton();
     });
     EXPECT_EQ(notfound, services.end());
@@ -219,11 +217,11 @@ TEST_F(SeriviceCollectionTest, ShouldCheckWithContainsIf)
     services.addTransient<TestClass1>();
     services.addTransient<TestInheritClass1, TestInheritClass5>();
 
-    auto contains = services.containsIf([](const sb::di::ServiceDescriptor &descriptor) {
+    const auto contains = services.containsIf([](const sb::di::ServiceDescriptor &descriptor) {
         return descriptor.getServiceTypeId() == typeid(TestInheritClass1) && descriptor.getLifeTime().isSingleton();
     });
     EXPECT_TRUE(contains);
-    auto notContains = services.containsIf([](const sb::di::ServiceDescriptor &descriptor) {
+    const auto notContains = services.containsIf([](const sb::di::ServiceDescriptor &descriptor) {
         return descriptor.getServiceTypeId() == typeid(TestInheritClass5) && descriptor.getLifeTime().isSingleton();
     });
     EXPECT_FALSE(notContains);
@@ -273,15 +271,15 @@ TEST_F(SeriviceCollectionTest, ShouldInsert)
     services.insert(services.begin(), sb::di::ServiceDescriber::describeScoped<TestClass2>());
 
     EXPECT_EQ(services.size(), 2);
-    EXPECT_EQ((services[0].getImplementationTypeId()), typeid(TestClass2));
-    EXPECT_EQ((services[1].getImplementationTypeId()), typeid(TestClass1));
+    EXPECT_EQ(services[0].getImplementationTypeId(), typeid(TestClass2));
+    EXPECT_EQ(services[1].getImplementationTypeId(), typeid(TestClass1));
 }
 
 TEST_F(SeriviceCollectionTest, ShouldAddDescriptor)
 {
     sb::di::ServiceCollection services;
 
-    auto act = [&]() {
+    auto act = [&] {
         services.add(sb::di::ServiceDescriber::describeSingleton<TestClass1>());
         services.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
 
@@ -351,9 +349,9 @@ TEST_F(SeriviceCollectionTest, ShouldRemoveIf)
     services.addTransient<TestClass1>();
     services.addTransient<TestInheritClass1, TestInheritClass5>();
 
-    EXPECT_EQ((services.removeIf([](sb::di::ServiceDescriptor &descriptor) {
-                  return descriptor.getServiceTypeId() == typeid(TestInheritClass1);
-              })),
+    EXPECT_EQ(services.removeIf([](const sb::di::ServiceDescriptor &descriptor) {
+        return descriptor.getServiceTypeId() == typeid(TestInheritClass1);
+    }),
               3);
     EXPECT_EQ(services.size(), 3);
 }
@@ -491,9 +489,9 @@ TEST_F(SeriviceCollectionTest, ShouldAddLifeTimeServicesWithFactory)
 {
     sb::di::ServiceCollection services;
 
-    services.add(sb::di::ServiceLifeTime::scoped(), []() { return std::make_unique<TestInheritClass5>(); });
-    services.add(sb::di::ServiceLifeTime::singleton(), []() { return std::make_unique<TestInheritClass4>(); });
-    services.add(sb::di::ServiceLifeTime::transient(), []() { return std::make_unique<TestInheritClass3>(); });
+    services.add(sb::di::ServiceLifeTime::scoped(), [] { return std::make_unique<TestInheritClass5>(); });
+    services.add(sb::di::ServiceLifeTime::singleton(), [] { return std::make_unique<TestInheritClass4>(); });
+    services.add(sb::di::ServiceLifeTime::transient(), [] { return std::make_unique<TestInheritClass3>(); });
 
     EXPECT_TRUE(services.contains<TestInheritClass5>());
     EXPECT_TRUE(services.contains<TestInheritClass4>());
@@ -506,11 +504,11 @@ TEST_F(SeriviceCollectionTest, ShouldAddLifeTimeInheritedServicesWithFactory)
     sb::di::ServiceCollection services;
 
     services.add<TestInheritClass1>(sb::di::ServiceLifeTime::scoped(),
-                                    []() { return std::make_unique<TestInheritClass5>(); });
+                                    [] { return std::make_unique<TestInheritClass5>(); });
     services.add<TestInheritClass1>(sb::di::ServiceLifeTime::singleton(),
-                                    []() { return std::make_unique<TestInheritClass4>(); });
+                                    [] { return std::make_unique<TestInheritClass4>(); });
     services.add<TestInheritClass1>(sb::di::ServiceLifeTime::transient(),
-                                    []() { return std::make_unique<TestInheritClass3>(); });
+                                    [] { return std::make_unique<TestInheritClass3>(); });
 
     EXPECT_TRUE(services.contains<TestInheritClass1>());
     EXPECT_EQ(services.size(), 3);
@@ -520,9 +518,9 @@ TEST_F(SeriviceCollectionTest, ShouldAddBasicServicesWithFactory)
 {
     sb::di::ServiceCollection services;
 
-    services.addSingleton([]() { return std::make_unique<TestInheritClass5>(); });
-    services.addScoped([]() { return std::make_unique<TestInheritClass4>(); });
-    services.addTransient([]() { return std::make_unique<TestInheritClass3>(); });
+    services.addSingleton([] { return std::make_unique<TestInheritClass5>(); });
+    services.addScoped([] { return std::make_unique<TestInheritClass4>(); });
+    services.addTransient([] { return std::make_unique<TestInheritClass3>(); });
 
     EXPECT_TRUE(services.contains<TestInheritClass5>());
     EXPECT_TRUE(services.contains<TestInheritClass4>());
@@ -534,7 +532,7 @@ TEST_F(SeriviceCollectionTest, ShouldAddServicesWithComplexFactory)
 {
     sb::di::ServiceCollection services;
 
-    services.addSingleton<ITestComplexClass1>([]() { return std::make_unique<TestComplexClass1>(); });
+    services.addSingleton<ITestComplexClass1>([] { return std::make_unique<TestComplexClass1>(); });
     services.addSingleton<ITestComplexClass2>(
         [](ITestComplexClass1 &other1) { return std::make_unique<TestComplexClass2>(&other1); });
     services.addScoped<ITestComplexClass3>([](ITestComplexClass1 &other1, ITestComplexClass2 *other2) {
@@ -556,9 +554,9 @@ TEST_F(SeriviceCollectionTest, ShouldAddInheritedServicesWithFactory)
 {
     sb::di::ServiceCollection services;
 
-    services.addSingleton<TestInheritClass1>([]() { return std::make_unique<TestInheritClass5>(); });
-    services.addScoped<TestInheritClass1>([]() { return std::make_unique<TestInheritClass4>(); });
-    services.addTransient<TestInheritClass1>([]() { return std::make_unique<TestInheritClass3>(); });
+    services.addSingleton<TestInheritClass1>([] { return std::make_unique<TestInheritClass5>(); });
+    services.addScoped<TestInheritClass1>([] { return std::make_unique<TestInheritClass4>(); });
+    services.addTransient<TestInheritClass1>([] { return std::make_unique<TestInheritClass3>(); });
 
     EXPECT_TRUE(services.contains<TestInheritClass1>());
     EXPECT_EQ(services.size(), 3);

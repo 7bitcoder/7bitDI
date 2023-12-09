@@ -7,7 +7,6 @@
 
 #include "SevenBit/DI/Details/Utils/Check.hpp"
 #include "SevenBit/DI/Details/Utils/Require.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstanceProvider.hpp"
 
 namespace sb::di
@@ -32,7 +31,7 @@ namespace sb::di
          * &scoped->getService<TestClass>() != &provider->getService<TestClass>(); // True
          * @endcode
          */
-        virtual ServiceProvider::Ptr createScope() = 0;
+        virtual Ptr createScope() = 0;
 
         /**
          * @brief Returns service pointer, might be null
@@ -47,7 +46,8 @@ namespace sb::di
          */
         template <class TService> TService *tryGetService()
         {
-            if (auto instance = tryGetInstance(typeid(TService)); details::utils::Check::instanceValidity(instance))
+            if (const auto instance = tryGetInstance(typeid(TService));
+                details::utils::Check::instanceValidity(instance))
             {
                 return instance->getAs<TService>();
             }
@@ -110,7 +110,8 @@ namespace sb::di
          */
         template <class TService> std::unique_ptr<TService> tryCreateService()
         {
-            if (auto instance = tryCreateInstance(typeid(TService)); details::utils::Check::instanceValidity(instance))
+            if (const auto instance = tryCreateInstance(typeid(TService));
+                details::utils::Check::instanceValidity(instance))
             {
                 return instance->moveOutAsUniquePtr<TService>();
             }
@@ -132,14 +133,14 @@ namespace sb::di
          */
         template <class TService> std::unique_ptr<TService> createService()
         {
-            auto instance = createInstance(typeid(TService));
+            const auto instance = createInstance(typeid(TService));
             details::utils::Require::validInstance(instance);
             return instance->moveOutAsUniquePtr<TService>();
         }
 
         template <class TService> TService createServiceInPlace()
         {
-            auto instance = createInstanceInPlace(typeid(TService));
+            const auto instance = createInstanceInPlace(typeid(TService));
             details::utils::Require::validInstance(instance);
             return instance->moveOutAs<TService>();
         }
@@ -163,7 +164,7 @@ namespace sb::di
         {
             if (auto instances = tryCreateInstances(typeid(TService)))
             {
-                return mapValidInstances(*instances, [](IServiceInstance::Ptr &instance) {
+                return mapValidInstances(*instances, [](const IServiceInstance::Ptr &instance) {
                     return instance->moveOutAsUniquePtr<TService>();
                 });
             }

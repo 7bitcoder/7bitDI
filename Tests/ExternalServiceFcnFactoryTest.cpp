@@ -1,12 +1,9 @@
 #include <gtest/gtest.h>
-#include <iostream>
 #include <memory>
 
 #include "Classes/BasicTest.hpp"
 #include "Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/DI/Details/Factories/ExternalServiceFcnFactory.hpp"
-#include "SevenBit/DI/Details/Factories/ServiceFcnFactory.hpp"
-#include "SevenBit/DI/ServiceLifeTime.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 
 class ExternalServiceFcnFactoryTest : public testing::Test
@@ -20,7 +17,7 @@ class ExternalServiceFcnFactoryTest : public testing::Test
 
     void TearDown() override {}
 
-    ~ExternalServiceFcnFactoryTest() {}
+    ~ExternalServiceFcnFactoryTest() override = default;
 
     static void TearDownTestSuite() {}
 };
@@ -37,8 +34,8 @@ TEST_F(ExternalServiceFcnFactoryTest, ShouldNotCompileWrongFactoryScheme)
 TEST_F(ExternalServiceFcnFactoryTest, ShouldReturnProperTypeId)
 {
     TestClass1 test;
-    auto fcn = [&](sb::di::ServiceProvider &) { return &test; };
-    sb::di::details::factories::ExternalServiceFcnFactory factory{fcn};
+    auto fcn = [&] { return &test; };
+    const sb::di::details::factories::ExternalServiceFcnFactory factory{fcn};
 
     EXPECT_EQ(factory.getServiceTypeId(), typeid(TestClass1));
 }
@@ -47,10 +44,10 @@ TEST_F(ExternalServiceFcnFactoryTest, ShouldCreateService)
 {
     ServiceProviderMock mock;
     TestClass1 test;
-    auto fcn = [&](sb::di::ServiceProvider &) { return &test; };
-    sb::di::details::factories::ExternalServiceFcnFactory factory{fcn};
+    auto fcn = [&] { return &test; };
+    const sb::di::details::factories::ExternalServiceFcnFactory factory{fcn};
 
-    auto instance = factory.createInstance(mock, false);
+    const auto instance = factory.createInstance(mock, false);
 
     EXPECT_TRUE(instance);
 }

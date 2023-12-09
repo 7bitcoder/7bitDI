@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <iostream>
 #include <memory>
 
 #include "Classes/BasicTest.hpp"
@@ -17,14 +16,14 @@ class ServiceOwnerTest : public testing::Test
 
     void TearDown() override {}
 
-    ~ServiceOwnerTest() {}
+    ~ServiceOwnerTest() override = default;
 
     static void TearDownTestSuite() {}
 };
 
 TEST_F(ServiceOwnerTest, ShouldProperelyCreateExternalService)
 {
-    sb::di::details::services::UniquePtrService<TestClass1> owner{std::make_unique<TestClass1>()};
+    const sb::di::details::services::UniquePtrService owner{std::make_unique<TestClass1>()};
 
     EXPECT_TRUE(owner);
     EXPECT_TRUE(owner.isValid());
@@ -34,7 +33,7 @@ TEST_F(ServiceOwnerTest, ShouldProperelyCreateExternalService)
 
 TEST_F(ServiceOwnerTest, ShouldProperelyCreateExternalNullService)
 {
-    sb::di::details::services::UniquePtrService<TestClass1> owner{nullptr};
+    const sb::di::details::services::UniquePtrService<TestClass1> owner{nullptr};
 
     EXPECT_FALSE(owner);
     EXPECT_FALSE(owner.isValid());
@@ -44,9 +43,9 @@ TEST_F(ServiceOwnerTest, ShouldProperelyCreateExternalNullService)
 
 TEST_F(ServiceOwnerTest, ShouldThrowOnMoveOut)
 {
-    sb::di::details::services::UniquePtrService<TestClass1> owner{std::make_unique<TestClass1>()};
+    sb::di::details::services::UniquePtrService owner{std::make_unique<TestClass1>()};
 
-    auto ptr = owner.release();
+    const auto ptr = owner.release();
     EXPECT_TRUE(ptr);
-    delete (TestClass1 *)ptr;
+    delete static_cast<TestClass1 *>(ptr);
 }

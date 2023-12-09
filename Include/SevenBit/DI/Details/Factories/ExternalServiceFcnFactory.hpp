@@ -1,13 +1,12 @@
 #pragma once
 
-#include <functional>
 #include <memory>
 #include <type_traits>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Helpers/ServiceFactoryInvoker.hpp"
 #include "SevenBit/DI/Details/Services/ExternalService.hpp"
-#include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
@@ -18,21 +17,28 @@ namespace sb::di::details::factories
 
     template <class FactoryFcn> class ExternalServiceFcnFactory : public IServiceFactory
     {
-      private:
-        FactoryFcn _factoryFunction;
+        using ServiceFactoryInvoker = helpers::ServiceFactoryInvoker<FactoryFcn>;
+        using FactoryReturnType = typename ServiceFactoryInvoker::ReturnType;
+        using IsPointer = std::is_pointer<FactoryReturnType>;
+        using TService = std::remove_pointer_t<FactoryReturnType>;
+
+        mutable FactoryFcn _factoryFunction;
 
       public:
-        using ReturnType = std::invoke_result_t<FactoryFcn, ServiceProvider &>;
-        using IsReturnTypePtr = std::is_pointer<ReturnType>;
-        using ServiceType = std::remove_pointer_t<ReturnType>;
+        using ServiceType = TService;
 
-        explicit ExternalServiceFcnFactory(FactoryFcn factoryFunction) : _factoryFunction{std::move(factoryFunction)} {}
+        explicit ExternalServiceFcnFactory(FactoryFcn factoryFunction) : _factoryFunction{std::move(factoryFunction)}
+        {
+            static_assert(IsPointer::value || utils::notSupportedType<FactoryFcn>,
+                          "External service factory return type must be pointner to object");
+        }
 
         [[nodiscard]] TypeId getServiceTypeId() const override { return typeid(ServiceType); }
 
-        IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, bool inPlaceRequest) const override
+        IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
-            return std::make_unique<services::ExternalService<ServiceType>>(_factoryFunction(serviceProvider));
+            ServiceFactoryInvoker invoker{_factoryFunction, serviceProvider};
+            return std::make_unique<services::ExternalService<ServiceType>>(invoker.invoke());
         }
     };
 } // namespace sb::di::details::factories

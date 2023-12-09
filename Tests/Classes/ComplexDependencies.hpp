@@ -7,16 +7,16 @@
 
 struct TestDependencyClass1
 {
-    int number() { return 1; }
+    static int number() { return 1; }
 };
 
 struct TestDependencyClass2
 {
     TestDependencyClass1 *_test1;
 
-    TestDependencyClass2(TestDependencyClass1 *test1) : _test1(test1) {}
+    explicit TestDependencyClass2(TestDependencyClass1 *test1) : _test1(test1) {}
 
-    int number() { return 2; }
+    static int number() { return 2; }
 };
 
 struct TestDependencyClass3
@@ -26,18 +26,18 @@ struct TestDependencyClass3
 
     TestDependencyClass3(TestDependencyClass1 *test1, TestDependencyClass2 *test2) : _test1(test1), _test2(test2) {}
 
-    int number() { return 3; }
+    static int number() { return 3; }
 };
 
 struct ITestComplexClass1
 {
     virtual int number() = 0;
-    virtual ~ITestComplexClass1() {}
+    virtual ~ITestComplexClass1() = default;
 };
 
 struct TestComplexClass1 : public ITestComplexClass1
 {
-    int number() { return 1; }
+    int number() override { return 1; }
 };
 
 struct ITestComplexClass2
@@ -46,17 +46,17 @@ struct ITestComplexClass2
 
     virtual int number() = 0;
 
-    virtual ~ITestComplexClass2() {}
+    virtual ~ITestComplexClass2() = default;
 };
 struct TestComplexClass2 : public ITestComplexClass2
 {
     ITestComplexClass1 *_test1;
 
-    TestComplexClass2(ITestComplexClass1 *test1) : _test1(test1) {}
+    explicit TestComplexClass2(ITestComplexClass1 *test1) : _test1(test1) {}
 
-    ITestComplexClass1 *getOne() { return _test1; }
+    ITestComplexClass1 *getOne() override { return _test1; }
 
-    int number() { return 2; }
+    int number() override { return 2; }
 };
 
 struct ITestComplexClass3
@@ -65,7 +65,7 @@ struct ITestComplexClass3
     virtual ITestComplexClass2 *getTwo() = 0;
 
     virtual int number() = 0;
-    virtual ~ITestComplexClass3() {}
+    virtual ~ITestComplexClass3() = default;
 };
 struct TestComplexClass3 : public ITestComplexClass3
 {
@@ -74,10 +74,10 @@ struct TestComplexClass3 : public ITestComplexClass3
 
     TestComplexClass3(ITestComplexClass1 *test1, ITestComplexClass2 *test2) : _test1(test1), _test2(test2) {}
 
-    ITestComplexClass1 *getOne() { return _test1; }
-    ITestComplexClass2 *getTwo() { return _test2; }
+    ITestComplexClass1 *getOne() override { return _test1; }
+    ITestComplexClass2 *getTwo() override { return _test2; }
 
-    int number() { return 3; }
+    int number() override { return 3; }
 };
 
 struct ITestComplexClass4
@@ -88,7 +88,7 @@ struct ITestComplexClass4
 
     virtual int number() = 0;
 
-    virtual ~ITestComplexClass4() {}
+    virtual ~ITestComplexClass4() = default;
 };
 struct TestComplexClass4 : public ITestComplexClass4
 {
@@ -101,11 +101,11 @@ struct TestComplexClass4 : public ITestComplexClass4
     {
     }
 
-    ITestComplexClass1 *getOne() { return _test1; }
-    ITestComplexClass2 *getTwo() { return _test2; }
-    std::unique_ptr<ITestComplexClass3> &getThree() { return _test3; }
+    ITestComplexClass1 *getOne() override { return _test1; }
+    ITestComplexClass2 *getTwo() override { return _test2; }
+    std::unique_ptr<ITestComplexClass3> &getThree() override { return _test3; }
 
-    int number() { return 4; }
+    int number() override { return 4; }
 };
 
 struct ITestComplexClass5
@@ -115,7 +115,7 @@ struct ITestComplexClass5
     virtual std::unique_ptr<ITestComplexClass3> makeThree() = 0;
 
     virtual int number() = 0;
-    virtual ~ITestComplexClass5() {}
+    virtual ~ITestComplexClass5() = default;
 };
 struct TestComplexClass5 : public ITestComplexClass5
 {
@@ -128,9 +128,9 @@ struct TestComplexClass5 : public ITestComplexClass5
     {
     }
 
-    ITestComplexClass1 *getOne() { return _test1; }
-    ITestComplexClass2 *getTwo() { return _test2; }
-    std::unique_ptr<ITestComplexClass3> makeThree() { return _provider->createService<ITestComplexClass3>(); }
+    ITestComplexClass1 *getOne() override { return _test1; }
+    ITestComplexClass2 *getTwo() override { return _test2; }
+    std::unique_ptr<ITestComplexClass3> makeThree() override { return _provider->createService<ITestComplexClass3>(); }
 
-    int number() { return 5; }
+    int number() override { return 5; }
 };

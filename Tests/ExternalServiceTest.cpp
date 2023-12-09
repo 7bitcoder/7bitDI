@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <iostream>
 
 #include "Classes/BasicTest.hpp"
 #include "SevenBit/DI/Details/Services/ExternalService.hpp"
@@ -16,7 +15,7 @@ class ExternalServiceTest : public testing::Test
 
     void TearDown() override {}
 
-    ~ExternalServiceTest() {}
+    ~ExternalServiceTest() override = default;
 
     static void TearDownTestSuite() {}
 };
@@ -24,7 +23,7 @@ class ExternalServiceTest : public testing::Test
 TEST_F(ExternalServiceTest, ShouldProperelyCreateExternalService)
 {
     TestClass1 test;
-    sb::di::details::services::ExternalService external{&test};
+    const sb::di::details::services::ExternalService external{&test};
 
     EXPECT_TRUE(external);
     EXPECT_TRUE(external.isValid());
@@ -35,7 +34,7 @@ TEST_F(ExternalServiceTest, ShouldProperelyCreateExternalService)
 TEST_F(ExternalServiceTest, ShouldProperelyCreateExternalNullService)
 {
     TestClass1 test;
-    sb::di::details::services::ExternalService<TestClass1> external{nullptr};
+    const sb::di::details::services::ExternalService<TestClass1> external{nullptr};
 
     EXPECT_FALSE(external);
     EXPECT_FALSE(external.isValid());

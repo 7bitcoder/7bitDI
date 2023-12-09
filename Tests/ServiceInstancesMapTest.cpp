@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <iostream>
 #include <memory>
 
 #include "Classes/BasicInherit.hpp"
@@ -22,7 +21,7 @@ class ServiceInstancesMapTest : public testing::Test
 
     void TearDown() override {}
 
-    ~ServiceInstancesMapTest() {}
+    ~ServiceInstancesMapTest() override = default;
 
     static void TearDownTestSuite() {}
 };
@@ -33,9 +32,9 @@ TEST_F(ServiceInstancesMapTest, ShouldAdd)
 
     TestClass1 test;
     sb::di::IServiceInstance::Ptr instance{new sb::di::details::services::ExternalService{&test}};
-    auto act = [&]() { map.insert(typeid(TestClass1), std::move(instance)); };
+    auto act = [&] { map.insert(typeid(TestClass1), std::move(instance)); };
 
-    EXPECT_NO_THROW((act()));
+    EXPECT_NO_THROW(act());
 }
 
 TEST_F(ServiceInstancesMapTest, ShouldFindList)
@@ -50,7 +49,7 @@ TEST_F(ServiceInstancesMapTest, ShouldFindList)
     sb::di::IServiceInstance::Ptr instance2{new sb::di::details::services::ExternalService{&test2}};
     map.insert(typeid(TestInheritClass1), std::move(instance2));
 
-    auto list = map.findServices(typeid(TestInheritClass1));
+    const auto list = map.findServices(typeid(TestInheritClass1));
     EXPECT_TRUE(list);
     EXPECT_TRUE(list->first()->isValid());
     EXPECT_EQ(list->first()->get(), &test);
@@ -69,8 +68,8 @@ TEST_F(ServiceInstancesMapTest, ShouldDestructInProperOrder)
     {
         int &_cnt;
         int _expected;
-        DestructionOrderCheck(int &cnt, int expected) : _cnt(cnt), _expected(expected) {}
-        void operator()()
+        DestructionOrderCheck(int &cnt, const int expected) : _cnt(cnt), _expected(expected) {}
+        void operator()() const
         {
             _cnt++;
             EXPECT_EQ(_cnt, _expected);
@@ -78,22 +77,22 @@ TEST_F(ServiceInstancesMapTest, ShouldDestructInProperOrder)
     };
     int cnt = 0;
 
-    auto describer = sb::di::ServiceDescriber::describeSingletonFrom<TestInheritDestrClass1>([&]() {
+    const auto describer = sb::di::ServiceDescriber::describeSingletonFrom<TestInheritDestrClass1>([&] {
         return std::make_unique<TestInheritDestrClass5<DestructionOrderCheck>>(DestructionOrderCheck{cnt, 4});
     });
     map.insert(describer.getServiceTypeId(), describer.getImplementationFactory().createInstance(mock, false));
 
-    auto describer2 = sb::di::ServiceDescriber::describeSingletonFrom<TestInheritDestrClass2>([&]() {
+    const auto describer2 = sb::di::ServiceDescriber::describeSingletonFrom<TestInheritDestrClass2>([&] {
         return std::make_unique<TestInheritDestrClass5<DestructionOrderCheck>>(DestructionOrderCheck{cnt, 3});
     });
     map.insert(describer2.getServiceTypeId(), describer2.getImplementationFactory().createInstance(mock, false));
 
-    auto describer3 = sb::di::ServiceDescriber::describeSingletonFrom<TestInheritDestrClass3>([&]() {
+    const auto describer3 = sb::di::ServiceDescriber::describeSingletonFrom<TestInheritDestrClass3>([&] {
         return std::make_unique<TestInheritDestrClass5<DestructionOrderCheck>>(DestructionOrderCheck{cnt, 2});
     });
     map.insert(describer3.getServiceTypeId(), describer3.getImplementationFactory().createInstance(mock, false));
 
-    auto describer4 = sb::di::ServiceDescriber::describeSingletonFrom<TestInheritDestrClass4>([&]() {
+    const auto describer4 = sb::di::ServiceDescriber::describeSingletonFrom<TestInheritDestrClass4>([&] {
         return std::make_unique<TestInheritDestrClass5<DestructionOrderCheck>>(DestructionOrderCheck{cnt, 1});
     });
     map.insert(describer4.getServiceTypeId(), describer4.getImplementationFactory().createInstance(mock, false));

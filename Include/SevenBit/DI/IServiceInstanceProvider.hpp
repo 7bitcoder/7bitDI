@@ -2,11 +2,9 @@
 
 #include <memory>
 #include <optional>
-#include <vector>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/OneOrList.hpp"
 #include "SevenBit/DI/TypeId.hpp"

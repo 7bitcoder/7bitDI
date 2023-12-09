@@ -18,14 +18,14 @@ struct IServiceB
     virtual ~IServiceB() = default;
 };
 
-struct ServiceA final : public IServiceA
+struct ServiceA final : IServiceA
 {
-    std::string actionA() { return "actionA"; }
+    std::string actionA() override { return "actionA"; }
 };
 
-struct ServiceB final : public IServiceB
+struct ServiceB final : IServiceB
 {
-    std::string actionB() { return "actionB"; }
+    std::string actionB() override { return "actionB"; }
 };
 
 class ServiceExecutor
@@ -34,23 +34,26 @@ class ServiceExecutor
     std::unique_ptr<IServiceB> _serviceB;
 
   public:
-    ServiceExecutor(ServiceProvider *provider)
+    explicit ServiceExecutor(ServiceProvider *provider)
     {
         _serviceA = &provider->getService<IServiceA>();
         _serviceB = provider->createService<IServiceB>();
     }
 
-    std::string execute() { return _serviceA->actionA() + ", " + _serviceB->actionB() + " executed."; }
+    [[nodiscard]] std::string execute() const
+    {
+        return _serviceA->actionA() + ", " + _serviceB->actionB() + " executed.";
+    }
 };
 int main()
 {
-    ServiceProvider::Ptr provider = ServiceCollection{}
-                                        .addSingleton<IServiceA, ServiceA>()
-                                        .addTransient<IServiceB, ServiceB>()
-                                        .addScoped<ServiceExecutor>()
-                                        .buildServiceProvider();
+    const ServiceProvider::Ptr provider = ServiceCollection{}
+                                              .addSingleton<IServiceA, ServiceA>()
+                                              .addTransient<IServiceB, ServiceB>()
+                                              .addScoped<ServiceExecutor>()
+                                              .buildServiceProvider();
 
-    ServiceExecutor &consumer = provider->getService<ServiceExecutor>();
+    const auto &consumer = provider->getService<ServiceExecutor>();
 
     std::cout << consumer.execute();
     return 0;

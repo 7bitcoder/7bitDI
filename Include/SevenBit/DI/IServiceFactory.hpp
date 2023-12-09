@@ -20,7 +20,7 @@ namespace sb::di
         /**
          * @brief Get the TypeId of the service instances that the factory will create
          */
-        virtual TypeId getServiceTypeId() const = 0;
+        [[nodiscard]] virtual TypeId getServiceTypeId() const = 0;
 
         /**
          * @brief Create a service service object

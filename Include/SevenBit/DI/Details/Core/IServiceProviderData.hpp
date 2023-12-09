@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <vector>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
@@ -16,9 +15,9 @@ namespace sb::di::details::core
         using Ptr = std::unique_ptr<IServiceProviderData>;
         using SPtr = std::shared_ptr<IServiceProviderData>;
 
-        virtual const ServiceProviderOptions &getOptions() const = 0;
+        [[nodiscard]] virtual const ServiceProviderOptions &getOptions() const = 0;
 
-        virtual const containers::ServiceDescriptorsMap &getDescriptorsMap() const = 0;
+        [[nodiscard]] virtual const containers::ServiceDescriptorsMap &getDescriptorsMap() const = 0;
 
         virtual containers::ServiceInstancesMap &getSingletons() = 0;
 

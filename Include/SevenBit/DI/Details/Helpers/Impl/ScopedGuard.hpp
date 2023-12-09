@@ -5,14 +5,16 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Helpers/ScopedGuard.hpp"
+#include "SevenBit/DI/Exceptions.hpp"
 
 namespace sb::di::details::helpers
 {
-    INLINE ScopedGuard::ScopedGuard(TypeId typeIdUnderConstruction,
+    INLINE ScopedGuard::ScopedGuard(const TypeId typeIdUnderConstruction,
                                     std::unordered_set<TypeId> &typeIdsUnderConstruction)
-        : _typeIdUnderConstruction(typeIdUnderConstruction), _typeIdsUnderConstruction(typeIdsUnderConstruction)
+        : _typeIdsUnderConstruction(typeIdsUnderConstruction), _typeIdUnderConstruction(typeIdUnderConstruction)
     {
-        if (auto it = _typeIdsUnderConstruction.find(_typeIdUnderConstruction); it != _typeIdsUnderConstruction.end())
+        if (const auto it = _typeIdsUnderConstruction.find(_typeIdUnderConstruction);
+            it != _typeIdsUnderConstruction.end())
         {
             throw CircularDependencyException{_typeIdUnderConstruction};
         }

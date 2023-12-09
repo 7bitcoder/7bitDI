@@ -1,14 +1,10 @@
 #include <gtest/gtest.h>
-#include <iostream>
 
 #include "Classes/BasicInherit.hpp"
-#include "Classes/BasicTest.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Factories/ServiceFactory.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/IServiceFactory.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
-#include "SevenBit/DI/ServiceLifeTime.hpp"
 
 class ServiceDescriptorListTest : public testing::Test
 {
@@ -21,7 +17,7 @@ class ServiceDescriptorListTest : public testing::Test
 
     void TearDown() override {}
 
-    ~ServiceDescriptorListTest() {}
+    ~ServiceDescriptorListTest() override = default;
 
     static void TearDownTestSuite() {}
 };
@@ -31,12 +27,12 @@ TEST_F(ServiceDescriptorListTest, ShouldAddServiceDescriptors)
     sb::di::details::containers::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
-    auto act = [&]() {
+    auto act = [&] {
         list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
         list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
     };
 
-    EXPECT_NO_THROW((act()));
+    EXPECT_NO_THROW(act());
 }
 
 TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorLifeTimeMismatch)
@@ -46,9 +42,9 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorLifeTimeMismatch
 
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    auto act = [&]() { list.add(sb::di::ServiceDescriber::describeScoped<TestInheritClass1, TestInheritClass5>()); };
+    auto act = [&] { list.add(sb::di::ServiceDescriber::describeScoped<TestInheritClass1, TestInheritClass5>()); };
 
-    EXPECT_THROW((act()), sb::di::ServiceLifeTimeMismatchException);
+    EXPECT_THROW(act(), sb::di::ServiceLifeTimeMismatchException);
 }
 
 TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorBaseTypeMismatch)
@@ -58,9 +54,9 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorBaseTypeMismatch
 
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    auto act = [&]() { list.add(sb::di::ServiceDescriber::describeScoped<TestInheritClass2, TestInheritClass5>()); };
+    auto act = [&] { list.add(sb::di::ServiceDescriber::describeScoped<TestInheritClass2, TestInheritClass5>()); };
 
-    EXPECT_THROW((act()), sb::di::ServiceBaseTypeMismatchException);
+    EXPECT_THROW(act(), sb::di::ServiceBaseTypeMismatchException);
 }
 
 TEST_F(ServiceDescriptorListTest, ShouldReturnProperSize)

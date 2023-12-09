@@ -3,16 +3,15 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
 
 namespace sb::di::details::containers
 {
-    INLINE ServiceInstancesMap::ServiceInstancesMap(bool strongDestructionOrder)
+    INLINE ServiceInstancesMap::ServiceInstancesMap(const bool strongDestructionOrder)
         : _strongDestructionOrder(strongDestructionOrder)
     {
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesMap::insert(TypeId serviceTypeId, IServiceInstance::Ptr service)
+    INLINE ServiceInstanceList &ServiceInstancesMap::insert(const TypeId serviceTypeId, IServiceInstance::Ptr service)
     {
         ServiceInstanceList &list = add(serviceTypeId, std::move(service));
         if (_strongDestructionOrder)
@@ -22,12 +21,12 @@ namespace sb::di::details::containers
         return list;
     }
 
-    INLINE bool ServiceInstancesMap::contains(TypeId serviceTypeId) const
+    INLINE bool ServiceInstancesMap::contains(const TypeId serviceTypeId) const
     {
         return _serviceListMap.find(serviceTypeId) != _serviceListMap.end();
     }
 
-    INLINE ServiceInstanceList *ServiceInstancesMap::findServices(TypeId serviceTypeId)
+    INLINE ServiceInstanceList *ServiceInstancesMap::findServices(const TypeId serviceTypeId)
     {
         auto it = _serviceListMap.find(serviceTypeId);
         return it != _serviceListMap.end() ? &it->second : nullptr;
@@ -48,7 +47,7 @@ namespace sb::di::details::containers
         _serviceListMap.clear();
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesMap::add(TypeId serviceTypeId, IServiceInstance::Ptr &&service)
+    INLINE ServiceInstanceList &ServiceInstancesMap::add(const TypeId serviceTypeId, IServiceInstance::Ptr &&service)
     {
         if (auto it = _serviceListMap.find(serviceTypeId); it != _serviceListMap.end())
         {

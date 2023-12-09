@@ -6,7 +6,7 @@
 
 namespace sb::di::details::containers
 {
-    INLINE ServiceDescriptorsMap::ServiceDescriptorsMap(bool checkDescriptorUniqueness)
+    INLINE ServiceDescriptorsMap::ServiceDescriptorsMap(const bool checkDescriptorUniqueness)
         : _checkDescriptorUniqueness(checkDescriptorUniqueness)
     {
     }
@@ -15,7 +15,7 @@ namespace sb::di::details::containers
     {
         if (_checkDescriptorUniqueness)
         {
-            auto implementationTypeId = descriptor.getImplementationTypeId();
+            const auto implementationTypeId = descriptor.getImplementationTypeId();
             checkIfAlreadyRegistered(implementationTypeId);
             addDescriptor(std::move(descriptor));
             registerService(implementationTypeId);
@@ -28,9 +28,9 @@ namespace sb::di::details::containers
 
     INLINE void ServiceDescriptorsMap::seal() { _registeredServices.clear(); }
 
-    INLINE const ServiceDescriptorList *ServiceDescriptorsMap::findDescriptors(TypeId typeId) const
+    INLINE const ServiceDescriptorList *ServiceDescriptorsMap::findDescriptors(const TypeId typeId) const
     {
-        if (auto it = _serviceCreatorsMap.find(typeId); it != end())
+        if (const auto it = _serviceCreatorsMap.find(typeId); it != end())
         {
             return &it->second;
         }
@@ -40,7 +40,7 @@ namespace sb::di::details::containers
     INLINE void ServiceDescriptorsMap::addDescriptor(ServiceDescriptor &&descriptor)
     {
         auto serviceTypeId = descriptor.getServiceTypeId();
-        if (auto it = _serviceCreatorsMap.find(serviceTypeId); it != _serviceCreatorsMap.end())
+        if (const auto it = _serviceCreatorsMap.find(serviceTypeId); it != _serviceCreatorsMap.end())
         {
             it->second.add(std::move(descriptor));
         }
@@ -50,15 +50,15 @@ namespace sb::di::details::containers
         }
     }
 
-    INLINE void ServiceDescriptorsMap::checkIfAlreadyRegistered(TypeId implementationTypeId)
+    INLINE void ServiceDescriptorsMap::checkIfAlreadyRegistered(const TypeId implementationTypeId)
     {
-        if (auto it = _registeredServices.find(implementationTypeId); it != _registeredServices.end())
+        if (const auto it = _registeredServices.find(implementationTypeId); it != _registeredServices.end())
         {
             throw ServiceAlreadyRegisteredException{implementationTypeId};
         }
     }
 
-    INLINE void ServiceDescriptorsMap::registerService(TypeId implementationTypeId)
+    INLINE void ServiceDescriptorsMap::registerService(const TypeId implementationTypeId)
     {
         _registeredServices.insert(implementationTypeId);
     }

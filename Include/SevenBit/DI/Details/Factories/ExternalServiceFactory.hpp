@@ -14,7 +14,6 @@ namespace sb::di::details::factories
 
     template <class T> class ExternalServiceFactory : public IServiceFactory
     {
-      private:
         T *_service = nullptr;
 
       public:
@@ -22,7 +21,7 @@ namespace sb::di::details::factories
 
         [[nodiscard]] TypeId getServiceTypeId() const override { return typeid(T); }
 
-        IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, bool inPlaceRequest) const override
+        IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
             return std::make_unique<services::ExternalService<T>>(_service);
         }

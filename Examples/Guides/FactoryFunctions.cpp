@@ -1,41 +1,40 @@
 #include <SevenBit/DI.hpp>
 #include <iostream>
 #include <memory>
+#include <utility>
 
 using namespace sb::di;
 
 class ServiceA
 {
-  private:
     std::string _message;
 
   public:
-    ServiceA(std::string message) { _message = message; }
+    explicit ServiceA(std::string message) { _message = std::move(message); }
 
     std::string message() { return _message; }
 };
 
 class ServiceB
 {
-  private:
     ServiceA &_serviceA;
 
   public:
-    ServiceB(ServiceA *serviceA) : _serviceA(*serviceA) {}
+    explicit ServiceB(ServiceA *serviceA) : _serviceA(*serviceA) {}
 
-    std::string message() { return _serviceA.message(); }
+    [[nodiscard]] std::string message() const { return _serviceA.message(); }
 };
 
 int main()
 {
-    ServiceProvider::Ptr provider =
+    const ServiceProvider::Ptr provider =
         ServiceCollection{}
-            .addSingleton<ServiceA>([]() { return std::make_unique<ServiceA>("Hello from service!"); })
+            .addSingleton<ServiceA>([] { return std::make_unique<ServiceA>("Hello from service!"); })
             .addSingleton<ServiceB>([](ServiceA *serviceA) { return std::make_unique<ServiceB>(serviceA); })
             .buildServiceProvider();
 
-    ServiceA &serviceA = provider->getService<ServiceA>();
-    ServiceB &serviceB = provider->getService<ServiceB>();
+    auto &serviceA = provider->getService<ServiceA>();
+    const auto &serviceB = provider->getService<ServiceB>();
 
     std::cout << serviceB.message();
 

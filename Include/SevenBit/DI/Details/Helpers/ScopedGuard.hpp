@@ -4,14 +4,12 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di::details::helpers
 {
     class EXPORT ScopedGuard
     {
-      private:
         std::unordered_set<TypeId> &_typeIdsUnderConstruction;
         TypeId _typeIdUnderConstruction;
 

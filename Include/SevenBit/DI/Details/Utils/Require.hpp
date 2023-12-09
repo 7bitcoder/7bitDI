@@ -1,7 +1,6 @@
 #pragma once
 
 #include <algorithm>
-#include <cstddef>
 #include <memory>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
@@ -43,13 +42,13 @@ namespace sb::di::details::utils
             notNull(ptr.get(), failMessage);
         }
 
-        template <class T> static void notNull(const T *ptr, std::string_view failMessage = "")
+        template <class T> static void notNull(const T *ptr, const std::string_view failMessage = "")
         {
             if (!ptr)
             {
-                auto message = !failMessage.empty()
-                                   ? std::string{failMessage}
-                                   : std::string{"Object of type: '"} + typeid(T).name() + "' cannot be null";
+                const auto message = !failMessage.empty()
+                                         ? std::string{failMessage}
+                                         : std::string{"Object of type: '"} + typeid(T).name() + "' cannot be null";
                 throw NullPointerException(message);
             }
         }

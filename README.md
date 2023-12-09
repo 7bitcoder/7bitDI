@@ -13,8 +13,9 @@
     7bitDI is a simple C++ dependency injection library, designed to be as easy to use as possible, the main inspiration was the asp net core dependency injection system. 
   </p>
 
-<h4>
+  <h4>
     <a href="https://7bitDI.readthedocs.io/en/latest/index.html">Documentation & Examples</a>
+  </h4>
 </div>
 
 <br />

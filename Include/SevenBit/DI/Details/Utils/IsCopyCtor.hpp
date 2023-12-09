@@ -1,7 +1,6 @@
 #pragma once
 
-#include <utility>
-#include <vector>
+#include <type_traits>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 

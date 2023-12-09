@@ -17,8 +17,8 @@ Injecting Services
 * Singleton/scoped services can be injected using one of:
 
   * Pointers: (T*)
-  * Const pointner: (T* const)
-  * Pointner to const object: (const T*)
+  * Const pointer: (T* const)
+  * Pointer to const object: (const T*)
   * Const pointer to const object: (const T* const)
 * Transient services can be injected using std::unique_ptr: (unique_ptr<T>)
 * Multiple services implementing specified interface can be injected using std::vector:

@@ -7,19 +7,16 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
-#include "SevenBit/DI/ServiceLifeTime.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di::details::containers
 {
     class EXPORT ServiceDescriptorsMap
     {
-      private:
         std::unordered_map<TypeId, ServiceDescriptorList> _serviceCreatorsMap;
         std::unordered_set<TypeId> _registeredServices;
-        bool _checkDescriptorUniqueness = false;
+        const bool _checkDescriptorUniqueness = false;
 
       public:
         using Ptr = std::unique_ptr<ServiceDescriptorsMap>;
@@ -33,7 +30,7 @@ namespace sb::di::details::containers
         explicit ServiceDescriptorsMap(bool checkDescriptorUniqueness);
 
         template <class TDescriptorIt>
-        ServiceDescriptorsMap(TDescriptorIt begin, TDescriptorIt end, bool checkDescriptorUniqueness = false)
+        ServiceDescriptorsMap(TDescriptorIt begin, TDescriptorIt end, const bool checkDescriptorUniqueness = false)
             : ServiceDescriptorsMap(checkDescriptorUniqueness)
         {
             for (auto it = begin; it != end; ++it)
@@ -46,7 +43,6 @@ namespace sb::di::details::containers
         ServiceDescriptorsMap(ServiceDescriptorsMap &&) noexcept = default;
 
         ServiceDescriptorsMap &operator=(const ServiceDescriptorsMap &) = delete;
-        ServiceDescriptorsMap &operator=(ServiceDescriptorsMap &&) = default;
 
         void add(ServiceDescriptor descriptor);
 

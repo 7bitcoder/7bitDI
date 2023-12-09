@@ -6,7 +6,6 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
@@ -14,10 +13,9 @@ namespace sb::di::details::containers
 {
     class EXPORT ServiceInstancesMap
     {
-      private:
         std::unordered_map<TypeId, ServiceInstanceList> _serviceListMap;
         std::vector<IServiceInstance::Ptr *> _constructionOrder;
-        bool _strongDestructionOrder = false;
+        const bool _strongDestructionOrder = false;
 
       public:
         using Ptr = std::unique_ptr<ServiceInstancesMap>;
@@ -28,7 +26,6 @@ namespace sb::di::details::containers
         ServiceInstancesMap(ServiceInstancesMap &&) noexcept = default;
 
         ServiceInstancesMap &operator=(const ServiceInstancesMap &) = delete;
-        ServiceInstancesMap &operator=(ServiceInstancesMap &&) = default;
 
         ServiceInstanceList &insert(TypeId serviceTypeId, IServiceInstance::Ptr service);
 

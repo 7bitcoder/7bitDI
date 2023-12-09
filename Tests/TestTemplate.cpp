@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <iostream>
 
 class Template : public testing::Test
 {
@@ -12,7 +11,7 @@ class Template : public testing::Test
 
     void TearDown() override {}
 
-    ~Template() {}
+    ~Template() override = default;
 
     static void TearDownTestSuite() {}
 };

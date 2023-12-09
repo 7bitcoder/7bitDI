@@ -10,7 +10,6 @@ namespace sb::di::details::services
 {
     template <class T> class UniquePtrService : public IServiceInstance
     {
-      private:
         std::unique_ptr<T> _service;
 
       public:
