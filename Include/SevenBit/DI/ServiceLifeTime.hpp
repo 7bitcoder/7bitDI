@@ -6,13 +6,13 @@ namespace sb::di
 {
 
     /**
-     * @brief Class used to describe instanceValidity lifetime
+     * @brief Class used to describe service lifetime
      */
     class EXPORT ServiceLifeTime
     {
       public:
         /**
-         * @brief 3 types of availabe instanceValidity lifetimes
+         * @brief 3 types of availabe service lifetimes
          */
         enum Type
         {
@@ -26,15 +26,15 @@ namespace sb::di
 
       public:
         /**
-         * @brief creates singleton instanceValidity lifetime
+         * @brief creates singleton service lifetime
          */
         static ServiceLifeTime singleton();
         /**
-         * @brief creates scoped instanceValidity lifetime
+         * @brief creates scoped service lifetime
          */
         static ServiceLifeTime scoped();
         /**
-         * @brief creates transient instanceValidity lifetime
+         * @brief creates transient service lifetime
          */
         static ServiceLifeTime transient();
 

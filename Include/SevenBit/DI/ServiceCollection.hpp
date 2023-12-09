@@ -41,10 +41,10 @@ namespace sb::di
         ServiceCollection &operator=(ServiceCollection &&) = default;
 
         /**
-         * @brief Builds instanceValidity provider with specified options
+         * @brief Builds service provider with specified options
          * @details might throw exceptions
-         * @throws ServiceAlreadyRegisteredException if instanceValidity was already registered
-         * @throws ServiceLifeTimeMissmatchException if instanceValidity has different lifetime than other already
+         * @throws ServiceAlreadyRegisteredException if service was already registered
+         * @throws ServiceLifeTimeMissmatchException if service has different lifetime than other already
          * registered with same base type
          */
         ServiceProvider::Ptr buildServiceProvider(ServiceProviderOptions options = {});
@@ -67,13 +67,13 @@ namespace sb::di
         ConstReverseIterator rbegin() const { return crBegin(); }
         ConstReverseIterator rend() const { return crEnd(); }
         /**
-         * @brief Returns instanceValidity descriptor at giver position
+         * @brief Returns service descriptor at giver position
          * @details might throw exception
          * @throws std::out_of_range if index >= size()
          */
         ServiceDescriptor &at(size_t index);
         /**
-         * @brief Returns instanceValidity descriptor at giver position
+         * @brief Returns service descriptor at giver position
          * @details might throw exception
          * @throws std::out_of_range if index >= size()
          */
@@ -106,13 +106,13 @@ namespace sb::di
         const ServiceDescriptor &last() const;
 
         /**
-         * @brief Returns instanceValidity descriptor at giver position
+         * @brief Returns service descriptor at giver position
          * @details might throw exception
          * @throws std::out_of_range if index >= size()
          */
         ServiceDescriptor &operator[](size_t index);
         /**
-         * @brief Returns instanceValidity descriptor at giver position
+         * @brief Returns service descriptor at giver position
          * @details might throw exception
          * @throws std::out_of_range if index >= size()
          */
@@ -309,7 +309,7 @@ namespace sb::di
 
         /**
          * @brief Adds ServiceDescriptor
-         * @details Adds instanceValidity descriptor with:
+         * @details Adds service descriptor with:
          * lifetime - given lifetime,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),

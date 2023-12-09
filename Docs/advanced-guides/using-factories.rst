@@ -1,7 +1,7 @@
 Using Factories
 ========================================
 
-Factory functor can be provided to manually create a instanceValidity.
+Factory functor can be provided to manually create a service.
 Functor should return unique_ptr and as an argument should optionally take other services ().
 Functor scheme (Services...) -> std::unique_ptr
 Where Services are pointners, unique pointners, references, vectors with pointners or unique pointners
@@ -14,4 +14,4 @@ Where Services are pointners, unique pointners, references, vectors with pointne
 .. code-block:: console
    :caption: Output
 
-   Hello from instanceValidity.
+   Hello from service.

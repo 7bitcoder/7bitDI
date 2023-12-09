@@ -18,19 +18,19 @@ namespace sb::di
     }
 
     INLINE ForbiddenServiceFactoryException::ForbiddenServiceFactoryException(TypeId typeId, const std::string &reason)
-        : InjectorException{std::string{"Forbidden instanceValidity: '"} + typeId.name() +
+        : InjectorException{std::string{"Forbidden service: '"} + typeId.name() +
                             "' factory, reason: " + reason + "."}
     {
     }
 
     INLINE CannotReleaseServiceException::CannotReleaseServiceException(TypeId typeId, const std::string &reason)
-        : InjectorException{std::string{"Cannot release ownership of instanceValidity: '"} + typeId.name() +
+        : InjectorException{std::string{"Cannot release ownership of service: '"} + typeId.name() +
                             "', reason: " + reason + "."}
     {
     }
 
     INLINE CannotMoveOutServiceException::CannotMoveOutServiceException(TypeId typeId, const std::string &reason)
-        : InjectorException{std::string{"Cannot move out instanceValidity: '"} + typeId.name() +
+        : InjectorException{std::string{"Cannot move out service: '"} + typeId.name() +
                             "', reason: " + reason + "."}
     {
     }
@@ -41,7 +41,7 @@ namespace sb::di
     }
 
     INLINE CircularDependencyException::CircularDependencyException(TypeId typeIndex)
-        : InjectorException{std::string{"Circular dependency detected while creating instanceValidity: '"} +
+        : InjectorException{std::string{"Circular dependency detected while creating service: '"} +
                             typeIndex.name() + "'."}
     {
     }

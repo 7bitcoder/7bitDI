@@ -10,4 +10,4 @@ Singleton can be registered externally
 .. code-block:: console
    :caption: Output
 
-   Hello from instanceValidity.
+   Hello from service.

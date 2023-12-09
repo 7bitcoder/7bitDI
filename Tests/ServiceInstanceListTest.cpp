@@ -33,8 +33,8 @@
 // TEST_F(ServiceInstanceListTest, ShouldAddServices)
 //{
 //     TestClass1 test;
-//     sb::di::IServiceInstance::Ptr instanceValidity{new sb::di::details::ExternalService{&test}};
-//     sb::di::details::ServiceInstanceList list{std::move(instanceValidity)};
+//     sb::di::IServiceInstance::Ptr service{new sb::di::details::ExternalService{&test}};
+//     sb::di::details::ServiceInstanceList list{std::move(service)};
 //
 //     sb::di::IServiceInstance::Ptr instance2{new sb::di::details::ExternalService{&test}};
 //     list.add(std::move(instance2));
@@ -50,8 +50,8 @@
 // TEST_F(ServiceInstanceListTest, ShouldFailAddInvalidService)
 //{
 //     auto act = [&]() {
-//         sb::di::IServiceInstance::Ptr instanceValidity{new sb::di::details::InPlaceService<TestClass1>{nullptr}};
-//         sb::di::details::ServiceInstanceList list{std::move(instanceValidity)};
+//         sb::di::IServiceInstance::Ptr service{new sb::di::details::InPlaceService<TestClass1>{nullptr}};
+//         sb::di::details::ServiceInstanceList list{std::move(service)};
 //     };
 //
 //     EXPECT_THROW((act()), sb::di::InvalidServiceException);

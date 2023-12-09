@@ -20,36 +20,36 @@ namespace sb::di
         using Ptr = std::unique_ptr<IServiceInstanceProvider>;
 
         /**
-         * @brief Returns instanceValidity instanceValidity reference, might throw exception
-         * @details If instanceValidity was not registered or was registered as transient, method throws exception
+         * @brief Returns service service reference, might throw exception
+         * @details If service was not registered or was registered as transient, method throws exception
          * @attention It is advised to use getService<T> method istead
-         * @throws ServiceNotFoundException instanceValidity was not found
+         * @throws ServiceNotFoundException service was not found
          *
          * Example:
          * @code {.cpp}
          * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
          *
-         * const IServiceInstance & instanceValidity = provider->getInstance(typeid(TestClass));
+         * const IServiceInstance & service = provider->getInstance(typeid(TestClass));
          * @endcode
          */
         virtual const IServiceInstance &getInstance(TypeId serviceTypeId) = 0;
 
         /**
-         * @brief Returns instanceValidity instanceValidity pointner, might be null
-         * @details If instanceValidity was not registered or was registered as transient, method returns null
+         * @brief Returns service service pointner, might be null
+         * @details If service was not registered or was registered as transient, method returns null
          * @attention It is advised to use tryGetService<T> method istead
          *
          * Example:
          * @code {.cpp}
          * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
          *
-         * IServiceInstance * instanceValidity = provider->tryGetInstance(typeid(TestClass));
+         * IServiceInstance * service = provider->tryGetInstance(typeid(TestClass));
          * @endcode
          */
         virtual const IServiceInstance *tryGetInstance(TypeId serviceTypeId) = 0;
 
         /**
-         * @brief Returns instanceValidity instances
+         * @brief Returns service instances
          * @details If instanceValidity was not registered or was registered as transient, method returns empty vector
          * @attention It is advised to use getServices<T> method istead
          * @example

@@ -30,7 +30,7 @@ int main()
 {
     ServiceProvider::Ptr provider =
         ServiceCollection{}
-            .addSingleton<ServiceA>([]() { return std::make_unique<ServiceA>("Hello from instanceValidity!"); })
+            .addSingleton<ServiceA>([]() { return std::make_unique<ServiceA>("Hello from service!"); })
             .addSingleton<ServiceB>([](ServiceA *serviceA) { return std::make_unique<ServiceB>(serviceA); })
             .buildServiceProvider();
 

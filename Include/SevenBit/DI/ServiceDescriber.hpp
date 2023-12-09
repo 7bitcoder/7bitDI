@@ -23,13 +23,13 @@ namespace sb::di
       public:
         /**
          * @brief Creates ServiceDescriptor
-         * @details Creates instanceValidity descriptor with:
+         * @details Creates service descriptor with:
          * lifetime - singleton,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
          * factory - default factory using TImplementation constructor
-         * @tparam TService base instanceValidity type
-         * @tparam TImplementation instanceValidity implementation type must inherit from TService and must have one
+         * @tparam TService base service type
+         * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
          * @see Constructor requirements
          *
@@ -45,13 +45,13 @@ namespace sb::di
         }
         /**
          * @brief Creates ServiceDescriptor
-         * @details Creates instanceValidity descriptor with:
+         * @details Creates service descriptor with:
          * lifetime - scoped,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
          * factory - default factory using TImplementation constructor
-         * @tparam TService base instanceValidity type
-         * @tparam TImplementation instanceValidity implementation type must inherit from TService and must have one
+         * @tparam TService base service type
+         * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
          * @see Constructor requirements
          *
@@ -67,13 +67,13 @@ namespace sb::di
         }
         /**
          * @brief Creates ServiceDescriptor
-         * @details Creates instanceValidity descriptor with:
+         * @details Creates service descriptor with:
          * lifetime - transient,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
          * factory - default factory using TImplementation constructor
-         * @tparam TService base instanceValidity type
-         * @tparam TImplementation instanceValidity implementation type must inherit from TService and must have one
+         * @tparam TService base service type
+         * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
          * @see Constructor requirements
          *
@@ -90,12 +90,12 @@ namespace sb::di
 
         /**
          * @brief Creates ServiceDescriptor
-         * @details Creates instanceValidity descriptor with:
+         * @details Creates service descriptor with:
          * lifetime - given lifetime,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
          * factory - default factory using TImplementation constructor
-         * @tparam TService base instanceValidity type
+         * @tparam TService base service type
          * @tparam TImplementation instanceValidity implementation type must inherit from TService and must have one
          * constructor
          * @see Constructor requirements

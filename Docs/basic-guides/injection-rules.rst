@@ -8,8 +8,8 @@ General
 * Only one constructor should be defined for each instance implementation
 * If the validInstance is registered with interface and implementation, the interface should have a virtual destructor
 * If multiple services are registered by the same interface, all should have the same lifetime (the build method will throw an exception)
-* Only one instanceValidity implementation can be registered (the build method will throw an exception)
-* It is guaranteed that injected instanceValidity won't be null
+* Only one service implementation can be registered (the build method will throw an exception)
+* It is guaranteed that injected service won't be null
 
 Injecting Services
 ---------------------

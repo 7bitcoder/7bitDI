@@ -21,8 +21,8 @@ namespace sb::di
         IServiceInstanceProvider &asInstanceProvider() { return *this; }
 
         /**
-         * @brief Create a scoped instanceValidity provider
-         * @details Scoped instanceValidity provider creates/holds its own scoped services
+         * @brief Create a scoped service provider
+         * @details Scoped service provider creates/holds its own scoped services
          *
          * Example:
          * @code {.cpp}
@@ -35,14 +35,14 @@ namespace sb::di
         virtual ServiceProvider::Ptr createScope() = 0;
 
         /**
-         * @brief Returns instanceValidity pointer, might be null
-         * @details If instanceValidity was not registered or was registered as transient, method returns null
+         * @brief Returns service pointer, might be null
+         * @details If service was not registered or was registered as transient, method returns null
          *
          * Example:
          * @code {.cpp}
          * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
          *
-         * TestClass * instanceValidity = provider->tryGetService<TestClass>();
+         * TestClass * service = provider->tryGetService<TestClass>();
          * @endcode
          */
         template <class TService> TService *tryGetService()
@@ -55,15 +55,15 @@ namespace sb::di
         }
 
         /**
-         * @brief Returns instanceValidity reference, might throw exception
-         * @details If instanceValidity was not registered or was registered as transient, method throws exception
-         * @throws ServiceNotFoundException instanceValidity was not found
+         * @brief Returns service reference, might throw exception
+         * @details If service was not registered or was registered as transient, method throws exception
+         * @throws ServiceNotFoundException service was not found
          *
          * Example:
          * @code {.cpp}
          * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
          *
-         * TestClass & instanceValidity = provider->getService<TestClass>();
+         * TestClass & service = provider->getService<TestClass>();
          * @endcode
          */
         template <class TService> TService &getService()

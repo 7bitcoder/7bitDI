@@ -13,7 +13,7 @@ struct IService
 class Service final : public IService
 {
   public:
-    std::string helloFromService() { return "Hello from instanceValidity."; }
+    std::string helloFromService() { return "Hello from service."; }
 };
 
 int main()

@@ -1,7 +1,7 @@
 Separate Implementation
 ========================================
 
-This example shows how to register the instanceValidity as an interface with implementation.
+This example shows how to register the service as an interface with implementation.
 Service will be accessible only by an interface, implementation is hidden for the client 
 
 .. literalinclude:: ../../Examples/Guides/SeparateImplementation.cpp
@@ -11,4 +11,4 @@ Service will be accessible only by an interface, implementation is hidden for th
 .. code-block:: console
    :caption: Output
 
-   Hello from instanceValidity.
+   Hello from service.
