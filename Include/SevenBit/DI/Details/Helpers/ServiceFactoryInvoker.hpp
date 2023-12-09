@@ -16,8 +16,8 @@ namespace sb::di::details::helpers
     template <class FactoryFcn> class ServiceFactoryInvoker
     {
       private:
-        using ServiceFactoryParamResolver = ServiceFactoryParamResolver<FactoryFcn>;
-        using IsUniquePtr = utils::IsUniquePtr<typename ServiceFactoryParamResolver::ReturnType>;
+        using Resolver = ServiceFactoryParamResolver<FactoryFcn>;
+        using IsUniquePtr = utils::IsUniquePtr<typename Resolver::ReturnType>;
 
         FactoryFcn &_factory;
         ServiceProvider &_serviceProvider;
@@ -34,6 +34,6 @@ namespace sb::di::details::helpers
                           "Factory return type must be std::unique_ptr<TService> or movable/copyable object");
         }
 
-        inline auto invoke() { return ServiceFactoryParamResolver::invoke(_factory, _serviceProvider); }
+        inline auto invoke() { return Resolver::invoke(_factory, _serviceProvider); }
     };
 } // namespace sb::di::details::helpers
