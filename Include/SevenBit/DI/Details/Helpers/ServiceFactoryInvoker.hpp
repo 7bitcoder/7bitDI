@@ -5,21 +5,19 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Helpers/ServiceFactoryParamResolver.hpp"
 #include "SevenBit/DI/Details/Helpers/ServiceParamProvider.hpp"
-#include "SevenBit/DI/Details/Utils/FunctionReflection.hpp"
 #include "SevenBit/DI/Details/Utils/IsInPlaceObject.hpp"
 #include "SevenBit/DI/Details/Utils/IsUniquePtr.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di::details::helpers
 {
-    template <class FactoryFcn> struct ServiceFactoryInvoker
+    template <class FactoryFcn> class ServiceFactoryInvoker
     {
       private:
-        using FunctorTraits = utils::FunctorTraits<FactoryFcn>;
-        using IsUniquePtr = utils::IsUniquePtr<typename FunctorTraits::ReturnType>;
-        template <size_t Index>
-        using ParamProvider = helpers::ServiceParamProvider<typename FunctorTraits::template Arg<Index>::Type>;
+        using ServiceFactoryParamResolver = ServiceFactoryParamResolver<FactoryFcn>;
+        using IsUniquePtr = utils::IsUniquePtr<typename ServiceFactoryParamResolver::ReturnType>;
 
         FactoryFcn &_factory;
         ServiceProvider &_serviceProvider;
@@ -36,12 +34,6 @@ namespace sb::di::details::helpers
                           "Factory return type must be std::unique_ptr<TService> or movable/copyable object");
         }
 
-        inline auto invoke() { return invoke(std::make_index_sequence<FunctorTraits::ArgsSize>{}); }
-
-      private:
-        template <size_t... Index> inline auto invoke(std::index_sequence<Index...>)
-        {
-            return _factory(ParamProvider<Index>{}.getParam(_serviceProvider)...);
-        }
+        inline auto invoke() { return ServiceFactoryParamResolver::invoke(_factory, _serviceProvider); }
     };
 } // namespace sb::di::details::helpers
