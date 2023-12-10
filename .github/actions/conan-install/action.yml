@@ -28,7 +28,7 @@ runs:
             }
           }
     - name: Configure Conan
-      run: conan config install https://github.com/7bitcoder/conan-config.git
+      run: conan profile detect
       shell: pwsh
 
     - name: Install Conan Packages in ${{ inputs.install-dir }}
