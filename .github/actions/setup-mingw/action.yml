@@ -15,11 +15,11 @@ runs:
         map: |
           {
             "Windows":{
-                "CC": "gcc-${{ inputs.version }}",
-                "CXX": "g++-${{ inputs.version }}"
+                "CC": "gcc",
+                "CXX": "g++"
             }
           }
 
-    - name: Install Gcc
-      run: choco install mingw ${{ inputs.version }} -y
+    - name: Install MinGW
+      run: choco install mingw --version ${{ inputs.version }} -y
       shell: pwsh
