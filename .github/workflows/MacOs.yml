@@ -52,10 +52,9 @@ jobs:
           brew update
           brew install ${{ matrix.compiler.cpp }} 
           cmake -E make_directory ${{env.BUILD_DIR}}
+          echo "CXX=${{matrix.compiler.cxx}}" >> $GITHUB_ENV 
 
       - name: Configure
-        env:
-          CXX: ${{matrix.compiler.cxx}}
         run: |
           cmake -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -D_7BIT_DI_LIBRARY_TYPE=Static \
                 -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_BUILD_TESTS=ON \
