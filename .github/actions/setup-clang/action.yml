@@ -8,8 +8,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v3
-
     - name: Set Environment
       uses: kanga333/variable-mapper@v0.3.0
       with:
@@ -32,10 +30,16 @@ runs:
       run: choco install LLVM --version ${{ inputs.version }} --allow-downgrade -y
       shell: pwsh
 
-    - uses: ./github/actions/get-major-version
-      id: major
+    - uses: rishabhgupta/split-by@v1
+      id: split
       with:
-        version: ${{ inputs.version }}
+        string: ${{ inputs.version }}
+        split-by: '.'
+
+    - name: Print
+      run: |
+        echo "${{ steps.split.outputs._1}}"
+      shell: bash
 
     - name: Set Environment
       uses: kanga333/variable-mapper@v0.3.0
@@ -44,7 +48,7 @@ runs:
         map: |
           {
             "*":{
-                "CC": "clang-${{ steps.major.outputs.version }}",
-                "CXX": "clang++-${{ steps.major.outputs.version }}"
+                "CC": "clang-${{ steps.split.outputs._1 }}",
+                "CXX": "clang++-${{ steps.split.outputs._1 }}"
             }
           }
