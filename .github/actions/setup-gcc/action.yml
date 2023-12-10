@@ -15,7 +15,7 @@ runs:
 
     - name: Install Gcc
       if: runner.os == 'macOS'
-      run: brew update && brew install gcc@${{ inputs.version }}",
+      run: brew update && brew install gcc@${{ inputs.version }}
       shell: pwsh
 
     - name: Set Ninja
