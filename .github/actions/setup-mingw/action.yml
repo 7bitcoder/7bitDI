@@ -16,7 +16,7 @@ runs:
           {
             "Windows":{
                 "CC": "gcc",
-                "CXX": "g++",
+                "CXX": "g++"
             }
           }
 
