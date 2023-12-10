@@ -113,8 +113,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install GCC
-        uses: ./.github/actions/setup-gcc
+      - name: Install Clang
+        uses: ./.github/actions/setup-clang
         with:
           version: ${{ matrix.version }}
 
