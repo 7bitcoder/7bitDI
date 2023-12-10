@@ -8,23 +8,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Set Environment
-      uses: kanga333/variable-mapper@v0.3.0
-      with:
-        key: "${{ runner.os }}"
-        map: |
-          {
-            "Linux":{
-                "install-clang": "sudo apt update && sudo apt install clang-${{ inputs.version }} -y"
-            },
-            "macOS":{
-                "install-clang": "brew update && brew install llvm@${{ inputs.version }}"
-            },
-            "Windows":{
-                "install-clang": "choco install LLVM --version ${{ inputs.version }} --allow-downgrade -y"
-            }
-          }
-
     - name: Install Clang
       if: runner.os == 'Windows'
       run: choco install LLVM --version ${{ inputs.version }} --allow-downgrade -y
@@ -40,14 +23,18 @@ runs:
       run: sudo apt update && sudo apt install clang-${{ inputs.version }} -y
       shell: pwsh
 
-    - name: Set CC
-      if: runner.os == 'Windows'
-      run: echo "CC=clang CXX=clang++ GENERATOR=Ninja MAKE_PROGRAM=ninja" >> $GITHUB_ENV
+    - name: Set Ninja
+      run: echo "GENERATOR=Ninja" >> $GITHUB_ENV && echo "MAKE_PROGRAM=ninja" >> $GITHUB_ENV
       shell: bash
 
-    - name: Set CC
+    - name: Set CC/CXX
+      if: runner.os == 'Windows'
+      run: echo "CC=clang" >> $GITHUB_ENV && echo "CXX=clang++" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Set CC/CXX
       if: runner.os != 'Windows'
-      run: echo "CC=clang-${{ inputs.version }} CXX=clang++-${{ inputs.version }} GENERATOR=Ninja MAKE_PROGRAM=ninja" >> $GITHUB_ENV
+      run: echo "CC=clang-${{ inputs.version }}" >> $GITHUB_ENV && echo "CXX=clang++-${{ inputs.version }}" >> $GITHUB_ENV
       shell: bash
 
     - name: Update Sys Path
