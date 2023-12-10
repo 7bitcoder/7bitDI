@@ -26,14 +26,18 @@ runs:
           }
 
     - name: Install Clang
-      run: ${{ env.install-clang }}
+      if: os.runner == 'Windows'
+      run: choco install LLVM --version ${{ inputs.version }} --allow-downgrade -y
       shell: pwsh
 
-    - uses: winterjung/split@v2
-      id: split
+    - name: Set output
+      run: echo "{name}={value}" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - uses: ./actions/get-major-version
+      id: major
       with:
-        msg: ${{ inputs.version }}
-        separator: '.'
+        version: ${{ inputs.version }}
 
     - name: Set Environment
       uses: kanga333/variable-mapper@v0.3.0
@@ -42,7 +46,7 @@ runs:
         map: |
           {
             "*":{
-                "CC": "clang-${{ steps.split.outputs._1 }}",
-                "CXX": "clang++-${{ steps.split.outputs._1 }}"
+                "CC": "clang-${{ major.version }}",
+                "CXX": "clang++-${{ major.version }}"
             }
           }
