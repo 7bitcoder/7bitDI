@@ -36,9 +36,3 @@ runs:
       if: runner.os != 'Windows'
       run: echo "CC=clang-${{ inputs.version }}" >> $GITHUB_ENV && echo "CXX=clang++-${{ inputs.version }}" >> $GITHUB_ENV
       shell: bash
-
-    - name: Update Sys Path
-      if: runner.os == 'Windows'
-      run: |
-        ("C:\\Program Files\\LLVM\\bin;" + (Get-Content -Path $env:GITHUB_PATH)) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
-      shell: pwsh
