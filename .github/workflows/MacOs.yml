@@ -35,7 +35,6 @@ jobs:
         std: [ 17, 20 ]
         exclude:
           - { os: macos-11, std: 20 }
-          - { os: macos-13, std: 11 }
           - { os: macos-13, std: 17 }
           - { os: macos-12, compiler: { cpp: gcc@9 } }
           - { os: macos-13, compiler: { cpp: gcc@9 } }
