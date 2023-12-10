@@ -16,18 +16,12 @@ runs:
           {
             "Linux":{
                 "install-clang": "sudo apt update && sudo apt install clang-${{ inputs.version }} -y",
-                "CC": "clang-${{ inputs.version }}",
-                "CXX": "clang++-${{ inputs.version }}"
             },
             "macOS":{
                 "install-clang": "brew update && brew install llvm@${{ inputs.version }}",
-                "CC": "clang-${{ inputs.version }}",
-                "CXX": "clang++-${{ inputs.version }}"
             },
             "Windows":{
                 "install-clang": "choco install LLVM --version ${{ inputs.version }} --allow-downgrade -y",
-                "CC": "clang",
-                "CXX": "clang++"
             }
           }
 
@@ -35,11 +29,11 @@ runs:
       run: ${{ env.install-clang }}
       shell: pwsh
 
-    - uses: rishabhgupta/split-by@v1
+    - uses: winterjung/split@v2
       id: split
       with:
-        string: ${{ inputs.version }}
-        split-by: '.'
+        msg: ${{ inputs.version }}
+        separator: '.'
 
     - name: Set Environment
       uses: kanga333/variable-mapper@v0.3.0
