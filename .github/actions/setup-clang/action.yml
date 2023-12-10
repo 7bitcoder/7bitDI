@@ -34,7 +34,7 @@ runs:
       run: echo "{name}={value}" >> $GITHUB_OUTPUT
       shell: bash
 
-    - uses: ./actions/get-major-version
+    - uses: ./github/actions/get-major-version
       id: major
       with:
         version: ${{ inputs.version }}
