@@ -64,7 +64,8 @@ jobs:
           uses: ./.github/actions/cmake-build
 
         - name: Test
-          run: ctest -j 10 --preset conan-release
+          working-directory: ${{ env.BUILD_DIR }}
+          run: ctest -C ${{ env.BUILD_TYPE }}
 
 
   #  test-mingw-windows:

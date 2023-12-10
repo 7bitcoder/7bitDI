@@ -10,12 +10,12 @@ runs:
   steps:
     - name: Install Gcc
       if: runner.os == 'Linux'
-      run: sudo apt update && sudo apt install gcc-${{ inputs.version }} g++-${{ inputs.version }} -y
+      run: sudo apt update && sudo apt install gcc-${{ inputs.version }} g++-${{ inputs.version }} ninja -y
       shell: pwsh
 
     - name: Install Gcc
       if: runner.os == 'macOS'
-      run: brew update && brew install gcc@${{ inputs.version }}
+      run: brew update && brew install gcc@${{ inputs.version }} ninja
       shell: pwsh
 
     - name: Set Ninja
