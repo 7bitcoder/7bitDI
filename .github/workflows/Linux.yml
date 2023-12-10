@@ -22,14 +22,20 @@ jobs:
   ubuntu-22:
     strategy:
       matrix:
-        compiler: [ {cpp: g++-7, cxx: g++-7}, {cpp: g++-8, cxx: g++-8}, {cpp: g++-9, cxx: g++-9}, {cpp: g++-10, cxx: g++-10}, {cpp: g++-11, cxx: g++-11}, {cpp: clang-7, cxx: clang++-7}, {cpp: clang-8, cxx: clang++-8}, {cpp: clang-9, cxx: clang++-9}, {cpp: clang-10, cxx: clang++-10}, {cpp: clang-11, cxx: clang++-11}, {cpp: clang-12, cxx: clang++-12} ]
+        compiler: [ {cpp: g++-7, cxx: g++-7}, {cpp: g++-8, cxx: g++-8}, {cpp: g++-9, cxx: g++-9}, {cpp: g++-10, cxx: g++-10}, {cpp: g++-11, cxx: g++-11},{cpp: g++-12, cxx: g++-12},{cpp: g++-13, cxx: g++-13}, {cpp: clang-7, cxx: clang++-7}, {cpp: clang-8, cxx: clang++-8}, {cpp: clang-9, cxx: clang++-9}, {cpp: clang-10, cxx: clang++-10}, {cpp: clang-11, cxx: clang++-11}, {cpp: clang-12, cxx: clang++-12} ]
         build_type: [Release]
+        os: [ubuntu-20.04, ubuntu-22.04]
         std: [17, 20]
+        exclude:
+          - {os: ubuntu-20.04, compiler: {cpp: g++-12, cxx: g++-12}}
+          - {os: ubuntu-20.04, compiler: {cpp: g++-13, cxx: g++-13}}
+          - {os: ubuntu-22.04, compiler: {cpp: g++-7, cxx: g++-7}}
+          - {os: ubuntu-22.04, compiler: {cpp: g++-8, cxx: g++-8}}
 
     env:
       BUILD_DIR: ${{github.workspace}}/build
 
-    runs-on: ubuntu-20.04
+    runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v3
 
