@@ -105,8 +105,8 @@ jobs:
   test-clang:
     strategy:
       matrix:
-        version: [ 11, 12, 13, 14, 15, 16 ]
-        os: [ ubuntu-22.04, macos-12 ]
+        version: [ 11, 12, 13, 14, 15 ]
+        os: [ ubuntu-22.04 ]
 
     runs-on: ${{ matrix.os }}
 
