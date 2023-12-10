@@ -16,14 +16,11 @@ runs:
           {
             "Windows":{
                 "CC": "gcc",
-                "CXX": "g++"
+                "CXX": "g++",
+                "Path": "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin;"${{env.Path}}
             }
           }
 
     - name: Install MinGW
       run: choco install mingw --version ${{ inputs.version }} -y
-      shell: pwsh
-
-    - name: Update Sys path
-      run: [ Environment ]::SetEnvironmentVariable("Path", "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin;" + $env:Path, [System.EnvironmentVariableTarget]::Machine)
       shell: pwsh
