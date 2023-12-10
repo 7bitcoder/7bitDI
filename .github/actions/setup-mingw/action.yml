@@ -22,7 +22,7 @@ runs:
           }
 
     - name: Update Sys Path
-      run: Write-Output "::add-path::C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin"
+      run: "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
       shell: pwsh
 
     - name: Install MinGW
