@@ -27,7 +27,7 @@ jobs:
         std: [17, 20]
 
     env:
-      BUILD_DIR: ${{runner.workspace}}/build
+      BUILD_DIR: ${{github.workspace}}/build
 
     runs-on: ubuntu-20.04
     steps:
