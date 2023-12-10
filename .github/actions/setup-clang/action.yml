@@ -26,7 +26,7 @@ runs:
           }
 
     - name: Install Clang
-      if: os.runner == 'Windows'
+      if: runner.os == 'Windows'
       run: choco install LLVM --version ${{ inputs.version }} --allow-downgrade -y
       shell: pwsh
 
