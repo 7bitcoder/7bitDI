@@ -171,10 +171,11 @@ jobs:
         uses: ./.github/actions/setup-clang
         with:
           version: ${{ matrix.version }}
-          build-type: ${{ env.BUILD_TYPE }}
 
       - name: CMake Build
         uses: ./.github/actions/cmake-build
+        with:
+          build-type: ${{ env.BUILD_TYPE }}
 
       - name: Test
         run: ctest -j 10 -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
