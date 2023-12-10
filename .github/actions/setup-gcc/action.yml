@@ -15,7 +15,7 @@ runs:
         map: |
           {
             "Linux":{
-                "install-gcc": "sudo apt install gcc-${{ inputs.version }} g++${{ inputs.version }} -y",
+                "install-gcc": "sudo apt install gcc-${{ inputs.version }} g++-${{ inputs.version }} -y",
                 "CC": "gcc-${{ inputs.version }}",
                 "CXX": "g++-${{ inputs.version }}"
             },
