@@ -21,11 +21,11 @@ runs:
             }
           }
 
-    - name: Install MinGW
-      run: choco install mingw --version ${{ inputs.version }} -y
+    - name: Update Sys Path
+      run: |
+        ("C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin;" + (Get-Content -Path $env:GITHUB_PATH)) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
       shell: pwsh
 
-    - name: Refresh Environment
-      run: |
-        Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1 | refreshenv
+    - name: Install MinGW
+      run: choco install mingw --version ${{ inputs.version }} -y
       shell: pwsh
