@@ -9,8 +9,6 @@ runs:
   using: composite
 
   steps:
-    - uses: actions/core
-
     - name: Update Environment
       uses: kanga333/variable-mapper@v0.3.0
       with:
@@ -24,7 +22,7 @@ runs:
           }
 
     - name: Update Sys Path
-      run: Write-Output "::addPath::C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin"
+      run: Write-Output "::add-path::C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin"
       shell: pwsh
 
     - name: Install MinGW
