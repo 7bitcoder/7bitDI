@@ -18,7 +18,7 @@ runs:
       shell: bash
 
     - name: Set CC/CXX
-      run: echo "CC=gcc" >> $GITHUB_ENV && echo "CXX=g++}" >> $GITHUB_ENV
+      run: echo "CC=gcc" >> $GITHUB_ENV && echo "CXX=g++" >> $GITHUB_ENV
       shell: bash
 
     - name: Update Sys Path
