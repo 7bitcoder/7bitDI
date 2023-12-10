@@ -1,4 +1,4 @@
-name: MinGwCI
+name: MinGwTest
 
 on:
   push:
