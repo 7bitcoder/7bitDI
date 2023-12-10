@@ -26,6 +26,9 @@ jobs:
         build_type: [Release]
         std: [17, 20]
 
+    env:
+      BUILD_DIR: ${{github.workspace}}/build
+
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -38,22 +41,20 @@ jobs:
           cmake -E make_directory ${{runner.workspace}}/build
 
       - name: Configure
-        working-directory: ${{runner.workspace}}/build
         env:
           CXX: ${{matrix.compiler.cxx}}
         run: |
-          cmake -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -D_7BIT_DI_LIBRARY_TYPE=Static \
+          cmake -B ${{ env.BUILD_DIR }} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -D_7BIT_DI_LIBRARY_TYPE=Static \
                 -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_BUILD_TESTS=ON \
                 -DCMAKE_CXX_VISIBILITY_PRESET=hidden -DCMAKE_VISIBILITY_INLINES_HIDDEN=ON \
 
       - name: Build
-        working-directory: ${{runner.workspace}}/build
         run: |
           threads=`nproc`
-          cmake --build . --config ${{matrix.build_type}} --parallel $threads
+          cmake --build ${{ env.BUILD_DIR }} --config ${{matrix.build_type}} --parallel $threads
 
       - name: Test
-        working-directory: ${{runner.workspace}}/build
+        working-directory: ${{ env.BUILD_DIR }}
         run: ctest -C ${{matrix.build_type}}
         env:
           CTEST_OUTPUT_ON_FAILURE: True
