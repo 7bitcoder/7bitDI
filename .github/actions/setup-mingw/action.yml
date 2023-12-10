@@ -15,8 +15,8 @@ runs:
         map: |
           {
             "Windows":{
-                "CC": "gcc",
-                "CXX": "g++"
+                "CC": "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\gcc",
+                "CXX": "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\g++"
             }
           }
 
