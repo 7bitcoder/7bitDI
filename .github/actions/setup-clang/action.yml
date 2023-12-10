@@ -46,7 +46,7 @@ runs:
         map: |
           {
             "*":{
-                "CC": "clang-${{ major.version }}",
-                "CXX": "clang++-${{ major.version }}"
+                "CC": "clang-${{ steps.major.outputs.version }}",
+                "CXX": "clang++-${{ steps.major.outputs.version }}"
             }
           }
