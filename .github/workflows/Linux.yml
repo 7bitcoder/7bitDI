@@ -22,12 +22,12 @@ jobs:
   ubuntu-22:
     strategy:
       matrix:
-        compilers: [ {cpp: g++-7, cxx: g++-7}, {cpp: g++-8, cxx: g++-8}, {cpp: g++-9, cxx: g++-9}, {cpp: g++-10, cxx: g++-10}, {cpp: g++-11, cxx: g++-11}, {cpp: clang-7, cxx: clang++-7}, {cpp: clang-8, cxx: clang++-8}, {cpp: clang-9, cxx: clang++-9}, {cpp: clang-10, cxx: clang++-10}, {cpp: clang-11, cxx: clang++-11}, {cpp: clang-12, cxx: clang++-12} ]
+        compiler: [ {cpp: g++-7, cxx: g++-7}, {cpp: g++-8, cxx: g++-8}, {cpp: g++-9, cxx: g++-9}, {cpp: g++-10, cxx: g++-10}, {cpp: g++-11, cxx: g++-11}, {cpp: clang-7, cxx: clang++-7}, {cpp: clang-8, cxx: clang++-8}, {cpp: clang-9, cxx: clang++-9}, {cpp: clang-10, cxx: clang++-10}, {cpp: clang-11, cxx: clang++-11}, {cpp: clang-12, cxx: clang++-12} ]
         build_type: [Release]
         std: [17, 20]
 
     env:
-      BUILD_DIR: ${{github.workspace}}/build
+      BUILD_DIR: ${{runner.workspace}}/build
 
     runs-on: ubuntu-20.04
     steps:
@@ -36,9 +36,9 @@ jobs:
       - name: Create Build Environment
         run: |
           sudo apt update
-          sudo apt install ${{matrix.compilers.cpp}}
+          sudo apt install ${{matrix.compiler.cpp}}
           sudo apt install locales-all
-          cmake -E make_directory ${{runner.workspace}}/build
+          cmake -E make_directory ${{ env.BUILD_DIR }}
 
       - name: Configure
         env:
