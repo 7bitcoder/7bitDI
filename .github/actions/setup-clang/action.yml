@@ -36,19 +36,10 @@ runs:
         string: ${{ inputs.version }}
         split-by: '.'
 
-    - name: Print
-      run: |
-        echo "${{ steps.split.outputs._0}}"
+    - name: Set CC
+      run: echo "CC=clang-${{ steps.split.outputs._0 }" >> $GITHUB_STATE
       shell: bash
 
-    - name: Set Environment
-      uses: kanga333/variable-mapper@v0.3.0
-      with:
-        key: "${{ runner.os }}"
-        map: |
-          {
-            "*":{
-                "CC": "clang-${{ steps.split.outputs._0 }}",
-                "CXX": "clang++-${{ steps.split.outputs._0 }}"
-            }
-          }
+    - name: Set CXX
+      run: echo "CXX=clang++-${{ steps.split.outputs._0 }" >> $GITHUB_STATE
+      shell: bash
