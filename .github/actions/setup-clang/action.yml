@@ -24,7 +24,7 @@ runs:
       shell: pwsh
 
     - name: Set Ninja
-      run: echo "GENERATOR=Ninja" >> $GITHUB_ENV && echo "MAKE_PROGRAM=ninja" >> $GITHUB_ENV
+      run: echo "GENERATOR=Ninja" >> $GITHUB_ENV && echo "MAKE_PROGRAM=C:\\Program Files\\LLVM\\bin\\ninja" >> $GITHUB_ENV
       shell: bash
 
     - name: Set CC/CXX
