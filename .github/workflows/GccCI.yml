@@ -1,0 +1,111 @@
+name: GccCI
+
+on:
+  push:
+    branches: [ "dev" ]
+    paths-ignore:
+      - "Docs/**"
+      - ".readthedocs.yaml"
+      - "README.md"
+
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - "Docs/**"
+      - ".readthedocs.yaml"
+      - "README.md"
+
+env:
+  BUILD_TYPE: Release
+  BUILD_DIR: ${{github.workspace}}/build
+  CMAKE_CONFIG_ARGS: -D_7BIT_DI_BUILD_TESTS:BOOL=ON -D_7BIT_DI_BUILD_EXAMPLES:BOOL=ON
+
+jobs:
+    test-gcc-ubuntu-22:
+      strategy:
+        matrix:
+          version: [ 9, 10, 11, 12, 13 ]
+
+      runs-on: ubuntu-22.04
+
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Install GCC
+          uses: ./.github/actions/setup-gcc
+          with:
+            version: ${{ matrix.version }}
+
+        - name: CMake Build
+          uses: ./.github/actions/cmake-build
+
+        - name: Test
+          working-directory: ${{ env.BUILD_DIR }}
+          run: ctest -C ${{ env.BUILD_TYPE }}
+
+    test-gcc-macos-12:
+      strategy:
+        matrix:
+          version: [ 10, 11, 12, 13 ]
+
+      runs-on: macos-12
+
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Install GCC
+          uses: ./.github/actions/setup-gcc
+          with:
+            version: ${{ matrix.version }}
+
+        - name: CMake Build
+          uses: ./.github/actions/cmake-build
+
+        - name: Test
+          working-directory: ${{ env.BUILD_DIR }}
+          run: ctest -C ${{ env.BUILD_TYPE }}
+
+    test-gcc-ubuntu-20:
+      strategy:
+        matrix:
+          version: [ 7, 8, 9, 10, 11 ]
+          os: [ ubuntu-20.04, macos-11 ]
+
+      runs-on: ubuntu-20.04
+
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Install GCC
+          uses: ./.github/actions/setup-gcc
+          with:
+            version: ${{ matrix.version }}
+
+        - name: CMake Build
+          uses: ./.github/actions/cmake-build
+
+        - name: Test
+          working-directory: ${{ env.BUILD_DIR }}
+          run: ctest -C ${{ env.BUILD_TYPE }}
+
+    test-gcc-macos-11:
+      strategy:
+        matrix:
+          version: [ 7, 8, 9, 10, 11 ]
+
+      runs-on: macos-11
+
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Install GCC
+          uses: ./.github/actions/setup-gcc
+          with:
+            version: ${{ matrix.version }}
+
+        - name: CMake Build
+          uses: ./.github/actions/cmake-build
+
+        - name: Test
+          working-directory: ${{ env.BUILD_DIR }}
+          run: ctest -C ${{ env.BUILD_TYPE }}

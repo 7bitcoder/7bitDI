@@ -21,52 +21,52 @@ env:
   CMAKE_CONFIG_ARGS: -D_7BIT_DI_BUILD_TESTS:BOOL=ON -D_7BIT_DI_BUILD_EXAMPLES:BOOL=ON
 
 jobs:
-    test-gcc:
-      strategy:
-        matrix:
-          version: [ 9, 10, 11, 12, 13 ]
-          os: [ ubuntu-22.04, macos-12 ]
-
-      runs-on: ${{ matrix.os }}
-
-      steps:
-        - uses: actions/checkout@v3
-
-        - name: Install GCC
-          uses: ./.github/actions/setup-gcc
-          with:
-            version: ${{ matrix.version }}
-
-        - name: CMake Build
-          uses: ./.github/actions/cmake-build
-
-        - name: Test
-          working-directory: ${{ env.BUILD_DIR }}
-          run: ctest -C ${{ env.BUILD_TYPE }}
-
-    test-gcc-old-os:
-      strategy:
-        matrix:
-          version: [ 7, 8, 9, 10, 11 ]
-          os: [ ubuntu-20.04, macos-11 ]
-
-      runs-on: ${{ matrix.os }}
-
-      steps:
-        - uses: actions/checkout@v3
-
-        - name: Install GCC
-          uses: ./.github/actions/setup-gcc
-          with:
-            version: ${{ matrix.version }}
-
-        - name: CMake Build
-          uses: ./.github/actions/cmake-build
-
-        - name: Test
-          working-directory: ${{ env.BUILD_DIR }}
-          run: ctest -C ${{ env.BUILD_TYPE }}
-
+#    test-gcc:
+#      strategy:
+#        matrix:
+#          version: [ 9, 10, 11, 12, 13 ]
+#          os: [ ubuntu-22.04, macos-12 ]
+#
+#      runs-on: ${{ matrix.os }}
+#
+#      steps:
+#        - uses: actions/checkout@v3
+#
+#        - name: Install GCC
+#          uses: ./.github/actions/setup-gcc
+#          with:
+#            version: ${{ matrix.version }}
+#
+#        - name: CMake Build
+#          uses: ./.github/actions/cmake-build
+#
+#        - name: Test
+#          working-directory: ${{ env.BUILD_DIR }}
+#          run: ctest -C ${{ env.BUILD_TYPE }}
+#
+#    test-gcc-old-os:
+#      strategy:
+#        matrix:
+#          version: [ 7, 8, 9, 10, 11 ]
+#          os: [ ubuntu-20.04, macos-11 ]
+#
+#      runs-on: ${{ matrix.os }}
+#
+#      steps:
+#        - uses: actions/checkout@v3
+#
+#        - name: Install GCC
+#          uses: ./.github/actions/setup-gcc
+#          with:
+#            version: ${{ matrix.version }}
+#
+#        - name: CMake Build
+#          uses: ./.github/actions/cmake-build
+#
+#        - name: Test
+#          working-directory: ${{ env.BUILD_DIR }}
+#          run: ctest -C ${{ env.BUILD_TYPE }}
+#
 
   #  test-mingw-windows:
   #    strategy:
