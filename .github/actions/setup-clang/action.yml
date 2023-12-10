@@ -34,3 +34,21 @@ runs:
     - name: Install Clang
       run: ${{ env.install-clang }}
       shell: pwsh
+
+    - uses: rishabhgupta/split-by@v1
+      id: split
+      with:
+        string: ${{ inputs.version }}
+        split-by: '.'
+
+    - name: Set Environment
+      uses: kanga333/variable-mapper@v0.3.0
+      with:
+        key: "${{ runner.os }}"
+        map: |
+          {
+            "*":{
+                "CC": "clang-${{ steps.split.outputs._1 }}",
+                "CXX": "clang++-${{ steps.split.outputs._1 }}"
+            }
+          }
