@@ -21,6 +21,6 @@ runs:
             "Windows":{
                 "CC": "gcc",
                 "CXX": "g++",
-                "Path": "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin;{{ $env:Path }}"
+                "Path": "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin; ${{ env:GITHUB_PATH }}"
             }
           }
