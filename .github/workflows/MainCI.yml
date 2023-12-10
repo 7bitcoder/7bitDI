@@ -18,6 +18,7 @@ on:
 env:
   BUILD_TYPE: Release
   BUILD_DIR: ${{github.workspace}}/build
+  CMAKE_CONFIG_ARGS: -DCMAKE_TRY_COMPILE_TARGET_TYPE:STRING=STATIC_LIBRARY -D_7BIT_DI_BUILD_TESTS:BOOL=ON -D_7BIT_DI_BUILD_EXAMPLES:BOOL=ON
 
 jobs:
   #  test-gcc:
@@ -160,7 +161,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [ 8.0.1, 9.0.1, 11.1.0, 11.1.0, 12.0.1, 13.0.1, 14.0.6, 15.0.7, 16.0.6, 17.0.6]
+        version: [ 8.0.1, 9.0.1, 11.1.0, 12.0.1, 13.0.1, 14.0.6, 15.0.7, 16.0.6, 17.0.6]
         os: [ windows-2019, windows-2022 ]
 
     runs-on: ${{ matrix.os }}
@@ -181,4 +182,4 @@ jobs:
 
       - name: Test
         working-directory: ${{ env.BUILD_DIR }}
-        run: ctest -C ${{env.BUILD_TYPE}}
+        run: ctest -C ${{ env.BUILD_TYPE }}

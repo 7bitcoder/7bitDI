@@ -22,9 +22,9 @@ runs:
   steps:
 
     - name: Configure CMake
-      run: cmake -B ${{ inputs.build-dir }} -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} -G ${{ env.GENERATOR }} -D_7BIT_DI_LIBRARY_TYPE=${{ inputs.library-type }} ${{ inputs.args }}
+      run: cmake -B ${{ env.BUILD_DIR }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -G ${{ env.GENERATOR }} -D_7BIT_DI_LIBRARY_TYPE=${{ inputs.library-type }} ${{ env.CMAKE_CONFIG_ARGS }}
       shell: pwsh
 
     - name: Build
-      run: cmake --build ${{ inputs.build-dir }}
+      run: cmake --build ${{ env.BUILD_DIR }}
       shell: pwsh
