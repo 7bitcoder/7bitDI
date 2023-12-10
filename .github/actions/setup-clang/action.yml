@@ -10,7 +10,7 @@ runs:
   steps:
     - name: Install Clang
       if: runner.os == 'Windows'
-      run: choco install LLVM --version ${{ inputs.version }} --allow-downgrade -y
+      run: choco install LLVM --version ${{ inputs.version }} ninja --allow-downgrade -y
       shell: pwsh
 
     - name: Install Clang
@@ -28,7 +28,7 @@ runs:
       shell: bash
 
     - name: Set Ninja
-      run: echo "GENERATOR=Ninja" >> $GITHUB_ENV && echo "MAKE_PROGRAM=C:\\Program Files\\LLVM\\bin\\ninja.exe" >> $GITHUB_ENV
+      run: echo "GENERATOR=Ninja" >> $GITHUB_ENV && echo "MAKE_PROGRAM=ninja" >> $GITHUB_ENV
       shell: bash
 
     - name: Set CC/CXX
