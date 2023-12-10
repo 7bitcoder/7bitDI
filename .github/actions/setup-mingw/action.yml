@@ -5,8 +5,6 @@ inputs:
     description: "Gcc version"
     required: true
 
-environment:
-
 runs:
   using: composite
   steps:
@@ -27,5 +25,5 @@ runs:
       shell: pwsh
 
     - name: Update Sys path
-      run: [ Environment ]::SetEnvironmentVariable ("Path", "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin;" + $env:Path, [System.EnvironmentVariableTarget]::Machine)
+      run: [ Environment ]::SetEnvironmentVariable("Path", "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin;" + $env:Path, [System.EnvironmentVariableTarget]::Machine)
       shell: pwsh
