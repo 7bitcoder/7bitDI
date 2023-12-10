@@ -5,17 +5,6 @@ inputs:
     description: "Library type"
     required: false
     default: Static
-  build-type:
-    description: "build type"
-    required: true
-  build-dir:
-    description: "build directory"
-    required: true
-  args:
-    description: "Other arguments"
-    required: false
-    default: -D_7BIT_DI_BUILD_TESTS:BOOL=ON -D_7BIT_DI_BUILD_EXAMPLES:BOOL=ON
-
 
 runs:
   using: composite
