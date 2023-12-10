@@ -1,0 +1,59 @@
+name: Linux
+
+on:
+  push:
+    branches: [ "dev" ]
+    paths-ignore:
+      - "Docs/**"
+      - ".readthedocs.yaml"
+      - "README.md"
+
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - "Docs/**"
+      - ".readthedocs.yaml"
+      - "README.md"
+
+permissions:
+  contents: read
+
+jobs:
+  ubuntu-22:
+    strategy:
+      matrix:
+        compilers: [ {cpp: g++-7, cxx: g++-7}, {cpp: g++-8, cxx: g++-8}, {cpp: g++-9, cxx: g++-9}, {cpp: g++-10, cxx: g++-10}, {cpp: g++-11, cxx: g++-11}, {cpp: clang-7, cxx: clang++-7}, {cpp: clang-8, cxx: clang++-8}, {cpp: clang-9, cxx: clang++-9}, {cpp: clang-10, cxx: clang++-10}, {cpp: clang-11, cxx: clang++-11}, {cpp: clang-12, cxx: clang++-12} ]
+        build_type: [Release]
+        std: [17, 20]
+
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create Build Environment
+        run: |
+          sudo apt update
+          sudo apt install ${{matrix.compilers.cpp}}
+          sudo apt install locales-all
+          cmake -E make_directory ${{runner.workspace}}/build
+
+      - name: Configure
+        working-directory: ${{runner.workspace}}/build
+        env:
+          CXX: ${{matrix.compiler.cxx}}
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -D_7BIT_DI_LIBRARY_TYPE=Static \
+                -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_BUILD_TESTS=ON \
+                -DCMAKE_CXX_VISIBILITY_PRESET=hidden -DCMAKE_VISIBILITY_INLINES_HIDDEN=ON \
+
+      - name: Build
+        working-directory: ${{runner.workspace}}/build
+        run: |
+          threads=`nproc`
+          cmake --build . --config ${{matrix.build_type}} --parallel $threads
+
+      - name: Test
+        working-directory: ${{runner.workspace}}/build
+        run: ctest -C ${{matrix.build_type}}
+        env:
+          CTEST_OUTPUT_ON_FAILURE: True
