@@ -17,10 +17,13 @@ runs:
             "Windows":{
                 "CC": "gcc",
                 "CXX": "g++",
-                "Path": "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin; ${{ $env:GITHUB_PATH }}"
             }
           }
 
     - name: Install MinGW
       run: choco install mingw --version ${{ inputs.version }} -y
+      shell: pwsh
+
+    - name: Update Sys Path
+      run: addPath "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin"
       shell: pwsh
