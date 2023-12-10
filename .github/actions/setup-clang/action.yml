@@ -10,7 +10,7 @@ runs:
   steps:
     - name: Install Clang
       if: runner.os == 'Windows'
-      run: choco install LLVM --version ${{ inputs.version }} ninja --allow-downgrade -y
+      run: choco install LLVM --version ${{ inputs.version }} ninja --allow-downgrade -y && choco install ninja -y
       shell: pwsh
 
     - name: Install Clang
