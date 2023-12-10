@@ -9,7 +9,7 @@ runs:
   using: composite
 
   steps:
-    - uses: actions/toolkit@actions/core
+    - uses: actions/toolkit@core
 
     - name: Update Environment
       uses: kanga333/variable-mapper@v0.3.0
