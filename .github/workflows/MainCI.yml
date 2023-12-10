@@ -23,7 +23,7 @@ jobs:
   test-gcc:
     strategy:
       matrix:
-        version: [ 9, 10, 11, 12 ]
+        version: [ 13 ]
         os: [ ubuntu-22.04, macos-12 ]
 
     runs-on: ${{ matrix.os }}
