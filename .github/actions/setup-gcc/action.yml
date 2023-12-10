@@ -8,24 +8,20 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Set Environment
-      uses: kanga333/variable-mapper@v0.3.0
-      with:
-        key: "${{ runner.os }}"
-        map: |
-          {
-            "Linux":{
-                "install-gcc": "sudo apt update && sudo apt install gcc-${{ inputs.version }} g++-${{ inputs.version }} -y",
-                "CC": "gcc-${{ inputs.version }}",
-                "CXX": "g++-${{ inputs.version }}"
-            },
-            "macOS":{
-                "install-gcc": "brew update && brew install gcc@${{ inputs.version }}",
-                "CC": "gcc-${{ inputs.version }}",
-                "CXX": "g++-${{ inputs.version }}"
-            }
-          }
+    - name: Install Gcc
+      if: runner.os == 'Linux'
+      run: sudo apt update && sudo apt install gcc-${{ inputs.version }} g++-${{ inputs.version }} -y
+      shell: pwsh
 
     - name: Install Gcc
-      run: ${{ env.install-gcc }}
+      if: runner.os == 'macOS'
+      run: brew update && brew install gcc@${{ inputs.version }}",
       shell: pwsh
+
+    - name: Set Ninja
+      run: echo "GENERATOR=Ninja" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Set CC/CXX
+      run: echo "CC=gcc-${{ inputs.version }}" >> $GITHUB_ENV && echo "CXX=g++-${{ inputs.version }}" >> $GITHUB_ENV
+      shell: bash
