@@ -25,7 +25,7 @@ runs:
                 "CXX": "clang++-${{ inputs.version }}"
             },
             "Windows":{
-                "install-clang": "choco install LLVM --version@${{ inputs.version }}",
+                "install-clang": "choco install LLVM --version ${{ inputs.version }}",
                 "CC": "clang-${{ inputs.version }}",
                 "CXX": "clang++-${{ inputs.version }}"
             }
