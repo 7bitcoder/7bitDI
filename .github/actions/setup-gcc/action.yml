@@ -15,12 +15,12 @@ runs:
         map: |
           {
             "Linux":{
-                "install-gcc": "sudo apt install gcc-${{ inputs.version }} g++-${{ inputs.version }} -y",
+                "install-gcc": "sudo apt update && sudo apt install gcc-${{ inputs.version }} g++-${{ inputs.version }} -y",
                 "CC": "gcc-${{ inputs.version }}",
                 "CXX": "g++-${{ inputs.version }}"
             },
             "macOS":{
-                "install-gcc": "brew install gcc@${{ inputs.version }}",
+                "install-gcc": "brew update && brew install gcc@${{ inputs.version }}",
                 "CC": "gcc-${{ inputs.version }}",
                 "CXX": "g++-${{ inputs.version }}"
             }
