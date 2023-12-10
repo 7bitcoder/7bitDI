@@ -38,7 +38,7 @@ runs:
 
     - name: Print
       run: |
-        echo "${{ steps.split.outputs._1}}"
+        echo "${{ steps.split.outputs._0}}"
       shell: bash
 
     - name: Set Environment
@@ -48,7 +48,7 @@ runs:
         map: |
           {
             "*":{
-                "CC": "clang-${{ steps.split.outputs._1 }}",
-                "CXX": "clang++-${{ steps.split.outputs._1 }}"
+                "CC": "clang-${{ steps.split.outputs._0 }}",
+                "CXX": "clang++-${{ steps.split.outputs._0 }}"
             }
           }
