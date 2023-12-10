@@ -1,4 +1,4 @@
-name: Setup Compiler
+name: Setup Gcc
 description: "Sets up the compiler"
 inputs:
   version:

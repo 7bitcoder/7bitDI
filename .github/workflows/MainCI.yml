@@ -75,19 +75,46 @@ jobs:
   #        run: ctest -j 10 --preset conan-release
 
 
-  test-mingw:
+  #  test-mingw:
+  #    strategy:
+  #      matrix:
+  #        version: [ 10.3.0, 11.2.0, 12.2.0, 13.2.0 ]
+  #        os: [ windows-2019, windows-2022 ]
+  #
+  #    runs-on: ${{ matrix.os }}
+  #
+  #    steps:
+  #      - uses: actions/checkout@v3
+  #
+  #      - name: Install MinGw
+  #        uses: ./.github/actions/setup-mingw
+  #        with:
+  #          version: ${{ matrix.version }}
+  #
+  #      - name: Install Conan Packages
+  #        uses: ./.github/actions/conan-install
+  #        with:
+  #          install-dir: ${{ env.BUILD_DIR }}
+  #
+  #      - name: CMake Build
+  #        uses: ./.github/actions/cmake-build
+  #
+  #      - name: Test
+  #        run: ctest -j 10 --preset conan-release
+
+  test-clang:
     strategy:
       matrix:
-        version: [ 10.3.0, 11.2.0, 12.2.0, 13.2.0 ]
-        os: [ windows-2019, windows-2022 ]
+        version: [ 11, 12, 13, 14, 15, 16 ]
+        os: [ ubuntu-22.04, macos-12 ]
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install MinGw
-        uses: ./.github/actions/setup-mingw
+      - name: Install GCC
+        uses: ./.github/actions/setup-gcc
         with:
           version: ${{ matrix.version }}
 
@@ -101,6 +128,7 @@ jobs:
 
       - name: Test
         run: ctest -j 10 --preset conan-release
+
 
 #  test-clang:
 #    strategy:

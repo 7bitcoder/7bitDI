@@ -1,8 +1,8 @@
-name: Setup Compiler
+name: Setup MinGw
 description: "Sets up the compiler"
 inputs:
   version:
-    description: "Gcc version"
+    description: "MinGw version"
     required: true
 
 runs:

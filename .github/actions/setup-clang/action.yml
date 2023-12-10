@@ -1,31 +1,31 @@
-name: Setup Compiler
+name: Setup Clang
 description: "Sets up the compiler"
 inputs:
   version:
-    description: "Gcc version"
+    description: "Clang version"
     required: true
 
 runs:
   using: composite
   steps:
-    - name: Set Proper Conan Profile
+    - name: Set Environment
       uses: kanga333/variable-mapper@v0.3.0
       with:
         key: "${{ runner.os }}"
         map: |
           {
             "Linux":{
-                "install-gcc": "sudo apt install gcc-${{ inputs.version }} g++${{ inputs.version }} -y",
-                "CC": "gcc-${{ inputs.version }}",
-                "CXX": "g++-${{ inputs.version }}"
+                "install-gcc": "sudo apt update && sudo apt install clang-${{ inputs.version }} -y",
+                "CC": "clang-${{ inputs.version }}",
+                "CXX": "clang++-${{ inputs.version }}"
             },
             "macOS":{
-                "install-gcc": "sudo apt install gcc-${{ inputs.version }} g++${{ inputs.version }} -y",
-                "CC": "gcc-${{ inputs.version }}",
-                "CXX": "g++-${{ inputs.version }}"
-            },
+                "install-gcc": "brew update && brew install llvm@${{ inputs.version }}",
+                "CC": "clang-${{ inputs.version }}",
+                "CXX": "clang++-${{ inputs.version }}"
+            }
           }
 
-    - name: Install Gcc
-      run: ${{ env.install-begin }} ${{ env.install-gcc }}${{ env.gcc-version }}  ${{ env.install-g++ }}${{ env.g++-version }} ${{ env.install-end }}
+    - name: Install Clang
+      run: ${{ env.install-gcc }}
       shell: pwsh
