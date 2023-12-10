@@ -46,7 +46,7 @@ jobs:
     test-gcc-macos-12:
       strategy:
         matrix:
-          version: [ 9, 10, 11, 12, 13 ]
+          version: [ 10, 11, 12, 13 ]
 
       runs-on: macos-12
 

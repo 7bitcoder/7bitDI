@@ -9,21 +9,17 @@ runs:
   using: composite
 
   steps:
-    - name: Update Environment
-      uses: kanga333/variable-mapper@v0.3.0
-      with:
-        key: "${{ runner.os }}"
-        map: |
-          {
-            "Windows":{
-                "CC": "gcc",
-                "CXX": "g++"
-            }
-          }
-
     - name: Install MinGW
       run: choco install mingw --version ${{ inputs.version }} -y
       shell: pwsh
+
+    - name: Set Ninja
+      run: echo "GENERATOR=Ninja" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Set CC/CXX
+      run: echo "CC=gcc" >> $GITHUB_ENV && echo "CXX=g++}" >> $GITHUB_ENV
+      shell: bash
 
     - name: Update Sys Path
       run: |
