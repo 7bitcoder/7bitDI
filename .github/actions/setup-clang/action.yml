@@ -14,11 +14,6 @@ runs:
       shell: pwsh
 
     - name: Install Clang
-      if: runner.os == 'macOS'
-      run: brew update && brew install llvm@${{ inputs.version }}
-      shell: pwsh
-
-    - name: Install Clang
       if: runner.os == 'Linux'
       run: sudo apt update && sudo apt install clang-${{ inputs.version }} -y
       shell: pwsh

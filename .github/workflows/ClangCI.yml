@@ -1,0 +1,90 @@
+name: ClangCI
+
+on:
+  push:
+    branches: [ "dev" ]
+    paths-ignore:
+      - "Docs/**"
+      - ".readthedocs.yaml"
+      - "README.md"
+
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - "Docs/**"
+      - ".readthedocs.yaml"
+      - "README.md"
+
+env:
+  BUILD_TYPE: Release
+  BUILD_DIR: ${{github.workspace}}/build
+  CMAKE_CONFIG_ARGS: -D_7BIT_DI_BUILD_TESTS:BOOL=ON -D_7BIT_DI_BUILD_EXAMPLES:BOOL=ON
+
+jobs:
+    test-clang-ubuntu-22:
+      strategy:
+        matrix:
+          version: [ 11, 12, 13, 14, 15 ]
+
+      runs-on: ubuntu-22.04
+
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Install Clang
+          uses: ./.github/actions/setup-clang
+          with:
+            version: ${{ matrix.version }}
+
+        - name: CMake Build
+          uses: ./.github/actions/cmake-build
+
+        - name: Test
+          working-directory: ${{ env.BUILD_DIR }}
+          run: ctest -C ${{ env.BUILD_TYPE }}
+
+    test-clang-ubuntu-20:
+      strategy:
+        matrix:
+          version: [ 7, 8, 9, 10, 11, 12 ]
+
+      runs-on: ubuntu-20.04
+
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Install Clang
+          uses: ./.github/actions/setup-clang
+          with:
+            version: ${{ matrix.version }}
+
+        - name: CMake Build
+          uses: ./.github/actions/cmake-build
+
+        - name: Test
+          working-directory: ${{ env.BUILD_DIR }}
+          run: ctest -C ${{ env.BUILD_TYPE }}
+
+    test-clang-windows:
+      strategy:
+        fail-fast: false
+        matrix:
+          version: [ 8.0.1, 9.0.1, 11.1.0, 12.0.1, 13.0.1, 14.0.6, 15.0.7, 16.0.6, 17.0.6]
+          os: [ windows-2019, windows-2022 ]
+
+      runs-on: ${{ matrix.os }}
+
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Install Clang
+          uses: ./.github/actions/setup-clang
+          with:
+            version: ${{ matrix.version }}
+
+        - name: CMake Build
+          uses: ./.github/actions/cmake-build
+
+        - name: Test
+          working-directory: ${{ env.BUILD_DIR }}
+          run: ctest -C ${{ env.BUILD_TYPE }}
