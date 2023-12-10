@@ -21,10 +21,10 @@ runs:
             }
           }
 
-    - name: Update Sys Path
-      run: refreshenv
-      shell: pwsh
-
     - name: Install MinGW
       run: choco install mingw --version ${{ inputs.version }} -y
+      shell: pwsh
+
+    - name: Refresh Environment
+      run: refreshenv
       shell: pwsh
