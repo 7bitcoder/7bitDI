@@ -10,7 +10,7 @@ runs:
 
   steps:
     - name: Install MinGW
-      run: choco install mingw --version ${{ inputs.version }} -y
+      run: choco install mingw --version ${{ inputs.version }} -y && choco install ninja -y
       shell: pwsh
 
     - name: Set Ninja
