@@ -40,5 +40,5 @@ runs:
     - name: Update Sys Path
       if: runner.os == 'Windows'
       run: |
-        (" C:\\Program Files\\LLVM\\bin;" + (Get-Content -Path $env:GITHUB_PATH)) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
+        ("C:\\Program Files\\LLVM\\bin;" + (Get-Content -Path $env:GITHUB_PATH)) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
       shell: pwsh
