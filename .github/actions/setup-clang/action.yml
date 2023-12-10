@@ -24,7 +24,7 @@ runs:
       shell: pwsh
 
     - name: Set Ninja
-      run: cd "C:\\Program Files\\LLVM\\bin\\ninja.exe" && ls
+      run: cd "C:\\Program Files\\LLVM\\bin" && ls
       shell: bash
 
     - name: Set Ninja
