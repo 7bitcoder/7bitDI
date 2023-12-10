@@ -30,16 +30,28 @@ runs:
       run: choco install LLVM --version ${{ inputs.version }} --allow-downgrade -y
       shell: pwsh
 
-    - uses: rishabhgupta/split-by@v1
-      id: split
-      with:
-        string: ${{ inputs.version }}
-        split-by: '.'
+    - name: Install Clang
+      if: runner.os == 'macOS'
+      run: brew update && brew install llvm@${{ inputs.version }}
+      shell: pwsh
+
+    - name: Install Clang
+      if: runner.os == 'Linux'
+      run: sudo apt update && sudo apt install clang-${{ inputs.version }} -y
+      shell: pwsh
 
     - name: Set CC
-      run: echo "CC=clang-${{ steps.split.outputs._0 }} CXX=clang++-${{ steps.split.outputs._0 }} GENERATOR=Ninja MAKE_PROGRAM=ninja" >> $GITHUB_ENV
+      if: runner.os == 'Windows'
+      run: echo "CC=clang CXX=clang++ GENERATOR=Ninja MAKE_PROGRAM=ninja" >> $GITHUB_ENV
       shell: bash
 
-    - name: Set CXX
-      run: echo "CXX=clang++-${{ steps.split.outputs._0 }}" >> $GITHUB_ENV
+    - name: Set CC
+      if: runner.os != 'Windows'
+      run: echo "CC=clang-${{ inputs.version }} CXX=clang++-${{ inputs.version }} GENERATOR=Ninja MAKE_PROGRAM=ninja" >> $GITHUB_ENV
       shell: bash
+
+    - name: Update Sys Path
+      if: runner.os == 'Windows'
+      run: |
+        (" C:\\Program Files\\LLVM\\bin;" + (Get-Content -Path $env:GITHUB_PATH)) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
+      shell: pwsh
