@@ -1,23 +1,27 @@
 name: Run CMake
 description: "Runs CMake Build"
 inputs:
-  args:
-    description: "Other arguments"
-    required: false
-    default: -D_7BIT_DI_BUILD_TESTS:BOOL=true -D_7BIT_DI_BUILD_EXAMPLES:BOOL=true
   library-type:
     description: "Library type"
     required: false
     default: Static
+  build-type:
+    description: "build type"
+    required: true
+  args:
+    description: "Other arguments"
+    required: false
+    default: -D_7BIT_DI_BUILD_TESTS:BOOL=true -D_7BIT_DI_BUILD_EXAMPLES:BOOL=true
+
 
 runs:
   using: composite
   steps:
 
     - name: Configure CMake
-      run: cmake --preset conan-release -D_7BIT_DI_LIBRARY_TYPE=${{ inputs.library-type }} ${{ inputs.args }}
+      run: cmake -D_7BIT_DI_LIBRARY_TYPE=${{ inputs.library-type }} ${{ inputs.args }} -DCMAKE_BUILD_TYPE=${{ inputs.build-type }}
       shell: pwsh
 
     - name: Build
-      run: cmake --build --preset conan-release
+      run: cmake --build -DCMAKE_BUILD_TYPE=${{ inputs.build-type }}
       shell: pwsh

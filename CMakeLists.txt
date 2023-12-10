@@ -20,64 +20,74 @@ include_directories(${CMAKE_SOURCE_DIR}/Include)
 
 add_subdirectory(Source)
 
-if(_7BIT_DI_BUILD_DOCS)
-        add_subdirectory(Docs)
-endif()
+if (_7BIT_DI_BUILD_DOCS)
+    add_subdirectory(Docs)
+endif ()
 
-if(_7BIT_DI_BUILD_TESTS)
-        include(GoogleTest)
-        enable_testing()
+if (_7BIT_DI_BUILD_TESTS)
+    include(FetchContent)
+    FetchContent_Declare(
+            googletest
+            GIT_REPOSITORY https://github.com/google/googletest.git
+            GIT_TAG f8d7d77c06936315286eb55f8de22cd23c188571 # release-1.14.0
+    )
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    FetchContent_MakeAvailable(googletest)
 
-        add_subdirectory(Tests)
-endif()
 
-if(_7BIT_DI_BUILD_EXAMPLES)
-        add_subdirectory(Examples)
-endif()
+    include(GoogleTest)
+    enable_testing()
 
-if(_7BIT_DI_BUILD_SINGLE_HEADER)
-        add_subdirectory(SingleHeader)
-endif()
+    add_subdirectory(Tests)
+endif ()
 
-if(_7BIT_DI_INSTALL)
-        set(PROJECT_CONFIG_IN ${CMAKE_SOURCE_DIR}/Cmake/7bitDIConfig.cmake.in)
-        set(PROJECT_CONFIG_OUT ${CMAKE_BINARY_DIR}/7bitDIConfig.cmake)
-        set(CONFIG_TARGETS_FILE 7bitDIConfigTargets.cmake)
-        set(VERSIONS_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/7bitDIConfigVersion.cmake)
-        set(EXPORT_DEST_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/7bitDI)
+if (_7BIT_DI_BUILD_EXAMPLES)
+    add_subdirectory(Examples)
+endif ()
 
-        install(DIRECTORY ${_7BIT_DI_HEADERS_DIR}/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+if (_7BIT_DI_BUILD_SINGLE_HEADER)
+    add_subdirectory(SingleHeader)
+endif ()
 
-        install(
-                TARGETS 7bitDI
-                EXPORT 7bitDI
-                LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-                ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-                RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+if (_7BIT_DI_INSTALL)
+    set(PROJECT_CONFIG_IN ${CMAKE_SOURCE_DIR}/Cmake/7bitDIConfig.cmake.in)
+    set(PROJECT_CONFIG_OUT ${CMAKE_BINARY_DIR}/7bitDIConfig.cmake)
+    set(CONFIG_TARGETS_FILE 7bitDIConfigTargets.cmake)
+    set(VERSIONS_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/7bitDIConfigVersion.cmake)
+    set(EXPORT_DEST_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/7bitDI)
 
-        export(
-                TARGETS 7bitDI
-                NAMESPACE 7bitDI::
-                FILE ${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_TARGETS_FILE})
+    install(DIRECTORY ${_7BIT_DI_HEADERS_DIR}/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-        install(
-                EXPORT 7bitDI
-                EXPORT 7bitDI
-                DESTINATION ${EXPORT_DEST_DIR}
-                NAMESPACE 7bitDI::
-                NAMESPACE 7bitDI::
-                FILE ${CONFIG_TARGETS_FILE})
+    install(
+            TARGETS 7bitDI
+            EXPORT 7bitDI
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-        include(CMakePackageConfigHelpers)
+    export(
+            TARGETS 7bitDI
+            NAMESPACE 7bitDI::
+            FILE ${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_TARGETS_FILE})
 
-        configure_package_config_file(${PROJECT_CONFIG_IN} ${PROJECT_CONFIG_OUT}
-                INSTALL_DESTINATION ${EXPORT_DEST_DIR})
+    install(
+            EXPORT 7bitDI
+            EXPORT 7bitDI
+            DESTINATION ${EXPORT_DEST_DIR}
+            NAMESPACE 7bitDI::
+            NAMESPACE 7bitDI::
+            FILE ${CONFIG_TARGETS_FILE})
 
-        write_basic_package_version_file(${VERSIONS_CONFIG_FILE} COMPATIBILITY SameMajorVersion)
+    include(CMakePackageConfigHelpers)
 
-        install(FILES ${PROJECT_CONFIG_OUT} ${VERSIONS_CONFIG_FILE} DESTINATION ${EXPORT_DEST_DIR})
+    configure_package_config_file(${PROJECT_CONFIG_IN} ${PROJECT_CONFIG_OUT}
+            INSTALL_DESTINATION ${EXPORT_DEST_DIR})
 
-        export(PACKAGE 7bitDI)
+    write_basic_package_version_file(${VERSIONS_CONFIG_FILE} COMPATIBILITY SameMajorVersion)
 
-        include(CPack)
-endif()
+    install(FILES ${PROJECT_CONFIG_OUT} ${VERSIONS_CONFIG_FILE} DESTINATION ${EXPORT_DEST_DIR})
+
+    export(PACKAGE 7bitDI)
+
+    include(CPack)
+endif ()
