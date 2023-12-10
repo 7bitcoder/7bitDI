@@ -51,4 +51,15 @@ namespace sb::di::details::containers
 
     INLINE bool ServiceInstanceList::isSealed() const { return _sealed; }
 
+    INLINE void ServiceInstanceList::clear()
+    {
+        if (const auto single = _oneOrList.tryGetAsSingle())
+        {
+             single->reset();
+        } else
+        {
+            _oneOrList.getAsList().clear();
+        }
+    }
+
 } // namespace sb::di::details::containers

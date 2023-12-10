@@ -31,7 +31,7 @@ TEST_F(ServiceCtorFactoryTest, ShouldCreateInPlaceService)
     EXPECT_TRUE(instance);
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
-    EXPECT_THROW(instance->release(), sb::di::CannotReleaseServiceException);
+    EXPECT_THROW(instance->moveOutAsUniquePtr<TestClass1>(), sb::di::CannotReleaseServiceException);
     EXPECT_TRUE(instance->getForMoveOut());
     EXPECT_EQ(instance->getTypeId(), typeid(TestClass1));
     EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());

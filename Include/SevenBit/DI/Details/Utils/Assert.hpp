@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstddef>
 #include <type_traits>
 
 #include "SevenBit/DI/LibraryConfig.hpp"

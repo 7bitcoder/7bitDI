@@ -29,7 +29,7 @@ namespace sb::di
          * @details implementationFactory cannot be null, otherwise construcor will throw exception
          * @throws NullPointnerException if implementationFactory is null
          */
-        ServiceDescriptor(TypeId serviceTypeId, ServiceLifeTime lifetime, IServiceFactory::SPtr implementationFactory);
+        ServiceDescriptor(TypeId serviceTypeId, ServiceLifeTime lifetime, IServiceFactory::Ptr implementationFactory);
 
         /**
          * @brief Construct a new service descriptor copy

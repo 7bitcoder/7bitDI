@@ -43,11 +43,9 @@ TEST_F(ServiceInstancesMapTest, ShouldFindList)
 
     TestInheritClass3 test;
     sb::di::IServiceInstance::Ptr instance{new sb::di::details::services::ExternalService{&test}};
-    map.insert(typeid(TestInheritClass1), std::move(instance));
-
     TestInheritClass2 test2;
     sb::di::IServiceInstance::Ptr instance2{new sb::di::details::services::ExternalService{&test2}};
-    map.insert(typeid(TestInheritClass1), std::move(instance2));
+    map.insert(typeid(TestInheritClass1), std::move(instance)).add(std::move(instance2));
 
     const auto list = map.findServices(typeid(TestInheritClass1));
     EXPECT_TRUE(list);

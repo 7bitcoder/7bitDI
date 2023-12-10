@@ -13,12 +13,12 @@ namespace sb::di::details::containers
 
     INLINE ServiceInstanceList &ServiceInstancesMap::insert(const TypeId serviceTypeId, IServiceInstance::Ptr service)
     {
-        ServiceInstanceList &list = add(serviceTypeId, std::move(service));
-        if (_strongDestructionOrder)
+        auto [it, inserted] = _serviceListMap.emplace(serviceTypeId, std::move(service));
+        if (inserted && _strongDestructionOrder)
         {
-            _constructionOrder.push_back(&list.last());
+            _constructionOrder.push_back(serviceTypeId);
         }
-        return list;
+        return it->second;
     }
 
     INLINE bool ServiceInstancesMap::contains(const TypeId serviceTypeId) const
@@ -40,21 +40,14 @@ namespace sb::di::details::containers
         {
             for (auto it = _constructionOrder.rbegin(); it != _constructionOrder.rend(); ++it)
             {
-                (*it)->reset();
+                if (const auto list = findServices(*it))
+                {
+                    list->clear();
+                }
             }
         }
         _constructionOrder.clear();
         _serviceListMap.clear();
-    }
-
-    INLINE ServiceInstanceList &ServiceInstancesMap::add(const TypeId serviceTypeId, IServiceInstance::Ptr &&service)
-    {
-        if (auto it = _serviceListMap.find(serviceTypeId); it != _serviceListMap.end())
-        {
-            it->second.add(std::move(service));
-            return it->second;
-        }
-        return _serviceListMap.emplace(serviceTypeId, std::move(service)).first->second;
     }
 
     INLINE ServiceInstancesMap::~ServiceInstancesMap() { clear(); }

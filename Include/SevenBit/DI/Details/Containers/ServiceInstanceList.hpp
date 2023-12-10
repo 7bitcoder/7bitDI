@@ -47,6 +47,8 @@ namespace sb::di::details::containers
 
         [[nodiscard]] bool isSealed() const;
 
+        void clear();
+
         ~ServiceInstanceList() = default;
     };
 } // namespace sb::di::details::containers

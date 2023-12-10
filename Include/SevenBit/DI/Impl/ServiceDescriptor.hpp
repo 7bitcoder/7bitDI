@@ -2,19 +2,18 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Utils/Require.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 
 namespace sb::di
 {
     INLINE ServiceDescriptor::ServiceDescriptor(const TypeId serviceTypeId, const ServiceLifeTime lifetime,
-                                                IServiceFactory::SPtr implementationFactory)
-        : _lifetime(lifetime), _serviceTypeId(serviceTypeId), _implementationFactory(std::move(implementationFactory))
+                                                IServiceFactory::Ptr implementationFactory)
+        : _lifetime(lifetime), _serviceTypeId(serviceTypeId),
+          _implementationFactory(details::utils::Require::notNullAndGet(std::move(implementationFactory),
+                                                                        "Implementation factory cannot be null"))
     {
-        if (!_implementationFactory)
-        {
-            throw NullPointerException{"Implementation factory cannot be null"};
-        }
     }
 
     INLINE const ServiceLifeTime &ServiceDescriptor::getLifeTime() const { return _lifetime; }

@@ -14,7 +14,7 @@ namespace sb::di::details::containers
     class EXPORT ServiceInstancesMap
     {
         std::unordered_map<TypeId, ServiceInstanceList> _serviceListMap;
-        std::vector<IServiceInstance::Ptr *> _constructionOrder;
+        std::vector<TypeId> _constructionOrder;
         const bool _strongDestructionOrder = false;
 
       public:
@@ -38,9 +38,6 @@ namespace sb::di::details::containers
         void clear();
 
         ~ServiceInstancesMap();
-
-      private:
-        ServiceInstanceList &add(TypeId serviceTypeId, IServiceInstance::Ptr &&service);
     };
 
 } // namespace sb::di::details::containers

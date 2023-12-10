@@ -77,6 +77,26 @@ TEST_F(ServiceDescriberTest, ShouldDescribeTransientCtorInterfaceService)
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestInheritClass5));
 }
 
+TEST_F(ServiceDescriberTest, ShouldDescribeSingletonExternalService)
+{
+    TestClass1 test;
+    const auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestClass1>(&test);
+
+    EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
+    EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
+    EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestClass1));
+}
+
+TEST_F(ServiceDescriberTest, ShouldDescribeSingletonExternalInterfaceService)
+{
+    TestInheritClass5 test;
+    const auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestInheritClass1>(&test);
+
+    EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
+    EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
+    EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestInheritClass5));
+}
+
 TEST_F(ServiceDescriberTest, ShouldDescribeSingletonFcnService)
 {
     const auto descriptor = sb::di::ServiceDescriber::describeSingletonFrom(
@@ -192,26 +212,6 @@ TEST_F(ServiceDescriberTest, ShouldDescribeTransientEmptyFcnInterfaceService)
         [] { return std::make_unique<TestInheritClass5>(); });
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::transient());
-    EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
-    EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestInheritClass5));
-}
-
-TEST_F(ServiceDescriberTest, ShouldDescribeSingletonExternalService)
-{
-    TestClass1 test;
-    const auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestClass1>(&test);
-
-    EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
-    EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
-    EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestClass1));
-}
-
-TEST_F(ServiceDescriberTest, ShouldDescribeSingletonExternalInterfaceService)
-{
-    TestInheritClass5 test;
-    const auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestInheritClass1>(&test);
-
-    EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestInheritClass5));
 }

@@ -43,8 +43,8 @@ TEST_F(ExternalServiceFcnFactoryTest, ShouldCreateService)
     EXPECT_TRUE(instance);
     EXPECT_TRUE(instance->isValid());
     EXPECT_EQ(instance->get(), &test);
-    EXPECT_THROW(instance->release(), sb::di::CannotReleaseServiceException);
-    EXPECT_THROW(instance->getForMoveOut(), sb::di::CannotMoveOutServiceException);
+    EXPECT_THROW(instance->moveOutAsUniquePtr<TestClass1>(), sb::di::CannotReleaseServiceException);
+    EXPECT_THROW(instance->moveOutAs<TestClass1>(), sb::di::CannotMoveOutServiceException);
     EXPECT_EQ(instance->getTypeId(), typeid(TestClass1));
     EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
@@ -60,8 +60,8 @@ TEST_F(ExternalServiceFcnFactoryTest, ShouldCreateNullService)
     EXPECT_TRUE(instance);
     EXPECT_FALSE(instance->isValid());
     EXPECT_FALSE(instance->get());
-    EXPECT_THROW(instance->release(), sb::di::CannotReleaseServiceException);
-    EXPECT_THROW(instance->getForMoveOut(), sb::di::CannotMoveOutServiceException);
+    EXPECT_THROW(instance->moveOutAsUniquePtr<TestClass1>(), sb::di::CannotReleaseServiceException);
+    EXPECT_THROW(instance->moveOutAs<TestClass1>(), sb::di::CannotMoveOutServiceException);
     EXPECT_EQ(instance->getTypeId(), typeid(TestClass1));
     EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
