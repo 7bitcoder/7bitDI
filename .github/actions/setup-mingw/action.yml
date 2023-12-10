@@ -22,5 +22,10 @@ runs:
           }
 
     - name: Install MinGW
-      run: choco install mingw --version ${{ inputs.version }} -y && refreshenv
+      run: choco install mingw --version ${{ inputs.version }} -y
+      shell: pwsh
+
+    - name: Refresh Environment
+      run: |
+        Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1 | refreshenv
       shell: pwsh
