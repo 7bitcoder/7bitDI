@@ -5,6 +5,8 @@ inputs:
     description: "Gcc version"
     required: true
 
+environment:
+
 runs:
   using: composite
   steps:
@@ -15,8 +17,8 @@ runs:
         map: |
           {
             "Windows":{
-                "CC": "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\gcc",
-                "CXX": "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\g++"
+                "CC": "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin\\gcc",
+                "CXX": "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin\\g++"
             }
           }
 
