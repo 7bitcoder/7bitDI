@@ -15,17 +15,22 @@ runs:
         map: |
           {
             "Linux":{
-                "install-gcc": "sudo apt update && sudo apt install clang-${{ inputs.version }} -y",
+                "install-clang": "sudo apt update && sudo apt install clang-${{ inputs.version }} -y",
                 "CC": "clang-${{ inputs.version }}",
                 "CXX": "clang++-${{ inputs.version }}"
             },
             "macOS":{
-                "install-gcc": "brew update && brew install llvm@${{ inputs.version }}",
+                "install-clang": "brew update && brew install llvm@${{ inputs.version }}",
+                "CC": "clang-${{ inputs.version }}",
+                "CXX": "clang++-${{ inputs.version }}"
+            },
+            "Windows":{
+                "install-clang": "choco install LLVM --version@${{ inputs.version }}",
                 "CC": "clang-${{ inputs.version }}",
                 "CXX": "clang++-${{ inputs.version }}"
             }
           }
 
     - name: Install Clang
-      run: ${{ env.install-gcc }}
+      run: ${{ env.install-clang }}
       shell: pwsh
