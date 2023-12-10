@@ -8,7 +8,11 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Set Proper Conan Profile
+    - name: Install MinGW
+      run: choco install mingw --version ${{ inputs.version }} -y
+      shell: pwsh
+
+    - name: Update Environment
       uses: kanga333/variable-mapper@v0.3.0
       with:
         key: "${{ runner.os }}"
@@ -17,10 +21,6 @@ runs:
             "Windows":{
                 "CC": "gcc",
                 "CXX": "g++",
-                "Path": "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin;${{env.Path}}"
+                "Path": "C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin;{{ $env:Path }}"
             }
           }
-
-    - name: Install MinGW
-      run: choco install mingw --version ${{ inputs.version }} -y
-      shell: pwsh
