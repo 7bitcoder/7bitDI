@@ -8,6 +8,8 @@ inputs:
 runs:
   using: composite
   steps:
+    - uses: actions/checkout@v3
+
     - name: Set Environment
       uses: kanga333/variable-mapper@v0.3.0
       with:
@@ -29,10 +31,6 @@ runs:
       if: runner.os == 'Windows'
       run: choco install LLVM --version ${{ inputs.version }} --allow-downgrade -y
       shell: pwsh
-
-    - name: Set output
-      run: echo "{name}={value}" >> $GITHUB_OUTPUT
-      shell: bash
 
     - uses: ./github/actions/get-major-version
       id: major
