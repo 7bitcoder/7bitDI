@@ -1,8 +1,15 @@
 name: MainCI
 
 on:
+  push:
+    branches: [ "dev" ]
+    paths-ignore:
+      - "Docs/**"
+      - ".readthedocs.yaml"
+      - "README.md"
+
   pull_request:
-    branches: [ "main", "dev" ]
+    branches: [ "main" ]
     paths-ignore:
       - "Docs/**"
       - ".readthedocs.yaml"
