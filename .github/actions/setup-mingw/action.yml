@@ -22,9 +22,5 @@ runs:
           }
 
     - name: Install MinGW
-      run: choco install mingw --version ${{ inputs.version }} -y
-      shell: pwsh
-
-    - name: Refresh Environment
-      run: refreshenv
+      run: choco install mingw --version ${{ inputs.version }} -y && refreshenv
       shell: pwsh
