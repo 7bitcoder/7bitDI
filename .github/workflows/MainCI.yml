@@ -102,11 +102,38 @@ jobs:
   #      - name: Test
   #        run: ctest -j 10 --preset conan-release
 
-  test-clang:
+  #  test-clang:
+  #    strategy:
+  #      matrix:
+  #        version: [ 11, 12, 13, 14, 15 ]
+  #        os: [ ubuntu-22.04 ]
+  #
+  #    runs-on: ${{ matrix.os }}
+  #
+  #    steps:
+  #      - uses: actions/checkout@v3
+  #
+  #      - name: Install Clang
+  #        uses: ./.github/actions/setup-clang
+  #        with:
+  #          version: ${{ matrix.version }}
+  #
+  #      - name: Install Conan Packages
+  #        uses: ./.github/actions/conan-install
+  #        with:
+  #          install-dir: ${{ env.BUILD_DIR }}
+  #
+  #      - name: CMake Build
+  #        uses: ./.github/actions/cmake-build
+  #
+  #      - name: Test
+  #        run: ctest -j 10 --preset conan-release
+
+  test-clang-old-os:
     strategy:
       matrix:
-        version: [ 11, 12, 13, 14, 15 ]
-        os: [ ubuntu-22.04 ]
+        version: [ 6, 7, 8, 9, 10, 13 ]
+        os: [ ubuntu-20.04 ]
 
     runs-on: ${{ matrix.os }}
 
@@ -128,6 +155,34 @@ jobs:
 
       - name: Test
         run: ctest -j 10 --preset conan-release
+
+
+#  test-clang-win:
+#    strategy:
+#      matrix:
+#        version: [ 11.1.0, 11.1.0, 12.0.1, 13.0.1, 14.0.6, 15.0.7, 16.0.6, 17.0.6 ]
+#        os: [ windows-2019, windows-2022 ]
+#
+#    runs-on: ${{ matrix.os }}
+#
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: Install Clang
+#        uses: ./.github/actions/setup-clang
+#        with:
+#          version: ${{ matrix.version }}
+#
+#      - name: Install Conan Packages
+#        uses: ./.github/actions/conan-install
+#        with:
+#          install-dir: ${{ env.BUILD_DIR }}
+#
+#      - name: CMake Build
+#        uses: ./.github/actions/cmake-build
+#
+#      - name: Test
+#        run: ctest -j 10 --preset conan-release
 
 
 #  test-clang:
