@@ -15,13 +15,13 @@ runs:
         map: |
           {
             "Linux":{
-                "install-clang": "sudo apt update && sudo apt install clang-${{ inputs.version }} -y",
+                "install-clang": "sudo apt update && sudo apt install clang-${{ inputs.version }} -y"
             },
             "macOS":{
-                "install-clang": "brew update && brew install llvm@${{ inputs.version }}",
+                "install-clang": "brew update && brew install llvm@${{ inputs.version }}"
             },
             "Windows":{
-                "install-clang": "choco install LLVM --version ${{ inputs.version }} --allow-downgrade -y",
+                "install-clang": "choco install LLVM --version ${{ inputs.version }} --allow-downgrade -y"
             }
           }
 
