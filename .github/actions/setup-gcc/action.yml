@@ -10,7 +10,7 @@ runs:
   steps:
     - name: Install Gcc
       if: runner.os == 'Linux'
-      run: sudo apt update && sudo apt install gcc-${{ inputs.version }} g++-${{ inputs.version }} ninja -y
+      run: sudo apt update && sudo apt install gcc-${{ inputs.version }} g++-${{ inputs.version }} ninja-build -y
       shell: pwsh
 
     - name: Install Gcc
