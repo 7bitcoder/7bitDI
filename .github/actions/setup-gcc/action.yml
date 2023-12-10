@@ -23,7 +23,7 @@ runs:
                 "install-gcc": "brew install gcc@${{ inputs.version }}",
                 "CC": "gcc-${{ inputs.version }}",
                 "CXX": "g++-${{ inputs.version }}"
-            },
+            }
           }
 
     - name: Install Gcc
