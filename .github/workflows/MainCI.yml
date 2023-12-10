@@ -176,6 +176,7 @@ jobs:
         uses: ./.github/actions/cmake-build
         with:
           build-type: ${{ env.BUILD_TYPE }}
+          build-dir: ${{ env.BUILD_DIR }}
 
       - name: Test
         working-directory: ${{ env.BUILD_DIR }}

@@ -8,6 +8,9 @@ inputs:
   build-type:
     description: "build type"
     required: true
+  build-dir:
+    description: "build directory"
+    required: true
   args:
     description: "Other arguments"
     required: false
@@ -19,11 +22,9 @@ runs:
   steps:
 
     - name: Configure CMake
-      working-directory: ${{ inputs.build-dir }}
-      run: cmake .. -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} -D_7BIT_DI_LIBRARY_TYPE=${{ inputs.library-type }} ${{ inputs.args }}
+      run: cmake -B ${{ inputs.build-dir }} -DCMAKE_BUILD_TYPE=${{ inputs.build-type }} -D_7BIT_DI_LIBRARY_TYPE=${{ inputs.library-type }} ${{ inputs.args }}
       shell: pwsh
 
     - name: Build
-      working-directory: ${{ inputs.build-dir }}
-      run: cmake --build . --config ${{ inputs.build-type }}
+      run: cmake --build ${{ inputs.build-dir }}
       shell: pwsh
