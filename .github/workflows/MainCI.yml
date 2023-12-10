@@ -178,4 +178,5 @@ jobs:
           build-type: ${{ env.BUILD_TYPE }}
 
       - name: Test
-        run: ctest -j 10 -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+        working-directory: ${{ env.BUILD_DIR }}
+        run: ctest -C ${{env.BUILD_TYPE}}

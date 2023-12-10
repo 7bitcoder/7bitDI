@@ -11,7 +11,7 @@ inputs:
   args:
     description: "Other arguments"
     required: false
-    default: -D_7BIT_DI_BUILD_TESTS:BOOL=true -D_7BIT_DI_BUILD_EXAMPLES:BOOL=true
+    default: -D_7BIT_DI_BUILD_TESTS:BOOL=ON -D_7BIT_DI_BUILD_EXAMPLES:BOOL=ON
 
 
 runs:
@@ -23,5 +23,5 @@ runs:
       shell: pwsh
 
     - name: Build
-      run: cmake --build -DCMAKE_BUILD_TYPE=${{ inputs.build-type }}
+      run: cmake --build . --config ${{ inputs.build-type }}
       shell: pwsh
