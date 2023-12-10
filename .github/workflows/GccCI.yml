@@ -46,7 +46,7 @@ jobs:
     test-gcc-macos-12:
       strategy:
         matrix:
-          version: [ 10, 11, 12, 13 ]
+          version: [ 9, 10, 11, 12, 13 ]
 
       runs-on: macos-12
 
@@ -69,7 +69,6 @@ jobs:
       strategy:
         matrix:
           version: [ 7, 8, 9, 10, 11 ]
-          os: [ ubuntu-20.04, macos-11 ]
 
       runs-on: ubuntu-20.04
 
@@ -91,7 +90,7 @@ jobs:
     test-gcc-macos-11:
       strategy:
         matrix:
-          version: [ 7, 8, 9, 10, 11 ]
+          version: [ 9, 10, 11, 12, 13 ]
 
       runs-on: macos-11
 
