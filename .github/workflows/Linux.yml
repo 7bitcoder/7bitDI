@@ -49,7 +49,8 @@ jobs:
           - { os: ubuntu-22.04, compiler: { cpp: g++-8 } }
           - { os: ubuntu-20.04, compiler: { cpp: clang-13 } }
           - { os: ubuntu-20.04, compiler: { cpp: clang-14 } }
-          - { os: ubuntu-22.04, compiler: { cpp: clang-15 } }
+          - { os: ubuntu-20.04, compiler: { cpp: clang-15 } }
+          - { os: ubuntu-22.04, compiler: { cpp: clang-7 } }
           - { os: ubuntu-22.04, compiler: { cpp: clang-8 } }
           - { os: ubuntu-22.04, compiler: { cpp: clang-9 } }
           - { os: ubuntu-22.04, compiler: { cpp: clang-10 } }
