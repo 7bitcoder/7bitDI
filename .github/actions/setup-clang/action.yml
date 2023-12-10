@@ -37,7 +37,7 @@ runs:
         split-by: '.'
 
     - name: Set CC
-      run: echo "CC=clang-${{ steps.split.outputs._0 }}" >> $GITHUB_ENV
+      run: echo "CC=clang-${{ steps.split.outputs._0 }} CXX=clang++-${{ steps.split.outputs._0 }} GENERATOR=Ninja MAKE_PROGRAM=ninja" >> $GITHUB_ENV
       shell: bash
 
     - name: Set CXX
