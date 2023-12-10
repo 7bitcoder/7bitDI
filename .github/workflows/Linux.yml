@@ -38,23 +38,23 @@ jobs:
           sudo apt update
           sudo apt install ${{matrix.compiler.cpp}}
           sudo apt install locales-all
-          cmake -E make_directory ${{ env.BUILD_DIR }}
+          cmake -E make_directory ${{env.BUILD_DIR}}
 
       - name: Configure
         env:
           CXX: ${{matrix.compiler.cxx}}
         run: |
-          cmake -B ${{ env.BUILD_DIR }} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -D_7BIT_DI_LIBRARY_TYPE=Static \
+          cmake -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -D_7BIT_DI_LIBRARY_TYPE=Static \
                 -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_BUILD_TESTS=ON \
                 -DCMAKE_CXX_VISIBILITY_PRESET=hidden -DCMAKE_VISIBILITY_INLINES_HIDDEN=ON \
 
       - name: Build
         run: |
           threads=`nproc`
-          cmake --build ${{ env.BUILD_DIR }} --config ${{matrix.build_type}} --parallel $threads
+          cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_type}} --parallel $threads
 
       - name: Test
-        working-directory: ${{ env.BUILD_DIR }}
+        working-directory: ${{env.BUILD_DIR}}
         run: ctest -C ${{matrix.build_type}}
         env:
           CTEST_OUTPUT_ON_FAILURE: True
