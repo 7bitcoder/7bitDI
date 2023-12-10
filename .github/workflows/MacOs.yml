@@ -22,8 +22,14 @@ jobs:
   test:
     strategy:
       matrix:
-        cpp: [ default ,g++-9 ,g++-10 ,g++-11 ,g++-12 ,g++-13 ]
-
+        compiler: [
+          { cpp: apple-clang, cxx: clang },
+          { cpp: gcc@9, cxx: g++-9 },
+          { cpp: gcc@10, cxx: g++-10 },
+          { cpp: gcc@11, cxx: g++-11 },
+          { cpp: gcc@12, cxx: g++-12 },
+          { cpp: gcc@13, cxx: g++-13 }
+        ]
         build_type: [ Release ]
         os: [ macos-11, macos-12, macos-13 ]
         std: [ 17, 20 ]
@@ -31,7 +37,7 @@ jobs:
           - { os: macos-11, std: 20 }
           - { os: macos-13, std: 11 }
           - { os: macos-13, std: 17 }
-          - { os: macos-12, cpp: g++-9 }
+          - { os: macos-12, compiler: { cpp: g++@9 } }
 
     env:
       BUILD_DIR: ${{github.workspace}}/build
@@ -41,11 +47,10 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Create Build Environment
-        if: matrix.cpp != 'default'
+        if: matrix.compiler.cpp != 'apple-clang'
         run: |
-          sudo apt update
-          sudo apt install ${{matrix.cpp}}
-          sudo apt install locales-all
+          brew update
+          brew install ${{ matrix.compiler.cpp }} 
           cmake -E make_directory ${{env.BUILD_DIR}}
 
       - name: Configure
