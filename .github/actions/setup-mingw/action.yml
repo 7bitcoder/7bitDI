@@ -1,0 +1,25 @@
+name: Setup Compiler
+description: "Sets up the compiler"
+inputs:
+  version:
+    description: "Gcc version"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Set Proper Conan Profile
+      uses: kanga333/variable-mapper@v0.3.0
+      with:
+        key: "${{ runner.os }}"
+        map: |
+          {
+            "Windows":{
+                "CC": "gcc-${{ inputs.version }}",
+                "CXX": "g++-${{ inputs.version }}"
+            }
+          }
+
+    - name: Install Gcc
+      run: choco install mingw ${{ inputs.version }} -y
+      shell: pwsh
