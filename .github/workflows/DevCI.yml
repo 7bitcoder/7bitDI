@@ -2,14 +2,13 @@ name: DevCI
 
 on:
   push:
-    branches: ["dev"]
+    branches: [ "dev" ]
     paths-ignore:
       - "Docs/**"
       - ".readthedocs.yaml"
       - "README.md"
 
 env:
-  BUILD_TYPE: Release
   BUILD_DIR: ${{github.workspace}}/build
 
 jobs:
@@ -17,23 +16,29 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        libraryType: [HeaderOnly, Static, Shared]
-        os: [ubuntu-22.04, macos-12, windows-2022]
+        os: [ ubuntu-22.04, macos-12, windows-2022 ]
+        std: [ 17, 20 ]
+        build_type: [ Release ]
+        library_type: [ HeaderOnly, Static, Shared ]
 
     runs-on: ${{matrix.os}}
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install Conan Packages
-        uses: ./.github/actions/conan-install
-        with:
-          install-dir: ${{ env.BUILD_DIR }}
+      - name: Configure
+        run: |
+          cmake -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} \
+                -DCMAKE_CXX_VISIBILITY_PRESET=hidden -DCMAKE_VISIBILITY_INLINES_HIDDEN=ON \
+                -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON \
 
-      - name: CMake Build
-        uses: ./.github/actions/cmake-build
-        with:
-          library-type: ${{ matrix.libraryType }}
+      - name: Build
+        run: |
+          threads=`nproc`
+          cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_type}} --parallel $threads
 
       - name: Test
-        run: ctest -j 10 --preset conan-release
+        working-directory: ${{env.BUILD_DIR}}
+        run: ctest -C ${{matrix.build_type}}
+        env:
+          CTEST_OUTPUT_ON_FAILURE: True

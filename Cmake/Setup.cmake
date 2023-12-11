@@ -1,5 +1,10 @@
 include(Functions)
 
+if (NOT CMAKE_CXX_STANDARD)
+    set(CMAKE_CXX_STANDARD 17)
+endif ()
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose Release or Debug" FORCE)
 endif ()
@@ -54,7 +59,7 @@ if (_7BIT_DI_BUILD_PIC)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif ()
 
-if (_7BIT_DI_LIBRARY_TYPE STREQUAL "Shared")
+if (_7BIT_DI_LIBRARY_TYPE STREQUAL "Shared" OR BUILD_SHARED_LIBS)
     set(_7BIT_DI_BUILD_LIBRARY_TYPE "Shared")
     set(_7BIT_DI_SHARED_LIB ON)
 elseif (_7BIT_DI_LIBRARY_TYPE STREQUAL "HeaderOnly")
@@ -67,10 +72,20 @@ endif ()
 
 configure_file(${CMAKE_SOURCE_DIR}/Include/SevenBit/DI/CmakeDef.hpp.input ${CMAKE_SOURCE_DIR}/Include/SevenBit/DI/CmakeDef.hpp)
 
+set(BYTE_SIZE 8)
+math(EXPR MEMORY_SIZE "${CMAKE_SIZEOF_VOID_P} * ${BYTE_SIZE}")
+
 set(INFOS
-        "${CMAKE_PROJECT_NAME} version: ${_7BIT_DI_VERSION}"
-        "${CMAKE_PROJECT_NAME} build type: ${CMAKE_BUILD_TYPE} "
-        "${CMAKE_PROJECT_NAME} build as ${_7BIT_DI_BUILD_LIBRARY_TYPE} library"
+        "${CMAKE_PROJECT_NAME} ${CMAKE_PROJECT_VERSION}"
+        "Build type: ${CMAKE_BUILD_TYPE}"
+        "Library type: ${_7BIT_DI_BUILD_LIBRARY_TYPE}"
+        "=================================================="
+        "Cmake version: ${CMAKE_VERSION}"
+        "Os: ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_VERSION}"
+        "Architecture: ${CMAKE_SYSTEM_PROCESSOR} ${MEMORY_SIZE}bit"
+        "CXX compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}"
+        "CXX standard: ${CMAKE_CXX_STANDARD}"
+        "Generator: ${CMAKE_GENERATOR}"
         "=================================================="
         "Build tests: ${_7BIT_DI_BUILD_TESTS}"
         "Build examples: ${_7BIT_DI_BUILD_EXAMPLES}"

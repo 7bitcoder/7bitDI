@@ -22,39 +22,42 @@ jobs:
   test:
     strategy:
       matrix:
-        compiler: [
-          { cpp: g++-7, cxx: g++-7 },
-          { cpp: g++-8, cxx: g++-8 },
-          { cpp: g++-9, cxx: g++-9 },
-          { cpp: g++-10, cxx: g++-10 },
-          { cpp: g++-11, cxx: g++-11 },
-          { cpp: g++-12, cxx: g++-12 },
-          { cpp: g++-13, cxx: g++-13 },
-          { cpp: clang-7, cxx: clang++-7 },
-          { cpp: clang-8, cxx: clang++-8 },
-          { cpp: clang-9, cxx: clang++-9 },
-          { cpp: clang-10, cxx: clang++-10 },
-          { cpp: clang-11, cxx: clang++-11 },
-          { cpp: clang-12, cxx: clang++-12 },
-          { cpp: clang-13, cxx: clang++-13 },
-          { cpp: clang-14, cxx: clang++-14 },
-          { cpp: clang-15, cxx: clang++-15 }
-        ]
+        compiler:
+          - { tool: g++, ver: 7 },
+          - { tool: g++, ver: 8 },
+          - { tool: g++, ver: 9 },
+          - { tool: g++, ver: 10 },
+          - { tool: g++, ver: 11 },
+          - { tool: g++, ver: 12 },
+          - { tool: g++, ver: 13 },
+          - { tool: clang, ver: 7 },
+          - { tool: clang, ver: 8 },
+          - { tool: clang, ver: 9 },
+          - { tool: clang, ver: 10 },
+          - { tool: clang, ver: 11 },
+          - { tool: clang, ver: 12 },
+          - { tool: clang, ver: 13 },
+          - { tool: clang, ver: 14 },
+          - { tool: clang, ver: 15 }
         build_type: [ Release ]
         os: [ ubuntu-20.04, ubuntu-22.04 ]
         std: [ 17, 20 ]
+        library_type: [ Static ]
+        include:
+          - compiler: { tool: g++, cxx: g++ }
+          - compiler: { tool: clang, cxx: clang++ }
         exclude:
-          - { os: ubuntu-20.04, compiler: { cpp: g++-12 } }
-          - { os: ubuntu-20.04, compiler: { cpp: g++-13 } }
-          - { os: ubuntu-20.04, compiler: { cpp: clang-13 } }
-          - { os: ubuntu-20.04, compiler: { cpp: clang-14 } }
-          - { os: ubuntu-20.04, compiler: { cpp: clang-15 } }
-          - { os: ubuntu-22.04, compiler: { cpp: g++-7 } }
-          - { os: ubuntu-22.04, compiler: { cpp: g++-8 } }
-          - { os: ubuntu-22.04, compiler: { cpp: clang-7 } }
-          - { os: ubuntu-22.04, compiler: { cpp: clang-8 } }
-          - { os: ubuntu-22.04, compiler: { cpp: clang-9 } }
-          - { os: ubuntu-22.04, compiler: { cpp: clang-10 } }
+          - { os: ubuntu-20.04, compiler: { tool: g++, ver: 12 } }
+          - { os: ubuntu-20.04, compiler: { tool: g++, ver: 13 } }
+          - { os: ubuntu-20.04, compiler: { tool: clang, ver: 13 } }
+          - { os: ubuntu-20.04, compiler: { tool: clang, ver: 14 } }
+          - { os: ubuntu-20.04, compiler: { tool: clang, ver: 15 } }
+          - { os: ubuntu-22.04, compiler: { tool: g++, ver: 7 } }
+          - { os: ubuntu-22.04, compiler: { tool: g++, ver: 8 } }
+          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 7 } }
+          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 8 } }
+          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 9 } }
+          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 10 } }
 
     env:
       BUILD_DIR: ${{github.workspace}}/build
@@ -66,17 +69,15 @@ jobs:
       - name: Create Build Environment
         run: |
           sudo apt update
-          sudo apt install ${{matrix.compiler.cpp}}
+          sudo apt install ${{matrix.compiler.tool}}-${{matrix.compiler.ver}} -y
           sudo apt install locales-all
-          cmake -E make_directory ${{env.BUILD_DIR}}
+          echo "CXX=${{matrix.compiler.cxx}}-${{matrix.compiler.ver}}" >> $GITHUB_ENV 
 
       - name: Configure
-        env:
-          CXX: ${{matrix.compiler.cxx}}
         run: |
-          cmake -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -D_7BIT_DI_LIBRARY_TYPE=Static \
-                -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_BUILD_TESTS=ON \
+          cmake -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} \
                 -DCMAKE_CXX_VISIBILITY_PRESET=hidden -DCMAKE_VISIBILITY_INLINES_HIDDEN=ON \
+                -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON \
 
       - name: Build
         run: |

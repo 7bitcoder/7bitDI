@@ -1,0 +1,87 @@
+name: Windows
+
+on:
+  push:
+    branches: [ "dev" ]
+    paths-ignore:
+      - "Docs/**"
+      - ".readthedocs.yaml"
+      - "README.md"
+
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - "Docs/**"
+      - ".readthedocs.yaml"
+      - "README.md"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        compiler:
+          - { tool: msvc, ver: 140 },
+          - { tool: msvc, ver: 141 },
+          - { tool: msvc, ver: 142 },
+          - { tool: msvc, ver: 143 },
+          - { tool: mingw, ver: 7.5.0 },
+          - { tool: mingw, ver: 8.5.0 },
+          - { tool: mingw, ver: 9.4.0 },
+          - { tool: mingw, ver: 10.3.0 },
+          - { tool: mingw, ver: 11.2.0 },
+          - { tool: mingw, ver: 12.2.0 },
+          - { tool: mingw, ver: 13.2.0 },
+          - { tool: LLVM, ver: 8.0.1 },
+          - { tool: LLVM, ver: 9.0.1 },
+          - { tool: LLVM, ver: 11.1.0 },
+          - { tool: LLVM, ver: 12.0.1 },
+          - { tool: LLVM, ver: 13.0.1 },
+          - { tool: LLVM, ver: 14.0.6 },
+          - { tool: LLVM, ver: 15.0.7 },
+          - { tool: LLVM, ver: 16.0.6 },
+          - { tool: LLVM, ver: 17.0.6 },
+        build_type: [ Release ]
+        os: [ windows-2019, windows-2022 ]
+        std: [ 17, 20 ]
+        library_type: [ Static ]
+        include:
+          - compiler: { tool: mingw, cxx: g++ }
+          - compiler: { tool: LLVM, cxx: clang++ }
+
+    env:
+      BUILD_DIR: ${{github.workspace}}/build
+
+    runs-on: ${{matrix.os}}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create Build Environment For MSVC
+        if: matrix.compiler.tool== 'msvc'
+        run: |
+          echo "MSVC-SETUP=-A x64 -T v${{matrix.compiler.ver}}" >> $GITHUB_ENV
+
+      - name: Create Build Environment
+        if: matrix.compiler.tool != 'msvc'
+        run: |
+          choco install ${{matrix.compiler.tool}} --version ${{matrix.compiler.ver}} -y
+          echo "CXX=${{matrix.compiler.cxx}}" >> $GITHUB_ENV 
+
+      - name: Configure
+        run: |
+          cmake -B ${{env.BUILD_DIR}}  -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} \
+                -DCMAKE_CXX_VISIBILITY_PRESET=hidden -DCMAKE_VISIBILITY_INLINES_HIDDEN=ON ${{env.MSVC-SETUP}} \
+                -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON \
+
+      - name: Build
+        run: |
+          $threads = (Get-CimInstance Win32_ComputerSystem).NumberOfLogicalProcessors
+          cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_type}} --parallel $threads
+
+      - name: Test
+        working-directory: ${{env.BUILD_DIR}}
+        run: ctest -C ${{matrix.build_type}}
+        env:
+          CTEST_OUTPUT_ON_FAILURE: True

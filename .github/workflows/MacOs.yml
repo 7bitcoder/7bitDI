@@ -22,22 +22,19 @@ jobs:
   test:
     strategy:
       matrix:
-        compiler: [
-          { cpp: apple-clang, cxx: clang },
-          { cpp: gcc@9, cxx: g++-9 },
-          { cpp: gcc@10, cxx: g++-10 },
-          { cpp: gcc@11, cxx: g++-11 },
-          { cpp: gcc@12, cxx: g++-12 },
-          { cpp: gcc@13, cxx: g++-13 }
-        ]
+        compiler:
+          - { tool: apple-clang },
+          - { tool: gcc, ver: 9 },
+          - { tool: gcc, ver: 10 },
+          - { tool: gcc, ver: 11 },
+          - { tool: gcc, ver: 12 },
+          - { tool: gcc, ver: 13 }
         build_type: [ Release ]
-        os: [ macos-11, macos-12, macos-13 ]
+        os: [ macos-12, macos-13 ]
         std: [ 17, 20 ]
-        exclude:
-          - { os: macos-11, std: 20 }
-          - { os: macos-13, std: 17 }
-          - { os: macos-12, compiler: { cpp: gcc@9 } }
-          - { os: macos-13, compiler: { cpp: gcc@9 } }
+        library_type: [ Static ]
+        include:
+          - compiler: { tool: gcc, cxx: g++ }
 
     env:
       BUILD_DIR: ${{github.workspace}}/build
@@ -50,15 +47,14 @@ jobs:
         if: matrix.compiler.cpp != 'apple-clang'
         run: |
           brew update
-          brew install ${{ matrix.compiler.cpp }} 
-          cmake -E make_directory ${{env.BUILD_DIR}}
-          echo "CXX=${{matrix.compiler.cxx}}" >> $GITHUB_ENV 
+          brew install ${{matrix.compiler.tool}}@${{matrix.compiler.ver}} 
+          echo "CXX=${{matrix.compiler.cxx}}-${{matrix.compiler.ver}}" >> $GITHUB_ENV 
 
       - name: Configure
         run: |
-          cmake -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -D_7BIT_DI_LIBRARY_TYPE=Static \
-                -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_BUILD_TESTS=ON \
+          cmake -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} \
                 -DCMAKE_CXX_VISIBILITY_PRESET=hidden -DCMAKE_VISIBILITY_INLINES_HIDDEN=ON \
+                -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON \
 
       - name: Build
         run: |
