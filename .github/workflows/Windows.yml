@@ -23,26 +23,26 @@ jobs:
     strategy:
       matrix:
         compiler:
-          - { tool: msvc, ver: 140 },
-          - { tool: msvc, ver: 141 },
-          - { tool: msvc, ver: 142 },
-          - { tool: msvc, ver: 143 },
-          - { tool: mingw, ver: 7.5.0 },
-          - { tool: mingw, ver: 8.5.0 },
-          - { tool: mingw, ver: 9.4.0 },
-          - { tool: mingw, ver: 10.3.0 },
-          - { tool: mingw, ver: 11.2.0 },
-          - { tool: mingw, ver: 12.2.0 },
-          - { tool: mingw, ver: 13.2.0 },
-          - { tool: LLVM, ver: 8.0.1 },
-          - { tool: LLVM, ver: 9.0.1 },
-          - { tool: LLVM, ver: 11.1.0 },
-          - { tool: LLVM, ver: 12.0.1 },
-          - { tool: LLVM, ver: 13.0.1 },
-          - { tool: LLVM, ver: 14.0.6 },
-          - { tool: LLVM, ver: 15.0.7 },
-          - { tool: LLVM, ver: 16.0.6 },
-          - { tool: LLVM, ver: 17.0.6 },
+          - { tool: msvc, ver: 140 }
+          - { tool: msvc, ver: 141 }
+          - { tool: msvc, ver: 142 }
+          - { tool: msvc, ver: 143 }
+          - { tool: mingw, ver: 7.5.0 }
+          - { tool: mingw, ver: 8.5.0 }
+          - { tool: mingw, ver: 9.4.0 }
+          - { tool: mingw, ver: 10.3.0 }
+          - { tool: mingw, ver: 11.2.0 }
+          - { tool: mingw, ver: 12.2.0 }
+          - { tool: mingw, ver: 13.2.0 }
+          - { tool: LLVM, ver: 8.0.1 }
+          - { tool: LLVM, ver: 9.0.1 }
+          - { tool: LLVM, ver: 11.1.0 }
+          - { tool: LLVM, ver: 12.0.1 }
+          - { tool: LLVM, ver: 13.0.1 }
+          - { tool: LLVM, ver: 14.0.6 }
+          - { tool: LLVM, ver: 15.0.7 }
+          - { tool: LLVM, ver: 16.0.6 }
+          - { tool: LLVM, ver: 17.0.6 }
         build_type: [ Release ]
         os: [ windows-2019, windows-2022 ]
         std: [ 17, 20 ]

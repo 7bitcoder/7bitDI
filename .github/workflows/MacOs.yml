@@ -23,11 +23,11 @@ jobs:
     strategy:
       matrix:
         compiler:
-          - { tool: apple-clang },
-          - { tool: gcc, ver: 9 },
-          - { tool: gcc, ver: 10 },
-          - { tool: gcc, ver: 11 },
-          - { tool: gcc, ver: 12 },
+          - { tool: apple-clang }
+          - { tool: gcc, ver: 9 }
+          - { tool: gcc, ver: 10 }
+          - { tool: gcc, ver: 11 }
+          - { tool: gcc, ver: 12 }
           - { tool: gcc, ver: 13 }
         build_type: [ Release ]
         os: [ macos-12, macos-13 ]
