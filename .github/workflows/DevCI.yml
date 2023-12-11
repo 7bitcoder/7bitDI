@@ -34,8 +34,7 @@ jobs:
 
       - name: Build
         run: |
-          threads=`nproc`
-          cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_type}} --parallel $threads
+          cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_type}} -j
 
       - name: Test
         working-directory: ${{env.BUILD_DIR}}
