@@ -18,6 +18,9 @@ on:
 permissions:
   contents: read
 
+env:
+  BUILD_DIR: ${{github.workspace}}/build
+
 jobs:
   test:
     strategy:
@@ -58,9 +61,6 @@ jobs:
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 8 } }
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 9 } }
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 10 } }
-
-    env:
-      BUILD_DIR: ${{github.workspace}}/build
 
     runs-on: ${{matrix.os}}
     steps:
