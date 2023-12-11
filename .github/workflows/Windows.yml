@@ -59,7 +59,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Create Build Environment For MSVC
-        if: matrix.compiler.tool== 'msvc'
+        if: matrix.compiler.tool == 'msvc'
         run: |
           echo "MSVC-SETUP=-A x64 -T v${{matrix.compiler.ver}}" >> $GITHUB_ENV
 
