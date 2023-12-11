@@ -22,23 +22,23 @@ jobs:
   test:
     strategy:
       matrix:
-        compiler:
-          - { tool: g++, ver: 7 },
-          - { tool: g++, ver: 8 },
-          - { tool: g++, ver: 9 },
-          - { tool: g++, ver: 10 },
-          - { tool: g++, ver: 11 },
-          - { tool: g++, ver: 12 },
-          - { tool: g++, ver: 13 },
-          - { tool: clang, ver: 7 },
-          - { tool: clang, ver: 8 },
-          - { tool: clang, ver: 9 },
-          - { tool: clang, ver: 10 },
-          - { tool: clang, ver: 11 },
-          - { tool: clang, ver: 12 },
-          - { tool: clang, ver: 13 },
-          - { tool: clang, ver: 14 },
-          - { tool: clang, ver: 15 }
+        compiler: [
+          { tool: g++, ver: 7 },
+          { tool: g++, ver: 8 },
+          { tool: g++, ver: 9 },
+          { tool: g++, ver: 10 },
+          { tool: g++, ver: 11 },
+          { tool: g++, ver: 12 },
+          { tool: g++, ver: 13 },
+          { tool: clang, ver: 7 },
+          { tool: clang, ver: 8 },
+          { tool: clang, ver: 9 },
+          { tool: clang, ver: 10 },
+          { tool: clang, ver: 11 },
+          { tool: clang, ver: 12 },
+          { tool: clang, ver: 13 },
+          { tool: clang, ver: 14 },
+          { tool: clang, ver: 15 } ]
         build_type: [ Release ]
         os: [ ubuntu-20.04, ubuntu-22.04 ]
         std: [ 17, 20 ]
@@ -62,7 +62,7 @@ jobs:
     env:
       BUILD_DIR: ${{github.workspace}}/build
 
-    runs-on: '${{ matrix.os }}'
+    runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v3
 
