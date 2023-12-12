@@ -42,11 +42,9 @@ jobs:
         library_type: [ Static ]
         include:
           - compiler: { tool: gcc }
-            install: g++-${{matrix.compiler.ver}} gcc-${{matrix.compiler.ver}}
             cxx: g++
             cc: gcc
           - compiler: { tool: clang }
-            install: clang-${{matrix.compiler.ver}}
             cxx: clang++
             cc: clang
         exclude:
@@ -67,11 +65,12 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Create Build Environment
+        env:
+          PACKAGES: ${{ compiler.tool == 'clang' && format('clang-{0}', compiler.tool.ver) || format('gcc-{0} g++-{0}', compiler.tool.ver) }}
         run: |
           sudo apt update
-          sudo apt install ${{matrix.install}} -y
+          sudo apt install ${{env.PACKAGES}} -y
           sudo apt install locales-all
-          echo "CXX=${{matrix.cxx}}-${{matrix.compiler.ver}}" >> $GITHUB_ENV 
           cmake -E make_directory ${{runner.workspace}}/build
 
       - name: Configure
