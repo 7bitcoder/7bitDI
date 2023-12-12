@@ -19,31 +19,30 @@ jobs:
   test:
     strategy:
       matrix:
-        compiler: [
-          { tool: g++, ver: 7 },
-          { tool: g++, ver: 8 },
-          { tool: g++, ver: 9 },
-          { tool: g++, ver: 10 },
-          { tool: g++, ver: 11 },
-          { tool: g++, ver: 12 },
-          { tool: g++, ver: 13 },
-          { tool: clang, ver: 7 },
-          { tool: clang, ver: 8 },
-          { tool: clang, ver: 9 },
-          { tool: clang, ver: 10 },
-          { tool: clang, ver: 11 },
-          { tool: clang, ver: 12 },
-          { tool: clang, ver: 13 },
-          { tool: clang, ver: 14 },
-          { tool: clang, ver: 15 }
-        ]
+        compiler:
+          - { tool: g++, ver: 7 }
+          - { tool: g++, ver: 8 }
+          - { tool: g++, ver: 9 }
+          - { tool: g++, ver: 10 }
+          - { tool: g++, ver: 11 }
+          - { tool: g++, ver: 12 }
+          - { tool: g++, ver: 13 }
+          - { tool: clang, ver: 7 }
+          - { tool: clang, ver: 8 }
+          - { tool: clang, ver: 9 }
+          - { tool: clang, ver: 10 }
+          - { tool: clang, ver: 11 }
+          - { tool: clang, ver: 12 }
+          - { tool: clang, ver: 13 }
+          - { tool: clang, ver: 14 }
+          - { tool: clang, ver: 15 }
         build_type: [ Release ]
         os: [ ubuntu-20.04, ubuntu-22.04 ]
         std: [ 17, 20 ]
         library_type: [ Static ]
-        #        include:
-        #          - compiler: { tool: g++, cxx: g++ }
-        #          - compiler: { tool: clang, cxx: clang++ }
+        include:
+          - { compiler: { tool: g++, cxx: g++ } }
+          - { compiler: { tool: clang, cxx: clang++ } }
         exclude:
           - { os: ubuntu-20.04, compiler: { tool: g++, ver: 12 } }
           - { os: ubuntu-20.04, compiler: { tool: g++, ver: 13 } }
@@ -71,14 +70,12 @@ jobs:
 
       - name: Configure
         run: |
-          cmake -B ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} \
-                -DCMAKE_CXX_VISIBILITY_PRESET=hidden -DCMAKE_VISIBILITY_INLINES_HIDDEN=ON \
-                -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON \
+          cmake -B ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
+                -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} \
+                -D_7BIT_DI_BUILD_TESTS=ON
 
       - name: Build
-        run: |
-          threads=`nproc`
-          cmake --build ${{runner.workspace}}/build --config ${{matrix.build_type}} --parallel $threads
+        run: cmake --build ${{runner.workspace}}/build --config ${{matrix.build_type}} -j
 
       - name: Test
         working-directory: ${{runner.workspace}}/build
