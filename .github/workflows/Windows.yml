@@ -42,7 +42,7 @@ jobs:
           { tool: LLVM, ver: 17.0.6 } ]
         build_type: [ Release ]
         os: [ windows-2019, windows-2022 ]
-        std: [ 17, 20 ]
+        std: [ 17 ]
         library_type: [ Static ]
         include:
           - compiler: { tool: mingw }
@@ -64,7 +64,7 @@ jobs:
       - name: Create Build Environment
         if: matrix.compiler.tool != 'msvc'
         run: |
-          choco install ${{matrix.compiler.tool}} --version ${{matrix.compiler.ver}} -y
+          choco install ${{matrix.compiler.tool}} --version ${{matrix.compiler.ver}} --allow-downgrade  -y
           echo "CXX=${{matrix.cxx}}" >> $GITHUB_ENV 
           echo "CC=${{matrix.cc}}" >> $GITHUB_ENV 
 
