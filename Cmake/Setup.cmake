@@ -32,16 +32,28 @@ set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
 set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
 
 set(_7BIT_DI_HEADERS_DIR "${CMAKE_SOURCE_DIR}/Include")
+set(_7BIT_DI_DI_DIR "${_7BIT_DI_HEADERS_DIR}/SevenBit/DI")
+set(_7BIT_DI_DETAILS_DIR "${_7BIT_DI_DI_DIR}/Details")
 
 set(_7BIT_DI_MAIN_HEADER "${_7BIT_DI_HEADERS_DIR}/SevenBit/DI.hpp")
-file(GLOB _7BIT_DI_TOP_HEADERS "${_7BIT_DI_HEADERS_DIR}/SevenBit/DI/*.hpp")
-file(GLOB _7BIT_DI_DETAILS_HEADERS "${_7BIT_DI_HEADERS_DIR}/SevenBit/DI/Details/*.hpp")
-file(GLOB _7BIT_DI_IMPL_HEADERS "${_7BIT_DI_HEADERS_DIR}/SevenBit/DI/Impl/*.hpp")
+file(GLOB _7BIT_DI_TOP_HEADERS "${_7BIT_DI_DI_DIR}/*.hpp")
+file(GLOB _7BIT_DI_DETAILS_HEADERS
+        "${_7BIT_DI_DETAILS_DIR}/Containers/*.hpp"
+        "${_7BIT_DI_DETAILS_DIR}/Core/*.hpp"
+        "${_7BIT_DI_DETAILS_DIR}/Factories/*.hpp"
+        "${_7BIT_DI_DETAILS_DIR}/Helpers/*.hpp"
+        "${_7BIT_DI_DETAILS_DIR}/Services/*.hpp"
+        "${_7BIT_DI_DETAILS_DIR}/Utils/*.hpp"
+)
+file(GLOB _7BIT_DI_IMPL_HEADERS
+        "${_7BIT_DI_DI_DIR}/Impl/*.hpp"
+        "${_7BIT_DI_DETAILS_DIR}/Containers/Impl/*.hpp"
+        "${_7BIT_DI_DETAILS_DIR}/Core/Impl/*.hpp"
+        "${_7BIT_DI_DETAILS_DIR}/Factories/Impl/*.hpp"
+        "${_7BIT_DI_DETAILS_DIR}/Helpers/Impl/*.hpp"
+        "${_7BIT_DI_DETAILS_DIR}/Utils/Impl/*.hpp"
+)
 set(_7BIT_DI_ALL_HEADERS ${_7BIT_DI_MAIN_HEADER} ${_7BIT_DI_TOP_HEADERS} ${_7BIT_DI_DETAILS_HEADERS} ${_7BIT_DI_IMPL_HEADERS})
-
-source_group("Header Files\\SevenBit" FILES ${_7BIT_DI_TOP_HEADERS})
-source_group("Header Files\\SevenBit\\Details" FILES ${_7BIT_DI_DETAILS_HEADERS})
-source_group("Header Files\\SevenBit\\Details\\Impl" FILES ${_7BIT_DI_IMPL_HEADERS})
 
 set(_7BIT_DI_LIBRARY_TYPE "Static" CACHE STRING "Library build type: Shared;Static;HeaderOnly")
 set(_7BIT_DI_LIBRARY_TYPE_VALUES "Shared;Static;HeaderOnly" CACHE STRING "List of possible _7BIT_DI_LIBRARY_TYPE values")

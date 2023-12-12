@@ -4,7 +4,6 @@
 
 namespace sb::di
 {
-
     /**
      * @brief Class used to describe service lifetime
      */
