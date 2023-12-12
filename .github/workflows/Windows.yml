@@ -65,8 +65,8 @@ jobs:
         if: matrix.compiler.tool != 'msvc'
         run: |
           choco install ${{matrix.compiler.tool}} --version ${{matrix.compiler.ver}} -y
-          echo "CXX=${{matrix.compiler.cxx}}" >> $GITHUB_ENV 
-          echo "CXX=${{matrix.compiler.cc}}" >> $GITHUB_ENV 
+          echo "CXX=${{matrix.cxx}}" >> $GITHUB_ENV 
+          echo "CC=${{matrix.cc}}" >> $GITHUB_ENV 
 
       - name: Configure
         run: |
