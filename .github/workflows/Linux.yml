@@ -66,7 +66,7 @@ jobs:
 
       - name: Create Build Environment
         env:
-          PACKAGES: ${{ compiler.tool == 'clang' && format('clang-{0}', compiler.tool.ver) || format('gcc-{0} g++-{0}', compiler.tool.ver) }}
+          PACKAGES: ${{ compiler.tool == 'clang' && format('clang-{0}', matrix.compiler.ver) || format('gcc-{0} g++-{0}', matrix.compiler.ver) }}
         run: |
           sudo apt update
           sudo apt install ${{env.PACKAGES}} -y
