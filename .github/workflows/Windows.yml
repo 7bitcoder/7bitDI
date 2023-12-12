@@ -67,6 +67,8 @@ jobs:
         run: choco install ${{matrix.compiler.tool}} --version ${{matrix.compiler.ver}} --allow-downgrade -y && echo "CXX=${{matrix.cxx}}" >> $GITHUB_ENV && echo "CC=${{matrix.cc}}" >> $GITHUB_ENV
 
       - name: Configure
+        env:
+          PARAMETER: ${{ matrix.compiler.tool == 'msvc' && format('-A x64 -T v{0}', matrix.compiler.ver) || '-G Ninja' }}
         run: cmake -B ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} ${{env.MSVC_SETUP}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON
 
       - name: Build
