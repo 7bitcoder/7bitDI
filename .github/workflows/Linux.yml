@@ -52,13 +52,6 @@ jobs:
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 8 } }
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 9 } }
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 10 } }
-        include:
-          - compiler:
-              tool: g++
-              cxx: g++
-          - compiler:
-              tool: clang
-              cxx: clang++
 
     runs-on: ${{matrix.os}}
     steps:
