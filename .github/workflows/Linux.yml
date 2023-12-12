@@ -40,6 +40,8 @@ jobs:
         os: [ ubuntu-20.04, ubuntu-22.04 ]
         std: [ 17, 20 ]
         library_type: [ Static ]
+        include:
+          - { compiler: { tool: g++, cxx: g++ } }
         exclude:
           - { os: ubuntu-20.04, compiler: { tool: g++, ver: 12 } }
           - { os: ubuntu-20.04, compiler: { tool: g++, ver: 13 } }
