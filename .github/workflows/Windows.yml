@@ -58,16 +58,11 @@ jobs:
 
       - name: Create Build Environment For MSVC
         if: matrix.compiler.tool == 'msvc'
-        shell: bash
         run: echo "MSVC_SETUP=-A x64 -T v${{matrix.compiler.ver}}" >> $GITHUB_ENV
 
       - name: Create Build Environment
         if: matrix.compiler.tool != 'msvc'
-        shell: bash
-        run: |
-          choco install ${{matrix.compiler.tool}} --version ${{matrix.compiler.ver}} --allow-downgrade  -y
-          echo "CXX=${{matrix.cxx}}" >> $GITHUB_ENV 
-          echo "CC=${{matrix.cc}}" >> $GITHUB_ENV 
+        run: choco install ${{matrix.compiler.tool}} --version ${{matrix.compiler.ver}} --allow-downgrade -y && echo "CXX=${{matrix.cxx}}" >> $GITHUB_ENV && echo "CC=${{matrix.cc}}" >> $GITHUB_ENV
 
       - name: Configure
         run: cmake -B ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} ${{env.MSVC_SETUP}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON
