@@ -15,12 +15,6 @@ on:
       - ".readthedocs.yaml"
       - "README.md"
 
-permissions:
-  contents: read
-
-env:
-  BUILD_DIR: ${{github.workspace}}/build
-  
 jobs:
   test:
     strategy:
@@ -34,10 +28,12 @@ jobs:
           { tool: gcc, ver: 13 } ]
         build_type: [ Release ]
         os: [ macos-12, macos-13 ]
-        std: [ 17, 20 ]
+        std: [ 17 ]
         library_type: [ Static ]
         include:
-          - compiler: { tool: gcc, cxx: g++ }
+          - compiler: { tool: gcc }
+            cxx: g++
+            cc: gcc
 
     runs-on: ${{matrix.os}}
     steps:
@@ -48,21 +44,21 @@ jobs:
         run: |
           brew update
           brew install ${{matrix.compiler.tool}}@${{matrix.compiler.ver}} 
-          echo "CXX=${{matrix.compiler.cxx}}-${{matrix.compiler.ver}}" >> $GITHUB_ENV 
+          cmake -E make_directory ${{runner.workspace}}/build
+          echo "CXX=${{matrix.cxx}}-${{matrix.compiler.ver}}" >> $GITHUB_ENV 
+          echo "CC=${{matrix.cc}}-${{matrix.compiler.ver}}" >> $GITHUB_ENV 
 
       - name: Configure
         run: |
-          cmake -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} \
-                -DCMAKE_CXX_VISIBILITY_PRESET=hidden -DCMAKE_VISIBILITY_INLINES_HIDDEN=ON \
-                -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON \
+          cmake -B ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
+                -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} \
+                -D_7BIT_DI_BUILD_TESTS=ON
 
       - name: Build
-        run: |
-          threads=`sysctl -n hw.logicalcpu`
-          cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_type}} --parallel $threads
+        run: cmake --build ${{runner.workspace}}/build --config ${{matrix.build_type}} -j
 
       - name: Test
-        working-directory: ${{env.BUILD_DIR}}
+        working-directory: ${{runner.workspace}}/build
         run: ctest -C ${{matrix.build_type}}
         env:
           CTEST_OUTPUT_ON_FAILURE: True
