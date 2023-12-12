@@ -20,13 +20,13 @@ jobs:
     strategy:
       matrix:
         compiler:
-          - { tool: g++, ver: 7 }
-          - { tool: g++, ver: 8 }
-          - { tool: g++, ver: 9 }
-          - { tool: g++, ver: 10 }
-          - { tool: g++, ver: 11 }
-          - { tool: g++, ver: 12 }
-          - { tool: g++, ver: 13 }
+          - { tool: gcc, ver: 7 }
+          - { tool: gcc, ver: 8 }
+          - { tool: gcc, ver: 9 }
+          - { tool: gcc, ver: 10 }
+          - { tool: gcc, ver: 11 }
+          - { tool: gcc, ver: 12 }
+          - { tool: gcc, ver: 13 }
           - { tool: clang, ver: 7 }
           - { tool: clang, ver: 8 }
           - { tool: clang, ver: 9 }
@@ -41,18 +41,22 @@ jobs:
         std: [ 17, 20 ]
         library_type: [ Static ]
         include:
-          - compiler: { tool: g++ }
+          - compiler: { tool: gcc }
+            install: g++-${{matrix.compiler.ver}} gcc-${{matrix.compiler.ver}}
             cxx: g++
+            cc: gcc
           - compiler: { tool: clang }
+            install: clang-${{matrix.compiler.ver}}
             cxx: clang++
+            cc: clang
         exclude:
-          - { os: ubuntu-20.04, compiler: { tool: g++, ver: 12 } }
-          - { os: ubuntu-20.04, compiler: { tool: g++, ver: 13 } }
+          - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 12 } }
+          - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 13 } }
           - { os: ubuntu-20.04, compiler: { tool: clang, ver: 13 } }
           - { os: ubuntu-20.04, compiler: { tool: clang, ver: 14 } }
           - { os: ubuntu-20.04, compiler: { tool: clang, ver: 15 } }
-          - { os: ubuntu-22.04, compiler: { tool: g++, ver: 7 } }
-          - { os: ubuntu-22.04, compiler: { tool: g++, ver: 8 } }
+          - { os: ubuntu-22.04, compiler: { tool: gcc, ver: 7 } }
+          - { os: ubuntu-22.04, compiler: { tool: gcc, ver: 8 } }
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 7 } }
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 8 } }
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 9 } }
@@ -65,12 +69,15 @@ jobs:
       - name: Create Build Environment
         run: |
           sudo apt update
-          sudo apt install ${{matrix.compiler.tool}}-${{matrix.compiler.ver}} -y
+          sudo apt install ${{matrix.install}} -y
           sudo apt install locales-all
           echo "CXX=${{matrix.cxx}}-${{matrix.compiler.ver}}" >> $GITHUB_ENV 
           cmake -E make_directory ${{runner.workspace}}/build
 
       - name: Configure
+        env:
+          CXX: ${{matrix.cxx}}-${{matrix.compiler.ver}}
+          CC: ${{matrix.cc}}-${{matrix.compiler.ver}}
         run: |
           cmake -B ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
                 -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} \
