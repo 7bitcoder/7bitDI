@@ -43,6 +43,8 @@ jobs:
         include:
           - compiler: { tool: g++ }
             cxx: g++
+          - compiler: { tool: clang }
+            cxx: clang++
         exclude:
           - { os: ubuntu-20.04, compiler: { tool: g++, ver: 12 } }
           - { os: ubuntu-20.04, compiler: { tool: g++, ver: 13 } }
@@ -65,7 +67,7 @@ jobs:
           sudo apt update
           sudo apt install ${{matrix.compiler.tool}}-${{matrix.compiler.ver}} -y
           sudo apt install locales-all
-          echo "CXX=${{matrix.compiler.cxx}}-${{matrix.compiler.ver}}" >> $GITHUB_ENV 
+          echo "CXX=${{matrix.cxx}}-${{matrix.compiler.ver}}" >> $GITHUB_ENV 
           cmake -E make_directory ${{runner.workspace}}/build
 
       - name: Configure
