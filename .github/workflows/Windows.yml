@@ -56,11 +56,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Create Build Environment For MSVC
-        if: matrix.compiler.tool == 'msvc'
-        shell: bash
-        run: echo "MSVC_SETUP=-A x64 -T v${{matrix.compiler.ver}}" >> $GITHUB_ENV
-
       - name: Create Build Environment
         if: matrix.compiler.tool != 'msvc'
         shell: bash
@@ -69,7 +64,7 @@ jobs:
       - name: Configure
         env:
           PARAMETER: ${{ matrix.compiler.tool == 'msvc' && format('-A x64 -T v{0}', matrix.compiler.ver) || '-G Ninja' }}
-        run: cmake -B ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} ${{env.MSVC_SETUP}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON
+        run: cmake -B ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} ${{env.PARAMETER}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON
 
       - name: Build
         run: cmake --build ${{runner.workspace}}/build --config ${{matrix.build_type}} -j
