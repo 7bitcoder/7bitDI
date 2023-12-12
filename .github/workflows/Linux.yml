@@ -15,12 +15,6 @@ on:
       - ".readthedocs.yaml"
       - "README.md"
 
-permissions:
-  contents: read
-
-env:
-  BUILD_DIR: ${{github.workspace}}/build
-
 jobs:
   test:
     strategy:
@@ -41,14 +35,15 @@ jobs:
           { tool: clang, ver: 12 },
           { tool: clang, ver: 13 },
           { tool: clang, ver: 14 },
-          { tool: clang, ver: 15 } ]
+          { tool: clang, ver: 15 }
+        ]
         build_type: [ Release ]
         os: [ ubuntu-20.04, ubuntu-22.04 ]
         std: [ 17, 20 ]
         library_type: [ Static ]
-        include:
-          - compiler: { tool: g++, cxx: g++ }
-          - compiler: { tool: clang, cxx: clang++ }
+        #        include:
+        #          - compiler: { tool: g++, cxx: g++ }
+        #          - compiler: { tool: clang, cxx: clang++ }
         exclude:
           - { os: ubuntu-20.04, compiler: { tool: g++, ver: 12 } }
           - { os: ubuntu-20.04, compiler: { tool: g++, ver: 13 } }
@@ -72,20 +67,21 @@ jobs:
           sudo apt install ${{matrix.compiler.tool}}-${{matrix.compiler.ver}} -y
           sudo apt install locales-all
           echo "CXX=${{matrix.compiler.cxx}}-${{matrix.compiler.ver}}" >> $GITHUB_ENV 
+          cmake -E make_directory ${{runner.workspace}}/build
 
       - name: Configure
         run: |
-          cmake -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} \
+          cmake -B ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} \
                 -DCMAKE_CXX_VISIBILITY_PRESET=hidden -DCMAKE_VISIBILITY_INLINES_HIDDEN=ON \
                 -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON \
 
       - name: Build
         run: |
           threads=`nproc`
-          cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_type}} --parallel $threads
+          cmake --build ${{runner.workspace}}/build --config ${{matrix.build_type}} --parallel $threads
 
       - name: Test
-        working-directory: ${{env.BUILD_DIR}}
+        working-directory: ${{runner.workspace}}/build
         run: ctest -C ${{matrix.build_type}}
         env:
           CTEST_OUTPUT_ON_FAILURE: True
