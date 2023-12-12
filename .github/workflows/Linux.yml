@@ -40,9 +40,6 @@ jobs:
         os: [ ubuntu-20.04, ubuntu-22.04 ]
         std: [ 17, 20 ]
         library_type: [ Static ]
-        include:
-          - { compiler: { tool: g++, cxx: g++ } }
-          - { compiler: { tool: clang, cxx: clang++ } }
         exclude:
           - { os: ubuntu-20.04, compiler: { tool: g++, ver: 12 } }
           - { os: ubuntu-20.04, compiler: { tool: g++, ver: 13 } }
@@ -55,6 +52,9 @@ jobs:
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 8 } }
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 9 } }
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 10 } }
+        include:
+          - { compiler: { tool: g++, cxx: g++ } }
+          - { compiler: { tool: clang, cxx: clang++ } }
 
     runs-on: ${{matrix.os}}
     steps:
