@@ -23,7 +23,6 @@ jobs:
         compiler: [
           { tool: msvc, ver: 141 },
           { tool: msvc, ver: 142 },
-          { tool: msvc, ver: 143 },
           { tool: mingw, ver: 7.5.0 },
           { tool: mingw, ver: 8.5.0 },
           { tool: mingw, ver: 9.4.0 },
@@ -31,8 +30,6 @@ jobs:
           { tool: mingw, ver: 11.2.0 },
           { tool: mingw, ver: 12.2.0 },
           { tool: mingw, ver: 13.2.0 },
-          { tool: LLVM, ver: 8.0.1 },
-          { tool: LLVM, ver: 9.0.1 },
           { tool: LLVM, ver: 11.1.0 },
           { tool: LLVM, ver: 12.0.1 },
           { tool: LLVM, ver: 13.0.1 },
@@ -68,8 +65,9 @@ jobs:
         run: choco install ${{matrix.compiler.tool}} --version ${{matrix.compiler.ver}} --allow-downgrade -y && choco install ninja && cmake -E make_directory ${{runner.workspace}}/build
 
       - name: Update Sys Path
-        if: matrix.compiler.tool != 'msvc'
-        run: ((gcm ${{matrix.cxx}})[0].Source + ';' + (Get-Content -Path $env:GITHUB_PATH)) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
+        if: matrix.compiler.tool == 'mingw'
+        run: |
+          ("C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin;" + (Get-Content -Path $env:GITHUB_PATH)) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
         shell: pwsh
 
       - name: Configure
