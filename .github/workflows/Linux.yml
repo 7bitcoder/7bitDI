@@ -18,6 +18,7 @@ on:
 jobs:
   test:
     strategy:
+      fail-fast: false
       matrix:
         compiler:
           - { tool: gcc, ver: 7 }
@@ -71,7 +72,7 @@ jobs:
           PACKAGES: ${{ matrix.compiler.tool == 'gcc' &&  format('gcc-{0} g++-{0}', matrix.compiler.ver) || format('{0}-{1}', matrix.compiler.tool, matrix.compiler.ver) }}
         run: |
           sudo apt update
-          sudo apt install ${{env.PACKAGES}} ninja -y
+          sudo apt install ${{env.PACKAGES}} ninja-build -y
           sudo apt install locales-all
           cmake -E make_directory ${{runner.workspace}}/build
 

@@ -18,6 +18,7 @@ on:
 jobs:
   test:
     strategy:
+      fail-fast: false
       matrix:
         compiler: [
           { tool: msvc, ver: 140 },
