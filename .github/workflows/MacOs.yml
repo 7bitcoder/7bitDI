@@ -51,14 +51,14 @@ jobs:
         if: matrix.compiler.tool != 'apple-clang'
         run: |
           brew update &&
-          brew install ${{matrix.compiler.tool}}@${{matrix.compiler.ver}}
+          brew install ${{matrix.compiler.tool}}@${{matrix.compiler.ver}} ninja
           cmake -E make_directory ${{runner.workspace}}/build
 
       - name: Configure
         env:
           CXX: ${{matrix.cxx}}-${{matrix.compiler.ver}}
           CC: ${{matrix.cc}}-${{matrix.compiler.ver}}
-        run: cmake -B ${{runner.workspace}}/build -G ${{matrix.generator}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON
+        run: cmake -B ${{runner.workspace}}/build -G "${{matrix.generator}}" -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON
 
       - name: Build
         run: cmake --build ${{runner.workspace}}/build --config ${{matrix.build_type}} -j
