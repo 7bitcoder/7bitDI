@@ -21,7 +21,6 @@ jobs:
       fail-fast: false
       matrix:
         compiler: [
-          { tool: msvc, ver: 140 },
           { tool: msvc, ver: 141 },
           { tool: msvc, ver: 142 },
           { tool: msvc, ver: 143 },
@@ -42,7 +41,7 @@ jobs:
           { tool: LLVM, ver: 16.0.6 },
           { tool: LLVM, ver: 17.0.6 } ]
         build_type: [ Release ]
-        os: [ windows-2022 ]
+        os: [ windows-2019 ]
         std: [ 17 ]
         library_type: [ Static ]
         include:
@@ -70,7 +69,7 @@ jobs:
 
       - name: Update Sys Path
         if: matrix.compiler.tool != 'msvc'
-        run: ((gcm ${{matrix.cxx}})[0].Source + (Get-Content -Path $env:GITHUB_PATH)) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
+        run: ((gcm ${{matrix.cxx}})[0].Source + ';' + (Get-Content -Path $env:GITHUB_PATH)) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
         shell: pwsh
 
       - name: Configure
