@@ -49,7 +49,7 @@ jobs:
           - compiler: { tool: mingw }
             cxx: g++
             cc: gcc
-            generator: MinGW Makefiles
+            generator: 'MinGW Makefiles'
           - compiler: { tool: LLVM }
             cxx: clang++
             cc: clang
@@ -57,7 +57,7 @@ jobs:
           - compiler: { tool: msvc }
             cxx: ''
             cc: ''
-            generator: Visual Studio 17 2022
+            generator: 'Visual Studio 17 2022'
 
     runs-on: ${{matrix.os}}
     steps:
