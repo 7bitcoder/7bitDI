@@ -1,13 +1,6 @@
 name: Windows
 
 on:
-  push:
-    branches: [ "dev" ]
-    paths-ignore:
-      - "Docs/**"
-      - ".readthedocs.yaml"
-      - "README.md"
-
   pull_request:
     branches: [ "main" ]
     paths-ignore:
@@ -17,6 +10,7 @@ on:
 
 env:
   CHOCO_LIB_DIR: C:\\ProgramData\\chocolatey\\lib
+  
 jobs:
   test:
     strategy:
