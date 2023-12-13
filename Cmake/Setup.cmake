@@ -1,10 +1,5 @@
 include(Functions)
 
-if (NOT CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 17)
-endif ()
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose Release or Debug" FORCE)
 endif ()

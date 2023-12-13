@@ -1,6 +1,7 @@
 [![DevCI](https://github.com/7bitcoder/7bitDI/actions/workflows/DevCI.yml/badge.svg?branch=dev)](https://github.com/7bitcoder/7bitDI/actions/workflows/DevCI.yml)
-[![MainCI](https://github.com/7bitcoder/7bitDI/actions/workflows/MainCI.yml/badge.svg?branch=main)](https://github.com/7bitcoder/7bitDI/actions/workflows/MainCI.yml)
-
+[![Linux](https://github.com/7bitcoder/7bitDI/actions/workflows/Linux.yml/badge.svg)](https://github.com/7bitcoder/7bitDI/actions/workflows/Linux.yml)
+[![Windows](https://github.com/7bitcoder/7bitDI/actions/workflows/Windows.yml/badge.svg)](https://github.com/7bitcoder/7bitDI/actions/workflows/Windows.yml)
+[![MacOs](https://github.com/7bitcoder/7bitDI/actions/workflows/MacOs.yml/badge.svg)](https://github.com/7bitcoder/7bitDI/actions/workflows/MacOs.yml)
 <div align="center">
 
   <img src="Docs/_static/logo.svg" alt="logo" width="500" height="auto" />
