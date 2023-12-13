@@ -35,6 +35,11 @@ jobs:
           - compiler: { tool: gcc }
             cxx: g++
             cc: gcc
+            generator: Ninja
+          - compiler: { tool: apple-clang }
+            cxx: ''
+            cc: ''
+            generator: Ninja
         exclude:
           - { os: macos-12, compiler: { tool: gcc, ver: 9 } }
 
@@ -48,11 +53,12 @@ jobs:
           brew update &&
           brew install ${{matrix.compiler.tool}}@${{matrix.compiler.ver}}
           cmake -E make_directory ${{runner.workspace}}/build
-          echo "CXX=${{matrix.cxx}}-${{matrix.compiler.ver}}" >> $GITHUB_ENV
-          echo "CC=${{matrix.cc}}-${{matrix.compiler.ver}}" >> $GITHUB_ENV
 
       - name: Configure
-        run: cmake -B ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON
+        env:
+          CXX: ${{matrix.cxx}}-${{matrix.compiler.ver}}
+          CC: ${{matrix.cc}}-${{matrix.compiler.ver}}
+        run: cmake -B ${{runner.workspace}}/build -G ${{matrix.generator}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON
 
       - name: Build
         run: cmake --build ${{runner.workspace}}/build --config ${{matrix.build_type}} -j

@@ -65,7 +65,7 @@ jobs:
 
       - name: Create Build Environment
         if: matrix.compiler.tool != 'msvc'
-        run: choco install ${{matrix.compiler.tool}} --version ${{matrix.compiler.ver}} --allow-downgrade -y && choco install ninja
+        run: choco install ${{matrix.compiler.tool}} --version ${{matrix.compiler.ver}} --allow-downgrade -y && choco install ninja && cmake -E make_directory ${{runner.workspace}}/build
 
       - name: Configure
         env:
