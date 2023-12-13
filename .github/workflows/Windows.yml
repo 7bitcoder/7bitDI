@@ -16,7 +16,7 @@ on:
       - "README.md"
 
 env:
-  CHOCO_LIB_DIR: C:\\ProgramData\\chocolatey\\lib\\
+  CHOCO_LIB_DIR: C:\\ProgramData\\chocolatey\\lib
 jobs:
   test:
     strategy:
