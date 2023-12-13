@@ -43,9 +43,11 @@ jobs:
         include:
           - compiler: { tool: gcc }
             cxx: g++
+            cc: gcc
             generator: Ninja
           - compiler: { tool: clang }
             cxx: clang++
+            cc: clang
             generator: Ninja
         exclude:
           - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 12 } }
@@ -69,7 +71,7 @@ jobs:
           PACKAGES: ${{ matrix.compiler.tool == 'gcc' &&  format('gcc-{0} g++-{0}', matrix.compiler.ver) || format('{0}-{1}', matrix.compiler.tool, matrix.compiler.ver) }}
         run: |
           sudo apt update
-          sudo apt install ${{env.PACKAGES}} -y
+          sudo apt install ${{env.PACKAGES}} ninja -y
           sudo apt install locales-all
           cmake -E make_directory ${{runner.workspace}}/build
 

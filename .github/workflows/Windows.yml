@@ -64,12 +64,12 @@ jobs:
 
       - name: Create Build Environment
         if: matrix.compiler.tool != 'msvc'
-        run: choco install ${{matrix.compiler.tool}} --version ${{matrix.compiler.ver}} --allow-downgrade -y
+        run: choco install ${{matrix.compiler.tool}} --version ${{matrix.compiler.ver}} --allow-downgrade -y && choco install ninja
 
       - name: Configure
         env:
-          CXX: ${{matrix.cxx}}-${{matrix.compiler.ver}}
-          CC: ${{matrix.cc}}-${{matrix.compiler.ver}}
+          CXX: ${{matrix.cxx}}
+          CC: ${{matrix.cc}}
           PARAMETER: ${{ matrix.compiler.tool == 'msvc' && format('-A x64 -T v{0}', matrix.compiler.ver) || '' }}
         run: cmake -B ${{runner.workspace}}/build -G ${{matrix.generator}} ${{env.PARAMETER}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON
 
