@@ -57,7 +57,7 @@ jobs:
           - compiler: { tool: msvc }
             cxx: ''
             cc: ''
-            generator: 'Visual Studio 17 2022'
+            generator: ''
 
     runs-on: ${{matrix.os}}
     steps:

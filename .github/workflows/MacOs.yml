@@ -39,7 +39,7 @@ jobs:
           - compiler: { tool: apple-clang }
             cxx: ''
             cc: ''
-            generator: Ninja
+            generator: ''
         exclude:
           - { os: macos-12, compiler: { tool: gcc, ver: 9 } }
 
