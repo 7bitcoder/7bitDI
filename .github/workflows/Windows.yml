@@ -42,7 +42,7 @@ jobs:
           { tool: LLVM, ver: 16.0.6 },
           { tool: LLVM, ver: 17.0.6 } ]
         build_type: [ Release ]
-        os: [ windows-2019, windows-2022 ]
+        os: [ windows-2022 ]
         std: [ 17 ]
         library_type: [ Static ]
         include:
@@ -65,7 +65,13 @@ jobs:
 
       - name: Create Build Environment
         if: matrix.compiler.tool != 'msvc'
+        shell: bash
         run: choco install ${{matrix.compiler.tool}} --version ${{matrix.compiler.ver}} --allow-downgrade -y && choco install ninja && cmake -E make_directory ${{runner.workspace}}/build
+
+      - name: Update Sys Path
+        if: matrix.compiler.tool != 'msvc'
+        run: ((gcm ${{matrix.cxx}})[0].Source + (Get-Content -Path $env:GITHUB_PATH)) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
+        shell: pwsh
 
       - name: Configure
         env:
