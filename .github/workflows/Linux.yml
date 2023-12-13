@@ -43,10 +43,10 @@ jobs:
         include:
           - compiler: { tool: gcc }
             cxx: g++
-            cc: gcc
+            generator: Ninja
           - compiler: { tool: clang }
             cxx: clang++
-            cc: clang
+            generator: Ninja
         exclude:
           - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 12 } }
           - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 13 } }
@@ -77,7 +77,7 @@ jobs:
         env:
           CXX: ${{matrix.cxx}}-${{matrix.compiler.ver}}
           CC: ${{matrix.cc}}-${{matrix.compiler.ver}}
-        run: cmake -B ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON
+        run: cmake -B ${{runner.workspace}}/build -G ${{matrix.generator}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON
 
       - name: Build
         run: cmake --build ${{runner.workspace}}/build --config ${{matrix.build_type}} -j

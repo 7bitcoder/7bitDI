@@ -48,9 +48,15 @@ jobs:
           - compiler: { tool: mingw }
             cxx: g++
             cc: gcc
+            generator: MinGW Makefiles
           - compiler: { tool: LLVM }
             cxx: clang++
             cc: clang
+            generator: Ninja
+          - compiler: { tool: msvc }
+            cxx: ''
+            cc: ''
+            generator: Visual Studio 17 2022
 
     runs-on: ${{matrix.os}}
     steps:
@@ -58,13 +64,14 @@ jobs:
 
       - name: Create Build Environment
         if: matrix.compiler.tool != 'msvc'
-        shell: bash
-        run: choco install ${{matrix.compiler.tool}} --version ${{matrix.compiler.ver}} --allow-downgrade -y && choco install ninja -y && echo "CXX=${{matrix.cxx}}" >> $GITHUB_ENV && echo "CC=${{matrix.cc}}" >> $GITHUB_ENV
+        run: choco install ${{matrix.compiler.tool}} --version ${{matrix.compiler.ver}} --allow-downgrade -y
 
       - name: Configure
         env:
-          PARAMETER: ${{ matrix.compiler.tool == 'msvc' && format('-A x64 -T v{0}', matrix.compiler.ver) || '-G Ninja' }}
-        run: cmake -B ${{runner.workspace}}/build ${{env.PARAMETER}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON
+          CXX: ${{matrix.cxx}}-${{matrix.compiler.ver}}
+          CC: ${{matrix.cc}}-${{matrix.compiler.ver}}
+          PARAMETER: ${{ matrix.compiler.tool == 'msvc' && format('-A x64 -T v{0}', matrix.compiler.ver) || '' }}
+        run: cmake -B ${{runner.workspace}}/build -G ${{matrix.generator}} ${{env.PARAMETER}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON
 
       - name: Build
         run: cmake --build ${{runner.workspace}}/build --config ${{matrix.build_type}} -j
