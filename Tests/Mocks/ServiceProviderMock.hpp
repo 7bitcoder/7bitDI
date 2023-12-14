@@ -10,8 +10,13 @@ struct ServiceProviderMock : public sb::di::ServiceProvider
     [[nodiscard]] static sb::di::IServiceInstanceProvider::Ptr prepare()
     {
         auto instance = std::make_unique<ServiceInstanceProviderMock>();
-        EXPECT_CALL(*instance, setServiceProvider).Times(testing::AtLeast(0)).WillRepeatedly(testing::Return());
+        EXPECT_CALL(*instance, setServiceProvider).WillOnce(testing::Return());
 
         return instance;
+    }
+
+    ServiceInstanceProviderMock &getMock()
+    {
+        return dynamic_cast<ServiceInstanceProviderMock &>(getInstanceProvider());
     }
 };
