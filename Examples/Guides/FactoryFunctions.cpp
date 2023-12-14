@@ -27,14 +27,14 @@ class ServiceB
 
 int main()
 {
-    const ServiceProvider::Ptr provider =
+    ServiceProvider provider =
         ServiceCollection{}
             .addSingleton<ServiceA>([] { return std::make_unique<ServiceA>("Hello from service!"); })
             .addSingleton<ServiceB>([](ServiceA *serviceA) { return std::make_unique<ServiceB>(serviceA); })
             .buildServiceProvider();
 
-    auto &serviceA = provider->getService<ServiceA>();
-    const auto &serviceB = provider->getService<ServiceB>();
+    auto &serviceA = provider.getService<ServiceA>();
+    const auto &serviceB = provider.getService<ServiceB>();
 
     std::cout << serviceB.message();
 

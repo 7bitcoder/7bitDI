@@ -42,17 +42,17 @@ class ServiceExecutor
 };
 int main()
 {
-    const ServiceProvider::Ptr provider = ServiceCollection{}
-                                              .addSingleton<IWorker, WorkerA>()
-                                              .addSingleton<IWorker, WorkerB>()
-                                              .addSingleton<IWorker, WorkerC>()
-                                              .addSingleton<ServiceExecutor>()
-                                              .buildServiceProvider();
+    ServiceProvider provider = ServiceCollection{}
+                                   .addSingleton<IWorker, WorkerA>()
+                                   .addSingleton<IWorker, WorkerB>()
+                                   .addSingleton<IWorker, WorkerC>()
+                                   .addSingleton<ServiceExecutor>()
+                                   .buildServiceProvider();
 
-    const auto &consumer = provider->getService<ServiceExecutor>();
+    const auto &consumer = provider.getService<ServiceExecutor>();
 
     std::cout << "work all: " << consumer.workAll() << std::endl;
-    std::cout << "single work: " << provider->getService<IWorker>().work();
+    std::cout << "single work: " << provider.getService<IWorker>().work();
 
     return 0;
 }

@@ -19,12 +19,12 @@ int main()
     services.addSingleton<ServiceB>();
     services.addSingleton<ServiceC>();
 
-    const ServiceProvider::Ptr provider = services.buildServiceProvider();
+    ServiceProvider provider = services.buildServiceProvider();
 
     // Accessing services
-    auto &serviceA = provider->getService<ServiceA>();
-    auto &serviceB = provider->getService<ServiceB>();
-    auto &serviceC = provider->getService<ServiceC>();
+    auto &serviceA = provider.getService<ServiceA>();
+    auto &serviceB = provider.getService<ServiceB>();
+    auto &serviceC = provider.getService<ServiceC>();
 
     return 0;
 }

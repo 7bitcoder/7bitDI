@@ -127,14 +127,14 @@ class Application
 };
 int main(int argc, char *argv[])
 {
-    const ServiceProvider::Ptr provider = ServiceCollection{}
-                                              .addSingleton<IOptionHandler, HelpOption>()
-                                              .addSingleton<IOptionHandler, InfoOption>()
-                                              .addSingleton<IOptionHandler, NumberOption>()
-                                              .addSingleton<CliHandler>()
-                                              .addScoped<Application>()
-                                              .buildServiceProvider();
+    ServiceProvider provider = ServiceCollection{}
+                                   .addSingleton<IOptionHandler, HelpOption>()
+                                   .addSingleton<IOptionHandler, InfoOption>()
+                                   .addSingleton<IOptionHandler, NumberOption>()
+                                   .addSingleton<CliHandler>()
+                                   .addScoped<Application>()
+                                   .buildServiceProvider();
 
-    const Application &app = provider->getService<Application>();
+    const Application &app = provider.getService<Application>();
     return app.run(argc, argv);
 }

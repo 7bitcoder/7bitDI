@@ -38,26 +38,26 @@ template <class TService, bool Get> void compareServices(ServiceProvider &root, 
 
 int main()
 {
-    const ServiceProvider::Ptr rootProvider = ServiceCollection{}
-                                                  .addSingleton<SingletonService>()
-                                                  .addScoped<ScopedService>()
-                                                  .addTransient<TransientService>()
-                                                  .buildServiceProvider();
+    ServiceProvider rootProvider = ServiceCollection{}
+                                       .addSingleton<SingletonService>()
+                                       .addScoped<ScopedService>()
+                                       .addTransient<TransientService>()
+                                       .buildServiceProvider();
 
     // Accessing Services
-    auto &singleton = rootProvider->getService<SingletonService>();
-    auto &scoped = rootProvider->getService<ScopedService>();
-    std::unique_ptr<TransientService> transient = rootProvider->createService<TransientService>();
+    auto &singleton = rootProvider.getService<SingletonService>();
+    auto &scoped = rootProvider.getService<ScopedService>();
+    std::unique_ptr<TransientService> transient = rootProvider.createService<TransientService>();
 
-    const ServiceProvider::Ptr scopedProvider = rootProvider->createScope();
+    ServiceProvider scopedProvider = rootProvider.createScope();
 
     std::cout << std::endl << "Singletons comparison" << std::endl;
-    compareServices<SingletonService, true>(*rootProvider, *scopedProvider);
+    compareServices<SingletonService, true>(rootProvider, scopedProvider);
 
     std::cout << std::endl << "Scoped comparison" << std::endl;
-    compareServices<ScopedService, true>(*rootProvider, *scopedProvider);
+    compareServices<ScopedService, true>(rootProvider, scopedProvider);
 
     std::cout << std::endl << "Transient comparison" << std::endl;
-    compareServices<TransientService, false>(*rootProvider, *scopedProvider);
+    compareServices<TransientService, false>(rootProvider, scopedProvider);
     return 0;
 }

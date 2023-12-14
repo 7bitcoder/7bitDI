@@ -18,9 +18,9 @@ class Service final : public IService
 
 int main()
 {
-    const ServiceProvider::Ptr provider = ServiceCollection{}.addSingleton<IService, Service>().buildServiceProvider();
+    ServiceProvider provider = ServiceCollection{}.addSingleton<IService, Service>().buildServiceProvider();
 
-    auto &service = provider->getService<IService>();
+    auto &service = provider.getService<IService>();
 
     std::cout << service.helloFromService();
 

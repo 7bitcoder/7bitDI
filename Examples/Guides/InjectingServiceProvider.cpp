@@ -47,13 +47,13 @@ class ServiceExecutor
 };
 int main()
 {
-    const ServiceProvider::Ptr provider = ServiceCollection{}
-                                              .addSingleton<IServiceA, ServiceA>()
-                                              .addTransient<IServiceB, ServiceB>()
-                                              .addScoped<ServiceExecutor>()
-                                              .buildServiceProvider();
+    ServiceProvider provider = ServiceCollection{}
+                                   .addSingleton<IServiceA, ServiceA>()
+                                   .addTransient<IServiceB, ServiceB>()
+                                   .addScoped<ServiceExecutor>()
+                                   .buildServiceProvider();
 
-    const auto &consumer = provider->getService<ServiceExecutor>();
+    const auto &consumer = provider.getService<ServiceExecutor>();
 
     std::cout << consumer.execute();
     return 0;

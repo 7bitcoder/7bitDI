@@ -44,12 +44,12 @@ class Application
 };
 int main()
 {
-    const ServiceProvider::Ptr provider = ServiceCollection{}
-                                              .addSingleton<IAppPartA, AppPartA>()
-                                              .addSingleton<IAppPartB, AppPartB>()
-                                              .addSingleton<Application>()
-                                              .buildServiceProvider();
+    ServiceProvider provider = ServiceCollection{}
+                                   .addSingleton<IAppPartA, AppPartA>()
+                                   .addSingleton<IAppPartB, AppPartB>()
+                                   .addSingleton<Application>()
+                                   .buildServiceProvider();
 
-    const auto &app = provider->getService<Application>();
+    const auto &app = provider.getService<Application>();
     return app.run();
 }

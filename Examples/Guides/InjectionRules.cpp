@@ -23,14 +23,14 @@ class ServiceExecutor
 };
 int main()
 {
-    const ServiceProvider::Ptr provider = ServiceCollection{}
-                                              .addSingleton<SingletonService>()
-                                              .addScoped<ScopedService>()
-                                              .addTransient<TransientService>()
-                                              .addScoped<ServiceExecutor>()
-                                              .buildServiceProvider();
+    ServiceProvider provider = ServiceCollection{}
+                                   .addSingleton<SingletonService>()
+                                   .addScoped<ScopedService>()
+                                   .addTransient<TransientService>()
+                                   .addScoped<ServiceExecutor>()
+                                   .buildServiceProvider();
 
-    auto &consumer = provider->getService<ServiceExecutor>();
+    auto &consumer = provider.getService<ServiceExecutor>();
 
     return 0;
 }

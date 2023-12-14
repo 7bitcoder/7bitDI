@@ -17,9 +17,9 @@ class Service
 int main()
 {
     Service externalSingleton{"Hello from service!"};
-    const ServiceProvider::Ptr provider = ServiceCollection{}.addSingleton(&externalSingleton).buildServiceProvider();
+    ServiceProvider provider = ServiceCollection{}.addSingleton(&externalSingleton).buildServiceProvider();
 
-    auto &service = provider->getService<Service>();
+    auto &service = provider.getService<Service>();
 
     std::cout << service.message();
     return 0;
