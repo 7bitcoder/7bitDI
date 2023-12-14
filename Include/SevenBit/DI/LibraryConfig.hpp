@@ -40,7 +40,9 @@
 
 #else
 
+#ifndef _7BIT_DI_HEADER_ONLY_LIB
 #define _7BIT_DI_HEADER_ONLY_LIB
+#endif
 
 #undef _7BIT_DI_SHARED_LIB
 #undef _7BIT_DI_STATIC_LIB
@@ -48,10 +50,6 @@
 #define _7BIT_DI_ADD_IMPL
 #define INLINE inline
 
-#endif
-
-#ifndef _7_BIT_DI_CTOR_LIMIT_SIZE
-#define _7_BIT_DI_CTOR_LIMIT_SIZE 10
 #endif
 
 #include "SevenBit/DI/Export.hpp"
