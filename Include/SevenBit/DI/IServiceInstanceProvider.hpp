@@ -11,11 +11,27 @@
 
 namespace sb::di
 {
-    template class OneOrList<IServiceInstance::Ptr>;
+    class ServiceProvider;
 
     struct IServiceInstanceProvider
     {
         using Ptr = std::unique_ptr<IServiceInstanceProvider>;
+
+        virtual void setServiceProvider(ServiceProvider &serviceProvider) = 0;
+
+        /**
+         * @brief Create a scoped service provider
+         * @details Scoped service provider creates/holds its own scoped services
+         *
+         * Example:
+         * @code {.cpp}
+         * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
+         * auto scoped = provider->createScope();
+         *
+         * &scoped->getService<TestClass>() != &provider->getService<TestClass>(); // True
+         * @endcode
+         */
+        [[nodiscard]] virtual Ptr createScope() const = 0;
 
         /**
          * @brief Returns service service reference, might throw exception

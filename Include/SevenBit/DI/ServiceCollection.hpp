@@ -43,7 +43,7 @@ namespace sb::di
          * @throws ServiceLifeTimeMissmatchException if service has different lifetime than other already
          * registered with same base type
          */
-        ServiceProvider::Ptr buildServiceProvider(ServiceProviderOptions options = {});
+        ServiceProvider buildServiceProvider(ServiceProviderOptions options = {});
 
         Iterator begin() { return _serviceDescriptors.begin(); }
         Iterator end() { return _serviceDescriptors.end(); }
@@ -167,7 +167,10 @@ namespace sb::di
          * @brief Cheks if contains descriptor meeting TPred requirement
          * @tparam TPred is functor with this sheme: (const ServiceDescriptor&) -> bool
          */
-        template <class TPred> [[nodiscard]] bool containsIf(TPred pred) const { return findIf(std::move(pred)) != end(); }
+        template <class TPred> [[nodiscard]] bool containsIf(TPred pred) const
+        {
+            return findIf(std::move(pred)) != end();
+        }
 
         /**
          * @brief Cheks if contains descriptor matching requirement

@@ -7,30 +7,27 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorsMap.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
-#include "SevenBit/DI/Details/Core/IServiceProviderData.hpp"
-#include "SevenBit/DI/Details/Factories/ServiceProviderSelfFactory.hpp"
+#include "SevenBit/DI/Details/Core/IServiceInstanceProviderData.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 
 namespace sb::di::details::core
 {
-    class EXPORT DefaultServiceProviderData : public IServiceProviderData
+    class EXPORT ServiceInstanceProviderData : public IServiceInstanceProviderData
     {
         containers::ServiceDescriptorsMap _descriptorsMap;
         containers::ServiceInstancesMap _singletons;
         ServiceProviderOptions _options;
 
       public:
-        using Ptr = std::unique_ptr<DefaultServiceProviderData>;
-        using SPtr = std::shared_ptr<DefaultServiceProviderData>;
+        using Ptr = std::unique_ptr<ServiceInstanceProviderData>;
+        using SPtr = std::shared_ptr<ServiceInstanceProviderData>;
 
         template <class TDescriptorIt>
-        DefaultServiceProviderData(TDescriptorIt begin, TDescriptorIt end, ServiceProviderOptions options = {})
+        ServiceInstanceProviderData(TDescriptorIt begin, TDescriptorIt end, ServiceProviderOptions options = {})
             : _descriptorsMap(begin, end, options.checkServiceGlobalUniqueness),
               _singletons(options.strongDestructionOrder), _options(options)
         {
-            _descriptorsMap.add(ServiceDescriptor{typeid(ServiceProvider), ServiceLifeTime::scoped(),
-                                                  std::make_unique<factories::ServiceProviderSelfFactory>()});
             _descriptorsMap.seal();
         }
 
@@ -43,5 +40,5 @@ namespace sb::di::details::core
 } // namespace sb::di::details::core
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Core/Impl/DefaultServiceProviderData.hpp"
+#include "SevenBit/DI/Details/Core/Impl/ServiceInstanceProviderData.hpp"
 #endif

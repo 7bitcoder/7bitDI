@@ -12,26 +12,43 @@
 namespace sb::di
 {
 
-    class ServiceProvider : protected IServiceInstanceProvider
+    class ServiceProvider
     {
+        IServiceInstanceProvider::Ptr _instanceProvider;
+
       public:
         using Ptr = std::unique_ptr<ServiceProvider>;
 
-        IServiceInstanceProvider &asInstanceProvider() { return *this; }
+        explicit ServiceProvider(IServiceInstanceProvider::Ptr instanceProvider)
+        {
+            _instanceProvider = std::move(instanceProvider);
+            _instanceProvider->setServiceProvider(*this);
+        }
 
-        /**
-         * @brief Create a scoped service provider
-         * @details Scoped service provider creates/holds its own scoped services
-         *
-         * Example:
-         * @code {.cpp}
-         * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
-         * auto scoped = provider->createScope();
-         *
-         * &scoped->getService<TestClass>() != &provider->getService<TestClass>(); // True
-         * @endcode
-         */
-        virtual Ptr createScope() = 0;
+        ServiceProvider(ServiceProvider &&parent) noexcept : ServiceProvider(std::move(parent._instanceProvider)) {}
+        ServiceProvider(const ServiceProvider &parent) = delete;
+
+        ServiceProvider &operator=(ServiceProvider &&parent) noexcept
+        {
+            _instanceProvider = std::move(parent._instanceProvider);
+            _instanceProvider->setServiceProvider(*this);
+            return *this;
+        }
+        ServiceProvider &operator=(const ServiceProvider &parent) = delete;
+
+        [[nodiscard]] ServiceProvider createScope() const
+        {
+            return ServiceProvider{getInstanceProvider().createScope()};
+        }
+
+        [[nodiscard]] const IServiceInstanceProvider &getInstanceProvider() const
+        {
+            return *details::utils::Require::notNullAndGet(_instanceProvider.get());
+        }
+        IServiceInstanceProvider &getInstanceProvider()
+        {
+            return *details::utils::Require::notNullAndGet(_instanceProvider.get());
+        }
 
         /**
          * @brief Returns service pointer, might be null
@@ -46,7 +63,7 @@ namespace sb::di
          */
         template <class TService> TService *tryGetService()
         {
-            if (const auto instance = tryGetInstance(typeid(TService));
+            if (const auto instance = getInstanceProvider().tryGetInstance(typeid(TService));
                 details::utils::Check::instanceValidity(instance))
             {
                 return instance->getAs<TService>();
@@ -68,7 +85,7 @@ namespace sb::di
          */
         template <class TService> TService &getService()
         {
-            auto &instance = getInstance(typeid(TService));
+            auto &instance = getInstanceProvider().getInstance(typeid(TService));
             details::utils::Require::validInstance(&instance);
             return *instance.getAs<TService>();
         }
@@ -89,7 +106,7 @@ namespace sb::di
          */
         template <class TService> std::vector<TService *> getServices()
         {
-            if (auto instances = tryGetInstances(typeid(TService)))
+            if (auto instances = getInstanceProvider().tryGetInstances(typeid(TService)))
             {
                 return mapValidInstances(
                     *instances, [](const IServiceInstance::Ptr &instance) { return instance->getAs<TService>(); });
@@ -110,7 +127,7 @@ namespace sb::di
          */
         template <class TService> std::unique_ptr<TService> tryCreateService()
         {
-            if (const auto instance = tryCreateInstance(typeid(TService));
+            if (const auto instance = getInstanceProvider().tryCreateInstance(typeid(TService));
                 details::utils::Check::instanceValidity(instance))
             {
                 return instance->moveOutAsUniquePtr<TService>();
@@ -133,14 +150,14 @@ namespace sb::di
          */
         template <class TService> std::unique_ptr<TService> createService()
         {
-            const auto instance = createInstance(typeid(TService));
+            const auto instance = getInstanceProvider().createInstance(typeid(TService));
             details::utils::Require::validInstance(instance);
             return instance->moveOutAsUniquePtr<TService>();
         }
 
         template <class TService> TService createServiceInPlace()
         {
-            const auto instance = createInstanceInPlace(typeid(TService));
+            const auto instance = getInstanceProvider().createInstanceInPlace(typeid(TService));
             details::utils::Require::validInstance(instance);
             return instance->moveOutAs<TService>();
         }
@@ -162,7 +179,7 @@ namespace sb::di
          */
         template <class TService> std::vector<std::unique_ptr<TService>> createServices()
         {
-            if (auto instances = tryCreateInstances(typeid(TService)))
+            if (auto instances = getInstanceProvider().tryCreateInstances(typeid(TService)))
             {
                 return mapValidInstances(*instances, [](const IServiceInstance::Ptr &instance) {
                     return instance->moveOutAsUniquePtr<TService>();

@@ -4,17 +4,17 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Core/DefaultServiceProvider.hpp"
-#include "SevenBit/DI/Details/Core/DefaultServiceProviderData.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstanceProviderData.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
 
 namespace sb::di
 {
 
-    INLINE ServiceProvider::Ptr ServiceCollection::buildServiceProvider(ServiceProviderOptions options)
+    INLINE ServiceProvider ServiceCollection::buildServiceProvider(ServiceProviderOptions options)
     {
-        auto core = std::make_unique<details::core::DefaultServiceProviderData>(begin(), end(), options);
-        return std::make_unique<details::core::DefaultServiceProvider>(std::move(core));
+        auto core = std::make_unique<details::core::ServiceInstanceProviderData>(begin(), end(), options);
+        return ServiceProvider{std::make_unique<details::core::ServiceInstanceProvider>(std::move(core))};
     }
 
     INLINE ServiceDescriptor &ServiceCollection::at(const size_t index) { return _serviceDescriptors.at(index); }

@@ -7,7 +7,7 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
-#include "SevenBit/DI/Details/Core/IServiceProviderData.hpp"
+#include "SevenBit/DI/Details/Core/IServiceInstanceProviderData.hpp"
 #include "SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
@@ -17,28 +17,28 @@
 
 namespace sb::di::details::core
 {
-    class EXPORT DefaultServiceProvider : public ServiceProvider
+    class EXPORT ServiceInstanceProvider : public IServiceInstanceProvider
     {
-        IServiceProviderData::SPtr _sharedData;
+        IServiceInstanceProviderData::SPtr _sharedData;
         containers::ServiceInstancesMap _scoped;
         helpers::CircularDependencyGuard _guard;
+        ServiceProvider *_serviceProvider = nullptr;
 
-        DefaultServiceProvider(const DefaultServiceProvider &provider);
+        ServiceInstanceProvider(const ServiceInstanceProvider &provider);
 
       public:
-        using Ptr = std::unique_ptr<DefaultServiceProvider>;
+        using Ptr = std::unique_ptr<ServiceInstanceProvider>;
 
-        explicit DefaultServiceProvider(IServiceProviderData::Ptr core);
+        explicit ServiceInstanceProvider(IServiceInstanceProviderData::Ptr core);
 
-        DefaultServiceProvider(DefaultServiceProvider &&) noexcept = default;
+        ServiceInstanceProvider(ServiceInstanceProvider &&) noexcept = default;
 
-        DefaultServiceProvider &operator=(const DefaultServiceProvider &) = delete;
+        ServiceInstanceProvider &operator=(const ServiceInstanceProvider &) = delete;
 
-        void clear();
+        void setServiceProvider(ServiceProvider &serviceProvider) override;
 
-        ServiceProvider::Ptr createScope() override;
+        [[nodiscard]] IServiceInstanceProvider::Ptr createScope() const override;
 
-      protected:
         const IServiceInstance &getInstance(TypeId serviceTypeId) override;
         const IServiceInstance *tryGetInstance(TypeId serviceTypeId) override;
         const OneOrList<IServiceInstance::Ptr> *tryGetInstances(TypeId serviceTypeId) override;
@@ -49,6 +49,8 @@ namespace sb::di::details::core
 
         IServiceInstance::Ptr createInstanceInPlace(TypeId serviceTypeId) override;
         IServiceInstance::Ptr tryCreateInstanceInPlace(TypeId serviceTypeId) override;
+
+        void clear();
 
       private:
         const IServiceInstance *tryCreateAndRegister(const containers::ServiceDescriptorList &descriptors);
@@ -78,5 +80,5 @@ namespace sb::di::details::core
 } // namespace sb::di::details::core
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Core/Impl/DefaultServiceProvider.hpp"
+#include "SevenBit/DI/Details/Core/Impl/ServiceInstanceProvider.hpp"
 #endif
