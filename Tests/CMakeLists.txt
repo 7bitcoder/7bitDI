@@ -2,6 +2,8 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS *.cpp)
 
 add_executable(Tests
         ${SOURCES}
+        Utils/CheckTest.cpp
+        Utils/CtorParamsNumberTest.cpp
 )
 
 target_link_libraries(Tests PUBLIC
