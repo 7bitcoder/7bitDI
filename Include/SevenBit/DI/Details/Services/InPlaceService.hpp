@@ -9,7 +9,7 @@
 
 namespace sb::di::details::services
 {
-    template <class T> class InPlaceService : public IServiceInstance
+    template <class T> class InPlaceService final : public IServiceInstance
     {
         T _service;
 

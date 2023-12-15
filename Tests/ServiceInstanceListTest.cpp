@@ -2,8 +2,8 @@
 // #include <iostream>
 // #include <memory>
 //
-// #include "Classes/BasicInherit.hpp"
-// #include "Classes/BasicTest.hpp"
+// #include "Classes/Inherit.hpp"
+// #include "Classes/Basic.hpp"
 // #include "SevenBit/DI/Details/ExternalService.hpp"
 // #include "SevenBit/DI/Details/ServiceFactory.hpp"
 // #include "SevenBit/DI/Details/ServiceDescriptorList.hpp"

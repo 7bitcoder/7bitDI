@@ -2,10 +2,11 @@
 #include <gtest/gtest.h>
 #include <memory>
 
-#include "Classes/BasicInherit.hpp"
-#include "Classes/BasicTest.hpp"
-#include "Classes/ComplexDependencies.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
+#include "TestHelpers/Classes/Basic.hpp"
+#include "TestHelpers/Classes/Complex.hpp"
+#include "TestHelpers/Classes/Dependencies.hpp"
+#include "TestHelpers/Classes/Inherit.hpp"
 
 class ServiceCollectionTest : public testing::Test
 {

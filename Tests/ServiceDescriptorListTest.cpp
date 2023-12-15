@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 
-#include "Classes/BasicInherit.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
-#include "SevenBit/DI/Details/Factories/ServiceFactory.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
+#include "TestHelpers/Classes/Complex.hpp"
+#include "TestHelpers/Classes/Inherit.hpp"
 
 class ServiceDescriptorListTest : public testing::Test
 {

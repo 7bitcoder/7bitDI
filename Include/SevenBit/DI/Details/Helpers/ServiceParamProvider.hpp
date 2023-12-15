@@ -31,19 +31,19 @@ namespace sb::di::details::helpers
 
     template <class T> struct ServiceParamProvider<T *>
     {
-        static T *getParam(ServiceProvider &sp) { return &sp.getService<T>(); }
+        static T *getParam(ServiceProvider &sp) { return sp.tryGetService<T>(); }
     };
     template <class T> struct ServiceParamProvider<const T *>
     {
-        static const T *getParam(ServiceProvider &sp) { return &sp.getService<T>(); }
+        static const T *getParam(ServiceProvider &sp) { return sp.tryGetService<T>(); }
     };
     template <class T> struct ServiceParamProvider<T *const>
     {
-        static T *const getParam(ServiceProvider &sp) { return &sp.getService<T>(); }
+        static T *const getParam(ServiceProvider &sp) { return sp.tryGetService<T>(); }
     };
     template <class T> struct ServiceParamProvider<const T *const>
     {
-        static const T *const getParam(ServiceProvider &sp) { return &sp.getService<T>(); }
+        static const T *const getParam(ServiceProvider &sp) { return sp.tryGetService<T>(); }
     };
 
     template <class T> struct ServiceParamProvider<T &>

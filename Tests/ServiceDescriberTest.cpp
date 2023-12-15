@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 #include <memory>
 
-#include "Classes/BasicInherit.hpp"
-#include "Classes/BasicTest.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
+#include "TestHelpers/Classes/Basic.hpp"
+#include "TestHelpers/Classes/Inherit.hpp"
 
 class ServiceDescriberTest : public testing::Test
 {

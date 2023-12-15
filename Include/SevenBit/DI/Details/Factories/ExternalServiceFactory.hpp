@@ -12,7 +12,7 @@
 namespace sb::di::details::factories
 {
 
-    template <class T> class ExternalServiceFactory : public IServiceFactory
+    template <class T> class ExternalServiceFactory final : public IServiceFactory
     {
         T *_service = nullptr;
 

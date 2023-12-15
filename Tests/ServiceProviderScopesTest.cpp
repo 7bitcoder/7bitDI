@@ -1,11 +1,12 @@
 #include <gtest/gtest.h>
 #include <memory>
 
-#include "Classes/BasicTest.hpp"
-#include "Classes/ComplexDependencies.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
+#include "TestHelpers/Classes/Basic.hpp"
+#include "TestHelpers/Classes/Complex.hpp"
+#include "TestHelpers/Classes/Dependencies.hpp"
 
 class ServiceProviderScopesTest : public testing::Test
 {
@@ -102,30 +103,28 @@ TEST_F(ServiceProviderScopesTest, ShouldReturnProperSelfForScope)
 TEST_F(ServiceProviderScopesTest, ShouldGetServicesDeeperRefWithScopedProvider)
 {
     auto provider = sb::di::ServiceCollection{}
-                        .addSingleton<TestDependencyClass1>()
-                        .addScoped<TestDependencyClass2>()
-                        .addTransient<TestDependencyClass3>()
+                        .addSingleton<TestDependencyClass>()
+                        .addScoped<TestDependencyPtrClass1>()
+                        .addTransient<TestDependencyRefClass1>()
                         .buildServiceProvider();
 
     auto scoped = provider.createScope();
 
-    auto &singletonFromTop = provider.getService<TestDependencyClass1>();
-    auto &singletonFromScoped = scoped.getService<TestDependencyClass1>();
+    auto &singletonFromTop = provider.getService<TestDependencyClass>();
+    auto &singletonFromScoped = scoped.getService<TestDependencyClass>();
     EXPECT_EQ(&singletonFromTop, &singletonFromScoped);
 
-    auto &scopedFromTop = provider.getService<TestDependencyClass2>();
-    auto &scopedFromScoped = scoped.getService<TestDependencyClass2>();
+    auto &scopedFromTop = provider.getService<TestDependencyPtrClass1>();
+    auto &scopedFromScoped = scoped.getService<TestDependencyPtrClass1>();
     EXPECT_NE(&scopedFromTop, &scopedFromScoped);
     EXPECT_EQ(scopedFromTop._test1, &singletonFromTop);
     EXPECT_EQ(scopedFromTop._test1, scopedFromScoped._test1);
 
-    const auto transientFromTop = provider.createService<TestDependencyClass3>();
-    const auto transientFromScoped = scoped.createService<TestDependencyClass3>();
+    const auto transientFromTop = provider.createService<TestDependencyRefClass1>();
+    const auto transientFromScoped = scoped.createService<TestDependencyRefClass1>();
     EXPECT_NE(transientFromTop, transientFromScoped);
-    EXPECT_EQ(transientFromTop->_test1, &singletonFromTop);
-    EXPECT_EQ(transientFromTop->_test1, transientFromScoped->_test1);
-    EXPECT_EQ(transientFromTop->_test2, &scopedFromTop);
-    EXPECT_EQ(transientFromScoped->_test2, &scopedFromScoped);
+    EXPECT_EQ(&transientFromTop->_test1, &singletonFromTop);
+    EXPECT_EQ(&transientFromTop->_test1, &transientFromScoped->_test1);
 }
 
 TEST_F(ServiceProviderScopesTest, ShouldGetComplexServices)

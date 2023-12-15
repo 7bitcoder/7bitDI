@@ -1,11 +1,12 @@
 #include <gtest/gtest.h>
 #include <memory>
 
-#include "Classes/BasicTest.hpp"
 #include "SevenBit/DI/Details/Factories/ServiceFactory.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
+#include "TestHelpers/Classes/Basic.hpp"
+#include "TestHelpers/Classes/Complex.hpp"
 
 class ServiceDescriptorTest : public testing::Test
 {

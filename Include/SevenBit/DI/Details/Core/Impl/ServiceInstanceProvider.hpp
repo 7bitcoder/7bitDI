@@ -21,8 +21,8 @@ namespace sb::di::details::core
     {
     }
 
-    INLINE ServiceInstanceProvider::ServiceInstanceProvider(IServiceInstanceProviderData::Ptr core)
-        : _sharedData(utils::Require::notNullAndGet(std::move(core))),
+    INLINE ServiceInstanceProvider::ServiceInstanceProvider(IServiceInstanceProviderData::Ptr data)
+        : _sharedData(utils::Require::notNullAndGet(std::move(data))),
           _scoped(_sharedData->getOptions().strongDestructionOrder)
     {
         if (_sharedData->getOptions().prebuildSingletons)

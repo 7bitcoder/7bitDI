@@ -5,37 +5,13 @@
 
 #include "SevenBit/DI/ServiceProvider.hpp"
 
-struct TestDependencyClass1
-{
-    static int number() { return 1; }
-};
-
-struct TestDependencyClass2
-{
-    TestDependencyClass1 *_test1;
-
-    explicit TestDependencyClass2(TestDependencyClass1 *test1) : _test1(test1) {}
-
-    static int number() { return 2; }
-};
-
-struct TestDependencyClass3
-{
-    TestDependencyClass1 *_test1;
-    TestDependencyClass2 *_test2;
-
-    TestDependencyClass3(TestDependencyClass1 *test1, TestDependencyClass2 *test2) : _test1(test1), _test2(test2) {}
-
-    static int number() { return 3; }
-};
-
 struct ITestComplexClass1
 {
     virtual int number() = 0;
     virtual ~ITestComplexClass1() = default;
 };
 
-struct TestComplexClass1 : public ITestComplexClass1
+struct TestComplexClass1 : ITestComplexClass1
 {
     int number() override { return 1; }
 };
@@ -48,7 +24,8 @@ struct ITestComplexClass2
 
     virtual ~ITestComplexClass2() = default;
 };
-struct TestComplexClass2 : public ITestComplexClass2
+
+struct TestComplexClass2 : ITestComplexClass2
 {
     ITestComplexClass1 *_test1;
 
@@ -67,7 +44,8 @@ struct ITestComplexClass3
     virtual int number() = 0;
     virtual ~ITestComplexClass3() = default;
 };
-struct TestComplexClass3 : public ITestComplexClass3
+
+struct TestComplexClass3 : ITestComplexClass3
 {
     ITestComplexClass1 *_test1;
     ITestComplexClass2 *_test2;

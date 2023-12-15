@@ -16,7 +16,7 @@
 
 namespace sb::di::details::factories
 {
-    template <class FactoryFcn> class ServiceFcnFactory : public IServiceFactory
+    template <class FactoryFcn> class ServiceFcnFactory final : public IServiceFactory
     {
         using ServiceFactoryInvoker = helpers::ServiceFactoryInvoker<FactoryFcn>;
         using FactoryReturnType = typename ServiceFactoryInvoker::ReturnType;

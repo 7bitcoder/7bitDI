@@ -9,7 +9,7 @@
 
 namespace sb::di::details::services
 {
-    template <class T> class ExternalService : public IServiceInstance
+    template <class T> class ExternalService final : public IServiceInstance
     {
         T *_service = nullptr;
 

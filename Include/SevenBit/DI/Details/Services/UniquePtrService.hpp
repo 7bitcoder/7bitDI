@@ -8,7 +8,7 @@
 
 namespace sb::di::details::services
 {
-    template <class T> class UniquePtrService : public IServiceInstance
+    template <class T> class UniquePtrService final : public IServiceInstance
     {
         std::unique_ptr<T> _service;
 

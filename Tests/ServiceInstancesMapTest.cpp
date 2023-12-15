@@ -1,14 +1,14 @@
 #include <gtest/gtest.h>
 #include <memory>
 
-#include "Classes/BasicInherit.hpp"
-#include "Classes/BasicInheritDesctuction.hpp"
-#include "Classes/BasicTest.hpp"
-#include "Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
 #include "SevenBit/DI/Details/Services/ExternalService.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
+#include "TestHelpers/Classes/Basic.hpp"
+#include "TestHelpers/Classes/Inherit.hpp"
+#include "TestHelpers/Classes/InheritDesctuction.hpp"
+#include "TestHelpers/Mocks/ServiceProviderMock.hpp"
 
 class ServiceInstancesMapTest : public testing::Test
 {

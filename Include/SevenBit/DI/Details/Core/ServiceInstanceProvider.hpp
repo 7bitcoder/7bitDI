@@ -29,7 +29,7 @@ namespace sb::di::details::core
       public:
         using Ptr = std::unique_ptr<ServiceInstanceProvider>;
 
-        explicit ServiceInstanceProvider(IServiceInstanceProviderData::Ptr core);
+        explicit ServiceInstanceProvider(IServiceInstanceProviderData::Ptr data);
 
         ServiceInstanceProvider(ServiceInstanceProvider &&) noexcept = default;
 

@@ -13,7 +13,7 @@
 
 namespace sb::di::details::factories
 {
-    template <class T> class ServiceFactory : public IServiceFactory
+    template <class T> class ServiceFactory final : public IServiceFactory
     {
         using ServiceCtorInvoker = helpers::ServiceCtorInvoker<T>;
         struct InPlaceCreator
