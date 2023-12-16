@@ -54,7 +54,7 @@ jobs:
         run: cmake --build ${{runner.workspace}}/build --config ${{matrix.build_type}} -j
 
       - name: Test
-        working-directory: ${{runner.workspace}}/build
+        working-directory: ${{runner.workspace}}/build/Tests
         run: ctest -C ${{matrix.build_type}}
         env:
           CTEST_OUTPUT_ON_FAILURE: True

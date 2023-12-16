@@ -45,6 +45,20 @@ if (_7BIT_DI_BUILD_EXAMPLES)
     add_subdirectory(Examples)
 endif ()
 
+if (_7BIT_DI_BUILD_BENCHMARKS)
+    include(FetchContent)
+    FetchContent_Declare(
+            benchmark
+            GIT_REPOSITORY https://github.com/google/benchmark.git
+            GIT_TAG 344117638c8ff7e239044fd0fa7085839fc03021 # release-1.14.0
+    )
+    FetchContent_MakeAvailable(benchmark)
+
+    enable_testing()
+
+    add_subdirectory(Benchmarks)
+endif ()
+
 if (_7BIT_DI_BUILD_SINGLE_HEADER)
     add_subdirectory(SingleHeader)
 endif ()

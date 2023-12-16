@@ -57,6 +57,7 @@ set_property(CACHE _7BIT_DI_LIBRARY_TYPE PROPERTY STRINGS Shared Static HeaderOn
 
 option(_7BIT_DI_BUILD_PIC "Build position independent code (-fPIC)" OFF)
 option(_7BIT_DI_BUILD_EXAMPLES "Build example" OFF)
+option(_7BIT_DI_BUILD_BENCHMARKS "Build benchmarks" OFF)
 option(_7BIT_DI_BUILD_TESTS "Build tests" OFF)
 option(_7BIT_DI_BUILD_DOCS "Turn on to build documentation (requires sphinx and doxygen installed)" OFF)
 option(_7BIT_DI_INSTALL "Installs 7bitDI" OFF)
@@ -96,6 +97,7 @@ set(INFOS
         "=================================================="
         "Build tests: ${_7BIT_DI_BUILD_TESTS}"
         "Build examples: ${_7BIT_DI_BUILD_EXAMPLES}"
+        "Build benchmarks: ${_7BIT_DI_BUILD_BENCHMARKS}"
         "Build documentation: ${_7BIT_DI_BUILD_DOCS}"
         "Build single header: ${_7BIT_DI_BUILD_SINGLE_HEADER}"
         "Install project: ${_7BIT_DI_INSTALL}"
