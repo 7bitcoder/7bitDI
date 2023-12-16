@@ -27,8 +27,8 @@ class RequireTest : public testing::Test
 TEST_F(RequireTest, ShouldRequireNotNull)
 {
     TestClass1 test1;
-    auto testPtr = std::make_unique<TestClass1>;
-    auto testSPtr = std::make_shared<TestClass1>;
+    std::unique_ptr<TestClass1> testPtr{new TestClass1};
+    std::shared_ptr<TestClass1> testSPtr{new TestClass1};
     EXPECT_NO_THROW(sb::di::details::utils::Require::notNull(&test1));
     EXPECT_NO_THROW(sb::di::details::utils::Require::notNullAndGet(&test1));
     EXPECT_NO_THROW(sb::di::details::utils::Require::notNull(testPtr));
