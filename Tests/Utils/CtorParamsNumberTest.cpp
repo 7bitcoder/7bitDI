@@ -35,13 +35,14 @@ struct Ambigious
     Ambigious(int a, int b, int d) {}
     Ambigious(int a, int b, int d, int e) {}
 };
+
 TEST_F(CtorParamsNumberTest, ShouldGetProperCtorParamsNumber)
 {
-    EXPECT_EQ(sb::di::details::utils::ctorParamsNumber2<TestComplexClass1>(), 0);
-    EXPECT_EQ(sb::di::details::utils::ctorParamsNumber2<TestComplexClass2>(), 1);
-    EXPECT_EQ(sb::di::details::utils::ctorParamsNumber2<TestComplexClass3>(), 2);
-    EXPECT_EQ(sb::di::details::utils::ctorParamsNumber2<TestComplexClass4>(), 3);
-    EXPECT_EQ(sb::di::details::utils::ctorParamsNumber2<TestComplexClass5>(), 3);
-    EXPECT_EQ(sb::di::details::utils::ctorParamsNumber2<LotOfParams>(), 13);
-    EXPECT_EQ(sb::di::details::utils::ctorParamsNumber2<Ambigious>(), 2);
+    EXPECT_EQ(sb::di::details::utils::ctorParamsNumber<TestComplexClass1>(), 0);
+    EXPECT_EQ(sb::di::details::utils::ctorParamsNumber<TestComplexClass2>(), 1);
+    EXPECT_EQ(sb::di::details::utils::ctorParamsNumber<TestComplexClass3>(), 2);
+    EXPECT_EQ(sb::di::details::utils::ctorParamsNumber<TestComplexClass4>(), 3);
+    EXPECT_EQ(sb::di::details::utils::ctorParamsNumber<TestComplexClass5>(), 3);
+    EXPECT_EQ(sb::di::details::utils::ctorParamsNumber<LotOfParams>(), 13);
+    EXPECT_EQ(sb::di::details::utils::ctorParamsNumber<Ambigious>(), 2);
 }

@@ -1,11 +1,10 @@
 #include <gtest/gtest.h>
 
+#include "../TestHelpers/Classes/Inherit.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorsMap.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
-#include "TestHelpers/Classes/Complex.hpp"
-#include "TestHelpers/Classes/Inherit.hpp"
 
 class ServiceDescriptorsMapTest : public testing::Test
 {
@@ -25,13 +24,54 @@ class ServiceDescriptorsMapTest : public testing::Test
 
 TEST_F(ServiceDescriptorsMapTest, ShouldAddDescriptors)
 {
+    auto act = [&] {
+        std::vector<sb::di::ServiceDescriptor> _descriptors;
+        sb::di::details::containers::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end()};
+
+        map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass3>());
+        map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+        map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
+    };
+
+    EXPECT_NO_THROW(act());
+}
+
+TEST_F(ServiceDescriptorsMapTest, ShouldCheckUniqeness)
+{
     std::vector<sb::di::ServiceDescriptor> _descriptors;
-    _descriptors.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass3>());
-    _descriptors.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
-    _descriptors.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
-    _descriptors.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass6>());
+    sb::di::details::containers::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end(), true};
+
+    map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass3>());
+    map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+
+    auto act = [&] { map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>()); };
+
+    EXPECT_THROW(act(), sb::di::ServiceAlreadyRegisteredException);
+}
+
+TEST_F(ServiceDescriptorsMapTest, ShouldNotCheckUniqeness)
+{
+    std::vector<sb::di::ServiceDescriptor> _descriptors;
+    sb::di::details::containers::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end(), false};
+
+    map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass3>());
+    map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+
+    auto act = [&] { map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>()); };
+
+    EXPECT_NO_THROW(act());
+}
+
+TEST_F(ServiceDescriptorsMapTest, ShouldAddDescriptorsFromVec)
+{
 
     auto act = [&] {
+        std::vector<sb::di::ServiceDescriptor> _descriptors;
+        _descriptors.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass3>());
+        _descriptors.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+        _descriptors.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
+        _descriptors.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass6>());
+
         sb::di::details::containers::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end()};
     };
 
@@ -80,9 +120,9 @@ TEST_F(ServiceDescriptorsMapTest, ShouldFindDescriptorList)
     auto first = map.findDescriptors(typeid(TestInheritClass2));
     EXPECT_TRUE(first);
     EXPECT_EQ(first->size(), 2);
-    //    EXPECT_EQ(first->begin()->getServiceTypeId(), typeid(TestInheritClass2));
-    //    EXPECT_EQ(first->begin()->getImplementationTypeId(), typeid(TestInheritClass3));
-    //    EXPECT_EQ(first->begin()->getLifeTime(), sb::di::ServiceLifeTime::scoped());
+    EXPECT_EQ(first->begin()->getServiceTypeId(), typeid(TestInheritClass2));
+    EXPECT_EQ(first->begin()->getImplementationTypeId(), typeid(TestInheritClass3));
+    EXPECT_EQ(first->begin()->getLifeTime(), sb::di::ServiceLifeTime::scoped());
     EXPECT_EQ(first->last().getServiceTypeId(), typeid(TestInheritClass2));
     EXPECT_EQ(first->last().getImplementationTypeId(), typeid(TestInheritClass5));
     EXPECT_EQ(first->last().getLifeTime(), sb::di::ServiceLifeTime::scoped());
@@ -90,9 +130,9 @@ TEST_F(ServiceDescriptorsMapTest, ShouldFindDescriptorList)
     auto second = map.findDescriptors(typeid(TestInheritClass1));
     EXPECT_TRUE(second);
     EXPECT_EQ(second->size(), 2);
-    //    EXPECT_EQ(second->begin()->getServiceTypeId(), typeid(TestInheritClass1));
-    //    EXPECT_EQ(second->begin()->getImplementationTypeId(), typeid(TestInheritClass4));
-    //    EXPECT_EQ(second->begin()->getLifeTime(), sb::di::ServiceLifeTime::singleton());
+    EXPECT_EQ(second->begin()->getServiceTypeId(), typeid(TestInheritClass1));
+    EXPECT_EQ(second->begin()->getImplementationTypeId(), typeid(TestInheritClass4));
+    EXPECT_EQ(second->begin()->getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(second->last().getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(second->last().getImplementationTypeId(), typeid(TestInheritClass6));
     EXPECT_EQ(second->last().getLifeTime(), sb::di::ServiceLifeTime::singleton());

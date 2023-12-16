@@ -29,12 +29,6 @@ namespace sb::di::details::containers
     INLINE IServiceInstance::Ptr &ServiceInstanceList::last() { return _oneOrList.last(); }
     INLINE const IServiceInstance::Ptr &ServiceInstanceList::last() const { return _oneOrList.last(); }
 
-    INLINE IServiceInstance::Ptr &ServiceInstanceList::operator[](const size_t index) { return _oneOrList[index]; }
-    INLINE const IServiceInstance::Ptr &ServiceInstanceList::operator[](const size_t index) const
-    {
-        return _oneOrList[index];
-    }
-
     INLINE size_t ServiceInstanceList::size() const { return _oneOrList.size(); }
 
     INLINE bool ServiceInstanceList::empty() const { return _oneOrList.empty(); }
@@ -55,8 +49,9 @@ namespace sb::di::details::containers
     {
         if (const auto single = _oneOrList.tryGetAsSingle())
         {
-             single->reset();
-        } else
+            single->reset();
+        }
+        else
         {
             _oneOrList.getAsList().clear();
         }

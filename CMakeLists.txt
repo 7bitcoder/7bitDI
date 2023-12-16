@@ -10,13 +10,13 @@ project(7bitDI LANGUAGES CXX VERSION ${_7BIT_DI_VERSION})
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Cmake")
 
-include(Setup)
-include(GNUInstallDirs)
-
 if (NOT CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 17)
 endif ()
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+include(Setup)
+include(GNUInstallDirs)
 
 include_directories(${CMAKE_SOURCE_DIR}/Include)
 

@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
 #include <memory>
 
+#include "../TestHelpers/Classes/Basic.hpp"
+#include "../TestHelpers/Classes/Complex.hpp"
+#include "../TestHelpers/Classes/Dependencies.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
-#include "TestHelpers/Classes/Basic.hpp"
-#include "TestHelpers/Classes/Complex.hpp"
-#include "TestHelpers/Classes/Dependencies.hpp"
 
 class ServiceProviderScopesTest : public testing::Test
 {

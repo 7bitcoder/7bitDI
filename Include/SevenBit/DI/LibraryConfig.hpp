@@ -52,4 +52,8 @@
 
 #endif
 
+#ifndef _7BIT_DI_CTOR_PARAMS_LIMIT
+#define _7BIT_DI_CTOR_PARAMS_LIMIT 100
+#endif
+
 #include "SevenBit/DI/Export.hpp"

@@ -24,9 +24,6 @@ namespace sb::di::details::containers
         [[nodiscard]] auto begin() const { return _serviceCreatorsMap.begin(); }
         [[nodiscard]] auto end() const { return _serviceCreatorsMap.end(); }
 
-        auto begin() { return _serviceCreatorsMap.begin(); }
-        auto end() { return _serviceCreatorsMap.end(); }
-
         explicit ServiceDescriptorsMap(bool checkDescriptorUniqueness);
 
         template <class TDescriptorIt>

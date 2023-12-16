@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 #include <memory>
 
+#include "../TestHelpers/Classes/Basic.hpp"
+#include "../TestHelpers/Classes/CirularDependency.hpp"
+#include "../TestHelpers/Classes/Inherit.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
-#include "TestHelpers/Classes/Basic.hpp"
-#include "TestHelpers/Classes/CirularDependency.hpp"
-#include "TestHelpers/Classes/Inherit.hpp"
 
 class ServiceProviderTest : public testing::Test
 {

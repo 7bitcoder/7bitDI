@@ -1,14 +1,14 @@
 #include <gtest/gtest.h>
 #include <memory>
 
+#include "../TestHelpers/Classes/Basic.hpp"
+#include "../TestHelpers/Classes/Inherit.hpp"
+#include "../TestHelpers/Classes/InheritDesctuction.hpp"
+#include "../TestHelpers/Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
 #include "SevenBit/DI/Details/Services/ExternalService.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
-#include "TestHelpers/Classes/Basic.hpp"
-#include "TestHelpers/Classes/Inherit.hpp"
-#include "TestHelpers/Classes/InheritDesctuction.hpp"
-#include "TestHelpers/Mocks/ServiceProviderMock.hpp"
 
 class ServiceInstancesMapTest : public testing::Test
 {
@@ -26,7 +26,7 @@ class ServiceInstancesMapTest : public testing::Test
     static void TearDownTestSuite() {}
 };
 
-TEST_F(ServiceInstancesMapTest, ShouldAdd)
+TEST_F(ServiceInstancesMapTest, ShouldInsert)
 {
     sb::di::details::containers::ServiceInstancesMap map{false};
 
@@ -35,6 +35,33 @@ TEST_F(ServiceInstancesMapTest, ShouldAdd)
     auto act = [&] { map.insert(typeid(TestClass1), std::move(instance)); };
 
     EXPECT_NO_THROW(act());
+}
+
+TEST_F(ServiceInstancesMapTest, ShouldCheckEmpty)
+{
+    sb::di::details::containers::ServiceInstancesMap map{false};
+
+    TestInheritClass3 test;
+    sb::di::IServiceInstance::Ptr instance{new sb::di::details::services::ExternalService{&test}};
+    TestInheritClass2 test2;
+    sb::di::IServiceInstance::Ptr instance2{new sb::di::details::services::ExternalService{&test2}};
+    map.insert(typeid(TestInheritClass1), std::move(instance)).add(std::move(instance2));
+
+    EXPECT_FALSE(map.empty());
+}
+
+TEST_F(ServiceInstancesMapTest, ShouldContainsList)
+{
+    sb::di::details::containers::ServiceInstancesMap map{false};
+
+    TestInheritClass3 test;
+    sb::di::IServiceInstance::Ptr instance{new sb::di::details::services::ExternalService{&test}};
+    TestInheritClass2 test2;
+    sb::di::IServiceInstance::Ptr instance2{new sb::di::details::services::ExternalService{&test2}};
+    map.insert(typeid(TestInheritClass1), std::move(instance)).add(std::move(instance2));
+
+    EXPECT_TRUE(map.contains(typeid(TestInheritClass1)));
+    EXPECT_FALSE(map.contains(typeid(TestInheritClass2)));
 }
 
 TEST_F(ServiceInstancesMapTest, ShouldFindList)
@@ -96,4 +123,6 @@ TEST_F(ServiceInstancesMapTest, ShouldDestructInProperOrder)
     map.insert(describer4.getServiceTypeId(), describer4.getImplementationFactory().createInstance(mock, false));
 
     map.clear();
+
+    EXPECT_TRUE(map.empty());
 }

@@ -30,7 +30,7 @@ namespace sb::di::details::containers
 
     INLINE const ServiceDescriptorList *ServiceDescriptorsMap::findDescriptors(const TypeId typeId) const
     {
-        if (const auto it = _serviceCreatorsMap.find(typeId); it != end())
+        if (const auto it = _serviceCreatorsMap.find(typeId); it != _serviceCreatorsMap.end())
         {
             return &it->second;
         }

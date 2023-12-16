@@ -32,9 +32,6 @@ namespace sb::di::details::containers
         IServiceInstance::Ptr &last();
         [[nodiscard]] const IServiceInstance::Ptr &last() const;
 
-        IServiceInstance::Ptr &operator[](size_t index);
-        const IServiceInstance::Ptr &operator[](size_t index) const;
-
         [[nodiscard]] size_t size() const;
 
         [[nodiscard]] bool empty() const;

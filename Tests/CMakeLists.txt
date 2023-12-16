@@ -4,6 +4,10 @@ add_executable(Tests
         ${SOURCES}
         Utils/CheckTest.cpp
         Utils/CtorParamsNumberTest.cpp
+        Utils/IsCopyCtorTest.cpp
+        Utils/IsInPlaceObject.cpp
+        Utils/IsUniquePtr.cpp
+        Utils/RequireTest.cpp
 )
 
 target_link_libraries(Tests PUBLIC

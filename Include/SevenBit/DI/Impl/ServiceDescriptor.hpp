@@ -29,4 +29,16 @@ namespace sb::di
     {
         return *_implementationFactory;
     }
+
+    INLINE bool ServiceDescriptor::operator==(const ServiceDescriptor &descriptor) const
+    {
+        return _serviceTypeId == descriptor.getServiceTypeId() && _lifetime == descriptor.getLifeTime() &&
+               _implementationFactory.get() == &descriptor.getImplementationFactory();
+    }
+
+    INLINE bool ServiceDescriptor::operator!=(const ServiceDescriptor &descriptor) const
+    {
+        return !(*this == descriptor);
+    }
+
 } // namespace sb::di

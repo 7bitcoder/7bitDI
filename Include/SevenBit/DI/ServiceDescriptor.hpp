@@ -70,6 +70,9 @@ namespace sb::di
          * @brief Get the service implementation factory
          */
         [[nodiscard]] const IServiceFactory &getImplementationFactory() const;
+
+        bool operator!=(const ServiceDescriptor &descriptor) const;
+        bool operator==(const ServiceDescriptor &descriptor) const;
     };
 } // namespace sb::di
 
