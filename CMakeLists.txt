@@ -27,17 +27,6 @@ if (_7BIT_DI_BUILD_DOCS)
 endif ()
 
 if (_7BIT_DI_BUILD_TESTS)
-    include(FetchContent)
-    FetchContent_Declare(
-            googletest
-            GIT_REPOSITORY https://github.com/google/googletest.git
-            GIT_TAG f8d7d77c06936315286eb55f8de22cd23c188571 # release-1.14.0
-    )
-    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-    FetchContent_MakeAvailable(googletest)
-
-    enable_testing()
-
     add_subdirectory(Tests)
 endif ()
 
@@ -46,16 +35,6 @@ if (_7BIT_DI_BUILD_EXAMPLES)
 endif ()
 
 if (_7BIT_DI_BUILD_BENCHMARKS)
-    include(FetchContent)
-    FetchContent_Declare(
-            benchmark
-            GIT_REPOSITORY https://github.com/google/benchmark.git
-            GIT_TAG 344117638c8ff7e239044fd0fa7085839fc03021 # release-1.14.0
-    )
-    FetchContent_MakeAvailable(benchmark)
-
-    enable_testing()
-
     add_subdirectory(Benchmarks)
 endif ()
 

@@ -2,9 +2,6 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS *.cpp)
 
 add_executable(UnitTests
         ${SOURCES}
-        Helpers/ServiceFactoryInvoker.cpp
-        OneOrListTest.cpp
-        ServiceLifeTimeTest.cpp
 )
 
 target_link_libraries(UnitTests PUBLIC

@@ -2,10 +2,11 @@
 #include <memory>
 
 #include "../../Helpers/Classes/Basic.hpp"
-#include "../../Helpers/Classes/CirularDependency.hpp"
 #include "../../Helpers/Classes/Inherit.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstanceProviderData.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
 
 class ServiceInstanceProviderTest : public testing::Test
