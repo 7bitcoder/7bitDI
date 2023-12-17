@@ -30,6 +30,9 @@ namespace sb::di
         using Ptr = std::unique_ptr<ServiceCollection>;
 
         ServiceCollection() = default;
+        ServiceCollection(std::initializer_list<ServiceDescriptor> list);
+        template <class InputIt> ServiceCollection(InputIt first, InputIt last) : _serviceDescriptors(first, last) {}
+
         ServiceCollection(const ServiceCollection &) = default;
         ServiceCollection(ServiceCollection &&) = default;
 
@@ -62,6 +65,7 @@ namespace sb::di
 
         [[nodiscard]] ConstReverseIterator rbegin() const { return crBegin(); }
         [[nodiscard]] ConstReverseIterator rend() const { return crEnd(); }
+
         /**
          * @brief Returns service descriptor at giver position
          * @details might throw exception
@@ -174,7 +178,7 @@ namespace sb::di
 
         /**
          * @brief Cheks if contains descriptor matching requirement
-         * @code {.cpp}
+         * @code{.cpp}
          * descriptor.getServiceTypeId() == typeid(TService)
          * @endcode
          */
@@ -182,7 +186,7 @@ namespace sb::di
 
         /**
          * @brief Cheks if contains descriptor matching requirement
-         * @code {.cpp}
+         * @code{.cpp}
          * descriptor.getServiceTypeId() == serviceTypeId
          * @endcode
          */
@@ -190,7 +194,7 @@ namespace sb::di
 
         /**
          * @brief Cheks if contains descriptor matching requirement
-         * @code {.cpp}
+         * @code{.cpp}
          * descriptor.getImplementationTypeId() == typeid(TImplementation) && descriptor.getServiceTypeId() ==
          * typeid(TService)
          * @endcode
@@ -202,7 +206,7 @@ namespace sb::di
 
         /**
          * @brief Cheks if contains descriptor matching requirement
-         * @code {.cpp}
+         * @code{.cpp}
          * descriptor.getImplementationTypeId() == implementationTypeId && descriptor.getServiceTypeId() ==
          * @endcode
          * serviceTypeId
@@ -262,7 +266,7 @@ namespace sb::di
 
         /**
          * @brief Removes all descriptors meeting requirement
-         * @code {.cpp}
+         * @code{.cpp}
          * descriptor.getServiceTypeId() == typeid(TService)
          * @endcode
          * @details Returns number of removed elements
@@ -271,7 +275,7 @@ namespace sb::di
 
         /**
          * @brief Removes all descriptors meeting requirement
-         * @code {.cpp}
+         * @code{.cpp}
          * descriptor.getServiceTypeId() == serviceTypeId
          * @endcode
          * @details Returns number of removed elements
@@ -280,7 +284,7 @@ namespace sb::di
 
         /**
          * @brief Removes all descriptors meeting requirement
-         * @code {.cpp}
+         * @code{.cpp}
          * descriptor.getImplementationTypeId() == typeid(TImplementation) && descriptor.getServiceTypeId() ==
          * typeid(TService)
          * @endcode
@@ -293,7 +297,7 @@ namespace sb::di
 
         /**
          * @brief Removes all descriptors meeting requirement
-         * @code {.cpp}
+         * @code{.cpp}
          * descriptor.getImplementationTypeId() == implementationTypeId && descriptor.getServiceTypeId() ==
          * serviceTypeId
          * @endcode
@@ -319,7 +323,7 @@ namespace sb::di
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.add<TestClass>(ServiceLifeTime::scoped());
          * ServiceCollection{}.add<BaseClass, ImplementationClass>(ServiceLifeTime::transient());
          * @endcode
@@ -342,7 +346,7 @@ namespace sb::di
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addSingleton<TestClass>();
          * ServiceCollection{}.addSingleton<BaseClass, ImplementationClass>();
          * @endcode
@@ -364,7 +368,7 @@ namespace sb::di
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addScoped<TestClass>();
          * ServiceCollection{}.addScoped<BaseClass, ImplementationClass>();
          * @endcode
@@ -386,7 +390,7 @@ namespace sb::di
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addTransient<TestClass>();
          * ServiceCollection{}.addTransient<BaseClass, ImplementationClass>();
          * @endcode
@@ -406,7 +410,7 @@ namespace sb::di
          * @tparam TService instanceValidity type must have one constructor
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * TestClass test;
          * ServiceCollection{}.addSingleton(&test);
          * @endcode
@@ -428,7 +432,7 @@ namespace sb::di
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ImplementationClass implementation;
          * ServiceCollection{}.addSingleton<BaseClass>(&implementation);
          * @endcode
@@ -450,7 +454,7 @@ namespace sb::di
          * pointners or unique pointners
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.add<BaseClass>(ServiceLifeTime::scoped(),
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
@@ -473,7 +477,7 @@ namespace sb::di
          * pointners or unique pointners
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addSingleton<BaseClass>([]() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
@@ -494,7 +498,7 @@ namespace sb::di
          * pointners or unique pointners
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addScoped<BaseClass>([]() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
@@ -515,7 +519,7 @@ namespace sb::di
          * pointners or unique pointners
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addTransient<BaseClass>([]() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
@@ -536,7 +540,7 @@ namespace sb::di
          * pointners or unique pointners
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.add(ServiceLifeTime::transient(), []() { return std::make_unique<TestClass>(); });
          * @endcode
          */
@@ -556,7 +560,7 @@ namespace sb::di
          * pointners or unique pointners
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addSingleton([]() { return std::make_unique<TestClass>(); });
          * @endcode
          */
@@ -576,7 +580,7 @@ namespace sb::di
          * pointners or unique pointners
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addScoped([]() { return std::make_unique<TestClass>(); });
          * @endcode
          */
@@ -596,7 +600,7 @@ namespace sb::di
          * pointners or unique pointners
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addTransient([]() { return std::make_unique<TestClass>(); });
          * @endcode
          */

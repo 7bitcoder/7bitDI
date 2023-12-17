@@ -1,11 +1,7 @@
 #include <gtest/gtest.h>
 #include <memory>
 
-#include "../Helpers/Classes/Basic.hpp"
-#include "../Helpers/Classes/CirularDependency.hpp"
 #include "../Helpers/Classes/Complex.hpp"
-#include "../Helpers/Classes/Inherit.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
 
 class ComplexInjectionsTest : public testing::Test
@@ -26,7 +22,7 @@ class ComplexInjectionsTest : public testing::Test
 
 // buildServiceProvider Tests
 
-TEST_F(ComplexInjectionsTest, ShouldTryGetService)
+TEST_F(ComplexInjectionsTest, ShouldGetService)
 {
     auto provider = sb::di::ServiceCollection{}
                         .addSingleton<ITestComplexClass1, TestComplexClass1>()
@@ -37,12 +33,32 @@ TEST_F(ComplexInjectionsTest, ShouldTryGetService)
                         .addScoped<ITestComplexClass6, TestComplexClass6>()
                         .buildServiceProvider();
 
-    EXPECT_TRUE(provider.tryGetService<ITestComplexClass1>());
-    EXPECT_TRUE(provider.tryGetService<ITestComplexClass2>());
-    EXPECT_FALSE(provider.tryGetService<ITestComplexClass3>());
-    EXPECT_TRUE(provider.tryGetService<ITestComplexClass4>());
-    EXPECT_TRUE(provider.tryGetService<ITestComplexClass5>());
-    EXPECT_TRUE(provider.tryGetService<ITestComplexClass6>());
+    auto &service1 = provider.getService<ITestComplexClass1>();
+    auto &service2 = provider.getService<ITestComplexClass2>();
+    auto service3 = provider.createService<ITestComplexClass3>();
+    auto &service4 = provider.getService<ITestComplexClass4>();
+    auto &service5 = provider.getService<ITestComplexClass5>();
+    auto &service6 = provider.getService<ITestComplexClass6>();
+
+    EXPECT_EQ(service1.number(), 1);
+    EXPECT_EQ(service2.number(), 2);
+    EXPECT_EQ(service3->number(), 3);
+    EXPECT_EQ(service4.number(), 4);
+    EXPECT_EQ(service5.number(), 5);
+    EXPECT_EQ(service6.number(), 6);
+    EXPECT_EQ(service2.getOne(), &service1);
+    EXPECT_EQ(service3->getOne(), &service1);
+    EXPECT_EQ(service3->getTwo(), &service2);
+    EXPECT_EQ(service4.getOne(), &service1);
+    EXPECT_EQ(service4.getTwo(), &service2);
+    EXPECT_NE(service4.getThree().get(), service3.get());
+    EXPECT_EQ(service5.getOne(), &service1);
+    EXPECT_EQ(service5.getTwo(), &service2);
+    EXPECT_NE(service5.makeThree(), service3);
+    EXPECT_EQ(&service6.getOne(), &service1);
+    EXPECT_EQ(&service6.getTwo(), &service2);
+    EXPECT_FALSE(service6.getNonExisting());
+    EXPECT_NE(service6.makeThree(), service3);
 }
 
 TEST_F(ComplexInjectionsTest, ShouldTryGetDeepNestedService)

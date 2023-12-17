@@ -17,12 +17,6 @@ namespace sb::di
     {
     }
 
-    INLINE ForbiddenServiceFactoryException::ForbiddenServiceFactoryException(const TypeId typeId,
-                                                                              const std::string &reason)
-        : InjectorException{std::string{"Forbidden service: '"} + typeId.name() + "' factory, reason: " + reason + "."}
-    {
-    }
-
     INLINE CannotReleaseServiceException::CannotReleaseServiceException(const TypeId typeId, const std::string &reason)
         : InjectorException{std::string{"Cannot release ownership of service: '"} + typeId.name() +
                             "', reason: " + reason + "."}

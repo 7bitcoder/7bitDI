@@ -10,6 +10,10 @@
 
 namespace sb::di
 {
+    INLINE ServiceCollection::ServiceCollection(const std::initializer_list<ServiceDescriptor> list)
+        : _serviceDescriptors(list)
+    {
+    }
 
     INLINE ServiceProvider ServiceCollection::buildServiceProvider(ServiceProviderOptions options)
     {

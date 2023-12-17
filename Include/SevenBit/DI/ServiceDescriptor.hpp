@@ -27,28 +27,16 @@ namespace sb::di
         /**
          * @brief Construct a new service descriptor object
          * @details implementationFactory cannot be null, otherwise construcor will throw exception
-         * @throws NullPointnerException if implementationFactory is null
+         * @throws sb::di::NullPointerException if implementationFactory is null
          */
         ServiceDescriptor(TypeId serviceTypeId, ServiceLifeTime lifetime, IServiceFactory::Ptr implementationFactory);
 
-        /**
-         * @brief Construct a new service descriptor copy
-         */
-        ServiceDescriptor(const ServiceDescriptor &other) = default;
 
-        /**
-         * @brief Construct a new service descriptor by move
-         */
+        ServiceDescriptor(const ServiceDescriptor &other) = default;
         ServiceDescriptor(ServiceDescriptor &&) = default;
 
-        /**
-         * @brief Assigns service descriptor
-         */
-        ServiceDescriptor &operator=(const ServiceDescriptor &other) = default;
 
-        /**
-         * @brief Assigns service descriptor by move
-         */
+        ServiceDescriptor &operator=(const ServiceDescriptor &other) = default;
         ServiceDescriptor &operator=(ServiceDescriptor &&other) = default;
 
         /**

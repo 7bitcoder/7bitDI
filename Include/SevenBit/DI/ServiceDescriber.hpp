@@ -32,7 +32,7 @@ namespace sb::di
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor1 = ServiceDescriber::describeSingleton<TestClass>();
          * ServiceDescriptor descriptor2 = ServiceDescriber::describeSingleton<BaseClass, ImplementationClass>();
          * @endcode
@@ -54,7 +54,7 @@ namespace sb::di
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor1 = ServiceDescriber::describeScoped<TestClass>();
          * ServiceDescriptor descriptor2 = ServiceDescriber::describeScoped<BaseClass, ImplementationClass>();
          * @endcode
@@ -76,7 +76,7 @@ namespace sb::di
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor1 = ServiceDescriber::describeTransient<TestClass>();
          * ServiceDescriptor descriptor2 = ServiceDescriber::describeTransient<BaseClass, ImplementationClass>();
          * @endcode
@@ -99,7 +99,7 @@ namespace sb::di
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor1 = ServiceDescriber::describe<TestClass>(ServiceLifeTime::scoped());
          * ServiceDescriptor descriptor2 =
          *          ServiceDescriber::describe<BaseClass, ImplementationClass>(ServiceLifeTime::transient());
@@ -125,7 +125,7 @@ namespace sb::di
          * constructor
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * TestClass test;
          * ServiceDescriptor descriptor1 = ServiceDescriber::describeSingleton<TestClass>(test);
          *
@@ -151,7 +151,7 @@ namespace sb::di
          * constructor
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * TestClass test;
          * ServiceDescriptor descriptor1 = ServiceDescriber::describeSingleton<TestClass>(&test);
          *
@@ -181,7 +181,7 @@ namespace sb::di
          * pointners or unique pointners, implementation type must inherit from TService
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeSingletonFrom<BaseClass>(
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
@@ -203,7 +203,7 @@ namespace sb::di
          * pointners or unique pointners, implementation type must inherit from TService
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeScopedFrom<BaseClass>(
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
@@ -225,7 +225,7 @@ namespace sb::di
          * pointners or unique pointners, implementation type must inherit from TService
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeTransientFrom<BaseClass>(
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
@@ -247,7 +247,7 @@ namespace sb::di
          * pointners or unique pointners
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeSingletonFrom(
          *       [](const ServiceDescriptor &) { return std::make_unique<TestClass>(); });
          * @endcode
@@ -268,7 +268,7 @@ namespace sb::di
          * pointners or unique pointners
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeScopedFrom(
          *       [](const ServiceDescriptor &) { return std::make_unique<TestClass>(); });
          * @endcode
@@ -289,7 +289,7 @@ namespace sb::di
          * pointners or unique pointners
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeTransientFrom(
          *       [](const ServiceDescriptor &) { return std::make_unique<TestClass>(); });
          * @endcode
@@ -311,7 +311,7 @@ namespace sb::di
          * pointners or unique pointners
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeFrom(
          *       []() { return std::make_unique<TestClass>(); }, ServiceLifeTime::scoped());
          * @endcode
@@ -335,7 +335,7 @@ namespace sb::di
          * pointners or unique pointners, implementation type must inherit from TService
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeFrom<BaseClass>(
          *       []() { return std::make_unique<ImplementationClass>(); }, ServiceLifeTime::scoped());
          * @endcode

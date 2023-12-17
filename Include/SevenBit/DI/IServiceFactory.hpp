@@ -23,9 +23,8 @@ namespace sb::di
         [[nodiscard]] virtual TypeId getServiceTypeId() const = 0;
 
         /**
-         * @brief Create a service service object
+         * @brief Create a service instance object
          */
-
         virtual IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, bool inPlaceRequest) const = 0;
 
         virtual ~IServiceFactory() = default;

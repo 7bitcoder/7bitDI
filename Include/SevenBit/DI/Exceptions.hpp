@@ -27,11 +27,6 @@ namespace sb::di
         explicit InvalidServiceException(TypeId typeId);
     };
 
-    struct EXPORT ForbiddenServiceFactoryException : InjectorException
-    {
-        ForbiddenServiceFactoryException(TypeId typeId, const std::string &reason);
-    };
-
     struct EXPORT CannotReleaseServiceException : InjectorException
     {
         CannotReleaseServiceException(TypeId typeId, const std::string &reason);

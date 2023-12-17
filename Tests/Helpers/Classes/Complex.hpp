@@ -120,6 +120,7 @@ struct ITestComplexClass6
 {
     virtual ITestComplexClass1 &getOne() = 0;
     virtual ITestComplexClass2 &getTwo() = 0;
+    virtual int *getNonExisting() = 0;
     virtual std::unique_ptr<ITestComplexClass3> makeThree() = 0;
 
     virtual int number() = 0;
@@ -130,17 +131,20 @@ struct TestComplexClass6 : public ITestComplexClass6
     ITestComplexClass1 &_test1;
     ITestComplexClass2 &_test2;
     sb::di::ServiceProvider &_provider;
+    int *_nonExisting;
 
-    TestComplexClass6(ITestComplexClass1 &test1, ITestComplexClass2 &test2, sb::di::ServiceProvider &provider)
-        : _test1(test1), _test2(test2), _provider(provider)
+    TestComplexClass6(ITestComplexClass1 &test1, ITestComplexClass2 &test2, sb::di::ServiceProvider &provider,
+                      int *nonExisting)
+        : _test1(test1), _test2(test2), _provider(provider), _nonExisting(nonExisting)
     {
     }
 
     ITestComplexClass1 &getOne() override { return _test1; }
     ITestComplexClass2 &getTwo() override { return _test2; }
     std::unique_ptr<ITestComplexClass3> makeThree() override { return _provider.createService<ITestComplexClass3>(); }
+    int *getNonExisting() override { return _nonExisting; };
 
-    int number() override { return 5; }
+    int number() override { return 6; }
 };
 
 template <size_t ID> struct TestNested
