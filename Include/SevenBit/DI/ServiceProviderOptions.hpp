@@ -11,8 +11,7 @@ namespace sb::di
     {
         /**
          * @brief Set strong service destruction order
-         * @details Regargind this setting first scoped object are destructured then singletons. If set to true
-         * service provider will also destruct services in oposite order to construction.
+         * @details If set to true service provider will destruct services in opposite order to construction.
          */
         bool strongDestructionOrder = false;
         /**
@@ -21,6 +20,10 @@ namespace sb::di
          */
         bool prebuildSingletons = false;
 
+        /**
+         * @brief Set global uniqueness check
+         * @details If set to true service provider will check if service was already registered
+         */
         bool checkServiceGlobalUniqueness = true;
     };
 } // namespace sb::di

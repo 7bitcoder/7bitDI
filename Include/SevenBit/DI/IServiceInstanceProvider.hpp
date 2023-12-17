@@ -18,152 +18,70 @@ namespace sb::di
     {
         using Ptr = std::unique_ptr<IServiceInstanceProvider>;
 
-        virtual void setServiceProvider(ServiceProvider &serviceProvider) = 0;
+        /**
+         * @brief Initializes instance provider
+         */
+        virtual void init(ServiceProvider &serviceProvider) = 0;
 
         /**
          * @brief Get service provider options
-         * @details Scoped service provider creates/holds its own scoped services
-         * @code{.cpp}
-         * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
-         * auto scoped = provider->createScope();
-         *
-         * auto& usedOptions = &provider->getOptions(); // True
-         * @endcode
          */
         [[nodiscard]] virtual const ServiceProviderOptions &getOptions() const = 0;
 
         /**
-         * @brief Create a scoped service provider
-         * @details Scoped service provider creates/holds its own scoped services
-         * @code{.cpp}
-         * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
-         * auto scoped = provider->createScope();
-         *
-         * &scoped->getService<TestClass>() != &provider->getService<TestClass>(); // True
-         * @endcode
+         * @brief Create a scoped service instance provider
+         * @details Scoped service instance provider creates/holds its own scoped services
          */
         [[nodiscard]] virtual Ptr createScope() const = 0;
 
         /**
-         * @brief Returns service service reference, might throw exception
+         * @brief Returns service instance reference, might throw exception
          * @details If service was not registered or was registered as transient, method throws exception
-         * @attention It is advised to use getService<T> method istead
-         * @throws ServiceNotFoundException service was not found
-         *
-         * Example:
-         * @code{.cpp}
-         * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
-         *
-         * const IServiceInstance & service = provider->getInstance(typeid(TestClass));
-         * @endcode
+         * @throws sb::di::ServiceNotFoundException
          */
         virtual const IServiceInstance &getInstance(TypeId serviceTypeId) = 0;
 
         /**
-         * @brief Returns service service pointner, might be null
+         * @brief Returns service instance pointer
          * @details If service was not registered or was registered as transient, method returns null
-         * @attention It is advised to use tryGetService<T> method istead
-         *
-         * Example:
-         * @code{.cpp}
-         * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
-         *
-         * IServiceInstance * service = provider->tryGetInstance(typeid(TestClass));
-         * @endcode
          */
         virtual const IServiceInstance *tryGetInstance(TypeId serviceTypeId) = 0;
 
         /**
          * @brief Returns service instances
-         * @details If instanceValidity was not registered or was registered as transient, method returns empty vector
-         * @attention It is advised to use getServices<T> method istead
-         * @example
-         * @code{.cpp}
-         * auto provider = ServiceCollection{}
-         *              .addScoped<ITestClass, TestClass1>()
-         *              .addScoped<ITestClass, TestClass2>()
-         *              .buildServiceProvider();
-         *
-         * std::vector<const IServiceInstance *> instances = provider->getInstances(typeid(ITestClass));
-         * @endcode
+         * @details If service instance was not registered or was registered as transient, method returns null
          */
         virtual const OneOrList<IServiceInstance::Ptr> *tryGetInstances(TypeId serviceTypeId) = 0;
 
         /**
-         * @brief Creates instanceValidity instanceValidity unique pointner, might throw exception
-         * @details If instanceValidity was not registered or was registered as scoped/transient, method throws
-         * exception
-         * @attention It is advised to use createInstance<T> method istead
-         * @throws ServiceNotFoundException instanceValidity was not found
-         *
-         * Example:
-         * @code{.cpp}
-         * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
-         *
-         * std::unique_ptr<IServiceInstance> instanceValidity = provider->createInstance(typeid(TestClass));
-         * @endcode
+         * @brief Creates service instance unique pointer, might throw exception
+         * @details If service was not registered or was registered as scoped/singleton, method throw exception
+         * @throws sb::di::ServiceNotFoundException
          */
         virtual IServiceInstance::Ptr createInstance(TypeId serviceTypeId) = 0;
 
         /**
-         * @brief Creates instanceValidity instanceValidity unique pointner, might be null
-         * @details If instanceValidity was not registered or was registered as scoped/transient, method returns null
-         * @attention It is advised to use tryCreateService<T> method istead
-         *
-         * Example:
-         * @code{.cpp}
-         * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
-         *
-         * std::unique_ptr<IServiceInstance> instanceValidity = provider->tryCreateInstance(typeid(TestClass));
-         * @endcode
+         * @brief Creates service instance unique pointer, might be null
+         * @details If service was not registered or was registered as scoped/singleton, method returns null
          */
         virtual IServiceInstance::Ptr tryCreateInstance(TypeId serviceTypeId) = 0;
 
         /**
-         * @brief Creates instanceValidity instanceValidity unique pointner, might throw exception
-         * @details If instanceValidity was not registered or was registered as scoped/transient, method throws
-         * exception
-         * @attention It is advised to use createInstance<T> method istead
-         * @throws ServiceNotFoundException instanceValidity was not found
-         *
-         * Example:
-         * @code{.cpp}
-         * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
-         *
-         * std::unique_ptr<IServiceInstance> instanceValidity = provider->createInstance(typeid(TestClass));
-         * @endcode
+         * @brief Creates service instance in place, might throw exception
+         * @details If service was not registered or was registered as scoped/singleton, method throws exception
+         * @throws sb::di::ServiceNotFoundException
          */
         virtual IServiceInstance::Ptr createInstanceInPlace(TypeId serviceTypeId) = 0;
 
         /**
-         * @brief Creates instanceValidity instanceValidity unique pointner, might be null
-         * @details If instanceValidity was not registered or was registered as scoped/transient, method returns null
-         * @attention It is advised to use tryCreateService<T> method istead
-         *
-         * Example:
-         * @code{.cpp}
-         * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
-         *
-         * std::unique_ptr<IServiceInstance> instanceValidity = provider->tryCreateInstance(typeid(TestClass));
-         * @endcode
+         * @brief Creates service instance in place
+         * @details If service was not registered or was registered as scoped/singleton, method returns null
          */
         virtual IServiceInstance::Ptr tryCreateInstanceInPlace(TypeId serviceTypeId) = 0;
 
         /**
-         * @brief Creates instanceValidity instances
-         * @details If instanceValidity was not registered or was registered as scoped/transient, method returns empty
-         * vector
-         * @attention It is advised to use createServices<T> method istead
-         *
-         * Example:
-         * @code{.cpp}
-         * auto provider = ServiceCollection{}
-         *              .addTransient<ITestClass, TestClass1>()
-         *              .addTransient<ITestClass, TestClass2>()
-         *              .buildServiceProvider();
-         *
-         * std::vector<std::unique_ptr<IServiceInstance>> instances = provider->createInstances(typeid(ITestClass));
-         * @endcode
+         * @brief Creates service instances
+         * @details If service was not registered or was registered as scoped/singleton, method returns null option
          */
         virtual std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateInstances(TypeId serviceTypeId) = 0;
 

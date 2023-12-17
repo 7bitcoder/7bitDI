@@ -13,9 +13,6 @@
 
 namespace sb::di
 {
-    /**
-     * @brief This is helper factory class for constructing ServiceDescriptor
-     */
     class ServiceDescriber
     {
       public:
@@ -27,11 +24,9 @@ namespace sb::di
          * implementationTypeId - typeid(TImplementation),
          * factory - default factory using TImplementation constructor
          * @tparam TService base service type
-         * @tparam TImplementation service implementation type must inherit from TService and must have one
-         * constructor
+         * @tparam TImplementation service implementation type must inherit from TService and must have one constructor
          * @see Constructor requirements
-         *
-         * Example:
+         * @example
          * @code{.cpp}
          * ServiceDescriptor descriptor1 = ServiceDescriber::describeSingleton<TestClass>();
          * ServiceDescriptor descriptor2 = ServiceDescriber::describeSingleton<BaseClass, ImplementationClass>();
@@ -41,6 +36,7 @@ namespace sb::di
         {
             return describe<TService, TImplementation>(ServiceLifeTime::singleton());
         }
+
         /**
          * @brief Creates ServiceDescriptor
          * @details Creates service descriptor with:
@@ -49,11 +45,9 @@ namespace sb::di
          * implementationTypeId - typeid(TImplementation),
          * factory - default factory using TImplementation constructor
          * @tparam TService base service type
-         * @tparam TImplementation service implementation type must inherit from TService and must have one
-         * constructor
+         * @tparam TImplementation service implementation type must inherit from TService and must have one constructor
          * @see Constructor requirements
-         *
-         * Example:
+         * @example
          * @code{.cpp}
          * ServiceDescriptor descriptor1 = ServiceDescriber::describeScoped<TestClass>();
          * ServiceDescriptor descriptor2 = ServiceDescriber::describeScoped<BaseClass, ImplementationClass>();
@@ -71,11 +65,9 @@ namespace sb::di
          * implementationTypeId - typeid(TImplementation),
          * factory - default factory using TImplementation constructor
          * @tparam TService base service type
-         * @tparam TImplementation service implementation type must inherit from TService and must have one
-         * constructor
+         * @tparam TImplementation service implementation type must inherit from TService and must have one constructor
          * @see Constructor requirements
-         *
-         * Example:
+         * @example
          * @code{.cpp}
          * ServiceDescriptor descriptor1 = ServiceDescriber::describeTransient<TestClass>();
          * ServiceDescriptor descriptor2 = ServiceDescriber::describeTransient<BaseClass, ImplementationClass>();
@@ -94,11 +86,10 @@ namespace sb::di
          * implementationTypeId - typeid(TImplementation),
          * factory - default factory using TImplementation constructor
          * @tparam TService base service type
-         * @tparam TImplementation instanceValidity implementation type must inherit from TService and must have one
+         * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
          * @see Constructor requirements
-         *
-         * Example:
+         * @example
          * @code{.cpp}
          * ServiceDescriptor descriptor1 = ServiceDescriber::describe<TestClass>(ServiceLifeTime::scoped());
          * ServiceDescriptor descriptor2 =
@@ -115,16 +106,15 @@ namespace sb::di
 
         /**
          * @brief Creates ServiceDescriptor
-         * @details Creates instanceValidity descriptor with:
+         * @details Creates service descriptor with:
          * lifetime - singleton,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
-         * factory - factory with external instanceValidity pointner
-         * @tparam TService base instanceValidity type
-         * @tparam TImplementation instanceValidity implementation type must inherit from TService and must have one
+         * factory - factory with external service pointer
+         * @tparam TService base service type
+         * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
-         *
-         * Example:
+         * @example
          * @code{.cpp}
          * TestClass test;
          * ServiceDescriptor descriptor1 = ServiceDescriber::describeSingleton<TestClass>(test);
@@ -141,16 +131,15 @@ namespace sb::di
         }
         /**
          * @brief Creates ServiceDescriptor
-         * @details Creates instanceValidity descriptor with:
+         * @details Creates service descriptor with:
          * lifetime - singleton,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
-         * factory - factory with external instanceValidity pointner
-         * @tparam TService base instanceValidity type
-         * @tparam TImplementation instanceValidity implementation type must inherit from TService and must have one
+         * factory - factory with external service pointner
+         * @tparam TService base service type
+         * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
-         *
-         * Example:
+         * @example
          * @code{.cpp}
          * TestClass test;
          * ServiceDescriptor descriptor1 = ServiceDescriber::describeSingleton<TestClass>(&test);
@@ -170,17 +159,16 @@ namespace sb::di
 
         /**
          * @brief Creates ServiceDescriptor
-         * @details Creates instanceValidity descriptor with:
+         * @details Creates service descriptor with:
          * lifetime - singleton,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base instanceValidity type
+         * @tparam TService base service type
          * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
          * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
          * pointners or unique pointners, implementation type must inherit from TService
-         *
-         * Example:
+         * @example
          * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeSingletonFrom<BaseClass>(
          *       []() { return std::make_unique<ImplementationClass>(); });
@@ -192,17 +180,16 @@ namespace sb::di
         }
         /**
          * @brief Creates ServiceDescriptor
-         * @details Creates instanceValidity descriptor with:
+         * @details Creates service descriptor with:
          * lifetime - scoped,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base instanceValidity type
+         * @tparam TService base service type
          * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
          * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
          * pointners or unique pointners, implementation type must inherit from TService
-         *
-         * Example:
+         * @example
          * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeScopedFrom<BaseClass>(
          *       []() { return std::make_unique<ImplementationClass>(); });
@@ -214,17 +201,16 @@ namespace sb::di
         }
         /**
          * @brief Creates ServiceDescriptor
-         * @details Creates instanceValidity descriptor with:
+         * @details Creates service descriptor with:
          * lifetime - transient,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base instanceValidity type
+         * @tparam TService base service type
          * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
          * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
          * pointners or unique pointners, implementation type must inherit from TService
-         *
-         * Example:
+         * @example
          * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeTransientFrom<BaseClass>(
          *       []() { return std::make_unique<ImplementationClass>(); });
@@ -237,7 +223,7 @@ namespace sb::di
 
         /**
          * @brief Creates ServiceDescriptor
-         * @details Creates instanceValidity descriptor with:
+         * @details Creates service descriptor with:
          * lifetime - singleton,
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
@@ -245,8 +231,7 @@ namespace sb::di
          * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
          * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
          * pointners or unique pointners
-         *
-         * Example:
+         * @example
          * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeSingletonFrom(
          *       [](const ServiceDescriptor &) { return std::make_unique<TestClass>(); });
@@ -258,7 +243,7 @@ namespace sb::di
         }
         /**
          * @brief Creates ServiceDescriptor
-         * @details Creates instanceValidity descriptor with:
+         * @details Creates service descriptor with:
          * lifetime - scoped,
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
@@ -266,8 +251,7 @@ namespace sb::di
          * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
          * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
          * pointners or unique pointners
-         *
-         * Example:
+         * @example
          * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeScopedFrom(
          *       [](const ServiceDescriptor &) { return std::make_unique<TestClass>(); });
@@ -279,7 +263,7 @@ namespace sb::di
         }
         /**
          * @brief Creates ServiceDescriptor
-         * @details Creates instanceValidity descriptor with:
+         * @details Creates service descriptor with:
          * lifetime - transient,
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
@@ -287,8 +271,7 @@ namespace sb::di
          * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
          * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
          * pointners or unique pointners
-         *
-         * Example:
+         * @example
          * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeTransientFrom(
          *       [](const ServiceDescriptor &) { return std::make_unique<TestClass>(); });
@@ -301,16 +284,15 @@ namespace sb::di
 
         /**
          * @brief Creates ServiceDescriptor
-         * @details Creates instanceValidity descriptor with:
-         * lifetime - given instanceValidity lifetime,
+         * @details Creates service descriptor with:
+         * lifetime - given service lifetime,
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
          * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
          * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
          * pointners or unique pointners
-         *
-         * Example:
+         * @example
          * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeFrom(
          *       []() { return std::make_unique<TestClass>(); }, ServiceLifeTime::scoped());
@@ -324,17 +306,16 @@ namespace sb::di
 
         /**
          * @brief Creates ServiceDescriptor
-         * @details Creates instanceValidity descriptor with:
-         * lifetime - given instanceValidity lifetime,
+         * @details Creates service descriptor with:
+         * lifetime - given service lifetime,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base instanceValidity type
+         * @tparam TService base service type
          * @tparam FactoryFcn is factory functor with this sheme: (Services...) ->
          * std::unique_ptr<TImplementation>, where services are pointners, unique pointners, references, vectors with
          * pointners or unique pointners, implementation type must inherit from TService
-         *
-         * Example:
+         * @example
          * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeFrom<BaseClass>(
          *       []() { return std::make_unique<ImplementationClass>(); }, ServiceLifeTime::scoped());

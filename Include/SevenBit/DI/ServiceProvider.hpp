@@ -25,28 +25,22 @@ namespace sb::di
         explicit ServiceProvider(IServiceInstanceProvider::Ptr instanceProvider)
             : _instanceProvider(std::move(instanceProvider))
         {
-            getInstanceProvider().setServiceProvider(*this);
+            getInstanceProvider().init(*this);
         }
 
         ServiceProvider(const ServiceProvider &parent) = delete;
-        ServiceProvider(ServiceProvider &&parent) noexcept : ServiceProvider(std::move(parent._instanceProvider)) {}
+        ServiceProvider(ServiceProvider &&) = delete;
 
         ServiceProvider &operator=(const ServiceProvider &parent) = delete;
-        ServiceProvider &operator=(ServiceProvider &&parent) noexcept
-        {
-            _instanceProvider = std::move(parent._instanceProvider);
-            getInstanceProvider().setServiceProvider(*this);
-            return *this;
-        }
+        ServiceProvider &operator=(ServiceProvider &&parent) = delete;
 
         /**
          * @brief Get service provider options
-         * @details Scoped service provider creates/holds its own scoped services
+         * @example
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
-         * auto scoped = provider->createScope();
          *
-         * auto& usedOptions = &provider->getOptions(); // True
+         * auto& usedOptions = provider->getOptions();
          * @endcode
          */
         [[nodiscard]] const ServiceProviderOptions &getOptions() const { return getInstanceProvider().getOptions(); }
@@ -54,6 +48,7 @@ namespace sb::di
         /**
          * @brief Create a scoped service provider
          * @details Scoped service provider creates/holds its own scoped services
+         * @example
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
          * auto scoped = provider->createScope();
@@ -67,8 +62,8 @@ namespace sb::di
         }
 
         /**
-         * @brief Returns inner service instance pointer
-         * @throw sb::di::NullPointerException if instance provider is null
+         * @brief Returns inner service instance provider
+         * @throw sb::di::NullPointerException
          */
         [[nodiscard]] const IServiceInstanceProvider &getInstanceProvider() const
         {
@@ -77,8 +72,8 @@ namespace sb::di
         }
 
         /**
-         * @brief Returns inner service instance pointer
-         * @throw sb::di::NullPointerException if instance provider is null
+         * @brief Returns inner service instance provider
+         * @throw sb::di::NullPointerException
          */
         IServiceInstanceProvider &getInstanceProvider()
         {
@@ -89,8 +84,7 @@ namespace sb::di
         /**
          * @brief Returns service pointer, might be null
          * @details If service was not registered or was registered as transient, method returns null
-         *
-         * Example:
+         * @example
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
          *
@@ -110,9 +104,8 @@ namespace sb::di
         /**
          * @brief Returns service reference, might throw exception
          * @details If service was not registered or was registered as transient, method throws exception
-         * @throws ServiceNotFoundException service was not found
-         *
-         * Example:
+         * @throws sb::di::ServiceNotFoundException
+         * @example
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
          *
@@ -128,9 +121,8 @@ namespace sb::di
 
         /**
          * @brief Returns services
-         * @details If instanceValidity was not registered or was registered as transient, method returns empty vector
-         *
-         * Example:
+         * @details If service was not registered or was registered as transient, method returns empty vector
+         * @example
          * @code{.cpp}
          * auto provider = ServiceCollection{}
          *              .addScoped<ITestClass, TestClass1>()
@@ -151,14 +143,13 @@ namespace sb::di
         }
 
         /**
-         * @brief Creates instanceValidity unique pointner, might be null
-         * @details If instanceValidity was not registered or was registered as scoped/transient, method returns null
-         *
-         * Example:
+         * @brief Creates service unique pointer, might be null
+         * @details If service was not registered or was registered as scoped/singleton, method returns null
+         * @example
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
          *
-         * std::unique_ptr<TestClass> instanceValidity = provider->tryCreateService<TestClass>();
+         * std::unique_ptr<TestClass> service = provider->tryCreateService<TestClass>();
          * @endcode
          */
         template <class TService> std::unique_ptr<TService> tryCreateService()
@@ -172,16 +163,14 @@ namespace sb::di
         }
 
         /**
-         * @brief Creates instanceValidity unique pointner, might throw exception
-         * @details If instanceValidity was not registered or was registered as scoped/transient, method throws
-         * exception
-         * @throws ServiceNotFoundException instanceValidity was not found
-         *
-         * Example:
+         * @brief Creates service unique pointer, might throw exception
+         * @details If service was not registered or was registered as scoped/singleton, method throws exception
+         * @throws sb::di::ServiceNotFoundException
+         * @example
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
          *
-         * std::unique_ptr<TestClass> instanceValidity = provider->createInstance<TestClass>();
+         * std::unique_ptr<TestClass> service = provider->createInstance<TestClass>();
          * @endcode
          */
         template <class TService> std::unique_ptr<TService> createService()
@@ -192,16 +181,14 @@ namespace sb::di
         }
 
         /**
-         * @brief Creates instanceValidity unique pointner, might throw exception
-         * @details If instanceValidity was not registered or was registered as scoped/transient, method throws
-         * exception
-         * @throws ServiceNotFoundException instanceValidity was not found
-         *
-         * Example:
+         * @brief Creates service in place, might throw exception
+         * @details If service was not registered or was registered as scoped/singleton, method throws exception
+         * @throws sb::di::ServiceNotFoundException
+         * @example
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
          *
-         * std::unique_ptr<TestClass> instanceValidity = provider->createInstance<TestClass>();
+         * TestClass service = provider->createServiceInPlace<TestClass>();
          * @endcode
          */
         template <class TService> TService createServiceInPlace()
@@ -213,17 +200,15 @@ namespace sb::di
 
         /**
          * @brief Creates services
-         * @details If instanceValidity was not registered or was registered as scoped/transient, method returns empty
-         * vector
-         *
-         * Example:
+         * @details If service was not registered or was registered as scoped/singleton, method returns empty vector
+         * @example
          * @code{.cpp}
          * auto provider = ServiceCollection{}
          *              .addTransient<ITestClass, TestClass1>()
          *              .addTransient<ITestClass, TestClass2>()
          *              .buildServiceProvider();
          *
-         * d::vector<std::unique_ptr<ITestClass>> services = provider->createServices<ITestClass>();
+         * std::vector<std::unique_ptr<ITestClass>> services = provider->createServices<ITestClass>();
          * @endcode
          */
         template <class TService> std::vector<std::unique_ptr<TService>> createServices()

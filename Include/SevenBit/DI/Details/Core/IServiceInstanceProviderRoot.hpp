@@ -10,10 +10,10 @@
 
 namespace sb::di::details::core
 {
-    struct IServiceInstanceProviderData
+    struct IServiceInstanceProviderRoot
     {
-        using Ptr = std::unique_ptr<IServiceInstanceProviderData>;
-        using SPtr = std::shared_ptr<IServiceInstanceProviderData>;
+        using Ptr = std::unique_ptr<IServiceInstanceProviderRoot>;
+        using SPtr = std::shared_ptr<IServiceInstanceProviderRoot>;
 
         [[nodiscard]] virtual const ServiceProviderOptions &getOptions() const = 0;
 
@@ -21,6 +21,8 @@ namespace sb::di::details::core
 
         virtual containers::ServiceInstancesMap &getSingletons() = 0;
 
-        virtual ~IServiceInstanceProviderData() = default;
+        virtual IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor, bool inPlaceRequest) = 0;
+
+        virtual ~IServiceInstanceProviderRoot() = default;
     };
 } // namespace sb::di::details::core

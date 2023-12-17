@@ -16,39 +16,20 @@
 namespace sb::di::details::core
 {
     INLINE ServiceInstanceProvider::ServiceInstanceProvider(const ServiceInstanceProvider &provider)
-        : _sharedData(utils::Require::notNullAndGet(IServiceInstanceProviderData::SPtr{provider._sharedData})),
-          _scoped(_sharedData->getOptions().strongDestructionOrder)
+        : _root(provider._root), _scoped(_root.getOptions().strongDestructionOrder)
     {
     }
 
-    INLINE ServiceInstanceProvider::ServiceInstanceProvider(IServiceInstanceProviderData::Ptr data)
-        : _sharedData(utils::Require::notNullAndGet(std::move(data))),
-          _scoped(_sharedData->getOptions().strongDestructionOrder)
+    INLINE ServiceInstanceProvider::ServiceInstanceProvider(IServiceInstanceProviderRoot &root)
+        : _root(root), _scoped(_root.getOptions().strongDestructionOrder)
     {
-        if (_sharedData->getOptions().prebuildSingletons)
-        {
-            prebuildSingletons();
-        }
     }
 
-    INLINE void ServiceInstanceProvider::setServiceProvider(ServiceProvider &serviceProvider)
+    INLINE void ServiceInstanceProvider::init(ServiceProvider &serviceProvider)
     {
         _serviceProvider = &serviceProvider;
-        if (const auto list = _scoped.findServices(typeid(ServiceProvider)))
-        {
-            auto &external = list->first();
-            if (!external)
-            {
-                external = std::make_unique<services::ExternalService<ServiceProvider>>(_serviceProvider);
-            }
-            dynamic_cast<services::ExternalService<ServiceProvider> &>(*external).update(_serviceProvider);
-            list->seal();
-        }
-        else
-        {
-            auto external = std::make_unique<services::ExternalService<ServiceProvider>>(_serviceProvider);
-            _scoped.insert(typeid(ServiceProvider), std::move(external)).seal();
-        }
+        auto external = std::make_unique<services::ExternalService<ServiceProvider>>(_serviceProvider);
+        _scoped.insert(typeid(ServiceProvider), std::move(external)).seal();
     }
 
     INLINE IServiceInstanceProvider::Ptr ServiceInstanceProvider::createScope() const
@@ -207,41 +188,34 @@ namespace sb::di::details::core
     INLINE IServiceInstance::Ptr ServiceInstanceProvider::createInstance(const ServiceDescriptor &descriptor,
                                                                          const bool inPlaceRequest)
     {
-        auto _ = _guard(descriptor.getImplementationTypeId());
-        return utils::Require::validInstanceAndGet(descriptor.getImplementationFactory().createInstance(
-            *utils::Require::notNullAndGet(_serviceProvider), inPlaceRequest));
+        if (descriptor.getLifeTime().isSingleton())
+        {
+            return _root.createInstance(descriptor, inPlaceRequest);
+        }
+        else
+        {
+            auto _ = _guard(descriptor.getImplementationTypeId());
+            return utils::Require::validInstanceAndGet(descriptor.getImplementationFactory().createInstance(
+                *utils::Require::notNullAndGet(_serviceProvider), inPlaceRequest));
+        }
     }
 
-    INLINE const ServiceProviderOptions &ServiceInstanceProvider::getOptions() const
-    {
-        return _sharedData->getOptions();
-    }
+    INLINE const ServiceProviderOptions &ServiceInstanceProvider::getOptions() const { return _root.getOptions(); }
 
     INLINE containers::ServiceInstanceList *ServiceInstanceProvider::findRegisteredInstances(const TypeId serviceTypeId)
     {
-        const auto singletons = _sharedData->getSingletons().findServices(serviceTypeId);
+        const auto singletons = _root.getSingletons().findServices(serviceTypeId);
         return singletons ? singletons : _scoped.findServices(serviceTypeId);
     }
 
     INLINE containers::ServiceInstancesMap *ServiceInstanceProvider::tryGetInstancesMap(const ServiceLifeTime &lifeTime)
     {
-        return lifeTime.isTransient() ? nullptr : (lifeTime.isSingleton() ? &_sharedData->getSingletons() : &_scoped);
+        return lifeTime.isTransient() ? nullptr : (lifeTime.isSingleton() ? &_root.getSingletons() : &_scoped);
     }
 
     INLINE const containers::ServiceDescriptorList *ServiceInstanceProvider::findDescriptors(
         const TypeId serviceTypeId) const
     {
-        return _sharedData->getDescriptorsMap().findDescriptors(serviceTypeId);
-    }
-
-    INLINE void ServiceInstanceProvider::prebuildSingletons()
-    {
-        for (auto &[_, descriptors] : _sharedData->getDescriptorsMap())
-        {
-            if (descriptors.getLifeTime().isSingleton())
-            {
-                tryCreateAndRegisterAll(descriptors);
-            }
-        }
+        return _root.getDescriptorsMap().findDescriptors(serviceTypeId);
     }
 } // namespace sb::di::details::core

@@ -7,7 +7,7 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
-#include "SevenBit/DI/Details/Core/IServiceInstanceProviderData.hpp"
+#include "SevenBit/DI/Details/Core/IServiceInstanceProviderRoot.hpp"
 #include "SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
@@ -19,7 +19,7 @@ namespace sb::di::details::core
 {
     class EXPORT ServiceInstanceProvider : public IServiceInstanceProvider
     {
-        IServiceInstanceProviderData::SPtr _sharedData;
+        IServiceInstanceProviderRoot &_root;
         containers::ServiceInstancesMap _scoped;
         helpers::CircularDependencyGuard _guard;
         ServiceProvider *_serviceProvider = nullptr;
@@ -29,13 +29,13 @@ namespace sb::di::details::core
       public:
         using Ptr = std::unique_ptr<ServiceInstanceProvider>;
 
-        explicit ServiceInstanceProvider(IServiceInstanceProviderData::Ptr data);
+        explicit ServiceInstanceProvider(IServiceInstanceProviderRoot &root);
 
         ServiceInstanceProvider(ServiceInstanceProvider &&) noexcept = default;
 
         ServiceInstanceProvider &operator=(const ServiceInstanceProvider &) = delete;
 
-        void setServiceProvider(ServiceProvider &serviceProvider) override;
+        void init(ServiceProvider &serviceProvider) override;
 
         [[nodiscard]] IServiceInstanceProvider::Ptr createScope() const override;
 
@@ -54,7 +54,7 @@ namespace sb::di::details::core
 
         [[nodiscard]] const ServiceProviderOptions &getOptions() const override;
 
-      private:
+      protected:
         const IServiceInstance *tryCreateAndRegister(const containers::ServiceDescriptorList &descriptors);
         const OneOrList<IServiceInstance::Ptr> *tryCreateAndRegisterAll(
             const containers::ServiceDescriptorList &descriptors);
@@ -74,8 +74,6 @@ namespace sb::di::details::core
         containers::ServiceInstanceList *findRegisteredInstances(TypeId serviceTypeId);
 
         [[nodiscard]] const containers::ServiceDescriptorList *findDescriptors(TypeId serviceTypeId) const;
-
-        void prebuildSingletons();
     };
 } // namespace sb::di::details::core
 

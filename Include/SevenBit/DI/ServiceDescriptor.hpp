@@ -10,15 +10,10 @@
 
 namespace sb::di
 {
-    /**
-     * @brief Describes Service
-     */
     class EXPORT ServiceDescriptor
     {
-        ServiceLifeTime _lifetime;
-
         TypeId _serviceTypeId;
-
+        ServiceLifeTime _lifetime;
         IServiceFactory::SPtr _implementationFactory;
 
       public:
@@ -26,15 +21,13 @@ namespace sb::di
 
         /**
          * @brief Construct a new service descriptor object
-         * @details implementationFactory cannot be null, otherwise construcor will throw exception
-         * @throws sb::di::NullPointerException if implementationFactory is null
+         * @details implementationFactory cannot be null, otherwise constructor will throw exception
+         * @throws sb::di::NullPointerException
          */
         ServiceDescriptor(TypeId serviceTypeId, ServiceLifeTime lifetime, IServiceFactory::Ptr implementationFactory);
 
-
         ServiceDescriptor(const ServiceDescriptor &other) = default;
         ServiceDescriptor(ServiceDescriptor &&) = default;
-
 
         ServiceDescriptor &operator=(const ServiceDescriptor &other) = default;
         ServiceDescriptor &operator=(ServiceDescriptor &&other) = default;

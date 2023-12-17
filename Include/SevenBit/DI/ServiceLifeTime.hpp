@@ -4,14 +4,11 @@
 
 namespace sb::di
 {
-    /**
-     * @brief Class used to describe service lifetime
-     */
     class EXPORT ServiceLifeTime
     {
       public:
         /**
-         * @brief 3 types of availabe service lifetimes
+         * @brief 3 types of available service lifetimes
          */
         enum Type
         {

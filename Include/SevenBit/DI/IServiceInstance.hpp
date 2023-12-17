@@ -9,22 +9,20 @@
 
 namespace sb::di
 {
-    /**
-     * @brief Interface for all service instances
-     */
     struct IServiceInstance
     {
         using Ptr = std::unique_ptr<IServiceInstance>;
 
         /**
-         * @brief Returns service pointner as void *
+         * @brief Returns service pointer as void *
          */
         [[nodiscard]] virtual void *get() const = 0;
 
         /**
-         * @brief Returns service pointner as void *,
+         * @brief Returns service pointer as void *,
          * @details Method is used to ensure that service can be moved out
-         * @throws sb::di::CannotMoveOutServiceException cannot move out service
+         * @throws sb::di::CannotMoveOutServiceException
+         * @example
          * @code{.cpp}
          * void* service = instance->getForMoveOut();
          * @endcode
@@ -35,9 +33,10 @@ namespace sb::di
          * @brief Releases service ownership as void *
          * @details If instance is owner of service it will release this ownership just like
          * std::unique_ptr<T>::release(), otherwise it will throw exception
-         * @throws sb::di::CannotReleaseServiceException cannot release service ownership
-         * @warning Using this method might couse memory leaks, client is responsible for managing this pointner
-         * lifetime, the best approach is to imediatly wrap this poinrner with proper std::unique_ptr<T>
+         * @throws sb::di::CannotReleaseServiceException
+         * @warning Using this method might cause memory leaks, client is responsible for managing this pointner
+         * lifetime, the best approach is to immediately wrap this pointer with proper std::unique_ptr<T>
+         * @example
          * @code{.cpp}
          * std::unique_ptr<T> service{static_cast<T *>(instance->release())};
          * @endcode
@@ -47,6 +46,7 @@ namespace sb::di
         /**
          * @brief Get the TypeId of service
          * @details This method can be used to check if casting is safe
+         * @example
          * @code{.cpp}
          * if(instance->getTypeId() == typeid(T)) {
          *      T* service = instance->getAs<T>();
@@ -67,8 +67,9 @@ namespace sb::di
         explicit operator bool() const { return isValid(); }
 
         /**
-         * @brief Returns service pointner as T *
+         * @brief Returns service pointer as T *
          * @details The client is responsible for ensuring that the T type is correct
+         * @example
          * @code{.cpp}
          * T* service = instance->getAs<T>();
          * @endcode
@@ -78,6 +79,7 @@ namespace sb::di
         /**
          * @brief Releases service ownership as pointer T *
          * @details The client is responsible for ensuring that the T type is correct
+         * @example
          * @code{.cpp}
          * T* service = instance->releaseAs<T>();
          * @endcode
@@ -87,6 +89,7 @@ namespace sb::di
         /**
          * @brief Moves out service as unique_ptr<T>
          * @details The client is responsible for ensuring that the T type is correct
+         * @example
          * @code{.cpp}
          * std::unique_ptr<T> service = instance->moveOutAsUniquePtr<T>();
          * @endcode
@@ -96,6 +99,7 @@ namespace sb::di
         /**
          * @brief Moves out service as T
          * @details The client is responsible for ensuring that the T type is correct
+         * @example
          * @code{.cpp}
          * T service = instance->moveOutAs<T>();
          * @endcode

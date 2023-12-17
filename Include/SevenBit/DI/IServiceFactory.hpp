@@ -9,9 +9,6 @@
 
 namespace sb::di
 {
-    /**
-     * @brief Interface for all service factories
-     */
     struct IServiceFactory
     {
         using Ptr = std::unique_ptr<IServiceFactory>;
