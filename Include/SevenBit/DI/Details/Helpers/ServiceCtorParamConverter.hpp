@@ -7,21 +7,20 @@
 
 namespace sb::di::details::helpers
 {
-    template <class T, size_t N = 0> class ServiceCtorParamConverter
+    template <class T> class ServiceCtorParamConverter
     {
-        ServiceProvider *_provider = nullptr;
+        ServiceProvider &_provider;
 
       public:
-        ServiceCtorParamConverter() = default;
-        explicit ServiceCtorParamConverter(ServiceProvider &provider) { _provider = &provider; }
+        explicit ServiceCtorParamConverter(ServiceProvider &provider, size_t argPos) : _provider(provider) {}
 
         template <class U, class = typename std::enable_if_t<!utils::IsCopyCtorV<T, U>>> operator U()
         {
-            return helpers::ServiceParamProvider<U>::getParam(*_provider);
+            return helpers::ServiceParamProvider<U>::getParam(_provider);
         }
         template <class U, class = typename std::enable_if_t<!utils::IsCopyCtorV<T, U>>> operator U &() const
         {
-            return helpers::ServiceParamProvider<U &>::getParam(*_provider);
+            return helpers::ServiceParamProvider<U &>::getParam(_provider);
         }
     };
 } // namespace sb::di::details::helpers

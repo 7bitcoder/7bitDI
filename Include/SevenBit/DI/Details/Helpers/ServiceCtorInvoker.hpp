@@ -25,7 +25,7 @@ namespace sb::di::details::helpers
       private:
         template <class TFunc, size_t... Index> auto invokeWithCtorParams(TFunc &&func, std::index_sequence<Index...>)
         {
-            return func(ServiceCtorParamConverter<T, Index>{_serviceProvider}...);
+            return func(ServiceCtorParamConverter<T>{_serviceProvider, Index}...);
         }
     };
 

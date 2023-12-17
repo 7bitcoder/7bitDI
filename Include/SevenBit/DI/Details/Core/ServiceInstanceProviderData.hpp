@@ -8,7 +8,6 @@
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorsMap.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
 #include "SevenBit/DI/Details/Core/IServiceInstanceProviderData.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 
 namespace sb::di::details::core

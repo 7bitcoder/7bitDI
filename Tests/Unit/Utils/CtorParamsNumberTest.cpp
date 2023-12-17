@@ -29,6 +29,21 @@ struct LotOfParams
     }
 };
 
+struct LotOfRefs
+{
+    int &a1;
+    int &a2;
+    int &a3;
+    int &a4;
+    int &a5;
+    int &a6;
+    int &a7;
+    int &a8;
+    int &a9;
+    int &a10;
+    int &a11;
+};
+
 struct Ambigious
 {
     Ambigious(int a, int b) {}
@@ -44,5 +59,6 @@ TEST_F(CtorParamsNumberTest, ShouldGetProperCtorParamsNumber)
     EXPECT_EQ(sb::di::details::utils::ctorParamsNumber<TestComplexClass4>(), 3);
     EXPECT_EQ(sb::di::details::utils::ctorParamsNumber<TestComplexClass5>(), 3);
     EXPECT_EQ(sb::di::details::utils::ctorParamsNumber<LotOfParams>(), 13);
+    EXPECT_EQ(sb::di::details::utils::ctorParamsNumber<LotOfRefs>(), 11);
     EXPECT_EQ(sb::di::details::utils::ctorParamsNumber<Ambigious>(), 2);
 }

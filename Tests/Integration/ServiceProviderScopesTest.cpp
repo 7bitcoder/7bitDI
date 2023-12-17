@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 #include <memory>
 
-#include "../../Helpers/Classes/Basic.hpp"
-#include "../../Helpers/Classes/Complex.hpp"
-#include "../../Helpers/Classes/Dependencies.hpp"
+#include "../Helpers/Classes/Basic.hpp"
+#include "../Helpers/Classes/Complex.hpp"
+#include "../Helpers/Classes/Dependencies.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"

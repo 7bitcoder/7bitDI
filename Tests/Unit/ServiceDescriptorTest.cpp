@@ -56,3 +56,18 @@ TEST_F(ServiceDescriptorTest, ShouldGetProperInfoFromDescriptor)
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestClass1));
     EXPECT_EQ(&descriptor.getImplementationFactory(), factoryPtr);
 }
+
+TEST_F(ServiceDescriptorTest, ShouldCompareDescriptors)
+{
+    auto factory = std::make_unique<sb::di::details::factories::ServiceFactory<TestClass1>>();
+    const sb::di::ServiceDescriptor descriptor{typeid(TestClass1), sb::di::ServiceLifeTime::singleton(),
+                                               std::move(factory)};
+
+    auto factory2 = std::make_unique<sb::di::details::factories::ServiceFactory<TestClass1>>();
+    const sb::di::ServiceDescriptor descriptor2{typeid(TestClass1), sb::di::ServiceLifeTime::singleton(),
+                                                std::move(factory2)};
+
+    const auto &descriptorCopy = descriptor;
+    EXPECT_EQ(descriptor, descriptorCopy);
+    EXPECT_NE(descriptor, descriptor2);
+}

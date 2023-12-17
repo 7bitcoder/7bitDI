@@ -42,7 +42,10 @@ namespace sb::di
          */
         explicit ServiceLifeTime(Type type);
 
+        ServiceLifeTime(ServiceLifeTime &&) = default;
         ServiceLifeTime(const ServiceLifeTime &) = default;
+
+        ServiceLifeTime &operator=(ServiceLifeTime &&) = default;
         ServiceLifeTime &operator=(const ServiceLifeTime &) = default;
 
         /**
@@ -63,10 +66,6 @@ namespace sb::di
          */
         [[nodiscard]] bool is(Type type) const;
 
-        bool operator>(const ServiceLifeTime &scope) const;
-        bool operator<(const ServiceLifeTime &scope) const;
-        bool operator>=(const ServiceLifeTime &scope) const;
-        bool operator<=(const ServiceLifeTime &scope) const;
         bool operator!=(const ServiceLifeTime &scope) const;
         bool operator==(const ServiceLifeTime &scope) const;
     };

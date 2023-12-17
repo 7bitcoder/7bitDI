@@ -9,13 +9,15 @@ namespace sb::di::details::utils
 {
     namespace ctorParamsNumberInternals
     {
-        template <class T, int N> struct Conv
+        template <class T> struct Conv
         {
+            explicit Conv(size_t paramNumber) {}
+
             template <class U, class = typename std::enable_if_t<!utils::IsCopyCtorV<T, U>>> operator U();
             template <class U, class = typename std::enable_if_t<!utils::IsCopyCtorV<T, U>>> operator U &() const;
         };
 
-        template <class T, size_t... Ns> constexpr auto paramsNumber(size_t) -> decltype(T{Conv<T, Ns>{}...}, 0)
+        template <class T, size_t... Ns> constexpr auto paramsNumber(size_t) -> decltype(T{Conv<T>{Ns}...}, 0)
         {
             return sizeof...(Ns);
         }
