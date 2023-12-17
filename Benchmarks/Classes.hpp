@@ -68,6 +68,19 @@ struct TestComplexClass3 : ITestComplexClass3
     int number() override { return 3; }
 };
 
+struct TestComplexClass31 : ITestComplexClass3
+{
+    ITestComplexClass1 *_test1;
+    ITestComplexClass2 *_test2;
+
+    TestComplexClass31(ITestComplexClass1 *test1, ITestComplexClass2 *test2) : _test1(test1), _test2(test2) {}
+
+    ITestComplexClass1 *getOne() override { return _test1; }
+    ITestComplexClass2 *getTwo() override { return _test2; }
+
+    int number() override { return 3; }
+};
+
 struct ITestComplexClass4
 {
     virtual ITestComplexClass1 *getOne() = 0;

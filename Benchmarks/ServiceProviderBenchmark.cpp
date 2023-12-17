@@ -20,7 +20,7 @@ class ServiceProviderBenchmark : public benchmark::Fixture
             .addSingleton<ITestComplexClass1, TestComplexClass13>()
             .addSingleton<ITestComplexClass2, TestComplexClass2>()
             .addTransient<ITestComplexClass3, TestComplexClass3>()
-            .addTransient<TestComplexClass3>()
+            .addTransient<TestComplexClass31>()
             .addScoped<ITestComplexClass4, TestComplexClass4>()
             .addScoped<ITestComplexClass5, TestComplexClass5>()
             .addScoped<ITestComplexClass6, TestComplexClass6>()
@@ -80,7 +80,7 @@ BENCHMARK_F(ServiceProviderBenchmark, CreateServicesInPlace)(benchmark::State &s
 {
     for (auto _ : st)
     {
-        _provider.createServiceInPlace<TestComplexClass3>();
+        _provider.createServiceInPlace<TestComplexClass31>();
     }
 }
 
