@@ -53,7 +53,6 @@ TEST_F(ComplexInjectionsTest, ShouldTryGetDeepNestedService)
 
     auto provider = collection.buildServiceProvider();
 
-    const auto nested = provider.tryGetService<TestNested<50>>();
-    EXPECT_TRUE(nested);
-    nested->checkRecurse(provider);
+    auto nested = provider.getService<TestNested<50>>();
+    nested.checkRecurse(provider);
 }

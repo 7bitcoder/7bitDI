@@ -157,7 +157,7 @@ template <size_t ID> struct TestNested
 
     void checkRecurse(sb::di::ServiceProvider &provider)
     {
-        EXPECT_EQ(&_nested, provider.tryGetService<TestNested<ID - 1>>());
+        EXPECT_EQ(&_nested, &provider.getService<TestNested<ID - 1>>());
         _nested.checkRecurse(provider);
     }
 };
