@@ -20,9 +20,9 @@ namespace sb::di
         using Ptr = std::unique_ptr<ServiceProvider>;
 
         explicit ServiceProvider(IServiceInstanceProvider::Ptr instanceProvider)
+            : _instanceProvider(std::move(instanceProvider))
         {
-            _instanceProvider = std::move(instanceProvider);
-            _instanceProvider->setServiceProvider(*this);
+            getInstanceProvider().setServiceProvider(*this);
         }
 
         ServiceProvider(ServiceProvider &&parent) noexcept : ServiceProvider(std::move(parent._instanceProvider)) {}
@@ -31,7 +31,7 @@ namespace sb::di
         ServiceProvider &operator=(ServiceProvider &&parent) noexcept
         {
             _instanceProvider = std::move(parent._instanceProvider);
-            _instanceProvider->setServiceProvider(*this);
+            getInstanceProvider().setServiceProvider(*this);
             return *this;
         }
         ServiceProvider &operator=(const ServiceProvider &parent) = delete;
@@ -41,13 +41,17 @@ namespace sb::di
             return ServiceProvider{getInstanceProvider().createScope()};
         }
 
+        [[nodiscard]] const ServiceProviderOptions &getOptions() const { return getInstanceProvider().getOptions(); }
+
         [[nodiscard]] const IServiceInstanceProvider &getInstanceProvider() const
         {
-            return *details::utils::Require::notNullAndGet(_instanceProvider.get());
+            details::utils::Require::notNull(_instanceProvider);
+            return *_instanceProvider;
         }
         IServiceInstanceProvider &getInstanceProvider()
         {
-            return *details::utils::Require::notNullAndGet(_instanceProvider.get());
+            details::utils::Require::notNull(_instanceProvider);
+            return *_instanceProvider;
         }
 
         /**

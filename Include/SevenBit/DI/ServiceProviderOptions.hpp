@@ -21,6 +21,6 @@ namespace sb::di
          */
         bool prebuildSingletons = false;
 
-        bool checkServiceGlobalUniqueness = false;
+        bool checkServiceGlobalUniqueness = true;
     };
 } // namespace sb::di

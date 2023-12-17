@@ -52,6 +52,8 @@ namespace sb::di::details::core
 
         void clear();
 
+        [[nodiscard]] const ServiceProviderOptions &getOptions() const override;
+
       private:
         const IServiceInstance *tryCreateAndRegister(const containers::ServiceDescriptorList &descriptors);
         const OneOrList<IServiceInstance::Ptr> *tryCreateAndRegisterAll(
@@ -72,8 +74,6 @@ namespace sb::di::details::core
         containers::ServiceInstanceList *findRegisteredInstances(TypeId serviceTypeId);
 
         [[nodiscard]] const containers::ServiceDescriptorList *findDescriptors(TypeId serviceTypeId) const;
-
-        [[nodiscard]] const ServiceProviderOptions &getOptions() const;
 
         void prebuildSingletons();
     };

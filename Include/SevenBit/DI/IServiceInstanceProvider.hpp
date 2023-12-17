@@ -7,6 +7,7 @@
 
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/OneOrList.hpp"
+#include "SevenBit/DI/ServiceProviderOptions.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di
@@ -129,6 +130,8 @@ namespace sb::di
         virtual IServiceInstance::Ptr tryCreateInstanceInPlace(TypeId serviceTypeId) = 0;
 
         virtual IServiceInstance::Ptr createInstanceInPlace(TypeId serviceTypeId) = 0;
+
+        [[nodiscard]] virtual const ServiceProviderOptions &getOptions() const = 0;
 
         virtual ~IServiceInstanceProvider() = default;
     };

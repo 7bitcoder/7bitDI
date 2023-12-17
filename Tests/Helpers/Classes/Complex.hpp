@@ -3,6 +3,9 @@
 #include <memory>
 #include <string>
 
+#include <gtest/gtest.h>
+
+#include "SevenBit/DI/ServiceCollection.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 
 struct ITestComplexClass1
@@ -111,4 +114,59 @@ struct TestComplexClass5 : public ITestComplexClass5
     std::unique_ptr<ITestComplexClass3> makeThree() override { return _provider->createService<ITestComplexClass3>(); }
 
     int number() override { return 5; }
+};
+
+struct ITestComplexClass6
+{
+    virtual ITestComplexClass1 &getOne() = 0;
+    virtual ITestComplexClass2 &getTwo() = 0;
+    virtual std::unique_ptr<ITestComplexClass3> makeThree() = 0;
+
+    virtual int number() = 0;
+    virtual ~ITestComplexClass6() = default;
+};
+struct TestComplexClass6 : public ITestComplexClass6
+{
+    ITestComplexClass1 &_test1;
+    ITestComplexClass2 &_test2;
+    sb::di::ServiceProvider &_provider;
+
+    TestComplexClass6(ITestComplexClass1 &test1, ITestComplexClass2 &test2, sb::di::ServiceProvider &provider)
+        : _test1(test1), _test2(test2), _provider(provider)
+    {
+    }
+
+    ITestComplexClass1 &getOne() override { return _test1; }
+    ITestComplexClass2 &getTwo() override { return _test2; }
+    std::unique_ptr<ITestComplexClass3> makeThree() override { return _provider.createService<ITestComplexClass3>(); }
+
+    int number() override { return 5; }
+};
+
+template <size_t ID> struct TestNested
+{
+    TestNested<ID - 1> &_nested;
+
+    explicit TestNested(TestNested<ID - 1> &nested) : _nested(nested) {}
+
+    static void addAllRecurse(sb::di::ServiceCollection &collection)
+    {
+        collection.addSingleton<TestNested<ID>>();
+        TestNested<ID - 1>::addAllRecurse(collection);
+    }
+
+    void checkRecurse(sb::di::ServiceProvider &provider)
+    {
+        EXPECT_EQ(&_nested, provider.tryGetService<TestNested<ID - 1>>());
+        _nested.checkRecurse(provider);
+    }
+};
+
+template <> struct TestNested<0>
+{
+    TestNested() = default;
+
+    static void addAllRecurse(sb::di::ServiceCollection &collection) { collection.addSingleton<TestNested<0>>(); }
+
+    void checkRecurse(sb::di::ServiceProvider &provider) {}
 };

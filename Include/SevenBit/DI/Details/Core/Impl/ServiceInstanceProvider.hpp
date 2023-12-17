@@ -219,8 +219,8 @@ namespace sb::di::details::core
 
     INLINE containers::ServiceInstanceList *ServiceInstanceProvider::findRegisteredInstances(const TypeId serviceTypeId)
     {
-        const auto scoped = _scoped.findServices(serviceTypeId);
-        return scoped ? scoped : _sharedData->getSingletons().findServices(serviceTypeId);
+        const auto singletons = _sharedData->getSingletons().findServices(serviceTypeId);
+        return singletons ? singletons : _scoped.findServices(serviceTypeId);
     }
 
     INLINE containers::ServiceInstancesMap *ServiceInstanceProvider::tryGetInstancesMap(const ServiceLifeTime &lifeTime)
