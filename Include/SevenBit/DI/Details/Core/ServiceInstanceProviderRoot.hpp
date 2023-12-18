@@ -38,7 +38,7 @@ namespace sb::di::details::core
 
         containers::ServiceInstancesMap &getSingletons() override;
 
-        helpers::ScopedGuard spawhGuard(TypeId typeId) override;
+        helpers::ScopedGuard spawnGuard(TypeId typeId) override;
 
         IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor, bool inPlaceRequest) override;
 

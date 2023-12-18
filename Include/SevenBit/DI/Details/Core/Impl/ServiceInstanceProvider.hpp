@@ -189,16 +189,15 @@ namespace sb::di::details::core
     INLINE IServiceInstance::Ptr ServiceInstanceProvider::createInstance(const ServiceDescriptor &descriptor,
                                                                          const bool inPlaceRequest)
     {
-        auto rootPtr = static_cast<void *>(&_root);
-        auto casted = static_cast<void *>(this);
-        bool isRoot = rootPtr == casted;
+        auto rootPtr = reinterpret_cast<ServiceInstanceProvider *>(&_root);
+        bool isRoot = rootPtr == this;
         if (descriptor.getLifeTime().isSingleton() && !isRoot)
         {
             return _root.createInstance(descriptor, inPlaceRequest);
         }
         else
         {
-            auto _ = _root.spawhGuard(descriptor.getImplementationTypeId());
+            auto _ = _root.spawnGuard(descriptor.getImplementationTypeId());
             return utils::Require::validInstanceAndGet(descriptor.getImplementationFactory().createInstance(
                 *utils::Require::notNullAndGet(_serviceProvider), inPlaceRequest));
         }

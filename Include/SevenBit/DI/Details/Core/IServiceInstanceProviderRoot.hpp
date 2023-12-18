@@ -20,7 +20,7 @@ namespace sb::di::details::core
 
         virtual containers::ServiceInstancesMap &getSingletons() = 0;
 
-        virtual helpers::ScopedGuard spawhGuard(TypeId typeId) = 0;
+        virtual helpers::ScopedGuard spawnGuard(TypeId typeId) = 0;
 
         virtual IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor, bool inPlaceRequest) = 0;
 

@@ -22,7 +22,7 @@ namespace sb::di::details::core
 
     INLINE containers::ServiceInstancesMap &ServiceInstanceProviderRoot::getSingletons() { return _singletons; }
 
-    INLINE helpers::ScopedGuard ServiceInstanceProviderRoot::spawhGuard(TypeId typeId) { return _guard(typeId); }
+    INLINE helpers::ScopedGuard ServiceInstanceProviderRoot::spawnGuard(TypeId typeId) { return _guard(typeId); }
 
     INLINE IServiceInstance::Ptr ServiceInstanceProviderRoot::createInstance(const ServiceDescriptor &descriptor,
                                                                              bool inPlaceRequest)
