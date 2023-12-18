@@ -24,12 +24,6 @@ namespace sb::di::details::core
 
     INLINE helpers::ScopedGuard ServiceInstanceProviderRoot::spawnGuard(TypeId typeId) { return _guard(typeId); }
 
-    INLINE IServiceInstance::Ptr ServiceInstanceProviderRoot::createInstance(const ServiceDescriptor &descriptor,
-                                                                             bool inPlaceRequest)
-    {
-        return ServiceInstanceProvider::createInstance(descriptor, inPlaceRequest);
-    }
-
     INLINE void ServiceInstanceProviderRoot::prebuildSingletons()
     {
         for (auto &[_, descriptors] : getDescriptorsMap())

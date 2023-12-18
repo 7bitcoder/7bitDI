@@ -13,7 +13,7 @@
 
 namespace sb::di::details::core
 {
-    class EXPORT ServiceInstanceProviderRoot : public ServiceInstanceProvider, public IServiceInstanceProviderRoot
+    class EXPORT ServiceInstanceProviderRoot : public ServiceInstanceProvider
     {
         containers::ServiceDescriptorsMap _descriptorsMap;
         containers::ServiceInstancesMap _singletons;
@@ -34,13 +34,11 @@ namespace sb::di::details::core
 
         void init(ServiceProvider &serviceProvider) override;
 
-        [[nodiscard]] const containers::ServiceDescriptorsMap &getDescriptorsMap() const override;
+        [[nodiscard]] const containers::ServiceDescriptorsMap &getDescriptorsMap() const;
 
-        containers::ServiceInstancesMap &getSingletons() override;
+        containers::ServiceInstancesMap &getSingletons();
 
-        helpers::ScopedGuard spawnGuard(TypeId typeId) override;
-
-        IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor, bool inPlaceRequest) override;
+        helpers::ScopedGuard spawnGuard(TypeId typeId);
 
       private:
         void prebuildSingletons();

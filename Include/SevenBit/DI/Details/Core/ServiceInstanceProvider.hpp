@@ -17,10 +17,12 @@
 
 namespace sb::di::details::core
 {
+    class ServiceInstanceProviderRoot;
+
     class EXPORT ServiceInstanceProvider : public IServiceInstanceProvider
     {
         ServiceProviderOptions _options;
-        IServiceInstanceProviderRoot &_root;
+        ServiceInstanceProviderRoot &_root;
         containers::ServiceInstancesMap _scoped;
         ServiceProvider *_serviceProvider = nullptr;
 
@@ -29,7 +31,7 @@ namespace sb::di::details::core
       public:
         using Ptr = std::unique_ptr<ServiceInstanceProvider>;
 
-        explicit ServiceInstanceProvider(IServiceInstanceProviderRoot &root, ServiceProviderOptions options);
+        explicit ServiceInstanceProvider(ServiceInstanceProviderRoot &root, ServiceProviderOptions options);
 
         ServiceInstanceProvider(ServiceInstanceProvider &&) noexcept = default;
 

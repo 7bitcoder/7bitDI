@@ -6,6 +6,7 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstanceProviderRoot.hpp"
 #include "SevenBit/DI/Details/Services/ExternalService.hpp"
 #include "SevenBit/DI/Details/Utils/Check.hpp"
 #include "SevenBit/DI/Details/Utils/Require.hpp"
@@ -20,7 +21,7 @@ namespace sb::di::details::core
     {
     }
 
-    INLINE ServiceInstanceProvider::ServiceInstanceProvider(IServiceInstanceProviderRoot &root,
+    INLINE ServiceInstanceProvider::ServiceInstanceProvider(ServiceInstanceProviderRoot &root,
                                                             ServiceProviderOptions options)
         : _options(options), _root(root), _scoped(_options.strongDestructionOrder)
     {
@@ -189,9 +190,7 @@ namespace sb::di::details::core
     INLINE IServiceInstance::Ptr ServiceInstanceProvider::createInstance(const ServiceDescriptor &descriptor,
                                                                          const bool inPlaceRequest)
     {
-        auto rootPtr = reinterpret_cast<ServiceInstanceProvider *>(&_root);
-        bool isRoot = rootPtr == this;
-        if (descriptor.getLifeTime().isSingleton() && !isRoot)
+        if (descriptor.getLifeTime().isSingleton() && this != static_cast<ServiceInstanceProvider *>(&_root))
         {
             return _root.createInstance(descriptor, inPlaceRequest);
         }
