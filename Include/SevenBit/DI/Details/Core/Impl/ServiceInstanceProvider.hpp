@@ -190,7 +190,7 @@ namespace sb::di::details::core
     INLINE IServiceInstance::Ptr ServiceInstanceProvider::createInstance(const ServiceDescriptor &descriptor,
                                                                          const bool inPlaceRequest)
     {
-        if (descriptor.getLifeTime().isSingleton() && this != static_cast<ServiceInstanceProvider *>(&_root))
+        if (descriptor.getLifeTime().isSingleton() && this != &_root)
         {
             return _root.createInstance(descriptor, inPlaceRequest);
         }
