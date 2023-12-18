@@ -22,7 +22,7 @@ namespace sb::di
         /**
          * @brief Construct a new service descriptor object
          * @details implementationFactory cannot be null, otherwise constructor will throw exception
-         * @throws sb::di::NullPointerException
+         * @throw sb::di::NullPointerException
          */
         ServiceDescriptor(TypeId serviceTypeId, ServiceLifeTime lifetime, IServiceFactory::Ptr implementationFactory);
 

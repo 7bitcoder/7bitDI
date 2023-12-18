@@ -37,7 +37,7 @@ namespace sb::di
         /**
          * @brief Returns service instance reference, might throw exception
          * @details If service was not registered or was registered as transient, method throws exception
-         * @throws sb::di::ServiceNotFoundException
+         * @throw sb::di::ServiceNotFoundException
          */
         virtual const IServiceInstance &getInstance(TypeId serviceTypeId) = 0;
 
@@ -56,7 +56,7 @@ namespace sb::di
         /**
          * @brief Creates service instance unique pointer, might throw exception
          * @details If service was not registered or was registered as scoped/singleton, method throw exception
-         * @throws sb::di::ServiceNotFoundException
+         * @throw sb::di::ServiceNotFoundException
          */
         virtual IServiceInstance::Ptr createInstance(TypeId serviceTypeId) = 0;
 
@@ -69,7 +69,7 @@ namespace sb::di
         /**
          * @brief Creates service instance in place, might throw exception
          * @details If service was not registered or was registered as scoped/singleton, method throws exception
-         * @throws sb::di::ServiceNotFoundException
+         * @throw sb::di::ServiceNotFoundException
          */
         virtual IServiceInstance::Ptr createInstanceInPlace(TypeId serviceTypeId) = 0;
 

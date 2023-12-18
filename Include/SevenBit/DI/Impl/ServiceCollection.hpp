@@ -20,6 +20,12 @@ namespace sb::di
         return ServiceProvider{std::make_unique<details::core::ServiceInstanceProviderRoot>(begin(), end(), options)};
     }
 
+    INLINE ServiceProvider::Ptr ServiceCollection::buildServiceProviderAsPtr(ServiceProviderOptions options)
+    {
+        auto instanceProvider = std::make_unique<details::core::ServiceInstanceProviderRoot>(begin(), end(), options);
+        return std::make_unique<ServiceProvider>(std::move(instanceProvider));
+    }
+
     INLINE ServiceDescriptor &ServiceCollection::at(const size_t index) { return _serviceDescriptors.at(index); }
     INLINE const ServiceDescriptor &ServiceCollection::at(const size_t index) const
     {
