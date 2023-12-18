@@ -9,6 +9,10 @@ namespace sb::di::details::core
     INLINE void ServiceInstanceProviderRoot::init(ServiceProvider &serviceProvider)
     {
         ServiceInstanceProvider::init(serviceProvider);
+        if (getOptions().prebuildSingletons)
+        {
+            prebuildSingletons();
+        }
     }
 
     INLINE const containers::ServiceDescriptorsMap &ServiceInstanceProviderRoot::getDescriptorsMap() const
@@ -18,7 +22,7 @@ namespace sb::di::details::core
 
     INLINE containers::ServiceInstancesMap &ServiceInstanceProviderRoot::getSingletons() { return _singletons; }
 
-    INLINE const ServiceProviderOptions &ServiceInstanceProviderRoot::getOptions() const { return _options; }
+    INLINE helpers::ScopedGuard ServiceInstanceProviderRoot::spawhGuard(TypeId typeId) { return _guard(typeId); }
 
     INLINE IServiceInstance::Ptr ServiceInstanceProviderRoot::createInstance(const ServiceDescriptor &descriptor,
                                                                              bool inPlaceRequest)

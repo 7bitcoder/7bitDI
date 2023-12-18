@@ -16,12 +16,13 @@
 namespace sb::di::details::core
 {
     INLINE ServiceInstanceProvider::ServiceInstanceProvider(const ServiceInstanceProvider &provider)
-        : _root(provider._root), _scoped(_root.getOptions().strongDestructionOrder)
+        : _options(provider._options), _root(provider._root), _scoped(_options.strongDestructionOrder)
     {
     }
 
-    INLINE ServiceInstanceProvider::ServiceInstanceProvider(IServiceInstanceProviderRoot &root)
-        : _root(root), _scoped(_root.getOptions().strongDestructionOrder)
+    INLINE ServiceInstanceProvider::ServiceInstanceProvider(IServiceInstanceProviderRoot &root,
+                                                            ServiceProviderOptions options)
+        : _options(options), _root(root), _scoped(_options.strongDestructionOrder)
     {
     }
 
@@ -188,19 +189,22 @@ namespace sb::di::details::core
     INLINE IServiceInstance::Ptr ServiceInstanceProvider::createInstance(const ServiceDescriptor &descriptor,
                                                                          const bool inPlaceRequest)
     {
-        if (descriptor.getLifeTime().isSingleton())
+        auto rootPtr = static_cast<void *>(&_root);
+        auto casted = static_cast<void *>(this);
+        bool isRoot = rootPtr == casted;
+        if (descriptor.getLifeTime().isSingleton() && !isRoot)
         {
             return _root.createInstance(descriptor, inPlaceRequest);
         }
         else
         {
-            auto _ = _guard(descriptor.getImplementationTypeId());
+            auto _ = _root.spawhGuard(descriptor.getImplementationTypeId());
             return utils::Require::validInstanceAndGet(descriptor.getImplementationFactory().createInstance(
                 *utils::Require::notNullAndGet(_serviceProvider), inPlaceRequest));
         }
     }
 
-    INLINE const ServiceProviderOptions &ServiceInstanceProvider::getOptions() const { return _root.getOptions(); }
+    INLINE const ServiceProviderOptions &ServiceInstanceProvider::getOptions() const { return _options; }
 
     INLINE containers::ServiceInstanceList *ServiceInstanceProvider::findRegisteredInstances(const TypeId serviceTypeId)
     {

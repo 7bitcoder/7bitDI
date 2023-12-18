@@ -17,7 +17,7 @@ namespace sb::di::details::core
     {
         containers::ServiceDescriptorsMap _descriptorsMap;
         containers::ServiceInstancesMap _singletons;
-        ServiceProviderOptions _options;
+        helpers::CircularDependencyGuard _guard;
 
       public:
         using Ptr = std::unique_ptr<ServiceInstanceProviderRoot>;
@@ -25,9 +25,9 @@ namespace sb::di::details::core
 
         template <class TDescriptorIt>
         ServiceInstanceProviderRoot(TDescriptorIt begin, TDescriptorIt end, ServiceProviderOptions options = {})
-            : ServiceInstanceProvider(static_cast<IServiceInstanceProviderRoot &>(*this)),
+            : ServiceInstanceProvider(*this, options),
               _descriptorsMap(begin, end, options.checkServiceGlobalUniqueness),
-              _singletons(options.strongDestructionOrder), _options(options)
+              _singletons(options.strongDestructionOrder)
         {
             _descriptorsMap.seal();
         }
@@ -38,7 +38,7 @@ namespace sb::di::details::core
 
         containers::ServiceInstancesMap &getSingletons() override;
 
-        [[nodiscard]] const ServiceProviderOptions &getOptions() const override;
+        helpers::ScopedGuard spawhGuard(TypeId typeId) override;
 
         IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor, bool inPlaceRequest) override;
 

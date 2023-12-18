@@ -33,6 +33,7 @@ TEST_F(ServiceInstanceProviderTest, ShouldGetOptions)
     describers.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestClass1>());
 
     sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    provider.init(mock);
 
     const auto options = provider.getOptions();
     EXPECT_FALSE(options.prebuildSingletons);
@@ -51,6 +52,7 @@ TEST_F(ServiceInstanceProviderTest, ShouldFailGetServiceDueToAlreadyRegisteredSe
 
     auto act = [&] {
         sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+        provider.init(mock);
     };
 
     EXPECT_THROW(act(), sb::di::ServiceAlreadyRegisteredException);
@@ -67,6 +69,7 @@ TEST_F(ServiceInstanceProviderTest, ShouldFailGetServiceDueToAlreadyRegisteredIn
 
     auto act = [&] {
         sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+        provider.init(mock);
     };
 
     EXPECT_THROW(act(), sb::di::ServiceAlreadyRegisteredException);
@@ -86,6 +89,7 @@ TEST_F(ServiceInstanceProviderTest, ShouldNotFailGetServiceDueToAlreadyRegistere
         options.checkServiceGlobalUniqueness = false;
 
         sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end(), options);
+        provider.init(mock);
     };
 
     EXPECT_NO_THROW(act());
@@ -105,6 +109,7 @@ TEST_F(ServiceInstanceProviderTest, ShouldNotFailGetServiceDueToAlreadyRegistere
         options.checkServiceGlobalUniqueness = false;
 
         sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end(), options);
+        provider.init(mock);
     };
 
     EXPECT_NO_THROW(act());
@@ -121,6 +126,7 @@ TEST_F(ServiceInstanceProviderTest, ShouldFailGetServiceDueToLifetimeMissmatchIn
 
     auto act = [&] {
         sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+        provider.init(mock);
     };
 
     EXPECT_THROW(act(), sb::di::ServiceLifeTimeMismatchException);
