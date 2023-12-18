@@ -194,12 +194,9 @@ namespace sb::di::details::core
         {
             return _root.createInstance(descriptor, inPlaceRequest);
         }
-        else
-        {
-            auto _ = _root.spawnGuard(descriptor.getImplementationTypeId());
-            return utils::Require::validInstanceAndGet(descriptor.getImplementationFactory().createInstance(
-                *utils::Require::notNullAndGet(_serviceProvider), inPlaceRequest));
-        }
+        auto _ = _root.spawnGuard(descriptor.getImplementationTypeId());
+        return utils::Require::validInstanceAndGet(descriptor.getImplementationFactory().createInstance(
+            *utils::Require::notNullAndGet(_serviceProvider), inPlaceRequest));
     }
 
     INLINE const ServiceProviderOptions &ServiceInstanceProvider::getOptions() const { return _options; }
