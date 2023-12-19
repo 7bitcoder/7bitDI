@@ -18,7 +18,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(Setup)
 include(GNUInstallDirs)
 
-include_directories(${CMAKE_SOURCE_DIR}/Include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
 add_subdirectory(Source)
 
