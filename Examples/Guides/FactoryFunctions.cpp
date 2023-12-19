@@ -20,7 +20,7 @@ class ServiceB
     ServiceA &_serviceA;
 
   public:
-    explicit ServiceB(ServiceA *serviceA) : _serviceA(*serviceA) {}
+    explicit ServiceB(ServiceA &serviceA) : _serviceA(serviceA) {}
 
     [[nodiscard]] std::string message() const { return _serviceA.message(); }
 };
@@ -30,7 +30,7 @@ int main()
     ServiceProvider provider =
         ServiceCollection{}
             .addSingleton<ServiceA>([] { return std::make_unique<ServiceA>("Hello from service!"); })
-            .addSingleton<ServiceB>([](ServiceA *serviceA) { return std::make_unique<ServiceB>(serviceA); })
+            .addSingleton<ServiceB>([](ServiceA &serviceA) { return std::make_unique<ServiceB>(serviceA); })
             .buildServiceProvider();
 
     auto &serviceA = provider.getService<ServiceA>();

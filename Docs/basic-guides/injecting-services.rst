@@ -7,8 +7,7 @@ This example shows the main purpose of this library, injecting services into ser
    Injection rules are simple:
 
    * Service should have one constructor
-   * It is guaranteed that injected service won`t be null
-   * Singleton/scoped service should be injected using pointers (references are not allowed due to library limitations, it might be fixed in the future)
+   * Singleton/scoped service should be injected using pointers or references
    * Transient services should be injected using std::unique_ptr 
 
 .. literalinclude:: ../../Examples/Guides/InjectingServices.cpp

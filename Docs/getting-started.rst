@@ -26,6 +26,19 @@ Installation
 --------------------
 **There are a few ways of installation:**
 
+
+#. Using Cmake fetch content api - Option in progress
+    Update CMakeLists.txt file with following code
+
+    .. code-block:: Cmake
+        include(FetchContent)
+        FetchContent_Declare(
+                7bitDI
+                GIT_REPOSITORY https://github.com/7bitcoder/7bitDI.git
+                GIT_TAG 86228173f14f449dde88a84c549474ba43c2fd25 # release-1.0.0
+        )
+        FetchContent_MakeAvailable(7bitDI)
+
 #. Using Conan.io package manager - Recommended
     Download and install Conan_, and create conanfile.txt in the root of your project for example:
 

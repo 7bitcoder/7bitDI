@@ -5,9 +5,9 @@ Service providers can create scoped validInstance providers:
 
 .. code-block:: cpp
 
-   IServiceProvider::Ptr provider = ServiceCollection{}.buildServiceProvider();
+   ServiceProvider provider = ServiceCollection{}.buildServiceProvider();
    
-   IServiceProvider::Ptr scoped = provider->createScope()
+   ServiceProvider scoped = provider.createScope()
 
 Service can be registered as a singleton, scoped, or transient.
 

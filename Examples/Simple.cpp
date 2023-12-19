@@ -19,12 +19,12 @@ struct IAppPartB
 
 struct AppPartA final : IAppPartA
 {
-    void doPart() override { std::cout << "part a done!"; }
+    void doPart() override { std::cout << "part a done!" << std::endl; }
 };
 
 struct AppPartB final : IAppPartB
 {
-    void doPart() override { std::cout << "part b done!"; }
+    void doPart() override { std::cout << "part b done!" << std::endl; }
 };
 
 class Application

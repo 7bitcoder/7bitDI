@@ -29,19 +29,18 @@ struct ServiceB final : IServiceB
 
 class ServiceExecutor
 {
-    IServiceA *_serviceA;
+    IServiceA &_serviceA;
     std::unique_ptr<IServiceB> _serviceB;
 
   public:
-    ServiceExecutor(IServiceA *serviceA, std::unique_ptr<IServiceB> serviceB)
+    ServiceExecutor(IServiceA &serviceA, std::unique_ptr<IServiceB> serviceB)
+        : _serviceA(serviceA), _serviceB(std::move(serviceB))
     {
-        _serviceA = serviceA;
-        _serviceB = std::move(serviceB);
     }
 
     [[nodiscard]] std::string execute() const
     {
-        return _serviceA->actionA() + ", " + _serviceB->actionB() + " executed.";
+        return _serviceA.actionA() + ", " + _serviceB->actionB() + " executed.";
     }
 };
 int main()

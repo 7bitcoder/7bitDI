@@ -28,7 +28,7 @@ class ServiceExecutor
     std::vector<IWorker *> _workers;
 
   public:
-    explicit ServiceExecutor(std::vector<IWorker *> workers) { _workers = std::move(workers); }
+    explicit ServiceExecutor(std::vector<IWorker *> workers) : _workers(std::move(workers)) {}
 
     [[nodiscard]] std::string workAll() const
     {
