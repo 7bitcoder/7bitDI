@@ -1,6 +1,6 @@
 ServiceInstanceList
 ========================================
 
-.. doxygenclass:: sb::di::details::ServiceInstanceList
+.. doxygenclass:: sb::di::details::containers::ServiceInstanceList
    :members:
    :undoc-members:

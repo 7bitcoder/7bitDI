@@ -1,6 +1,6 @@
-IServiceProvider
+Check
 ========================================
 
-.. doxygenstruct:: sb::di::IServiceProvider
+.. doxygenstruct:: sb::di::details::utils::Check
    :members:
    :undoc-members:

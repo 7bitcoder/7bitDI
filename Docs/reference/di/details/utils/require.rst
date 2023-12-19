@@ -1,6 +1,6 @@
-InPlaceService
+Require
 ========================================
 
-.. doxygenclass:: sb::di::details::InPlaceService
+.. doxygenstruct:: sb::di::details::utils::Require
    :members:
    :undoc-members:

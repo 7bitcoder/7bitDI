@@ -9,15 +9,15 @@ Exceptions
    :members:
    :undoc-members:
 
-.. doxygenstruct:: sb::di::ForbiddenServiceFactoryException
+.. doxygenstruct:: sb::di::InvalidServiceException
+   :members:
+   :undoc-members:
+
+.. doxygenstruct:: sb::di::CannotReleaseServiceException
    :members:
    :undoc-members:
 
 .. doxygenstruct:: sb::di::CannotMoveOutServiceException
-   :members:
-   :undoc-members:
-
-.. doxygenstruct:: sb::di::InvalidServiceException
    :members:
    :undoc-members:
 

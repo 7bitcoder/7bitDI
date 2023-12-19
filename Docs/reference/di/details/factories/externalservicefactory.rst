@@ -1,7 +1,6 @@
 ExternalServiceFactory
 ========================================
 
-.. doxygenclass:: sb::di::details::ExternalServiceFactory
+.. doxygenclass:: sb::di::details::factories::ExternalServiceFactory
    :members:
    :undoc-members:
-

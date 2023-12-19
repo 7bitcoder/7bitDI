@@ -1,6 +1,6 @@
 ServiceInstancesMap
 ========================================
 
-.. doxygenclass:: sb::di::details::ServiceInstancesMap
+.. doxygenclass:: sb::di::details::containers::ServiceInstancesMap
    :members:
    :undoc-members:

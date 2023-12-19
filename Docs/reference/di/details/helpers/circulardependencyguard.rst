@@ -1,7 +1,6 @@
 CircularDependencyGuard
 ========================================
 
-.. doxygenclass:: sb::di::details::CircularDependencyGuard
+.. doxygenclass:: sb::di::details::helpers::CircularDependencyGuard
    :members:
    :undoc-members:
-

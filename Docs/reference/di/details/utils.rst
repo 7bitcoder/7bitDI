@@ -1,10 +1,14 @@
-Utils
+sb::di::details::utils
 ========================================
 
-.. doxygenstruct:: sb::di::details::utils::IsUniquePtr
-   :members:
-   :undoc-members:
+.. toctree::
+   :maxdepth: 5
+   :titlesonly:
 
-.. doxygenstruct:: sb::di::details::utils::IsUniquePtr< std::unique_ptr< T > >
-   :members:
-   :undoc-members:
+   utils/assert.rst
+   utils/check.rst
+   utils/require.rst
+   utils/ctorparamsnumber.rst
+   utils/iscopyctor.rst
+   utils/isinplaceobject.rst
+   utils/isuniqueptr.rst

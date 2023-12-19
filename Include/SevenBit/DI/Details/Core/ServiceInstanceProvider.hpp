@@ -7,8 +7,6 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
-#include "SevenBit/DI/Details/Core/IServiceInstanceProviderRoot.hpp"
-#include "SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"

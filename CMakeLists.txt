@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15.0)
 
-set(_7BIT_DI_VERSION_MAJOR 1)
+set(_7BIT_DI_VERSION_MAJOR 2)
 set(_7BIT_DI_VERSION_MINOR 0)
 set(_7BIT_DI_VERSION_PATCH 0)
 

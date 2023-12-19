@@ -6,6 +6,9 @@ Reference
    :titlesonly:
 
    reference/di
-   reference/di/details
-
-
+   reference/di/details/containers
+   reference/di/details/core
+   reference/di/details/factories
+   reference/di/details/helpers
+   reference/di/details/services
+   reference/di/details/utils

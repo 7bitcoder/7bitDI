@@ -22,7 +22,6 @@ namespace sb::di
          * @brief Returns service pointer as void *,
          * @details Method is used to ensure that service can be moved out
          * @throw sb::di::CannotMoveOutServiceException
-         * @example
          * @code{.cpp}
          * void* service = instance->getForMoveOut();
          * @endcode
@@ -36,7 +35,6 @@ namespace sb::di
          * @throw sb::di::CannotReleaseServiceException
          * @warning Using this method might cause memory leaks, client is responsible for managing this pointner
          * lifetime, the best approach is to immediately wrap this pointer with proper std::unique_ptr<T>
-         * @example
          * @code{.cpp}
          * std::unique_ptr<T> service{static_cast<T *>(instance->release())};
          * @endcode
@@ -46,7 +44,6 @@ namespace sb::di
         /**
          * @brief Get the TypeId of service
          * @details This method can be used to check if casting is safe
-         * @example
          * @code{.cpp}
          * if(instance->getTypeId() == typeid(T)) {
          *      T* service = instance->getAs<T>();
@@ -69,7 +66,6 @@ namespace sb::di
         /**
          * @brief Returns service pointer as T *
          * @details The client is responsible for ensuring that the T type is correct
-         * @example
          * @code{.cpp}
          * T* service = instance->getAs<T>();
          * @endcode
@@ -79,7 +75,6 @@ namespace sb::di
         /**
          * @brief Releases service ownership as pointer T *
          * @details The client is responsible for ensuring that the T type is correct
-         * @example
          * @code{.cpp}
          * T* service = instance->releaseAs<T>();
          * @endcode
@@ -89,7 +84,6 @@ namespace sb::di
         /**
          * @brief Moves out service as unique_ptr<T>
          * @details The client is responsible for ensuring that the T type is correct
-         * @example
          * @code{.cpp}
          * std::unique_ptr<T> service = instance->moveOutAsUniquePtr<T>();
          * @endcode
@@ -99,7 +93,6 @@ namespace sb::di
         /**
          * @brief Moves out service as T
          * @details The client is responsible for ensuring that the T type is correct
-         * @example
          * @code{.cpp}
          * T service = instance->moveOutAs<T>();
          * @endcode

@@ -1,7 +1,6 @@
-ExternalService
+ScopedGuard
 ========================================
 
-.. doxygenclass:: sb::di::details::ExternalService
+.. doxygenclass:: sb::di::details::helpers::ScopedGuard
    :members:
    :undoc-members:
-

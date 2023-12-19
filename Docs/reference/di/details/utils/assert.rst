@@ -1,7 +1,6 @@
-ScopedGuard
+Assert
 ========================================
 
-.. doxygenclass:: sb::di::details::ScopedGuard
+.. doxygenstruct:: sb::di::details::utils::Assert
    :members:
    :undoc-members:
-
