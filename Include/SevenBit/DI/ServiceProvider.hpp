@@ -35,7 +35,8 @@ namespace sb::di
 
         /**
          * @brief Get service provider options
-         * @example
+         *
+         * Example:
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
          *
@@ -47,7 +48,8 @@ namespace sb::di
         /**
          * @brief Create a scoped service provider
          * @details Scoped service provider creates/holds its own scoped services
-         * @example
+         *
+         * Example:
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
          * auto scoped = provider.createScope();
@@ -63,7 +65,8 @@ namespace sb::di
         /**
          * @brief Create a scoped service provider as unique_ptr
          * @details Scoped service provider creates/holds its own scoped services
-         * @example
+         *
+         * Example:
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProviderAsPtr();
          * auto scoped = provider->createScopeAsPtr();
@@ -99,7 +102,8 @@ namespace sb::di
         /**
          * @brief Returns service pointer, might be null
          * @details If service was not registered or was registered as transient, method returns null
-         * @example
+         *
+         * Example:
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
          *
@@ -120,7 +124,8 @@ namespace sb::di
          * @brief Returns service reference, might throw exception
          * @details If service was not registered or was registered as transient, method throws exception
          * @throws sb::di::ServiceNotFoundException
-         * @example
+         *
+         * Example:
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
          *
@@ -137,7 +142,8 @@ namespace sb::di
         /**
          * @brief Returns services
          * @details If service was not registered or was registered as transient, method returns empty vector
-         * @example
+         *
+         * Example:
          * @code{.cpp}
          * auto provider = ServiceCollection{}
          *              .addScoped<ITestClass, TestClass1>()
@@ -160,7 +166,8 @@ namespace sb::di
         /**
          * @brief Creates service unique pointer, might be null
          * @details If service was not registered or was registered as scoped/singleton, method returns null
-         * @example
+         *
+         * Example:
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
          *
@@ -181,7 +188,8 @@ namespace sb::di
          * @brief Creates service unique pointer, might throw exception
          * @details If service was not registered or was registered as scoped/singleton, method throws exception
          * @throws sb::di::ServiceNotFoundException
-         * @example
+         *
+         * Example:
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
          *
@@ -199,7 +207,8 @@ namespace sb::di
          * @brief Creates service in place, might throw exception
          * @details If service was not registered or was registered as scoped/singleton, method throws exception
          * @throws sb::di::ServiceNotFoundException
-         * @example
+         *
+         * Example:
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
          *
@@ -216,7 +225,8 @@ namespace sb::di
         /**
          * @brief Creates services
          * @details If service was not registered or was registered as scoped/singleton, method returns empty vector
-         * @example
+         *
+         * Example:
          * @code{.cpp}
          * auto provider = ServiceCollection{}
          *              .addTransient<ITestClass, TestClass1>()
