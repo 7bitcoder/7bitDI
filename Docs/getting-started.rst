@@ -31,6 +31,7 @@ Installation
     Update CMakeLists.txt file with following code
 
     .. code-block:: Cmake
+
         include(FetchContent)
         FetchContent_Declare(
                 7bitDI

@@ -7,7 +7,7 @@ The library relies on two core classes:
 * ServiceProvider_: class is responsible for delivering real services and managing its lifetime
 
 .. _ServiceCollection: ../reference/di/servicecollection.html
-.. _IServiceProvider: ../reference/di/serviceprovider.html
+.. _ServiceProvider: ../reference/di/serviceprovider.html
 
 .. literalinclude:: ../../Examples/Guides/CoreClasses.cpp
    :caption: Examples/Guides/Basic
