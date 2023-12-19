@@ -43,8 +43,8 @@ namespace sb::di
          * @brief Builds service provider with specified options
          * @details might throw exceptions if service was already registered, or if service has different lifetime than
          * other already registered with same base type
-         * @throw sb::di::ServiceAlreadyRegisteredException
-         * @throw sb::di::ServiceLifeTimeMismatchException
+         * @throws sb::di::ServiceAlreadyRegisteredException
+         * @throws sb::di::ServiceLifeTimeMismatchException
          * registered with same base type
          */
         ServiceProvider buildServiceProvider(ServiceProviderOptions options = {});
@@ -53,8 +53,8 @@ namespace sb::di
          * @brief Builds service provider as unique_ptr with specified options
          * @details might throw exceptions if service was already registered, or if service has different lifetime than
          * other already registered with same base type
-         * @throw sb::di::ServiceAlreadyRegisteredException
-         * @throw sb::di::ServiceLifeTimeMismatchException
+         * @throws sb::di::ServiceAlreadyRegisteredException
+         * @throws sb::di::ServiceLifeTimeMismatchException
          */
         ServiceProvider::Ptr buildServiceProviderAsPtr(ServiceProviderOptions options = {});
 
@@ -79,52 +79,52 @@ namespace sb::di
         /**
          * @brief Returns service descriptor at giver position
          * @details might throw exception, if index >= size() throws exception
-         * @throw std::out_of_range
+         * @throws std::out_of_range
          */
         ServiceDescriptor &at(size_t index);
         /**
          * @brief Returns service descriptor at giver position
          * @details might throw exception, if index >= size() throws exception
-         * @throw std::out_of_range
+         * @throws std::out_of_range
          */
         [[nodiscard]] const ServiceDescriptor &at(size_t index) const;
 
         /**
          * @brief Returns first descriptor
          * @details might throw exception if empty()
-         * @throw std::out_of_range
+         * @throws std::out_of_range
          */
         ServiceDescriptor &first();
         /**
          * @brief Returns first descriptor
          * @details might throw exception if empty()
-         * @throw std::out_of_range
+         * @throws std::out_of_range
          */
         [[nodiscard]] const ServiceDescriptor &first() const;
 
         /**
          * @brief Returns last descriptor
          * @details might throw exception if empty()
-         * @throw std::out_of_range
+         * @throws std::out_of_range
          */
         ServiceDescriptor &last();
         /**
          * @brief Returns last descriptor
          * @details might throw exception if empty()
-         * @throw std::out_of_range
+         * @throws std::out_of_range
          */
         [[nodiscard]] const ServiceDescriptor &last() const;
 
         /**
          * @brief Returns service descriptor at giver position
          * @details might throw exception if index >= size()
-         * @throw std::out_of_range
+         * @throws std::out_of_range
          */
         ServiceDescriptor &operator[](size_t index);
         /**
          * @brief Returns service descriptor at giver position
          * @details might throw exception if index >= size()
-         * @throw std::out_of_range
+         * @throws std::out_of_range
          */
         const ServiceDescriptor &operator[](size_t index) const;
 

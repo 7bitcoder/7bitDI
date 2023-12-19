@@ -78,7 +78,7 @@ namespace sb::di
 
         /**
          * @brief Returns inner service instance provider
-         * @throw sb::di::NullPointerException
+         * @throws sb::di::NullPointerException
          */
         [[nodiscard]] const IServiceInstanceProvider &getInstanceProvider() const
         {
@@ -88,7 +88,7 @@ namespace sb::di
 
         /**
          * @brief Returns inner service instance provider
-         * @throw sb::di::NullPointerException
+         * @throws sb::di::NullPointerException
          */
         IServiceInstanceProvider &getInstanceProvider()
         {
@@ -119,7 +119,7 @@ namespace sb::di
         /**
          * @brief Returns service reference, might throw exception
          * @details If service was not registered or was registered as transient, method throws exception
-         * @throw sb::di::ServiceNotFoundException
+         * @throws sb::di::ServiceNotFoundException
          * @example
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
@@ -180,7 +180,7 @@ namespace sb::di
         /**
          * @brief Creates service unique pointer, might throw exception
          * @details If service was not registered or was registered as scoped/singleton, method throws exception
-         * @throw sb::di::ServiceNotFoundException
+         * @throws sb::di::ServiceNotFoundException
          * @example
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
@@ -198,7 +198,7 @@ namespace sb::di
         /**
          * @brief Creates service in place, might throw exception
          * @details If service was not registered or was registered as scoped/singleton, method throws exception
-         * @throw sb::di::ServiceNotFoundException
+         * @throws sb::di::ServiceNotFoundException
          * @example
          * @code{.cpp}
          * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();

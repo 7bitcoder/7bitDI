@@ -21,7 +21,7 @@ namespace sb::di
         /**
          * @brief Returns service pointer as void *,
          * @details Method is used to ensure that service can be moved out
-         * @throw sb::di::CannotMoveOutServiceException
+         * @throws sb::di::CannotMoveOutServiceException
          * @code{.cpp}
          * void* service = instance->getForMoveOut();
          * @endcode
@@ -32,7 +32,7 @@ namespace sb::di
          * @brief Releases service ownership as void *
          * @details If instance is owner of service it will release this ownership just like
          * std::unique_ptr<T>::release(), otherwise it will throw exception
-         * @throw sb::di::CannotReleaseServiceException
+         * @throws sb::di::CannotReleaseServiceException
          * @warning Using this method might cause memory leaks, client is responsible for managing this pointner
          * lifetime, the best approach is to immediately wrap this pointer with proper std::unique_ptr<T>
          * @code{.cpp}
