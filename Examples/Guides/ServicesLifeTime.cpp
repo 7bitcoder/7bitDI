@@ -14,7 +14,7 @@ struct TransientService
 {
 };
 
-template <class TService, bool Get> auto getOrCreate(IServiceProvider &provider)
+template <class TService, bool Get> auto getOrCreate(ServiceProvider &provider)
 {
     if constexpr (Get)
     {
@@ -26,7 +26,7 @@ template <class TService, bool Get> auto getOrCreate(IServiceProvider &provider)
     }
 }
 
-template <class TService, bool Get> void compareServices(IServiceProvider &root, IServiceProvider &scoped)
+template <class TService, bool Get> void compareServices(ServiceProvider &root, ServiceProvider &scoped)
 {
     std::cout << "rootProvider \t == rootProvider:\t"
               << (getOrCreate<TService, Get>(root) == getOrCreate<TService, Get>(root)) << std::endl;
@@ -38,26 +38,26 @@ template <class TService, bool Get> void compareServices(IServiceProvider &root,
 
 int main()
 {
-    IServiceProvider::Ptr rootProvider = ServiceCollection{}
-                                             .addSingleton<SingletonService>()
-                                             .addScoped<ScopedService>()
-                                             .addTransient<TransientService>()
-                                             .buildServiceProvider();
+    ServiceProvider rootProvider = ServiceCollection{}
+                                       .addSingleton<SingletonService>()
+                                       .addScoped<ScopedService>()
+                                       .addTransient<TransientService>()
+                                       .buildServiceProvider();
 
     // Accessing Services
-    SingletonService &singleton = rootProvider->getService<SingletonService>();
-    ScopedService &scoped = rootProvider->getService<ScopedService>();
-    std::unique_ptr<TransientService> transient = rootProvider->createService<TransientService>();
+    auto &singleton = rootProvider.getService<SingletonService>();
+    auto &scoped = rootProvider.getService<ScopedService>();
+    std::unique_ptr<TransientService> transient = rootProvider.createService<TransientService>();
 
-    IServiceProvider::Ptr scopedProvider = rootProvider->createScope();
+    ServiceProvider scopedProvider = rootProvider.createScope();
 
     std::cout << std::endl << "Singletons comparison" << std::endl;
-    compareServices<SingletonService, true>(*rootProvider, *scopedProvider);
+    compareServices<SingletonService, true>(rootProvider, scopedProvider);
 
     std::cout << std::endl << "Scoped comparison" << std::endl;
-    compareServices<ScopedService, true>(*rootProvider, *scopedProvider);
+    compareServices<ScopedService, true>(rootProvider, scopedProvider);
 
     std::cout << std::endl << "Transient comparison" << std::endl;
-    compareServices<TransientService, false>(*rootProvider, *scopedProvider);
+    compareServices<TransientService, false>(rootProvider, scopedProvider);
     return 0;
 }

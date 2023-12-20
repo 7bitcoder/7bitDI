@@ -4,79 +4,59 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di
 {
-    /**
-     * @brief Describes Service
-     */
     class EXPORT ServiceDescriptor
     {
-      private:
-        ServiceLifeTime _lifetime;
-
         TypeId _serviceTypeId;
-
-        IServiceFactory::Ptr _implementationFactory;
+        ServiceLifeTime _lifetime;
+        IServiceFactory::SPtr _implementationFactory;
 
       public:
         using Ptr = std::unique_ptr<ServiceDescriptor>;
 
         /**
          * @brief Construct a new service descriptor object
-         * @details implementationFactory cannot be null, otherwise construcor will throw exception
-         * @throws NullPointnerException if implementationFactory is null
+         * @details implementationFactory cannot be null, otherwise constructor will throw exception
+         * @throws sb::di::NullPointerException
          */
         ServiceDescriptor(TypeId serviceTypeId, ServiceLifeTime lifetime, IServiceFactory::Ptr implementationFactory);
 
-        /**
-         * @brief Construct a new service descriptor copy
-         * @details Note that implementation factory must be clonable
-         */
-        ServiceDescriptor(const ServiceDescriptor &other);
-
-        /**
-         * @brief Construct a new service descriptor by move
-         */
+        ServiceDescriptor(const ServiceDescriptor &other) = default;
         ServiceDescriptor(ServiceDescriptor &&) = default;
 
-        /**
-         * @brief Assigns service descriptor
-         * @details Note that implementation factory must be clonable
-         */
-        ServiceDescriptor &operator=(const ServiceDescriptor &other);
-
-        /**
-         * @brief Assigns service descriptor by move
-         */
+        ServiceDescriptor &operator=(const ServiceDescriptor &other) = default;
         ServiceDescriptor &operator=(ServiceDescriptor &&other) = default;
 
         /**
          * @brief Get the lifetime object
          */
-        const ServiceLifeTime &getLifeTime() const;
+        [[nodiscard]] const ServiceLifeTime &getLifeTime() const;
 
         /**
          * @brief Get the service TypeId
          */
-        TypeId getServiceTypeId() const;
+        [[nodiscard]] TypeId getServiceTypeId() const;
 
         /**
          * @brief Get the service implementation TypeId
          */
-        TypeId getImplementationTypeId() const;
+        [[nodiscard]] TypeId getImplementationTypeId() const;
 
         /**
          * @brief Get the service implementation factory
          */
-        const IServiceFactory &getImplementationFactory() const;
+        [[nodiscard]] const IServiceFactory &getImplementationFactory() const;
+
+        bool operator!=(const ServiceDescriptor &descriptor) const;
+        bool operator==(const ServiceDescriptor &descriptor) const;
     };
 } // namespace sb::di
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Impl/ServiceDescriptor.hpp"
+#include "SevenBit/DI/Impl/ServiceDescriptor.hpp"
 #endif

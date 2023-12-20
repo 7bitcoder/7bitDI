@@ -1,5 +1,6 @@
 #include <SevenBit/DI.hpp>
 #include <iostream>
+#include <utility>
 
 using namespace sb::di;
 
@@ -9,17 +10,17 @@ struct IWorker
 
     virtual ~IWorker() = default;
 };
-struct WorkerA final : public IWorker
+struct WorkerA final : IWorker
 {
-    std::string work() { return "work A done!"; }
+    std::string work() override { return "work A done!"; }
 };
-struct WorkerB final : public IWorker
+struct WorkerB final : IWorker
 {
-    std::string work() { return "work B done!"; }
+    std::string work() override { return "work B done!"; }
 };
-struct WorkerC final : public IWorker
+struct WorkerC final : IWorker
 {
-    std::string work() { return "work C done!"; }
+    std::string work() override { return "work C done!"; }
 };
 
 class ServiceExecutor
@@ -27,12 +28,12 @@ class ServiceExecutor
     std::vector<IWorker *> _workers;
 
   public:
-    ServiceExecutor(std::vector<IWorker *> workers) { _workers = workers; }
+    explicit ServiceExecutor(std::vector<IWorker *> workers) : _workers(std::move(workers)) {}
 
-    std::string workAll()
+    [[nodiscard]] std::string workAll() const
     {
         std::string result;
-        for (auto worker : _workers)
+        for (const auto worker : _workers)
         {
             result += worker->work() + " ";
         }
@@ -41,17 +42,17 @@ class ServiceExecutor
 };
 int main()
 {
-    IServiceProvider::Ptr provider = ServiceCollection{}
-                                         .addSingleton<IWorker, WorkerA>()
-                                         .addSingleton<IWorker, WorkerB>()
-                                         .addSingleton<IWorker, WorkerC>()
-                                         .addSingleton<ServiceExecutor>()
-                                         .buildServiceProvider();
+    ServiceProvider provider = ServiceCollection{}
+                                   .addSingleton<IWorker, WorkerA>()
+                                   .addSingleton<IWorker, WorkerB>()
+                                   .addSingleton<IWorker, WorkerC>()
+                                   .addSingleton<ServiceExecutor>()
+                                   .buildServiceProvider();
 
-    ServiceExecutor &consumer = provider->getService<ServiceExecutor>();
+    const auto &consumer = provider.getService<ServiceExecutor>();
 
     std::cout << "work all: " << consumer.workAll() << std::endl;
-    std::cout << "single work: " << provider->getService<IWorker>().work();
+    std::cout << "single work: " << provider.getService<IWorker>().work();
 
     return 0;
 }

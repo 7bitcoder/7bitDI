@@ -5,19 +5,19 @@ Exceptions
    :members:
    :undoc-members:
 
-.. doxygenstruct:: sb::di::NullPointnerException
-   :members:
-   :undoc-members:
-
-.. doxygenstruct:: sb::di::ForbiddenServiceFactoryException
-   :members:
-   :undoc-members:
-
-.. doxygenstruct:: sb::di::CannotMoveOutServiceException
+.. doxygenstruct:: sb::di::NullPointerException
    :members:
    :undoc-members:
 
 .. doxygenstruct:: sb::di::InvalidServiceException
+   :members:
+   :undoc-members:
+
+.. doxygenstruct:: sb::di::CannotReleaseServiceException
+   :members:
+   :undoc-members:
+
+.. doxygenstruct:: sb::di::CannotMoveOutServiceException
    :members:
    :undoc-members:
 
@@ -29,11 +29,11 @@ Exceptions
    :members:
    :undoc-members:
 
-.. doxygenstruct:: sb::di::ServiceBaseTypeMissmatchException
+.. doxygenstruct:: sb::di::ServiceBaseTypeMismatchException
    :members:
    :undoc-members:
 
-.. doxygenstruct:: sb::di::ServiceLifeTimeMissmatchException
+.. doxygenstruct:: sb::di::ServiceLifeTimeMismatchException
    :members:
    :undoc-members:
 

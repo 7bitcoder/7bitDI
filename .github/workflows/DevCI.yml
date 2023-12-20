@@ -2,41 +2,38 @@ name: DevCI
 
 on:
   push:
-    branches: ["dev"]
+    branches: [ "dev" ]
     paths-ignore:
       - "Docs/**"
       - ".readthedocs.yaml"
       - "README.md"
-
-env:
-  BUILD_TYPE: Release
-  BUILD_DIR: ${{github.workspace}}/build
 
 jobs:
   test:
     strategy:
       fail-fast: false
       matrix:
-        libraryType: [HeaderOnly, Static, Shared]
-        os: [ubuntu-22.04, macos-12, windows-2022]
+        os: [ ubuntu-22.04, macos-12, windows-2022 ]
+        library_type: [ HeaderOnly, Static, Shared ]
+        std: [ 17, 20 ]
+        build_type: [ Release ]
 
     runs-on: ${{matrix.os}}
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install Conan Packages
-        uses: ./.github/actions/conan-install
-        with:
-          install-dir: ${{ env.BUILD_DIR }}
+      - name: Create Build Environment
+        run: cmake -E make_directory ${{runner.workspace}}/build
 
-      - name: CMake Build
-        uses: ./.github/actions/cmake-build
-        with:
-          build-dir: ${{ env.BUILD_DIR }}
-          build-type: ${{ env.BUILD_TYPE }}
-          library-type: ${{ matrix.libraryType }}
+      - name: Configure
+        run: cmake -B ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON -D_7BIT_DI_BUILD_EXAMPLES=ON
+
+      - name: Build
+        run: cmake --build ${{runner.workspace}}/build --config ${{matrix.build_type}} -j
 
       - name: Test
-        working-directory: ${{ env.BUILD_DIR }}
-        run: ctest -C ${{env.BUILD_TYPE}}
+        working-directory: ${{runner.workspace}}/build/Tests
+        run: ctest -C ${{matrix.build_type}}
+        env:
+          CTEST_OUTPUT_ON_FAILURE: True

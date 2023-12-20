@@ -12,4 +12,3 @@ Service will be accessible only by an interface, implementation is hidden for th
    :caption: Output
 
    Hello from service.
-

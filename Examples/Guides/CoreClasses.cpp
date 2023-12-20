@@ -1,5 +1,4 @@
 #include <SevenBit/DI.hpp>
-#include <iostream>
 
 using namespace sb::di;
 
@@ -20,12 +19,12 @@ int main()
     services.addSingleton<ServiceB>();
     services.addSingleton<ServiceC>();
 
-    IServiceProvider::Ptr provider = services.buildServiceProvider();
+    ServiceProvider provider = services.buildServiceProvider();
 
     // Accessing services
-    ServiceA &serviceA = provider->getService<ServiceA>();
-    ServiceB &serviceB = provider->getService<ServiceB>();
-    ServiceC &serviceC = provider->getService<ServiceC>();
+    auto &serviceA = provider.getService<ServiceA>();
+    auto &serviceB = provider.getService<ServiceB>();
+    auto &serviceC = provider.getService<ServiceC>();
 
     return 0;
 }

@@ -2,27 +2,22 @@
 
 #include <type_traits>
 
-#include "SevenBit/DI/IServiceProvider.hpp"
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/ExternalServiceFactory.hpp"
-#include "SevenBit/DI/Details/ServiceCtorFactory.hpp"
-#include "SevenBit/DI/Details/ServiceFcnFactory.hpp"
-#include "SevenBit/DI/Details/Utils.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
+#include "SevenBit/DI/Details/Factories/ExternalServiceFactory.hpp"
+#include "SevenBit/DI/Details/Factories/ServiceFactory.hpp"
+#include "SevenBit/DI/Details/Factories/ServiceFcnFactory.hpp"
+#include "SevenBit/DI/Details/Utils/Assert.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
 
 namespace sb::di
 {
-    /**
-     * @brief This is helper factory class for constructing ServiceDescriptor
-     */
     class ServiceDescriber
     {
       public:
         /**
-         * @brief Creates ServiceDescriptor
+         * @brief Creates service descriptor
          * @details Creates service descriptor with:
          * lifetime - singleton,
          * serviceTypeId - typeid(TService),
@@ -33,7 +28,7 @@ namespace sb::di
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor1 = ServiceDescriber::describeSingleton<TestClass>();
          * ServiceDescriptor descriptor2 = ServiceDescriber::describeSingleton<BaseClass, ImplementationClass>();
          * @endcode
@@ -42,8 +37,9 @@ namespace sb::di
         {
             return describe<TService, TImplementation>(ServiceLifeTime::singleton());
         }
+
         /**
-         * @brief Creates ServiceDescriptor
+         * @brief Creates service descriptor
          * @details Creates service descriptor with:
          * lifetime - scoped,
          * serviceTypeId - typeid(TService),
@@ -54,7 +50,7 @@ namespace sb::di
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor1 = ServiceDescriber::describeScoped<TestClass>();
          * ServiceDescriptor descriptor2 = ServiceDescriber::describeScoped<BaseClass, ImplementationClass>();
          * @endcode
@@ -64,7 +60,7 @@ namespace sb::di
             return describe<TService, TImplementation>(ServiceLifeTime::scoped());
         }
         /**
-         * @brief Creates ServiceDescriptor
+         * @brief Creates service descriptor
          * @details Creates service descriptor with:
          * lifetime - transient,
          * serviceTypeId - typeid(TService),
@@ -75,7 +71,7 @@ namespace sb::di
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor1 = ServiceDescriber::describeTransient<TestClass>();
          * ServiceDescriptor descriptor2 = ServiceDescriber::describeTransient<BaseClass, ImplementationClass>();
          * @endcode
@@ -86,43 +82,44 @@ namespace sb::di
         }
 
         /**
-         * @brief Creates ServiceDescriptor
+         * @brief Creates service descriptor
          * @details Creates service descriptor with:
          * lifetime - given lifetime,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
          * factory - default factory using TImplementation constructor
          * @tparam TService base service type
-         * @tparam TImplementation service implementation type must inherit from TService and must have one constructor
+         * @tparam TImplementation service implementation type must inherit from TService and must have one
+         * constructor
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor1 = ServiceDescriber::describe<TestClass>(ServiceLifeTime::scoped());
          * ServiceDescriptor descriptor2 =
          *          ServiceDescriber::describe<BaseClass, ImplementationClass>(ServiceLifeTime::transient());
          * @endcode
          */
         template <class TService, class TImplementation = TService>
-        static ServiceDescriptor describe(ServiceLifeTime lifetime)
+        static ServiceDescriptor describe(const ServiceLifeTime lifetime)
         {
-            details::utils::inheritCheck<TService, TImplementation>();
-            auto factory = std::make_unique<details::ServiceCtorFactory<TImplementation>>();
+            details::utils::Assert::inheritance<TService, TImplementation>();
+            auto factory = std::make_unique<details::factories::ServiceFactory<TImplementation>>();
             return {typeid(TService), lifetime, std::move(factory)};
         }
 
         /**
-         * @brief Creates ServiceDescriptor
+         * @brief Creates service descriptor
          * @details Creates service descriptor with:
          * lifetime - singleton,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
-         * factory - factory with external service pointner
+         * factory - factory with external service pointer
          * @tparam TService base service type
-         * @tparam TImplementation service implementation type must inherit from TService and must have one constructor
+         * @tparam TImplementation service implementation type must inherit from TService
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * TestClass test;
          * ServiceDescriptor descriptor1 = ServiceDescriber::describeSingleton<TestClass>(test);
          *
@@ -137,17 +134,17 @@ namespace sb::di
             return describeSingleton<TService, TImplementation>(&service);
         }
         /**
-         * @brief Creates ServiceDescriptor
+         * @brief Creates service descriptor
          * @details Creates service descriptor with:
          * lifetime - singleton,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
-         * factory - factory with external service pointner
+         * factory - factory with external service pointer
          * @tparam TService base service type
-         * @tparam TImplementation service implementation type must inherit from TService and must have one constructor
+         * @tparam TImplementation service implementation type must inherit from TService
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * TestClass test;
          * ServiceDescriptor descriptor1 = ServiceDescriber::describeSingleton<TestClass>(&test);
          *
@@ -159,250 +156,191 @@ namespace sb::di
         template <class TService, class TImplementation = TService>
         static ServiceDescriptor describeSingleton(TImplementation *service)
         {
-            details::utils::inheritCheck<TService, TImplementation>();
-            auto factory = std::make_unique<details::ExternalServiceFactory<TImplementation>>(service);
+            details::utils::Assert::inheritance<TService, TImplementation>();
+            auto factory = std::make_unique<details::factories::ExternalServiceFactory<TImplementation>>(service);
             return {typeid(TService), ServiceLifeTime::singleton(), std::move(factory)};
         }
 
         /**
-         * @brief Creates ServiceDescriptor
+         * @brief Creates service descriptor
          * @details Creates service descriptor with:
          * lifetime - singleton,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must inherit from TService and must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
+         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
+         * vectors with pointers or unique pointers, implementation type must inherit from TService
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeSingletonFrom<BaseClass>(
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
-        template <class TService, class FactoryFcn> static ServiceDescriptor describeSingletonFrom(FactoryFcn factory)
+        template <class TService, class FactoryFcn> static ServiceDescriptor describeSingletonFrom(FactoryFcn &&factory)
         {
-            return describeFrom<TService, FactoryFcn>(ServiceLifeTime::singleton(), std::move(factory));
+            return describeFrom<TService, FactoryFcn>(ServiceLifeTime::singleton(), std::forward<FactoryFcn>(factory));
         }
         /**
-         * @brief Creates ServiceDescriptor
+         * @brief Creates service descriptor
          * @details Creates service descriptor with:
          * lifetime - scoped,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must inherit from TService and must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
+         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
+         * vectors with pointers or unique pointers, implementation type must inherit from TService
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeScopedFrom<BaseClass>(
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
-        template <class TService, class FactoryFcn> static ServiceDescriptor describeScopedFrom(FactoryFcn factory)
+        template <class TService, class FactoryFcn> static ServiceDescriptor describeScopedFrom(FactoryFcn &&factory)
         {
-            return describeFrom<TService, FactoryFcn>(ServiceLifeTime::scoped(), std::move(factory));
+            return describeFrom<TService, FactoryFcn>(ServiceLifeTime::scoped(), std::forward<FactoryFcn>(factory));
         }
         /**
-         * @brief Creates ServiceDescriptor
+         * @brief Creates service descriptor
          * @details Creates service descriptor with:
          * lifetime - transient,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must inherit from TService and must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
+         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
+         * vectors with pointers or unique pointers, implementation type must inherit from TService
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeTransientFrom<BaseClass>(
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
-        template <class TService, class FactoryFcn> static ServiceDescriptor describeTransientFrom(FactoryFcn factory)
+        template <class TService, class FactoryFcn> static ServiceDescriptor describeTransientFrom(FactoryFcn &&factory)
         {
-            return describeFrom<TService, FactoryFcn>(ServiceLifeTime::transient(), std::move(factory));
+            return describeFrom<TService, FactoryFcn>(ServiceLifeTime::transient(), std::forward<FactoryFcn>(factory));
         }
 
         /**
-         * @brief Creates ServiceDescriptor
-         * @details Creates service descriptor with:
-         * lifetime - given service lifetime,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must inherit from TService and must have one constructor
-         * @see Constructor requirements
-         *
-         * Example:
-         * @code {.cpp}
-         * ServiceDescriptor descriptor = ServiceDescriber::describeFrom<BaseClass>(
-         *       []() { return std::make_unique<ImplementationClass>(); }, ServiceLifeTime::scoped());
-         * @endcode
-         */
-        template <class TService, class FactoryFcn>
-        static ServiceDescriptor describeFrom(ServiceLifeTime lifetime, FactoryFcn factoryFcn)
-        {
-            return describeFromAutoFactory<TService, FactoryFcn>(lifetime, std::move(factoryFcn));
-        }
-
-        /**
-         * @brief Creates ServiceDescriptor
+         * @brief Creates service descriptor
          * @details Creates service descriptor with:
          * lifetime - singleton,
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
+         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
+         * vectors with pointers or unique pointers
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeSingletonFrom(
          *       [](const ServiceDescriptor &) { return std::make_unique<TestClass>(); });
          * @endcode
          */
-        template <class FactoryFcn> static ServiceDescriptor describeSingletonFrom(FactoryFcn factory)
+        template <class FactoryFcn> static ServiceDescriptor describeSingletonFrom(FactoryFcn &&factory)
         {
-            return describeFrom<void, FactoryFcn>(ServiceLifeTime::singleton(), std::move(factory));
+            return describeFrom(ServiceLifeTime::singleton(), std::forward<FactoryFcn>(factory));
         }
         /**
-         * @brief Creates ServiceDescriptor
+         * @brief Creates service descriptor
          * @details Creates service descriptor with:
          * lifetime - scoped,
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
+         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
+         * vectors with pointers or unique pointers
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeScopedFrom(
          *       [](const ServiceDescriptor &) { return std::make_unique<TestClass>(); });
          * @endcode
          */
-        template <class FactoryFcn> static ServiceDescriptor describeScopedFrom(FactoryFcn factory)
+        template <class FactoryFcn> static ServiceDescriptor describeScopedFrom(FactoryFcn &&factory)
         {
-            return describeFrom<void, FactoryFcn>(ServiceLifeTime::scoped(), std::move(factory));
+            return describeFrom(ServiceLifeTime::scoped(), std::forward<FactoryFcn>(factory));
         }
         /**
-         * @brief Creates ServiceDescriptor
+         * @brief Creates service descriptor
          * @details Creates service descriptor with:
          * lifetime - transient,
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
+         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
+         * vectors with pointers or unique pointers
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeTransientFrom(
          *       [](const ServiceDescriptor &) { return std::make_unique<TestClass>(); });
          * @endcode
          */
-        template <class FactoryFcn> static ServiceDescriptor describeTransientFrom(FactoryFcn factory)
+        template <class FactoryFcn> static ServiceDescriptor describeTransientFrom(FactoryFcn &&factory)
         {
-            return describeFrom<void, FactoryFcn>(ServiceLifeTime::transient(), std::move(factory));
+            return describeFrom(ServiceLifeTime::transient(), std::forward<FactoryFcn>(factory));
         }
 
         /**
-         * @brief Creates ServiceDescriptor
+         * @brief Creates service descriptor
          * @details Creates service descriptor with:
          * lifetime - given service lifetime,
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
+         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
+         * vectors with pointers or unique pointers
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceDescriptor descriptor = ServiceDescriber::describeFrom(
          *       []() { return std::make_unique<TestClass>(); }, ServiceLifeTime::scoped());
          * @endcode
          */
         template <class FactoryFcn>
-        static ServiceDescriptor describeFrom(ServiceLifeTime lifetime, FactoryFcn factoryFcn)
+        static ServiceDescriptor describeFrom(const ServiceLifeTime lifetime, FactoryFcn &&factoryFcn)
         {
-            return describeFrom<void, FactoryFcn>(lifetime, std::move(factoryFcn));
+            return describeFrom<void, FactoryFcn>(lifetime, std::forward<FactoryFcn>(factoryFcn));
         }
 
-      private:
-        template <class... T> inline static constexpr bool notSupportedFactory = false;
-
+        /**
+         * @brief Creates service descriptor
+         * @details Creates service descriptor with:
+         * lifetime - given service lifetime,
+         * serviceTypeId - typeid(TService),
+         * implementationTypeId - extracted from factory return type,
+         * factory - default factory using FactoryFcn factory functor
+         * @tparam TService base service type
+         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
+         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
+         * vectors with pointers or unique pointers, implementation type must inherit from TService
+         *
+         * Example:
+         * @code{.cpp}
+         * ServiceDescriptor descriptor = ServiceDescriber::describeFrom<BaseClass>(
+         *       []() { return std::make_unique<ImplementationClass>(); }, ServiceLifeTime::scoped());
+         * @endcode
+         */
         template <class TService, class FactoryFcn>
-        static ServiceDescriptor describeFromAutoFactory(ServiceLifeTime lifetime, FactoryFcn factoryFcn)
+        static ServiceDescriptor describeFrom(const ServiceLifeTime lifetime, FactoryFcn &&factoryFcn)
         {
-            checkCopyAndMove<FactoryFcn>();
-            if constexpr (std::is_invocable_v<FactoryFcn>)
-            {
-                return describeFromFactory<TService>(lifetime, [=](IServiceProvider &) { return factoryFcn(); });
-            }
-            else if constexpr (std::is_invocable_v<FactoryFcn, IServiceProvider &>)
-            {
-                return describeFromFactory<TService>(lifetime, std::move(factoryFcn));
-            }
-            else
-            {
-                badFactory<FactoryFcn>();
-            }
-        }
+            using FactoryType = details::factories::ServiceFcnFactory<FactoryFcn>;
+            auto factory = std::make_unique<FactoryType>(std::forward<FactoryFcn>(factoryFcn));
 
-        template <class TService, class FactoryFcn>
-        static ServiceDescriptor describeFromFactory(ServiceLifeTime lifetime, FactoryFcn factoryFcn)
-        {
-            using FactoryType = details::ServiceFcnFactory<FactoryFcn>;
-            if constexpr (!FactoryType::IsReturnTypeUniquePtr::value)
-            {
-                badFactory<FactoryFcn>();
-            }
-            auto factory = std::make_unique<FactoryType>(std::move(factoryFcn));
-
-            using Service =
-                typename std::conditional<std::is_void_v<TService>, typename FactoryType::ServiceType, TService>::type;
+            using Service = std::conditional_t<std::is_void_v<TService>, typename FactoryType::ServiceType, TService>;
             return {typeid(Service), lifetime, std::move(factory)};
-        }
-
-        template <class FactoryFcn> static void checkCopyAndMove()
-        {
-            if constexpr (!std::is_copy_constructible_v<FactoryFcn> || !std::is_move_constructible_v<FactoryFcn>)
-            {
-                static_assert(notSupportedFactory<FactoryFcn>, "Factory function should be movable and copyable.");
-            }
-        }
-
-        template <class FactoryFcn> static void badFactory()
-        {
-            static_assert(notSupportedFactory<FactoryFcn>,
-                          "Factory function should have this scheme: (IServiceProvider &) -> std::unique_ptr<T> or () "
-                          "-> std::unique_ptr<T>, it should return std::unique_ptr<T> and optionally take as argument "
-                          "IServiceProvider &");
         }
     };
 } // namespace sb::di
-
-#ifdef _7BIT_DI_ADD_IMPL
-#endif

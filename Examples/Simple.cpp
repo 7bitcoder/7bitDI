@@ -17,14 +17,14 @@ struct IAppPartB
     virtual ~IAppPartB() = default;
 };
 
-struct AppPartA final : public IAppPartA
+struct AppPartA final : IAppPartA
 {
-    void doPart() { std::cout << "part a done!"; }
+    void doPart() override { std::cout << "part a done!" << std::endl; }
 };
 
-struct AppPartB final : public IAppPartB
+struct AppPartB final : IAppPartB
 {
-    void doPart() { std::cout << "part b done!"; }
+    void doPart() override { std::cout << "part b done!" << std::endl; }
 };
 
 class Application
@@ -35,7 +35,7 @@ class Application
   public:
     Application(IAppPartA *partA, IAppPartB *partB) : _partA(*partA), _partB(*partB) {}
 
-    int run()
+    [[nodiscard]] int run() const
     {
         _partA.doPart();
         _partB.doPart();
@@ -44,12 +44,12 @@ class Application
 };
 int main()
 {
-    IServiceProvider::Ptr provider = ServiceCollection{}
-                                         .addSingleton<IAppPartA, AppPartA>()
-                                         .addSingleton<IAppPartB, AppPartB>()
-                                         .addSingleton<Application>()
-                                         .buildServiceProvider();
+    ServiceProvider provider = ServiceCollection{}
+                                   .addSingleton<IAppPartA, AppPartA>()
+                                   .addSingleton<IAppPartB, AppPartB>()
+                                   .addSingleton<Application>()
+                                   .buildServiceProvider();
 
-    Application &app = provider->getService<Application>();
+    const auto &app = provider.getService<Application>();
     return app.run();
 }

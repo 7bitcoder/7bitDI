@@ -12,8 +12,3 @@ Basic Guides
    basic-guides/injecting-multiple-services
    basic-guides/injection-rules
    basic-guides/injecting-service-provider
-   
-   
-   
-
-

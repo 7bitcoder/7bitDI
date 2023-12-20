@@ -1,0 +1,85 @@
+name: Linux
+
+on:
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - "Docs/**"
+      - ".readthedocs.yaml"
+      - "README.md"
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler:
+          - { tool: gcc, ver: 7 }
+          - { tool: gcc, ver: 8 }
+          - { tool: gcc, ver: 9 }
+          - { tool: gcc, ver: 10 }
+          - { tool: gcc, ver: 11 }
+          - { tool: gcc, ver: 12 }
+          - { tool: gcc, ver: 13 }
+          - { tool: clang, ver: 7 }
+          - { tool: clang, ver: 8 }
+          - { tool: clang, ver: 9 }
+          - { tool: clang, ver: 10 }
+          - { tool: clang, ver: 11 }
+          - { tool: clang, ver: 12 }
+          - { tool: clang, ver: 13 }
+          - { tool: clang, ver: 14 }
+          - { tool: clang, ver: 15 }
+        build_type: [ Release ]
+        os: [ ubuntu-20.04, ubuntu-22.04 ]
+        std: [ 17 ]
+        library_type: [ Static ]
+        include:
+          - compiler: { tool: gcc }
+            cxx: g++
+            cc: gcc
+            generator: Ninja
+          - compiler: { tool: clang }
+            cxx: clang++
+            cc: clang
+            generator: Ninja
+        exclude:
+          - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 12 } }
+          - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 13 } }
+          - { os: ubuntu-20.04, compiler: { tool: clang, ver: 13 } }
+          - { os: ubuntu-20.04, compiler: { tool: clang, ver: 14 } }
+          - { os: ubuntu-20.04, compiler: { tool: clang, ver: 15 } }
+          - { os: ubuntu-22.04, compiler: { tool: gcc, ver: 7 } }
+          - { os: ubuntu-22.04, compiler: { tool: gcc, ver: 8 } }
+          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 7 } }
+          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 8 } }
+          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 9 } }
+          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 10 } }
+
+    runs-on: ${{matrix.os}}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create Build Environment
+        env:
+          PACKAGES: ${{ matrix.compiler.tool == 'gcc' &&  format('gcc-{0} g++-{0}', matrix.compiler.ver) || format('{0}-{1}', matrix.compiler.tool, matrix.compiler.ver) }}
+        run: |
+          sudo apt update
+          sudo apt install ${{env.PACKAGES}} ninja-build -y
+          sudo apt install locales-all
+          cmake -E make_directory ${{runner.workspace}}/build
+
+      - name: Configure
+        env:
+          CXX: ${{matrix.cxx}}-${{matrix.compiler.ver}}
+          CC: ${{matrix.cc}}-${{matrix.compiler.ver}}
+        run: cmake -B ${{runner.workspace}}/build -G "${{matrix.generator}}" -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON
+
+      - name: Build
+        run: cmake --build ${{runner.workspace}}/build --config ${{matrix.build_type}} -j
+
+      - name: Test
+        working-directory: ${{runner.workspace}}/build/Tests
+        run: ctest -C ${{matrix.build_type}}
+        env:
+          CTEST_OUTPUT_ON_FAILURE: True

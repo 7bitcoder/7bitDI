@@ -1,20 +1,13 @@
-find_package(GTest REQUIRED)
-
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS *.cpp)
-
-add_executable(Tests
-    ${SOURCES}
+include(FetchContent)
+FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG f8d7d77c06936315286eb55f8de22cd23c188571 # release-1.14.0
 )
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
 
-target_link_libraries(Tests PUBLIC
-    GTest::gtest
-    GTest::gmock
-)
+enable_testing()
 
-target_link_libraries(Tests PUBLIC
-    7bitDI
-)
-
-gtest_discover_tests(Tests
-    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-    PROPERTIES TIMEOUT 10)
+add_subdirectory(Integration)
+add_subdirectory(Unit)

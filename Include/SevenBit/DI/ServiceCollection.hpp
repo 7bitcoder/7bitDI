@@ -3,16 +3,15 @@
 #include <algorithm>
 #include <cstddef>
 #include <memory>
-#include <unordered_map>
 #include <vector>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/DefaultServiceProviderRoot.hpp"
-#include "SevenBit/DI/IServiceFactory.hpp"
+#include "SevenBit/DI/Details/Utils/Container.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
@@ -20,7 +19,6 @@ namespace sb::di
 {
     class EXPORT ServiceCollection
     {
-      private:
         std::vector<ServiceDescriptor> _serviceDescriptors;
 
       public:
@@ -32,6 +30,9 @@ namespace sb::di
         using Ptr = std::unique_ptr<ServiceCollection>;
 
         ServiceCollection() = default;
+        ServiceCollection(std::initializer_list<ServiceDescriptor> list);
+        template <class InputIt> ServiceCollection(InputIt first, InputIt last) : _serviceDescriptors(first, last) {}
+
         ServiceCollection(const ServiceCollection &) = default;
         ServiceCollection(ServiceCollection &&) = default;
 
@@ -41,29 +42,39 @@ namespace sb::di
         /**
          * @brief Builds service provider with specified options
          * @details might throw exceptions
-         * @throws ServiceAlreadyRegisteredException if service was already registered
-         * @throws ServiceLifeTimeMissmatchException if service has different lifetime than other already registered
-         * with same base type
+         * @throws sb::di::ServiceAlreadyRegisteredException if service was already registered
+         * @throws sb::di::ServiceLifeTimeMismatchException if service has different lifetime than other already
+         * registered with same base type
          */
-        IServiceProvider::Ptr buildServiceProvider(ServiceProviderOptions options = {});
+        ServiceProvider buildServiceProvider(ServiceProviderOptions options = {});
+
+        /**
+         * @brief Builds service provider as unique_ptr with specified options
+         * @details might throw exceptions
+         * @throws sb::di::ServiceAlreadyRegisteredException if service was already registered
+         * @throws sb::di::ServiceLifeTimeMismatchException if service has different lifetime than other already
+         * registered with same base type
+         */
+        ServiceProvider::Ptr buildServiceProviderAsPtr(ServiceProviderOptions options = {});
 
         Iterator begin() { return _serviceDescriptors.begin(); }
         Iterator end() { return _serviceDescriptors.end(); }
 
-        ConstIterator cBegin() const { return _serviceDescriptors.cbegin(); }
-        ConstIterator cEnd() const { return _serviceDescriptors.cend(); }
+        [[nodiscard]] ConstIterator cBegin() const { return _serviceDescriptors.cbegin(); }
+        [[nodiscard]] ConstIterator cEnd() const { return _serviceDescriptors.cend(); }
 
-        ConstIterator begin() const { return cBegin(); }
-        ConstIterator end() const { return cEnd(); }
+        [[nodiscard]] ConstIterator begin() const { return cBegin(); }
+        [[nodiscard]] ConstIterator end() const { return cEnd(); }
 
         ReverseIterator rBegin() { return _serviceDescriptors.rbegin(); }
         ReverseIterator rEnd() { return _serviceDescriptors.rend(); }
 
-        ConstReverseIterator crBegin() const { return _serviceDescriptors.crbegin(); }
-        ConstReverseIterator crEnd() const { return _serviceDescriptors.crend(); }
+        [[nodiscard]] ConstReverseIterator crBegin() const { return _serviceDescriptors.crbegin(); }
+        [[nodiscard]] ConstReverseIterator crEnd() const { return _serviceDescriptors.crend(); }
 
-        ConstReverseIterator rbegin() const { return crBegin(); }
-        ConstReverseIterator rend() const { return crEnd(); }
+        [[nodiscard]] ConstReverseIterator rbegin() const { return crBegin(); }
+        [[nodiscard]] ConstReverseIterator rend() const { return crEnd(); }
+
         /**
          * @brief Returns service descriptor at giver position
          * @details might throw exception
@@ -75,7 +86,7 @@ namespace sb::di
          * @details might throw exception
          * @throws std::out_of_range if index >= size()
          */
-        const ServiceDescriptor &at(size_t index) const;
+        [[nodiscard]] const ServiceDescriptor &at(size_t index) const;
 
         /**
          * @brief Returns first descriptor
@@ -88,7 +99,7 @@ namespace sb::di
          * @details might throw exception
          * @throws std::out_of_range if empty()
          */
-        const ServiceDescriptor &first() const;
+        [[nodiscard]] const ServiceDescriptor &first() const;
 
         /**
          * @brief Returns last descriptor
@@ -101,7 +112,7 @@ namespace sb::di
          * @details might throw exception
          * @throws std::out_of_range if empty()
          */
-        const ServiceDescriptor &last() const;
+        [[nodiscard]] const ServiceDescriptor &last() const;
 
         /**
          * @brief Returns service descriptor at giver position
@@ -119,21 +130,21 @@ namespace sb::di
         /**
          * @brief Returns number of stored descriptors
          */
-        size_t size() const;
+        [[nodiscard]] size_t size() const;
         /**
          * @brief Returns number of stored descriptors
          */
-        size_t count() const;
+        [[nodiscard]] size_t count() const;
 
         /**
          * @brief Returns true if there are no descriptors
          */
-        bool empty() const;
+        [[nodiscard]] bool empty() const;
 
         /**
          * @brief Returns capacity
          */
-        size_t capacity() const;
+        [[nodiscard]] size_t capacity() const;
 
         /**
          * @brief Reserves space for descriptors
@@ -152,61 +163,64 @@ namespace sb::di
 
         /**
          * @brief Find first descriptor meeting TPred requirement
-         * @tparam TPred is functor with this sheme: (const ServiceDescriptor&) -> bool
+         * @tparam TPred is functor with this scheme: (const ServiceDescriptor&) -> bool
          */
-        template <class TPred> Iterator findIf(const TPred &pred) { return std::find_if(begin(), end(), pred); }
+        template <class TPred> Iterator findIf(TPred pred) { return std::find_if(begin(), end(), std::move(pred)); }
 
         /**
          * @brief Find first descriptor meeting TPred requirement
-         * @tparam TPred is functor with this sheme: (const ServiceDescriptor&) -> bool
+         * @tparam TPred is functor with this scheme: (const ServiceDescriptor&) -> bool
          */
-        template <class TPred> ConstIterator findIf(const TPred &pred) const
+        template <class TPred> [[nodiscard]] ConstIterator findIf(TPred pred) const
         {
-            return std::find_if(begin(), end(), pred);
+            return std::find_if(begin(), end(), std::move(pred));
         }
 
         /**
-         * @brief Cheks if contains descriptor meeting TPred requirement
-         * @tparam TPred is functor with this sheme: (const ServiceDescriptor&) -> bool
+         * @brief Checks if contains descriptor meeting TPred requirement
+         * @tparam TPred is functor with this scheme: (const ServiceDescriptor&) -> bool
          */
-        template <class TPred> bool containsIf(const TPred &pred) const { return findIf(pred) != end(); }
+        template <class TPred> [[nodiscard]] bool containsIf(TPred pred) const
+        {
+            return findIf(std::move(pred)) != end();
+        }
 
         /**
-         * @brief Cheks if contains descriptor matching requirement
-         * @code {.cpp}
+         * @brief Checks if contains descriptor matching requirement
+         * @code{.cpp}
          * descriptor.getServiceTypeId() == typeid(TService)
          * @endcode
          */
-        template <class TService> bool contains() const { return contains(typeid(TService)); }
+        template <class TService> [[nodiscard]] bool contains() const { return contains(typeid(TService)); }
 
         /**
-         * @brief Cheks if contains descriptor matching requirement
-         * @code {.cpp}
+         * @brief Checks if contains descriptor matching requirement
+         * @code{.cpp}
          * descriptor.getServiceTypeId() == serviceTypeId
          * @endcode
          */
-        bool contains(TypeId serviceTypeId) const;
+        [[nodiscard]] bool contains(TypeId serviceTypeId) const;
 
         /**
-         * @brief Cheks if contains descriptor matching requirement
-         * @code {.cpp}
+         * @brief Checks if contains descriptor matching requirement
+         * @code{.cpp}
          * descriptor.getImplementationTypeId() == typeid(TImplementation) && descriptor.getServiceTypeId() ==
          * typeid(TService)
          * @endcode
          */
-        template <class TService, class TImplementation = TService> bool containsExact() const
+        template <class TService, class TImplementation = TService> [[nodiscard]] bool containsExact() const
         {
             return containsExact(typeid(TService), typeid(TImplementation));
         }
 
         /**
-         * @brief Cheks if contains descriptor matching requirement
-         * @code {.cpp}
+         * @brief Checks if contains descriptor matching requirement
+         * @code{.cpp}
          * descriptor.getImplementationTypeId() == implementationTypeId && descriptor.getServiceTypeId() ==
-         * @endcode
          * serviceTypeId
+         * @endcode
          */
-        bool containsExact(TypeId serviceTypeId, TypeId implementationTypeId) const;
+        [[nodiscard]] bool containsExact(TypeId serviceTypeId, TypeId implementationTypeId) const;
 
         /**
          * @brief Inserts descriptor before giver iterator
@@ -248,12 +262,12 @@ namespace sb::di
 
         /**
          * @brief Removes all descriptors meeting TPred requirement
-         * @tparam TPred is functor with this sheme: (const ServiceDescriptor&) -> bool
+         * @tparam TPred is functor with this scheme: (const ServiceDescriptor&) -> bool
          * @details Returns number of removed elements
          */
-        template <class TPred> size_t removeIf(const TPred &pred)
+        template <class TPred> size_t removeIf(TPred pred)
         {
-            auto it = details::utils::removeIf(begin(), end(), pred);
+            auto it = details::utils::Container::removeIf(begin(), end(), std::move(pred));
             auto r = std::distance(it, end());
             removeRange(it, end());
             return r;
@@ -261,7 +275,7 @@ namespace sb::di
 
         /**
          * @brief Removes all descriptors meeting requirement
-         * @code {.cpp}
+         * @code{.cpp}
          * descriptor.getServiceTypeId() == typeid(TService)
          * @endcode
          * @details Returns number of removed elements
@@ -270,7 +284,7 @@ namespace sb::di
 
         /**
          * @brief Removes all descriptors meeting requirement
-         * @code {.cpp}
+         * @code{.cpp}
          * descriptor.getServiceTypeId() == serviceTypeId
          * @endcode
          * @details Returns number of removed elements
@@ -279,7 +293,7 @@ namespace sb::di
 
         /**
          * @brief Removes all descriptors meeting requirement
-         * @code {.cpp}
+         * @code{.cpp}
          * descriptor.getImplementationTypeId() == typeid(TImplementation) && descriptor.getServiceTypeId() ==
          * typeid(TService)
          * @endcode
@@ -292,7 +306,7 @@ namespace sb::di
 
         /**
          * @brief Removes all descriptors meeting requirement
-         * @code {.cpp}
+         * @code{.cpp}
          * descriptor.getImplementationTypeId() == implementationTypeId && descriptor.getServiceTypeId() ==
          * serviceTypeId
          * @endcode
@@ -306,39 +320,42 @@ namespace sb::di
         void pop();
 
         /**
-         * @brief Adds ServiceDescriptor
+         * @brief Adds service descriptor
          * @details Adds service descriptor with:
          * lifetime - given lifetime,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
          * factory - default factory using TImplementation constructor
          * @tparam TService base service type
-         * @tparam TImplementation service implementation type must inherit from TService and must have one constructor
+         * @tparam TImplementation service implementation type must inherit from TService and must have one
+         * constructor
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.add<TestClass>(ServiceLifeTime::scoped());
          * ServiceCollection{}.add<BaseClass, ImplementationClass>(ServiceLifeTime::transient());
          * @endcode
          */
-        template <class TService, class TImplementation = TService> ServiceCollection &add(ServiceLifeTime lifeTime)
+        template <class TService, class TImplementation = TService>
+        ServiceCollection &add(const ServiceLifeTime lifeTime)
         {
             return add(ServiceDescriber::describe<TService, TImplementation>(lifeTime));
         }
         /**
-         * @brief Adds ServiceDescriptor
+         * @brief Adds service descriptor
          * @details Adds service descriptor with:
          * lifetime - singleton,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
          * factory - default factory using TImplementation constructor
          * @tparam TService base service type
-         * @tparam TImplementation service implementation type must inherit from TService and must have one constructor
+         * @tparam TImplementation service implementation type must inherit from TService and must have one
+         * constructor
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addSingleton<TestClass>();
          * ServiceCollection{}.addSingleton<BaseClass, ImplementationClass>();
          * @endcode
@@ -348,18 +365,19 @@ namespace sb::di
             return add(ServiceDescriber::describeSingleton<TService, TImplementation>());
         }
         /**
-         * @brief Adds ServiceDescriptor
+         * @brief Adds service descriptor
          * @details Adds service descriptor with:
          * lifetime - scoped,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
          * factory - default factory using TImplementation constructor
          * @tparam TService base service type
-         * @tparam TImplementation service implementation type must inherit from TService and must have one constructor
+         * @tparam TImplementation service implementation type must inherit from TService and must have one
+         * constructor
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addScoped<TestClass>();
          * ServiceCollection{}.addScoped<BaseClass, ImplementationClass>();
          * @endcode
@@ -369,18 +387,19 @@ namespace sb::di
             return add(ServiceDescriber::describeScoped<TService, TImplementation>());
         }
         /**
-         * @brief Adds ServiceDescriptor
+         * @brief Adds service descriptor
          * @details Adds service descriptor with:
          * lifetime - transient,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
          * factory - default factory using TImplementation constructor
          * @tparam TService base service type
-         * @tparam TImplementation service implementation type must inherit from TService and must have one constructor
+         * @tparam TImplementation service implementation type must inherit from TService and must have one
+         * constructor
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addTransient<TestClass>();
          * ServiceCollection{}.addTransient<BaseClass, ImplementationClass>();
          * @endcode
@@ -391,16 +410,16 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds ServiceDescriptor
+         * @brief Adds service descriptor
          * @details Adds service descriptor with:
          * lifetime - singleton,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TService),
-         * factory - factory with external service pointner
-         * @tparam TService service type must have one constructor
+         * factory - factory with external service pointer
+         * @tparam TService service type
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * TestClass test;
          * ServiceCollection{}.addSingleton(&test);
          * @endcode
@@ -410,18 +429,18 @@ namespace sb::di
             return add(ServiceDescriber::describeSingleton<TService, TService>(service));
         }
         /**
-         * @brief Adds ServiceDescriptor
+         * @brief Adds service descriptor
          * @details Adds service descriptor with:
          * lifetime - singleton,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
-         * factory - factory with external service pointner
+         * factory - factory with external service pointer
          * @tparam TService base service type
-         * @tparam TImplementation service implementation type must inherit from TService and must have one constructor
+         * @tparam TImplementation service implementation type must inherit from TService
          * @see Constructor requirements
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ImplementationClass implementation;
          * ServiceCollection{}.addSingleton<BaseClass>(&implementation);
          * @endcode
@@ -431,43 +450,42 @@ namespace sb::di
             return add(ServiceDescriber::describeSingleton<TService, TImplementation>(service));
         }
         /**
-         * @brief Adds ServiceDescriptor
+         * @brief Adds service descriptor
          * @details Adds service descriptor with:
          * lifetime - singleton,
          * serviceTypeId - given service lifetime,
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must inherit from TService and must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
+         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
+         * vectors with pointers or unique pointers
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.add<BaseClass>(ServiceLifeTime::scoped(),
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
-        template <class TService, class FactoryFcn> ServiceCollection &add(ServiceLifeTime lifeTime, FactoryFcn factory)
+        template <class TService, class FactoryFcn>
+        ServiceCollection &add(const ServiceLifeTime lifeTime, FactoryFcn factory)
         {
             return add(ServiceDescriber::describeFrom<TService, FactoryFcn>(lifeTime, std::move(factory)));
         }
         /**
-         * @brief Adds ServiceDescriptor
+         * @brief Adds service descriptor
          * @details Adds service descriptor with:
          * lifetime - singleton,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must inherit from TService and must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
+         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
+         * vectors with pointers or unique pointers
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addSingleton<BaseClass>([]() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
@@ -476,20 +494,19 @@ namespace sb::di
             return add(ServiceDescriber::describeSingletonFrom<TService, FactoryFcn>(std::move(factory)));
         }
         /**
-         * @brief Adds ServiceDescriptor
+         * @brief Adds service descriptor
          * @details Adds service descriptor with:
          * lifetime - scoped,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must inherit from TService and must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
+         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
+         * vectors with pointers or unique pointers
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addScoped<BaseClass>([]() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
@@ -498,20 +515,19 @@ namespace sb::di
             return add(ServiceDescriber::describeScopedFrom<TService, FactoryFcn>(std::move(factory)));
         }
         /**
-         * @brief Adds ServiceDescriptor
+         * @brief Adds service descriptor
          * @details Adds service descriptor with:
          * lifetime - transient,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must inherit from TService and must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
+         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
+         * vectors with pointers or unique pointers
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addTransient<BaseClass>([]() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
@@ -521,42 +537,38 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds ServiceDescriptor
+         * @brief Adds service descriptor
          * @details Adds service descriptor with:
          * lifetime - given service lifetime,
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
+         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
+         * vectors with pointers or unique pointers
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.add(ServiceLifeTime::transient(), []() { return std::make_unique<TestClass>(); });
          * @endcode
          */
-        template <class FactoryFcn> ServiceCollection &add(ServiceLifeTime lifeTime, FactoryFcn factory)
+        template <class FactoryFcn> ServiceCollection &add(const ServiceLifeTime lifeTime, FactoryFcn factory)
         {
             return add(ServiceDescriber::describeFrom(lifeTime, std::move(factory)));
         }
         /**
-         * @brief Adds ServiceDescriptor
+         * @brief Adds service descriptor
          * @details Adds service descriptor with:
          * lifetime - singleton,
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
+         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
+         * vectors with pointers or unique pointers
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addSingleton([]() { return std::make_unique<TestClass>(); });
          * @endcode
          */
@@ -565,20 +577,18 @@ namespace sb::di
             return add(ServiceDescriber::describeSingletonFrom(std::move(factory)));
         }
         /**
-         * @brief Adds ServiceDescriptor
+         * @brief Adds service descriptor
          * @details Adds service descriptor with:
          * lifetime - scoped,
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
+         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
+         * vectors with pointers or unique pointers
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addScoped([]() { return std::make_unique<TestClass>(); });
          * @endcode
          */
@@ -587,20 +597,18 @@ namespace sb::di
             return add(ServiceDescriber::describeScopedFrom(std::move(factory)));
         }
         /**
-         * @brief Adds ServiceDescriptor
+         * @brief Adds service descriptor
          * @details Adds service descriptor with:
          * lifetime - transient,
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
          * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this sheme: (const ServiceDescriptor&) ->
-         * std::unique_ptr<TImplementation> (argument is optional), functor must be copyable and movable, implementation
-         * type must have one constructor
-         * @see Constructor requirements
+         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
+         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
+         * vectors with pointers or unique pointers
          *
          * Example:
-         * @code {.cpp}
+         * @code{.cpp}
          * ServiceCollection{}.addTransient([]() { return std::make_unique<TestClass>(); });
          * @endcode
          */
@@ -612,5 +620,5 @@ namespace sb::di
 } // namespace sb::di
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Impl/ServiceCollection.hpp"
+#include "SevenBit/DI/Impl/ServiceCollection.hpp"
 #endif

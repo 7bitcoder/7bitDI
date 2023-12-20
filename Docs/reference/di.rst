@@ -1,17 +1,19 @@
-Namespace sb::di
+sb::di
 ========================================
 
 .. toctree::
    :maxdepth: 5
    :titlesonly:
 
-   di/typeid
-   di/iserviceinstance
-   di/iservicefactory
-   di/servicelifetime
-   di/servicedescriptor
-   di/servicedescriber
-   di/serviceprovideroptions
-   di/iserviceprovider
-   di/servicecollection
    di/exceptions
+   di/iservicefactory
+   di/iserviceinstance
+   di/iserviceinstanceprovider
+   di/oneorlist
+   di/servicecollection
+   di/servicedescriber
+   di/servicedescriptor
+   di/servicelifetime
+   di/serviceprovider
+   di/serviceprovideroptions
+   di/typeid

@@ -4,15 +4,11 @@
 
 namespace sb::di
 {
-
-    /**
-     * @brief Class used to describe service lifetime
-     */
     class EXPORT ServiceLifeTime
     {
       public:
         /**
-         * @brief 3 types of availabe service lifetimes
+         * @brief 3 types of available service lifetimes
          */
         enum Type
         {
@@ -41,32 +37,32 @@ namespace sb::di
         /**
          * @brief Construct a new Service Life Time object with specified type
          */
-        ServiceLifeTime(Type type);
+        explicit ServiceLifeTime(Type type);
 
+        ServiceLifeTime(ServiceLifeTime &&) = default;
         ServiceLifeTime(const ServiceLifeTime &) = default;
+
+        ServiceLifeTime &operator=(ServiceLifeTime &&) = default;
         ServiceLifeTime &operator=(const ServiceLifeTime &) = default;
 
         /**
          * @brief checks if lifetime is singleton
          */
-        bool isSingleton() const;
+        [[nodiscard]] bool isSingleton() const;
         /**
          * @brief checks if lifetime is scoped
          */
-        bool isScoped() const;
+        [[nodiscard]] bool isScoped() const;
         /**
          * @brief checks if lifetime is transient
          */
-        bool isTransient() const;
+        [[nodiscard]] bool isTransient() const;
+
         /**
          * @brief checks if lifetime is given type
          */
-        bool is(Type type) const;
+        [[nodiscard]] bool is(Type type) const;
 
-        bool operator>(const ServiceLifeTime &scope) const;
-        bool operator<(const ServiceLifeTime &scope) const;
-        bool operator>=(const ServiceLifeTime &scope) const;
-        bool operator<=(const ServiceLifeTime &scope) const;
         bool operator!=(const ServiceLifeTime &scope) const;
         bool operator==(const ServiceLifeTime &scope) const;
     };
@@ -74,5 +70,5 @@ namespace sb::di
 } // namespace sb::di
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Impl/ServiceLifeTime.hpp"
+#include "SevenBit/DI/Impl/ServiceLifeTime.hpp"
 #endif

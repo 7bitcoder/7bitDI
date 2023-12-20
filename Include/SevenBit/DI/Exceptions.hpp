@@ -1,6 +1,5 @@
 #pragma once
 
-#include <exception>
 #include <stdexcept>
 #include <string>
 
@@ -13,57 +12,57 @@ namespace sb::di
     /**
      * @brief Base class for all injector exceptions
      */
-    struct EXPORT InjectorException : public std::runtime_error
+    struct EXPORT InjectorException : std::runtime_error
     {
-        InjectorException(const std::string &error);
+        explicit InjectorException(const std::string &error);
     };
 
-    struct EXPORT NullPointnerException : public InjectorException
+    struct EXPORT NullPointerException : InjectorException
     {
-        NullPointnerException(const std::string &why);
+        explicit NullPointerException(const std::string &why);
     };
 
-    struct EXPORT ForbiddenServiceFactoryException : public InjectorException
+    struct EXPORT InvalidServiceException : InjectorException
     {
-        ForbiddenServiceFactoryException(TypeId typeId, const std::string &reason);
+        explicit InvalidServiceException(TypeId typeId);
     };
 
-    struct EXPORT CannotMoveOutServiceException : public InjectorException
+    struct EXPORT CannotReleaseServiceException : InjectorException
+    {
+        CannotReleaseServiceException(TypeId typeId, const std::string &reason);
+    };
+
+    struct EXPORT CannotMoveOutServiceException : InjectorException
     {
         CannotMoveOutServiceException(TypeId typeId, const std::string &reason);
     };
 
-    struct EXPORT InvalidServiceException : public InjectorException
-    {
-        InvalidServiceException(TypeId typeId, const std::string &reason);
-    };
-
-    struct EXPORT ServiceNotFoundException : public InjectorException
+    struct EXPORT ServiceNotFoundException : InjectorException
     {
         ServiceNotFoundException(TypeId typeIndex, const std::string &reason);
     };
 
-    struct EXPORT ServiceAlreadyRegisteredException : public InjectorException
+    struct EXPORT ServiceAlreadyRegisteredException : InjectorException
     {
-        ServiceAlreadyRegisteredException(TypeId typeIndex);
+        explicit ServiceAlreadyRegisteredException(TypeId typeIndex);
     };
 
-    struct EXPORT ServiceBaseTypeMissmatchException : public InjectorException
+    struct EXPORT ServiceBaseTypeMismatchException : InjectorException
     {
-        ServiceBaseTypeMissmatchException(TypeId typeIndex, TypeId interface);
+        ServiceBaseTypeMismatchException(TypeId typeIndex, TypeId interface);
     };
 
-    struct EXPORT ServiceLifeTimeMissmatchException : public InjectorException
+    struct EXPORT ServiceLifeTimeMismatchException : InjectorException
     {
-        ServiceLifeTimeMissmatchException(TypeId typeIndex, TypeId interface);
+        ServiceLifeTimeMismatchException(TypeId typeIndex, TypeId interface);
     };
 
-    struct EXPORT CircularDependencyException : public InjectorException
+    struct EXPORT CircularDependencyException : InjectorException
     {
-        CircularDependencyException(TypeId typeIndex);
+        explicit CircularDependencyException(TypeId typeIndex);
     };
 } // namespace sb::di
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Impl/Exceptions.hpp"
+#include "SevenBit/DI/Impl/Exceptions.hpp"
 #endif

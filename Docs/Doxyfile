@@ -1765,7 +1765,7 @@ MATHJAX_FORMAT         = HTML-CSS
 
 # When MathJax is enabled you need to specify the location relative to the HTML
 # output directory using the MATHJAX_RELPATH option. The destination directory
-# should contain the MathJax.js script. For instance, if the mathjax directory
+# should contain the MathJax.js script. For service, if the mathjax directory
 # is located at the same level as the HTML output directory, then
 # MATHJAX_RELPATH should be ../mathjax. The default value points to the MathJax
 # Content Delivery Network so you can quickly see the result without installing
@@ -1955,7 +1955,7 @@ PAPER_TYPE             = a4
 # The EXTRA_PACKAGES tag can be used to specify one or more LaTeX package names
 # that should be included in the LaTeX output. The package can be specified just
 # by its name or with the correct syntax as to be used with the LaTeX
-# \usepackage command. To get the times font for instance you can specify :
+# \usepackage command. To get the times font for service you can specify :
 # EXTRA_PACKAGES=times or EXTRA_PACKAGES={times}
 # To use the option intlimits with the amsmath package you can specify:
 # EXTRA_PACKAGES=[intlimits]{amsmath}
@@ -2402,7 +2402,7 @@ EXTERNAL_PAGES         = YES
 #---------------------------------------------------------------------------
 
 # You can include diagrams made with dia in doxygen documentation. Doxygen will
-# then run dia to produce the diagram and insert it in the documentation. The
+# then run dia to produce the diagram and add it in the documentation. The
 # DIA_PATH tag allows you to specify the directory where the dia binary resides.
 # If left empty dia is assumed to be found in the default search path.
 
