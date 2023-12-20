@@ -4,15 +4,12 @@ include(GenerateExportHeader)
 if (_7BIT_DI_SHARED_LIB)
     add_library(7bitDI SHARED Source.cpp)
 
-    target_include_directories(7bitDI PUBLIC ${_7BIT_DI_INCLUDE_DIR})
 elseif (_7BIT_DI_STATIC_LIB)
     add_library(7bitDI STATIC Source.cpp)
 
-    target_include_directories(7bitDI PUBLIC ${_7BIT_DI_INCLUDE_DIR})
 elseif (_7BIT_DI_HEADER_ONLY_LIB)
     add_library(7bitDI INTERFACE)
 
-    target_include_directories(7bitDI INTERFACE ${_7BIT_DI_INCLUDE_DIR})
 endif ()
 
 add_library(7bitDI::7bitDI ALIAS 7bitDI)

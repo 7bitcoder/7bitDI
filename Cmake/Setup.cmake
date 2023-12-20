@@ -50,7 +50,7 @@ option(_7BIT_DI_BUILD_EXAMPLES "Build example" OFF)
 option(_7BIT_DI_BUILD_BENCHMARKS "Build benchmarks" OFF)
 option(_7BIT_DI_BUILD_TESTS "Build tests" OFF)
 option(_7BIT_DI_BUILD_DOCS "Turn on to build documentation (requires sphinx and doxygen installed)" OFF)
-option(_7BIT_DI_INSTALL "Installs 7bitDI" ON)
+option(_7BIT_DI_INSTALL "Installs 7bitDI" OFF)
 option(_7BIT_DI_BUILD_SINGLE_HEADER "Builds single header SevenBitDI.hpp" OFF)
 
 if (_7BIT_DI_BUILD_PIC)
