@@ -1,12 +1,14 @@
 cmake_minimum_required(VERSION 3.15.0)
 
+set(_7BIT_DI_LIBRARY 7bitDI)
+
 set(_7BIT_DI_VERSION_MAJOR 2)
 set(_7BIT_DI_VERSION_MINOR 0)
 set(_7BIT_DI_VERSION_PATCH 0)
 
 set(_7BIT_DI_VERSION ${_7BIT_DI_VERSION_MAJOR}.${_7BIT_DI_VERSION_MINOR}.${_7BIT_DI_VERSION_PATCH})
 
-project(7bitDI LANGUAGES CXX VERSION ${_7BIT_DI_VERSION})
+project(${_7BIT_DI_LIBRARY} LANGUAGES CXX VERSION ${_7BIT_DI_VERSION})
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Cmake")
 
@@ -19,7 +21,7 @@ include(Setup)
 include(CMakeDependentOption)
 include(GNUInstallDirs)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Include)
+include_directories(${_7BIT_DI_INCLUDE_DIR})
 
 add_subdirectory(Source)
 
@@ -50,7 +52,7 @@ if (_7BIT_DI_INSTALL)
     set(VERSIONS_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/7bitDIConfigVersion.cmake)
     set(EXPORT_DEST_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/7bitDI)
 
-    install(DIRECTORY ${_7BIT_DI_HEADERS_DIR}/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    install(DIRECTORY ${_7BIT_DI_INCLUDE_DIR}/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
     install(
             TARGETS 7bitDI
