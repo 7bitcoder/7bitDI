@@ -48,7 +48,7 @@ fixes are welcome!
 
 ## Installation
 
-**There are a few ways of installation:**
+### There are a few ways of installation:
 
 ### 1. Using Cmake fetch content api - Recommended
 
@@ -68,16 +68,16 @@ FetchContent_MakeAvailable(7bitDI)
 
 Download and install A [Conan](https://conan.io/), and create conanfile.txt in the root of your project for example:
 
-    ```txt
-        [requires]
-        7bitdi/2.0.0
-    ```
+```txt
+[requires]
+7bitdi/2.0.0
+```
 
 change the version to newer if available, then run the command:
 
-    ```sh
-        conan install . --output-folder=build --build=missing
-    ```
+```console
+conan install . --output-folder=build --build=missing
+```
 
 ### 3. Header only
 
@@ -86,9 +86,9 @@ copy include folder into your project location,
 for example copy into the '/SevenBitDI' folder.
 Include this folder into the project, with [Cmake](https://cmake.org/), u can use:
 
-    ```cmake
-        include_directories(/SevenBitDI/Include)
-    ```
+```cmake
+include_directories(/SevenBitDI/Include)
+```
 
 ### 4. Header only - Single file
 
@@ -97,7 +97,7 @@ copy this file into your project location and include it.
 
 ### 5. Building library as Static/Shared
 
-Download source code from the most recent release, build or install the project using [Cmake](https://cmake.org/)_,
+Download source code from the most recent release, build or install the project using [Cmake](https://cmake.org/),
 for more details see the Building Library guide
 in [Documentation](https://7bitdi.readthedocs.io/en/latest/getting-started.html).
 
@@ -108,19 +108,29 @@ in [Documentation](https://7bitdi.readthedocs.io/en/latest/getting-started.html)
 
 ## Injection Rules
 
-The dependency injection mechanism relies heavily on template metaprogramming and it has some limitations.
+The dependency injection system relies heavily on template metaprogramming and it has some limitations.
 
 ### General
 
 * Only one constructor should be defined for each instance implementation
 * If the service is registered with interface and implementation, the interface should have a virtual destructor
-* If multiple services are registered by the same interface, all should have the same lifetime (the build method will
-  throw an exception)
+* If multiple services are registered by the same interface, all should have the same lifetime singleton, scoped or
+  transient (the build method will throw an exception)
 * Only one service implementation can be registered (the build method will throw an exception)
+
+### Service lifetime
+
+Service can be registered as a singleton, scoped, or transient.
+
+* Singleton: service provider will create only one instance of this service (accessible via the getService
+  method)
+* Scoped: instance provider will create only one instance of this instance for each scope (accessible via the getService
+  method)
+* Transient: services are always unique, a new service is provided every time it is requested, and the service provider
+  returns, in this case, std::unique_ptr (accessible via createService method)
 
 ### Injecting Services
 
-* Services cannot be injected by value: (T)
 * Singleton/scoped services can be injected using one of:
     * References: (T&)
     * Const references: (const T&)
@@ -128,22 +138,23 @@ The dependency injection mechanism relies heavily on template metaprogramming an
     * Const pointer: (T* const)
     * Pointer to const object: (const T*)
     * Const pointer to const object: (const T* const)
-* Transient services can be injected using std::unique_ptr: (unique_ptr<T>) or directly T if object is movable or
-  copyable
+* Transient services can be injected using one of:
+    * std::unique_ptr: (unique_ptr< T>)
+    * In place object if type is movable or copyable: T
 * Multiple services implementing specified interface can be injected using std::vector:
-    * Transient (std::vector<std::unique_ptr<T>>)
-    * Singleton/scoped (std::vector<T*>)
+    * Transient (std::vector<std::unique_ptr < T>>)
+    * Singleton/scoped (std::vector<T *>)
 
 ### Injection Table
 
-| Constructor param type          | ServiceProvider method used        |
-|---------------------------------|------------------------------------|
-| T - if movable or copyable      | provider.createServiceInPlace<T>() |
-| std::unique_ptr<T>              | provider.createService<T>()        |
-| T&                              | provider.getService<T>()           |
-| T*                              | provider.tryGetService<T>()        |
-| std::vector<T*>                 | provider.getServices<T>()          |
-| std::vector<std::unique_ptr<T>> | provider.createServices<T>()       |
+| Constructor param type           | ServiceProvider method used         |
+|----------------------------------|-------------------------------------|
+| T - if movable or copyable       | provider.createServiceInPlace< T>() |
+| std::unique_ptr< T>              | provider.createService< T>()        |
+| T&                               | provider.getService< T>()           |
+| T*                               | provider.tryGetService< T>()        |
+| std::vector<T*>                  | provider.getServices< T>()          |
+| std::vector<std::unique_ptr< T>> | provider.createServices< T>()       |
 
 ### Sample Usage
 
