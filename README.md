@@ -59,16 +59,18 @@ include(FetchContent)
 FetchContent_Declare(
         7bitDI
         GIT_REPOSITORY https://github.com/7bitcoder/7bitDI.git
-        GIT_TAG 86228173f14f449dde88a84c549474ba43c2fd25 # proper release tag for example 1.0.0
+        GIT_TAG defbeb195e11367c5906564e33748ca7494dee88 # release 2.0.0
 )
 FetchContent_MakeAvailable(7bitDI)
+
+target_link_libraries(Target 7bitDI::7bitDI)
 ```
 
 ### 2. Using Conan.io package manager
 
 Download and install A [Conan](https://conan.io/), and create conanfile.txt in the root of your project for example:
 
-```txt
+```
 [requires]
 7bitdi/2.0.0
 ```
@@ -79,11 +81,14 @@ change the version to newer if available, then run the command:
 conan install . --output-folder=build --build=missing
 ```
 
+Follow in detail instructions available
+at [Conan Tutorial](https://docs.conan.io/2/tutorial/consuming_packages/build_simple_cmake_project.html)
+
 ### 3. Header only
 
 Download source code from the most recent release,
-copy include folder into your project location,
-for example copy into the '/SevenBitDI' folder.
+copy include folder into your project location.
+For example copy into the '/SevenBitDI' folder.
 Include this folder into the project, with [Cmake](https://cmake.org/), u can use:
 
 ```cmake
@@ -101,14 +106,14 @@ Download source code from the most recent release, build or install the project 
 for more details see the Building Library guide
 in [Documentation](https://7bitdi.readthedocs.io/en/latest/getting-started.html).
 
+## Injection Rules
+
 ### The library relies on two core classes:
 
 * ServiceCollection: class is responsible for registering services and building service provider
 * ServiceProvider: class is responsible for delivering real services and managing its lifetime
 
-## Injection Rules
-
-The dependency injection system relies heavily on template metaprogramming and it has some limitations.
+The dependency injection system relies heavily on template metaprogramming, and it has some limitations.
 
 ### General
 

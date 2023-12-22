@@ -36,9 +36,11 @@ Installation
         FetchContent_Declare(
                 7bitDI
                 GIT_REPOSITORY https://github.com/7bitcoder/7bitDI.git
-                GIT_TAG 86228173f14f449dde88a84c549474ba43c2fd25 # proper release tag for example 1.0.0
+                GIT_TAG defbeb195e11367c5906564e33748ca7494dee88 # release 2.0.0
         )
         FetchContent_MakeAvailable(7bitDI)
+
+        target_link_libraries(Target 7bitDI::7bitDI)
 
 #. Using Conan.io package manager
     Download and install Conan_, and create conanfile.txt in the root of your project for example:
@@ -53,6 +55,8 @@ Installation
     .. code-block:: sh
 
         conan install . --output-folder=build --build=missing
+
+    Follow in detail instructions available at `Conan Tutorial`_
 
 #. Header only
     Download source code from the most recent release, 
@@ -88,6 +92,7 @@ The next chapters will in detail, step by step explain what is going on in this 
 
 
 .. _Conan: https://conan.io/
+.. _`Conan Tutorial`: https://docs.conan.io/2/tutorial/consuming_packages/build_simple_cmake_project.html
 .. _CMake: https://cmake.org/
 .. _7bitDI: https://github.com/7bitcoder/7bitDI
 .. _`Building Library`: advanced-guides/building-library.html
