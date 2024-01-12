@@ -13,5 +13,5 @@
 #endif
 
 #define _7BIT_DI_VERSION_MAJOR 2
-/* #undef _7BIT_DI_VERSION_MINOR */
+#define _7BIT_DI_VERSION_MINOR 1
 /* #undef _7BIT_DI_VERSION_PATCH */

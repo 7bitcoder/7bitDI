@@ -2,6 +2,7 @@
 [![Linux](https://github.com/7bitcoder/7bitDI/actions/workflows/Linux.yml/badge.svg)](https://github.com/7bitcoder/7bitDI/actions/workflows/Linux.yml)
 [![Windows](https://github.com/7bitcoder/7bitDI/actions/workflows/Windows.yml/badge.svg)](https://github.com/7bitcoder/7bitDI/actions/workflows/Windows.yml)
 [![MacOs](https://github.com/7bitcoder/7bitDI/actions/workflows/MacOs.yml/badge.svg)](https://github.com/7bitcoder/7bitDI/actions/workflows/MacOs.yml)
+[![Conan Center](https://img.shields.io/conan/v/7bitdi)](https://conan.io/center/recipes/7bitdi)
 <div align="center">
 
   <img src="Docs/_static/logo.svg" alt="logo" width="500" height="auto" />

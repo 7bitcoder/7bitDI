@@ -28,7 +28,7 @@ namespace sb::di::details::containers
 
     INLINE ServiceInstanceList *ServiceInstancesMap::findServices(const TypeId serviceTypeId)
     {
-        auto it = _serviceListMap.find(serviceTypeId);
+        const auto it = _serviceListMap.find(serviceTypeId);
         return it != _serviceListMap.end() ? &it->second : nullptr;
     }
 

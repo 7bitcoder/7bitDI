@@ -29,7 +29,7 @@ namespace sb::di::details::utils
             {
                 static_assert(
                     details::utils::notSupportedType<T>,
-                    "Proper constructor for cpecified type was not found, reached maximum constructor params number "
+                    "Proper constructor for specified type was not found, reached maximum constructor params number "
                     "limit, to bump limit define macro _7BIT_DI_CTOR_PARAMS_LIMIT with new value befor including lib");
                 return 0;
             }
