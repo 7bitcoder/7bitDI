@@ -21,31 +21,25 @@ namespace sb::di::details::factories
         using ServiceFactoryInvoker = helpers::ServiceFactoryInvoker<FactoryFcn>;
         using FactoryReturnType = typename ServiceFactoryInvoker::ReturnType;
 
-        using IsRetUniquePtr = utils::IsUniquePtr<FactoryReturnType>;
-        using IsRetInPlaceObjectConstructable = utils::IsInPlaceObjectConstructable<FactoryReturnType>;
-
         mutable FactoryFcn _factoryFunction;
 
       public:
-        using ServiceType = std::conditional_t<IsRetUniquePtr::value, typename IsRetUniquePtr::Type, FactoryReturnType>;
-
-        explicit ServiceFcnFactory(FactoryFcn &&factoryFunction) : _factoryFunction{std::move(factoryFunction)}
-        {
-            static_assert(IsRetUniquePtr::value || IsRetInPlaceObjectConstructable::value ||
-                              utils::notSupportedType<FactoryFcn>,
-                          "Service factory return type must be std::unique_ptr<TService> or movable/copyable object");
-        }
+        explicit ServiceFcnFactory(FactoryFcn &&factoryFunction) : _factoryFunction{std::move(factoryFunction)} {}
 
         [[nodiscard]] TypeId getServiceTypeId() const override { return typeid(ServiceType); }
 
         IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
             ServiceFactoryInvoker invoker{_factoryFunction, serviceProvider};
-            if constexpr (IsRetUniquePtr::value)
+            if constexpr (IsUniquePtr::value)
             {
                 return std::make_unique<services::UniquePtrService<ServiceType>>(invoker.invoke());
             }
-            else
+            else if (IsPtr::value)
+            {
+                return std::make_unique<services::ExternalService<ServiceType>>(invoker.invoke());
+            }
+            else if (utils::IsInPlaceObjectConstructableV<ServiceType>)
             {
                 if (inPlaceRequest)
                 {
@@ -53,6 +47,12 @@ namespace sb::di::details::factories
                 }
                 auto servicePtr = std::make_unique<ServiceType>(invoker.invoke());
                 return std::make_unique<services::UniquePtrService<ServiceType>>(std::move(servicePtr));
+            }
+            else
+            {
+                static_assert(utils::notSupportedType<FactoryFcn>,
+                              "Service factory return type must be pointer or std::unique_ptr<TService> or "
+                              "movable/copyable object");
             }
         }
     };

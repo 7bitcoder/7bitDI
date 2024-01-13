@@ -19,4 +19,5 @@ namespace sb::di::details::utils
 
     template <class T> inline constexpr bool IsUniquePtrV = IsUniquePtr<T>::value;
 
+    template <class T> using IsUniquePtrT = typename IsUniquePtr<T>::Type;
 } // namespace sb::di::details::utils

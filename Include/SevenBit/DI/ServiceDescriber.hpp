@@ -7,6 +7,7 @@
 #include "SevenBit/DI/Details/Factories/ExternalServiceFactory.hpp"
 #include "SevenBit/DI/Details/Factories/ServiceFactory.hpp"
 #include "SevenBit/DI/Details/Factories/ServiceFcnFactory.hpp"
+#include "SevenBit/DI/Details/Helpers/ServiceFactoryInvoker.hpp"
 #include "SevenBit/DI/Details/Utils/Assert.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
@@ -231,6 +232,33 @@ namespace sb::di
         /**
          * @brief Creates service descriptor
          * @details Creates service descriptor with:
+         * lifetime - given service lifetime,
+         * serviceTypeId - typeid(TService),
+         * implementationTypeId - extracted from factory return type,
+         * factory - default factory using FactoryFcn factory functor
+         * @tparam TService base service type
+         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
+         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
+         * vectors with pointers or unique pointers, implementation type must inherit from TService
+         *
+         * Example:
+         * @code{.cpp}
+         * ServiceDescriptor descriptor = ServiceDescriber::describeFrom<BaseClass>(
+         *       []() { return std::make_unique<ImplementationClass>(); }, ServiceLifeTime::scoped());
+         * @endcode
+         */
+        template <class TService, class FactoryFcn>
+        static ServiceDescriptor describeFrom(const ServiceLifeTime lifetime, FactoryFcn &&factoryFcn)
+        {
+            using FactoryType = details::factories::ServiceFcnFactory<FactoryFcn>;
+            details::utils::Assert::inheritance<TService, typename FactoryType::ServiceType>();
+            auto factory = std::make_unique<FactoryType>(std::forward<FactoryFcn>(factoryFcn));
+            return {typeid(TService), lifetime, std::move(factory)};
+        }
+
+        /**
+         * @brief Creates service descriptor
+         * @details Creates service descriptor with:
          * lifetime - singleton,
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
@@ -312,35 +340,9 @@ namespace sb::di
         template <class FactoryFcn>
         static ServiceDescriptor describeFrom(const ServiceLifeTime lifetime, FactoryFcn &&factoryFcn)
         {
-            return describeFrom<void, FactoryFcn>(lifetime, std::forward<FactoryFcn>(factoryFcn));
-        }
-
-        /**
-         * @brief Creates service descriptor
-         * @details Creates service descriptor with:
-         * lifetime - given service lifetime,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers, implementation type must inherit from TService
-         *
-         * Example:
-         * @code{.cpp}
-         * ServiceDescriptor descriptor = ServiceDescriber::describeFrom<BaseClass>(
-         *       []() { return std::make_unique<ImplementationClass>(); }, ServiceLifeTime::scoped());
-         * @endcode
-         */
-        template <class TService, class FactoryFcn>
-        static ServiceDescriptor describeFrom(const ServiceLifeTime lifetime, FactoryFcn &&factoryFcn)
-        {
             using FactoryType = details::factories::ServiceFcnFactory<FactoryFcn>;
             auto factory = std::make_unique<FactoryType>(std::forward<FactoryFcn>(factoryFcn));
-
-            using Service = std::conditional_t<std::is_void_v<TService>, typename FactoryType::ServiceType, TService>;
-            return {typeid(Service), lifetime, std::move(factory)};
+            return {factory->getServiceTypeId(), lifetime, std::move(factory)};
         }
     };
 } // namespace sb::di
