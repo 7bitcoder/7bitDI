@@ -7,7 +7,6 @@
 
 #include "SevenBit/DI/Details/Helpers/ServiceFactoryInvoker.hpp"
 #include "SevenBit/DI/Details/Services/ExternalService.hpp"
-#include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
 #include "SevenBit/DI/Details/Utils/IsPtr.hpp"
 #include "SevenBit/DI/Details/Utils/RemovePtr.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"

@@ -187,7 +187,8 @@ namespace sb::di
          */
         template <class TService, class FactoryFcn> static ServiceDescriptor describeSingletonFrom(FactoryFcn &&factory)
         {
-            return describeFrom<TService, FactoryFcn>(ServiceLifeTime::singleton(), std::forward<FactoryFcn>(factory));
+            return describeFrom<TService, FactoryFcn, false>(ServiceLifeTime::singleton(),
+                                                             std::forward<FactoryFcn>(factory));
         }
         /**
          * @brief Creates service descriptor
@@ -209,7 +210,8 @@ namespace sb::di
          */
         template <class TService, class FactoryFcn> static ServiceDescriptor describeScopedFrom(FactoryFcn &&factory)
         {
-            return describeFrom<TService, FactoryFcn>(ServiceLifeTime::scoped(), std::forward<FactoryFcn>(factory));
+            return describeFrom<TService, FactoryFcn, false>(ServiceLifeTime::scoped(),
+                                                             std::forward<FactoryFcn>(factory));
         }
         /**
          * @brief Creates service descriptor
@@ -364,7 +366,16 @@ namespace sb::di
         static IServiceFactory::Ptr makeFactoryFrom(const ServiceLifeTime &lifetime, FactoryFcn &&factoryFcn)
         {
             using ReturnType = typename details::helpers::ServiceFactoryInvoker<FactoryFcn>::ReturnType;
-            if constexpr (details::utils::IsUniquePtrV<ReturnType>)
+            if constexpr (details::utils::IsPtrV<ReturnType> && !AssumeTransient)
+            {
+                if (lifetime.isTransient())
+                {
+                    throw InjectorException("Service factory cannot return pointer for transient service");
+                }
+                return std::make_unique<details::factories::ExternalServiceFcnFactory<FactoryFcn>>(
+                    std::forward<FactoryFcn>(factoryFcn));
+            }
+            else if constexpr (details::utils::IsUniquePtrV<ReturnType>)
             {
                 return std::make_unique<details::factories::UniquePtrServiceFcnFactory<FactoryFcn>>(
                     std::forward<FactoryFcn>(factoryFcn));
@@ -372,15 +383,6 @@ namespace sb::di
             else if constexpr (details::utils::IsInPlaceObjectConstructableV<ReturnType>)
             {
                 return std::make_unique<details::factories::ServiceFcnFactory<FactoryFcn>>(
-                    std::forward<FactoryFcn>(factoryFcn));
-            }
-            else if constexpr (details::utils::IsPtrV<ReturnType> && !AssumeTransient)
-            {
-                if (lifetime.isTransient())
-                {
-                    throw "";
-                }
-                return std::make_unique<details::factories::ExternalServiceFcnFactory<FactoryFcn>>(
                     std::forward<FactoryFcn>(factoryFcn));
             }
             else
