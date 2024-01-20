@@ -4,6 +4,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Utils/Check.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 
@@ -43,7 +44,7 @@ namespace sb::di::details::utils
 
         template <class T> static void notNull(const T *ptr, const std::string_view failMessage = "")
         {
-            if (!ptr)
+            if (!Check::notNull(ptr))
             {
                 const auto message = !failMessage.empty()
                                          ? std::string{failMessage}
@@ -52,12 +53,18 @@ namespace sb::di::details::utils
             }
         }
 
+        template <class TEnum> static TEnum validEnumAndGet(TEnum value)
+        {
+            validEnum(value);
+            return value;
+        }
+
         template <class TEnum> static void validEnum(TEnum value)
         {
-            if (value < 0 || value >= TEnum::Count)
+            if (!Check::enumValidity(value))
             {
                 throw InjectorException{"enum value: " + std::to_string(value) + " is invalid, shoud be in range [0" +
-                                        std::to_string(TEnum::Count) + "]"};
+                                        std::to_string(TEnum::Count) + ")"};
             }
         }
 

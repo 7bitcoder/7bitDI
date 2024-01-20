@@ -8,13 +8,14 @@ namespace sb::di
     {
       public:
         /**
-         * @brief 3 types of available service lifetimes
+         * @brief 4 types of available service lifetimes
          */
         enum Type
         {
             Singleton,
             Scoped,
             Transient,
+            Alias,
 
             Count
         };
@@ -48,6 +49,10 @@ namespace sb::di
         ServiceLifeTime &operator=(const ServiceLifeTime &) = default;
 
         /**
+         * @brief checks if lifetime is given type
+         */
+        [[nodiscard]] bool is(Type type) const;
+        /**
          * @brief checks if lifetime is singleton
          */
         [[nodiscard]] bool isSingleton() const;
@@ -59,11 +64,10 @@ namespace sb::di
          * @brief checks if lifetime is transient
          */
         [[nodiscard]] bool isTransient() const;
-
         /**
-         * @brief checks if lifetime is given type
+         * @brief checks if lifetime is alias
          */
-        [[nodiscard]] bool is(Type type) const;
+        [[nodiscard]] bool isAlias() const;
 
         bool operator!=(const ServiceLifeTime &scope) const;
         bool operator==(const ServiceLifeTime &scope) const;

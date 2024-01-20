@@ -11,5 +11,8 @@ namespace sb::di::details::utils
         return instanceValidity(instance.get());
     }
 
-    INLINE bool Check::instanceValidity(const IServiceInstance *instance) { return instance && instance->isValid(); }
+    INLINE bool Check::instanceValidity(const IServiceInstance *instance)
+    {
+        return notNull(instance) && instance->isValid();
+    }
 } // namespace sb::di::details::utils

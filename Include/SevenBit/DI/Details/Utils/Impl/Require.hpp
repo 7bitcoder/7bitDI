@@ -24,7 +24,7 @@ namespace sb::di::details::utils
     INLINE void Require::validInstance(const IServiceInstance *instance)
     {
         notNull(instance);
-        if (!instance->isValid())
+        if (!Check::instanceValidity(instance))
         {
             throw InvalidServiceException{instance->getTypeId()};
         }

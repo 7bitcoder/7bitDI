@@ -59,7 +59,7 @@ namespace sb::di::details::core
         return descriptors ? tryCreateAndRegister(*descriptors) : nullptr;
     }
 
-    INLINE const OneOrList<IServiceInstance::Ptr> *ServiceInstanceProvider::tryGetInstances(TypeId serviceTypeId)
+    INLINE const OneOrList<IServiceInstance::Ptr> *ServiceInstanceProvider::tryGetInstances(const TypeId serviceTypeId)
     {
         const auto instances = findRegisteredInstances(serviceTypeId);
         if (!instances)
@@ -98,7 +98,7 @@ namespace sb::di::details::core
         return descriptors ? tryCreateAll(*descriptors) : std::nullopt;
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstanceProvider::createInstanceInPlace(TypeId serviceTypeId)
+    INLINE IServiceInstance::Ptr ServiceInstanceProvider::createInstanceInPlace(const TypeId serviceTypeId)
     {
         if (auto instance = tryCreateInstanceInPlace(serviceTypeId); utils::Check::instanceValidity(instance))
         {
@@ -109,7 +109,7 @@ namespace sb::di::details::core
                                        "registered as singleton/scoped instance"};
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstanceProvider::tryCreateInstanceInPlace(TypeId serviceTypeId)
+    INLINE IServiceInstance::Ptr ServiceInstanceProvider::tryCreateInstanceInPlace(const TypeId serviceTypeId)
     {
         if (const auto descriptors = findDescriptors(serviceTypeId);
             descriptors && descriptors->last().getImplementationTypeId() == serviceTypeId)
