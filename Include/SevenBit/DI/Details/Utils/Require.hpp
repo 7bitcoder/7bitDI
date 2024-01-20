@@ -52,6 +52,15 @@ namespace sb::di::details::utils
             }
         }
 
+        template <class TEnum> static void validEnum(TEnum value)
+        {
+            if (value < 0 || value >= TEnum::Count)
+            {
+                throw InjectorException{"enum value: " + std::to_string(value) + " is invalid, shoud be in range [0" +
+                                        std::to_string(TEnum::Count) + "]"};
+            }
+        }
+
         static IServiceInstance::Ptr validInstanceAndGet(IServiceInstance::Ptr &&instance);
 
         static IServiceInstance &validInstanceAndGet(IServiceInstance *instance);

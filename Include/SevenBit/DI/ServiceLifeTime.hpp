@@ -14,7 +14,9 @@ namespace sb::di
         {
             Singleton,
             Scoped,
-            Transient
+            Transient,
+
+            Count
         };
 
       private:
