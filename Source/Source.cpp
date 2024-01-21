@@ -5,6 +5,7 @@
 #include "SevenBit/DI/Details/Containers/Impl/ServiceDescriptorsMap.hpp"
 #include "SevenBit/DI/Details/Containers/Impl/ServiceInstanceList.hpp"
 #include "SevenBit/DI/Details/Containers/Impl/ServiceInstancesMap.hpp"
+#include "SevenBit/DI/Details/Core/Impl/ServiceInstanceCreator.hpp"
 #include "SevenBit/DI/Details/Core/Impl/ServiceInstanceProvider.hpp"
 #include "SevenBit/DI/Details/Core/Impl/ServiceInstanceProviderRoot.hpp"
 #include "SevenBit/DI/Details/Helpers/Impl/CircularDependencyGuard.hpp"

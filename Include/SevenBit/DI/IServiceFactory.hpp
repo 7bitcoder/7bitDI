@@ -5,10 +5,11 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/IServiceInstance.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
 
 namespace sb::di
 {
+    class ServiceProvider;
+
     struct IServiceFactory
     {
         using Ptr = std::unique_ptr<IServiceFactory>;
