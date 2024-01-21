@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include <memory>
 #include <optional>
 
@@ -7,6 +8,7 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstancesCreator.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
@@ -55,25 +57,20 @@ namespace sb::di::details::core
         [[nodiscard]] const ServiceProviderOptions &getOptions() const override;
 
       protected:
-        const IServiceInstance *tryCreateAndRegister(const containers::ServiceDescriptorList &descriptors);
-        const OneOrList<IServiceInstance::Ptr> *tryCreateAndRegisterAll(
-            const containers::ServiceDescriptorList &descriptors);
+        IServiceInstance *tryCreateAndRegister(const containers::ServiceDescriptorList &descriptors);
 
-        IServiceInstance::Ptr tryCreate(const ServiceDescriptor &descriptor, bool inPlaceRequest);
-        std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateAll(
-            const containers::ServiceDescriptorList &descriptors);
+        OneOrList<IServiceInstance::Ptr> *tryCreateAndRegisterAll(const containers::ServiceDescriptorList &descriptors);
 
         OneOrList<IServiceInstance::Ptr> &createRestInstances(const containers::ServiceDescriptorList &descriptors,
-                                                              containers::ServiceInstanceList &instances,
-                                                              bool inPlaceRequest);
-
-        IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor, bool inPlaceRequest);
+                                                              containers::ServiceInstanceList &instances) const;
 
         containers::ServiceInstancesMap *tryGetInstancesMap(const ServiceLifeTime &lifeTime);
 
         containers::ServiceInstanceList *findRegisteredInstances(TypeId serviceTypeId);
 
         [[nodiscard]] const containers::ServiceDescriptorList *findDescriptors(TypeId serviceTypeId) const;
+
+        [[nodiscard]] ServiceInstancesCreator makeInstanceCreator(const containers::ServiceDescriptorList &descriptors) const;
     };
 } // namespace sb::di::details::core
 

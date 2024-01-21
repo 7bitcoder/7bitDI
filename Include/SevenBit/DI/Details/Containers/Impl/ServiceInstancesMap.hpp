@@ -11,9 +11,14 @@ namespace sb::di::details::containers
     {
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesMap::insert(const TypeId serviceTypeId, IServiceInstance::Ptr service)
+    INLINE ServiceInstanceList &ServiceInstancesMap::insert(const TypeId serviceTypeId, IServiceInstance::Ptr instance)
     {
-        auto [it, inserted] = _serviceListMap.emplace(serviceTypeId, std::move(service));
+        return insert(serviceTypeId, ServiceInstanceList{std::move(instance)});
+    }
+
+    INLINE ServiceInstanceList &ServiceInstancesMap::insert(const TypeId serviceTypeId, ServiceInstanceList instances)
+    {
+        auto [it, inserted] = _serviceListMap.emplace(serviceTypeId, std::move(instances));
         if (inserted && _strongDestructionOrder)
         {
             _constructionOrder.push_back(serviceTypeId);

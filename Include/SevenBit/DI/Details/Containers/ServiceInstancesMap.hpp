@@ -27,7 +27,9 @@ namespace sb::di::details::containers
 
         ServiceInstancesMap &operator=(const ServiceInstancesMap &) = delete;
 
-        ServiceInstanceList &insert(TypeId serviceTypeId, IServiceInstance::Ptr service);
+        ServiceInstanceList &insert(TypeId serviceTypeId, IServiceInstance::Ptr instance);
+
+        ServiceInstanceList &insert(TypeId serviceTypeId, ServiceInstanceList instances);
 
         [[nodiscard]] bool contains(TypeId serviceTypeId) const;
 
