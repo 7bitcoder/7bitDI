@@ -13,7 +13,7 @@ namespace sb::di::details::core
         helpers::CircularDependencyGuard _guard;
 
       public:
-        void setServiceProvider(ServiceProvider *serviceProvider);
+        void setServiceProvider(ServiceProvider &serviceProvider);
 
         IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor, bool inPlaceRequest);
     };

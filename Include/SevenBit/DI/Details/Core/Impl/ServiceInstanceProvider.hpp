@@ -12,6 +12,7 @@
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 
 namespace sb::di::details::core
 {
@@ -28,7 +29,7 @@ namespace sb::di::details::core
 
     INLINE void ServiceInstanceProvider::init(ServiceProvider &serviceProvider)
     {
-        _instanceCreator.setServiceProvider(&serviceProvider);
+        _instanceCreator.setServiceProvider(serviceProvider);
         auto external = std::make_unique<services::ExternalService<ServiceProvider>>(&serviceProvider);
         _scoped.insert(typeid(ServiceProvider), std::move(external)).seal();
     }
@@ -86,7 +87,8 @@ namespace sb::di::details::core
 
     INLINE IServiceInstance::Ptr ServiceInstanceProvider::tryCreateInstance(const TypeId serviceTypeId)
     {
-        if (const auto descriptors = findDescriptors(serviceTypeId))
+        if (const auto descriptors = findDescriptors(serviceTypeId);
+            descriptors && descriptors->getLifeTime().isTransient())
         {
             return makeResolver(*descriptors).createInstance();
         }
@@ -96,7 +98,8 @@ namespace sb::di::details::core
     INLINE std::optional<OneOrList<IServiceInstance::Ptr>> ServiceInstanceProvider::tryCreateInstances(
         const TypeId serviceTypeId)
     {
-        if (const auto descriptors = findDescriptors(serviceTypeId))
+        if (const auto descriptors = findDescriptors(serviceTypeId);
+            descriptors && descriptors->getLifeTime().isTransient())
         {
             auto instances = makeResolver(*descriptors).createAllInstances();
             return std::move(instances.getInnerList());
@@ -118,7 +121,8 @@ namespace sb::di::details::core
     INLINE IServiceInstance::Ptr ServiceInstanceProvider::tryCreateInstanceInPlace(const TypeId serviceTypeId)
     {
         if (const auto descriptors = findDescriptors(serviceTypeId);
-            descriptors && descriptors->last().getImplementationTypeId() == serviceTypeId)
+            descriptors && descriptors->getLifeTime().isTransient() &&
+            descriptors->last().getImplementationTypeId() == serviceTypeId)
         {
             return makeResolver(*descriptors).createInstanceInPlace();
         }

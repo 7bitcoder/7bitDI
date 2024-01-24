@@ -10,7 +10,7 @@
 namespace sb::di::details::core
 {
     INLINE ServiceInstancesResolver::ServiceInstancesResolver(ServiceInstanceCreator &creator,
-                                                            const containers::ServiceDescriptorList &descriptors)
+                                                              const containers::ServiceDescriptorList &descriptors)
         : _creator(creator), _descriptors(descriptors)
     {
     }
@@ -69,7 +69,7 @@ namespace sb::di::details::core
     INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllInstances(const bool inPlaceRequest)
     {
         containers::ServiceInstanceList instances{_creator.createInstance(_descriptors.last(), inPlaceRequest)};
-        return std::move(createRestInstances(instances, true));
+        return std::move(createRestInstances(instances, inPlaceRequest));
     }
 
     INLINE containers::ServiceInstanceList &ServiceInstancesResolver::createRestInstances(

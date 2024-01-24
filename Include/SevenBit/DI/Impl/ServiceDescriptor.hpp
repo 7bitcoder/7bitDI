@@ -10,10 +10,9 @@ namespace sb::di
 {
     INLINE ServiceDescriptor::ServiceDescriptor(const TypeId serviceTypeId, const ServiceLifeTime lifetime,
                                                 IServiceFactory::Ptr implementationFactory)
-        : _serviceTypeId(serviceTypeId), _lifetime(lifetime),
-          _implementationFactory(details::utils::Require::notNullAndGet(std::move(implementationFactory),
-                                                                        "Implementation factory cannot be null"))
+        : _serviceTypeId(serviceTypeId), _lifetime(lifetime), _implementationFactory(std::move(implementationFactory))
     {
+        details::utils::Require::notNull(_implementationFactory, "Implementation factory cannot be null");
     }
 
     INLINE const ServiceLifeTime &ServiceDescriptor::getLifeTime() const { return _lifetime; }

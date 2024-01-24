@@ -9,7 +9,7 @@
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
 #include "SevenBit/DI/Details/Core/ServiceInstanceCreator.hpp"
 #include "SevenBit/DI/Details/Core/ServiceInstancesResolver.hpp"
-#include "SevenBit/DI/IServiceInstance.hpp"
+#include "SevenBit/DI/IServiceInstanceProvider.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
@@ -20,8 +20,8 @@ namespace sb::di::details::core
     class EXPORT ServiceInstanceProvider : public IServiceInstanceProvider
     {
         ServiceProviderOptions _options;
-        ServiceInstanceCreator _instanceCreator;
         ServiceInstanceProviderRoot &_root;
+        ServiceInstanceCreator _instanceCreator;
         containers::ServiceInstancesMap _scoped;
 
         ServiceInstanceProvider(const ServiceInstanceProvider &provider);

@@ -65,10 +65,10 @@ TEST_F(ComplexInjectionsTest, ShouldTryGetDeepNestedService)
 {
 
     sb::di::ServiceCollection collection;
-    TestNested<50>::addAllRecurse(collection);
+    TestNested<60>::addAllRecurse(collection);
 
     auto provider = collection.buildServiceProvider();
 
-    auto nested = provider.getService<TestNested<50>>();
+    auto nested = provider.getService<TestNested<60>>();
     nested.checkRecurse(provider);
 }
