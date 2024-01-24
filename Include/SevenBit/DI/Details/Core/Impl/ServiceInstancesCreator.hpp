@@ -5,17 +5,13 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Core/ServiceInstancesCreator.hpp"
 #include "SevenBit/DI/Details/Core/ServiceInstanceProviderRoot.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstancesCreator.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 
 namespace sb::di::details::core
 {
-    INLINE ServiceInstancesCreator::ServiceInstancesCreator(ServiceInstanceProviderRoot &root,
-                                                              ServiceProvider &provider, const bool isThisRoot,
-                                                              const containers::ServiceDescriptorList &descriptors)
-        : _root(root), _serviceProvider(provider), _descriptors(descriptors), _isThisRoot(isThisRoot)
-    {
-    }
+    INLINE ServiceInstancesCreator::ServiceInstancesCreator(const ServiceInstancesCreatorCtx &ctx) : _ctx(ctx) {}
 
     INLINE IServiceInstance::Ptr ServiceInstancesCreator::createInstance() { return createInstance(false); }
 
@@ -55,13 +51,14 @@ namespace sb::di::details::core
 
     INLINE IServiceInstance::Ptr ServiceInstancesCreator::createInstance(const bool inPlaceRequest)
     {
-        return createInstance(_descriptors.last(), inPlaceRequest);
+        return createInstance(_ctx.getDescriptors().last(), inPlaceRequest);
     }
 
     INLINE containers::ServiceInstanceList ServiceInstancesCreator::createOneInstance(const bool inPlaceRequest)
     {
-        containers::ServiceInstanceList instances{createInstance(_descriptors.last(), inPlaceRequest)};
-        if (_descriptors.size() == 1)
+        auto &desctiptors = _ctx.getDescriptors();
+        containers::ServiceInstanceList instances{createInstance(desctiptors.last(), inPlaceRequest)};
+        if (desctiptors.size() == 1)
         {
             instances.seal();
         }
@@ -70,19 +67,19 @@ namespace sb::di::details::core
 
     INLINE containers::ServiceInstanceList ServiceInstancesCreator::createAllInstances(const bool inPlaceRequest)
     {
-        containers::ServiceInstanceList instances{createInstance(_descriptors.last(), inPlaceRequest)};
+        containers::ServiceInstanceList instances{createInstance(_ctx.getDescriptors().last(), inPlaceRequest)};
         return std::move(createRestInstances(instances, true));
     }
 
     INLINE containers::ServiceInstanceList &ServiceInstancesCreator::createRestInstances(
         containers::ServiceInstanceList &instances, const bool inPlaceRequest)
     {
-        if (_descriptors.size() > 1)
+        if (auto &desctiptors = _ctx.getDescriptors(); desctiptors.size() > 1)
         {
-            instances.reserve(_descriptors.size());
-            auto realFirst = createInstance(_descriptors.first(), inPlaceRequest);
-            const auto end = --_descriptors.end();
-            for (auto it = ++_descriptors.begin(); it != end; ++it) // skip first and last
+            instances.reserve(desctiptors.size());
+            auto realFirst = createInstance(desctiptors.first(), inPlaceRequest);
+            const auto end = --desctiptors.end();
+            for (auto it = ++desctiptors.begin(); it != end; ++it) // skip first and last
             {
                 instances.add(createInstance(*it, inPlaceRequest));
             }
@@ -94,14 +91,10 @@ namespace sb::di::details::core
     }
 
     INLINE IServiceInstance::Ptr ServiceInstancesCreator::createInstance(const ServiceDescriptor &descriptor,
-                                                                          const bool inPlaceRequest)
+                                                                         const bool inPlaceRequest)
     {
-        if (descriptor.getLifeTime().isSingleton() && !_isThisRoot)
-        {
-            return _root.createInstance(descriptor, inPlaceRequest);
-        }
-        auto _ = _root.spawnGuard(descriptor.getImplementationTypeId());
+        auto _ = _ctx.getGuard().spawnGuard(descriptor.getImplementationTypeId());
         return utils::Require::validInstanceAndGet(
-            descriptor.getImplementationFactory().createInstance(_serviceProvider, inPlaceRequest));
+            descriptor.getImplementationFactory().createInstance(_ctx.getServiceProvider(), inPlaceRequest));
     }
 } // namespace sb::di::details::core

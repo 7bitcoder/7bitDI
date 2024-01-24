@@ -4,25 +4,20 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
-#include "SevenBit/DI/IServiceInstance.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstancesCreatorCtx.hpp"
+#include "SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
-#include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di::details::core
 {
-	class ServiceInstanceProviderRoot;
-
     class EXPORT ServiceInstancesCreator
     {
-        ServiceInstanceProviderRoot &_root;
-        ServiceProvider &_serviceProvider;
-        const containers::ServiceDescriptorList &_descriptors;
-        bool _isThisRoot;
+        ServiceInstancesCreatorCtx _ctx;
 
       public:
-        explicit ServiceInstancesCreator(ServiceInstanceProviderRoot &root, ServiceProvider &provider, bool isThisRoot,
-                                         const containers::ServiceDescriptorList &descriptors);
+        explicit ServiceInstancesCreator(const ServiceInstancesCreatorCtx &ctx);
+
+        ServiceInstancesCreator(ServiceInstancesCreator &&) = default;
 
         IServiceInstance::Ptr createInstance();
 

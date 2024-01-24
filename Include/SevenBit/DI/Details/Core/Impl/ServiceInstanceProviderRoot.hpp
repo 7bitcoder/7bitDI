@@ -22,8 +22,6 @@ namespace sb::di::details::core
 
     INLINE containers::ServiceInstancesMap &ServiceInstanceProviderRoot::getSingletons() { return _singletons; }
 
-    INLINE helpers::ScopedGuard ServiceInstanceProviderRoot::spawnGuard(const TypeId typeId) { return _guard(typeId); }
-
     INLINE void ServiceInstanceProviderRoot::prebuildSingletons()
     {
         for (auto &[_, descriptors] : getDescriptorsMap())

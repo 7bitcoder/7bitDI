@@ -87,15 +87,22 @@ namespace sb::di::details::core
 
     INLINE IServiceInstance::Ptr ServiceInstanceProvider::tryCreateInstance(const TypeId serviceTypeId)
     {
-        const auto descriptors = findDescriptors(serviceTypeId);
-        return descriptors ? makeInstanceCreator(*descriptors).createInstance() : nullptr;
+        if (const auto descriptors = findDescriptors(serviceTypeId))
+        {
+            return ServiceInstancesCreator{makeCreatorCtx(*descriptors)}.createInstance();
+        }
+        return nullptr;
     }
 
     INLINE std::optional<OneOrList<IServiceInstance::Ptr>> ServiceInstanceProvider::tryCreateInstances(
         const TypeId serviceTypeId)
     {
-        const auto descriptors = findDescriptors(serviceTypeId);
-        return descriptors ? makeInstanceCreator(*descriptors).createAllInstances() : std::nullopt;
+        if (const auto descriptors = findDescriptors(serviceTypeId))
+        {
+            auto instances = ServiceInstancesCreator{makeCreatorCtx(*descriptors)}.createAllInstances();
+            return std::move(instances.getInnerList());
+        }
+        return std::nullopt;
     }
 
     INLINE IServiceInstance::Ptr ServiceInstanceProvider::createInstanceInPlace(const TypeId serviceTypeId)
@@ -114,7 +121,7 @@ namespace sb::di::details::core
         if (const auto descriptors = findDescriptors(serviceTypeId);
             descriptors && descriptors->last().getImplementationTypeId() == serviceTypeId)
         {
-            return makeInstanceCreator(*descriptors).createInstanceInPlace();
+            return ServiceInstancesCreator{makeCreatorCtx(*descriptors)}.createInstanceInPlace();
         }
         return nullptr;
     }
@@ -126,7 +133,7 @@ namespace sb::di::details::core
     {
         if (const auto instancesMap = tryGetInstancesMap(descriptors.getLifeTime()))
         {
-            auto instance = makeInstanceCreator(descriptors).createInstanceInPlace();
+            auto instance = ServiceInstancesCreator{makeCreatorCtx(descriptors)}.createInstanceInPlace();
             return instancesMap->insert(descriptors.getServiceTypeId(), std::move(instance)).last().get();
         }
         return nullptr;
@@ -137,16 +144,18 @@ namespace sb::di::details::core
     {
         if (const auto instancesMap = tryGetInstancesMap(descriptors.getLifeTime()))
         {
-            auto instances = makeInstanceCreator(descriptors).createAllInstancesInPlace();
+            auto instances = ServiceInstancesCreator{makeCreatorCtx(descriptors)}.createAllInstancesInPlace();
             return &instancesMap->insert(descriptors.getServiceTypeId(), std::move(instances)).getInnerList();
         }
         return nullptr;
     }
 
     INLINE OneOrList<IServiceInstance::Ptr> &ServiceInstanceProvider::createRestInstances(
-        const containers::ServiceDescriptorList &descriptors, containers::ServiceInstanceList &instances) const
+        const containers::ServiceDescriptorList &descriptors, containers::ServiceInstanceList &instances)
     {
-        return makeInstanceCreator(descriptors).createRestInstancesInPlace(instances).getInnerList();
+        return ServiceInstancesCreator{makeCreatorCtx(descriptors)}
+            .createRestInstancesInPlace(instances)
+            .getInnerList();
     }
 
     INLINE const ServiceProviderOptions &ServiceInstanceProvider::getOptions() const { return _options; }
@@ -168,10 +177,11 @@ namespace sb::di::details::core
         return _root.getDescriptorsMap().findDescriptors(serviceTypeId);
     }
 
-    INLINE ServiceInstancesCreator
-    ServiceInstanceProvider::makeInstanceCreator(const containers::ServiceDescriptorList &descriptors) const
+    INLINE ServiceInstancesCreatorCtx
+    ServiceInstanceProvider::makeCreatorCtx(const containers::ServiceDescriptorList &descriptors)
     {
-        return ServiceInstancesCreator{_root, *_serviceProvider, this == &_root, descriptors};
+        return ServiceInstancesCreatorCtx{
+            descriptors.getLifeTime().isSingleton() ? _root._serviceProvider : _serviceProvider, _guard, descriptors};
     }
 
 } // namespace sb::di::details::core

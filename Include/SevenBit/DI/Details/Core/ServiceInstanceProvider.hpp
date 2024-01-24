@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <memory>
 #include <optional>
 
@@ -8,11 +7,10 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
-#include "SevenBit/DI/Details/Core/ServiceInstancesCreator.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstancesCreatorCtx.hpp"
+#include "SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
-#include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di::details::core
@@ -22,9 +20,12 @@ namespace sb::di::details::core
     class EXPORT ServiceInstanceProvider : public IServiceInstanceProvider
     {
         ServiceProviderOptions _options;
-        ServiceInstanceProviderRoot &_root;
         containers::ServiceInstancesMap _scoped;
+
+        ServiceInstanceProviderRoot &_root;
         ServiceProvider *_serviceProvider = nullptr;
+
+        helpers::CircularDependencyGuard _guard;
 
         ServiceInstanceProvider(const ServiceInstanceProvider &provider);
 
@@ -62,7 +63,7 @@ namespace sb::di::details::core
         OneOrList<IServiceInstance::Ptr> *tryCreateAndRegisterAll(const containers::ServiceDescriptorList &descriptors);
 
         OneOrList<IServiceInstance::Ptr> &createRestInstances(const containers::ServiceDescriptorList &descriptors,
-                                                              containers::ServiceInstanceList &instances) const;
+                                                              containers::ServiceInstanceList &instances);
 
         containers::ServiceInstancesMap *tryGetInstancesMap(const ServiceLifeTime &lifeTime);
 
@@ -70,7 +71,7 @@ namespace sb::di::details::core
 
         [[nodiscard]] const containers::ServiceDescriptorList *findDescriptors(TypeId serviceTypeId) const;
 
-        [[nodiscard]] ServiceInstancesCreator makeInstanceCreator(const containers::ServiceDescriptorList &descriptors) const;
+        ServiceInstancesCreatorCtx makeCreatorCtx(const containers::ServiceDescriptorList &descriptors);
     };
 } // namespace sb::di::details::core
 
