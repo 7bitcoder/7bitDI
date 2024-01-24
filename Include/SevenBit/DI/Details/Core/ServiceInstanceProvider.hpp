@@ -7,8 +7,8 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
-#include "SevenBit/DI/Details/Core/ServiceInstancesCreatorCtx.hpp"
-#include "SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstanceCreator.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstancesResolver.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/ServiceLifeTime.hpp"
 #include "SevenBit/DI/TypeId.hpp"
@@ -20,12 +20,9 @@ namespace sb::di::details::core
     class EXPORT ServiceInstanceProvider : public IServiceInstanceProvider
     {
         ServiceProviderOptions _options;
-        containers::ServiceInstancesMap _scoped;
-
+        ServiceInstanceCreator _instanceCreator;
         ServiceInstanceProviderRoot &_root;
-        ServiceProvider *_serviceProvider = nullptr;
-
-        helpers::CircularDependencyGuard _guard;
+        containers::ServiceInstancesMap _scoped;
 
         ServiceInstanceProvider(const ServiceInstanceProvider &provider);
 
@@ -71,7 +68,7 @@ namespace sb::di::details::core
 
         [[nodiscard]] const containers::ServiceDescriptorList *findDescriptors(TypeId serviceTypeId) const;
 
-        ServiceInstancesCreatorCtx makeCreatorCtx(const containers::ServiceDescriptorList &descriptors);
+        ServiceInstancesResolver makeResolver(const containers::ServiceDescriptorList &descriptors);
     };
 } // namespace sb::di::details::core
 

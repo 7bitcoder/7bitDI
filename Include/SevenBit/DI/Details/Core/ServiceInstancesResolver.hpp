@@ -4,20 +4,17 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
-#include "SevenBit/DI/Details/Core/ServiceInstancesCreatorCtx.hpp"
-#include "SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp"
-#include "SevenBit/DI/ServiceDescriptor.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstanceCreator.hpp"
 
 namespace sb::di::details::core
 {
-    class EXPORT ServiceInstancesCreator
+    class EXPORT ServiceInstancesResolver
     {
-        ServiceInstancesCreatorCtx _ctx;
+        ServiceInstanceCreator &_creator;
+        const containers::ServiceDescriptorList &_descriptors;
 
       public:
-        explicit ServiceInstancesCreator(const ServiceInstancesCreatorCtx &ctx);
-
-        ServiceInstancesCreator(ServiceInstancesCreator &&) = default;
+        ServiceInstancesResolver(ServiceInstanceCreator &creator, const containers::ServiceDescriptorList &descriptors);
 
         IServiceInstance::Ptr createInstance();
 
@@ -44,11 +41,9 @@ namespace sb::di::details::core
 
         containers::ServiceInstanceList &createRestInstances(containers::ServiceInstanceList &instances,
                                                              bool inPlaceRequest);
-
-        IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor, bool inPlaceRequest);
     };
 } // namespace sb::di::details::core
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Core/Impl/ServiceInstancesCreator.hpp"
+#include "SevenBit/DI/Details/Core/Impl/ServiceInstancesResolver.hpp"
 #endif

@@ -52,7 +52,7 @@ namespace sb::di::details::containers
 
     INLINE void ServiceDescriptorsMap::checkIfAlreadyRegistered(const TypeId implementationTypeId)
     {
-        if (const auto it = _registeredServices.find(implementationTypeId); it != _registeredServices.end())
+        if (_registeredServices.count(implementationTypeId))
         {
             throw ServiceAlreadyRegisteredException{implementationTypeId};
         }

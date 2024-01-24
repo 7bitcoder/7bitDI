@@ -4,7 +4,6 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di

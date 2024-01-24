@@ -28,7 +28,7 @@ namespace sb::di::details::containers
 
     INLINE bool ServiceInstancesMap::contains(const TypeId serviceTypeId) const
     {
-        return _serviceListMap.find(serviceTypeId) != _serviceListMap.end();
+        return _serviceListMap.count(serviceTypeId);
     }
 
     INLINE ServiceInstanceList *ServiceInstancesMap::findServices(const TypeId serviceTypeId)

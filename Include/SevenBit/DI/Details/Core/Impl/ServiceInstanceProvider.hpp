@@ -7,7 +7,6 @@
 
 #include "SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp"
 #include "SevenBit/DI/Details/Core/ServiceInstanceProviderRoot.hpp"
-#include "SevenBit/DI/Details/Core/ServiceInstancesCreator.hpp"
 #include "SevenBit/DI/Details/Services/ExternalService.hpp"
 #include "SevenBit/DI/Details/Utils/Check.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
@@ -29,8 +28,8 @@ namespace sb::di::details::core
 
     INLINE void ServiceInstanceProvider::init(ServiceProvider &serviceProvider)
     {
-        _serviceProvider = &serviceProvider;
-        auto external = std::make_unique<services::ExternalService<ServiceProvider>>(_serviceProvider);
+        _instanceCreator.setServiceProvider(&serviceProvider);
+        auto external = std::make_unique<services::ExternalService<ServiceProvider>>(&serviceProvider);
         _scoped.insert(typeid(ServiceProvider), std::move(external)).seal();
     }
 
@@ -89,7 +88,7 @@ namespace sb::di::details::core
     {
         if (const auto descriptors = findDescriptors(serviceTypeId))
         {
-            return ServiceInstancesCreator{makeCreatorCtx(*descriptors)}.createInstance();
+            return makeResolver(*descriptors).createInstance();
         }
         return nullptr;
     }
@@ -99,7 +98,7 @@ namespace sb::di::details::core
     {
         if (const auto descriptors = findDescriptors(serviceTypeId))
         {
-            auto instances = ServiceInstancesCreator{makeCreatorCtx(*descriptors)}.createAllInstances();
+            auto instances = makeResolver(*descriptors).createAllInstances();
             return std::move(instances.getInnerList());
         }
         return std::nullopt;
@@ -121,7 +120,7 @@ namespace sb::di::details::core
         if (const auto descriptors = findDescriptors(serviceTypeId);
             descriptors && descriptors->last().getImplementationTypeId() == serviceTypeId)
         {
-            return ServiceInstancesCreator{makeCreatorCtx(*descriptors)}.createInstanceInPlace();
+            return makeResolver(*descriptors).createInstanceInPlace();
         }
         return nullptr;
     }
@@ -133,7 +132,7 @@ namespace sb::di::details::core
     {
         if (const auto instancesMap = tryGetInstancesMap(descriptors.getLifeTime()))
         {
-            auto instance = ServiceInstancesCreator{makeCreatorCtx(descriptors)}.createInstanceInPlace();
+            auto instance = makeResolver(descriptors).createInstanceInPlace();
             return instancesMap->insert(descriptors.getServiceTypeId(), std::move(instance)).last().get();
         }
         return nullptr;
@@ -144,7 +143,7 @@ namespace sb::di::details::core
     {
         if (const auto instancesMap = tryGetInstancesMap(descriptors.getLifeTime()))
         {
-            auto instances = ServiceInstancesCreator{makeCreatorCtx(descriptors)}.createAllInstancesInPlace();
+            auto instances = makeResolver(descriptors).createAllInstancesInPlace();
             return &instancesMap->insert(descriptors.getServiceTypeId(), std::move(instances)).getInnerList();
         }
         return nullptr;
@@ -153,9 +152,7 @@ namespace sb::di::details::core
     INLINE OneOrList<IServiceInstance::Ptr> &ServiceInstanceProvider::createRestInstances(
         const containers::ServiceDescriptorList &descriptors, containers::ServiceInstanceList &instances)
     {
-        return ServiceInstancesCreator{makeCreatorCtx(descriptors)}
-            .createRestInstancesInPlace(instances)
-            .getInnerList();
+        return makeResolver(descriptors).createRestInstancesInPlace(instances).getInnerList();
     }
 
     INLINE const ServiceProviderOptions &ServiceInstanceProvider::getOptions() const { return _options; }
@@ -177,11 +174,10 @@ namespace sb::di::details::core
         return _root.getDescriptorsMap().findDescriptors(serviceTypeId);
     }
 
-    INLINE ServiceInstancesCreatorCtx
-    ServiceInstanceProvider::makeCreatorCtx(const containers::ServiceDescriptorList &descriptors)
+    INLINE ServiceInstancesResolver
+    ServiceInstanceProvider::makeResolver(const containers::ServiceDescriptorList &descriptors)
     {
-        return ServiceInstancesCreatorCtx{
-            descriptors.getLifeTime().isSingleton() ? _root._serviceProvider : _serviceProvider, _guard, descriptors};
+        auto &creator = descriptors.getLifeTime().isSingleton() ? _root._instanceCreator : _instanceCreator;
+        return ServiceInstancesResolver{creator, descriptors};
     }
-
 } // namespace sb::di::details::core
