@@ -20,20 +20,20 @@ namespace sb::di::details::core
     class EXPORT ServiceInstanceProvider : public IServiceInstanceProvider
     {
         ServiceProviderOptions _options;
-        ServiceInstanceProviderRoot &_root;
         ServiceInstanceCreator _instanceCreator;
+        ServiceInstanceProviderRoot &_root;
         containers::ServiceInstancesMap _scoped;
-
-        ServiceInstanceProvider(const ServiceInstanceProvider &provider);
 
       public:
         using Ptr = std::unique_ptr<ServiceInstanceProvider>;
 
-        explicit ServiceInstanceProvider(ServiceInstanceProviderRoot &root, ServiceProviderOptions options);
+        ServiceInstanceProvider(ServiceInstanceProviderRoot &root, ServiceProviderOptions options);
 
-        ServiceInstanceProvider(ServiceInstanceProvider &&) noexcept = default;
+        ServiceInstanceProvider(ServiceInstanceProvider &&) noexcept = delete;
+        ServiceInstanceProvider(const ServiceInstanceProvider &) = delete;
 
         ServiceInstanceProvider &operator=(const ServiceInstanceProvider &) = delete;
+        ServiceInstanceProvider &operator=(ServiceInstanceProvider &&) = delete;
 
         void init(ServiceProvider &serviceProvider) override;
 

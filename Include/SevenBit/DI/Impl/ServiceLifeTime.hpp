@@ -13,6 +13,8 @@ namespace sb::di
 
     INLINE ServiceLifeTime::ServiceLifeTime(const Type type) : _type(details::utils::Require::validEnumAndGet(type)) {}
 
+    INLINE ServiceLifeTime::Type ServiceLifeTime::getType() const { return _type; }
+
     INLINE bool ServiceLifeTime::is(const Type type) const { return _type == type; }
     INLINE bool ServiceLifeTime::isSingleton() const { return is(Singleton); }
     INLINE bool ServiceLifeTime::isScoped() const { return is(Scoped); }

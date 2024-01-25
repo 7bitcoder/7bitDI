@@ -16,11 +16,6 @@
 
 namespace sb::di::details::core
 {
-    INLINE ServiceInstanceProvider::ServiceInstanceProvider(const ServiceInstanceProvider &provider)
-        : _options(provider._options), _root(provider._root), _scoped(_options.strongDestructionOrder)
-    {
-    }
-
     INLINE ServiceInstanceProvider::ServiceInstanceProvider(ServiceInstanceProviderRoot &root,
                                                             const ServiceProviderOptions options)
         : _options(options), _root(root), _scoped(_options.strongDestructionOrder)
@@ -36,7 +31,7 @@ namespace sb::di::details::core
 
     INLINE IServiceInstanceProvider::Ptr ServiceInstanceProvider::createScope() const
     {
-        return IServiceInstanceProvider::Ptr{new ServiceInstanceProvider{*this}};
+        return std::make_unique<ServiceInstanceProvider>(_root, _options);
     }
 
     INLINE const IServiceInstance &ServiceInstanceProvider::getInstance(const TypeId serviceTypeId)

@@ -48,6 +48,8 @@ namespace sb::di
         ServiceLifeTime &operator=(ServiceLifeTime &&) = default;
         ServiceLifeTime &operator=(const ServiceLifeTime &) = default;
 
+        [[nodiscard]] Type getType() const;
+
         /**
          * @brief checks if lifetime is given type
          */
