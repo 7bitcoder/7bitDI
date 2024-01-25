@@ -56,10 +56,8 @@ namespace sb::di::details::core
 
       protected:
         IServiceInstance *tryCreateAndRegister(const containers::ServiceDescriptorList &descriptors);
-
         OneOrList<IServiceInstance::Ptr> *tryCreateAndRegisterAll(const containers::ServiceDescriptorList &descriptors);
-
-        OneOrList<IServiceInstance::Ptr> &createRestInstances(const containers::ServiceDescriptorList &descriptors,
+        OneOrList<IServiceInstance::Ptr> *createRestInstances(const containers::ServiceDescriptorList &descriptors,
                                                               containers::ServiceInstanceList &instances);
 
         containers::ServiceInstancesMap *tryGetInstancesMap(const ServiceLifeTime &lifeTime);

@@ -37,8 +37,6 @@ namespace sb::di::details::core
 
         containers::ServiceInstancesMap &getSingletons();
 
-        helpers::ScopedGuard spawnGuard(TypeId typeId);
-
       private:
         void prebuildSingletons();
     };

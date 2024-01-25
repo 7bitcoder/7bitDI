@@ -24,6 +24,7 @@ namespace sb::di
         explicit ServiceProvider(IServiceInstanceProvider::Ptr instanceProvider)
             : _instanceProvider(std::move(instanceProvider))
         {
+            details::utils::Require::notNull(_instanceProvider);
             getInstanceProvider().init(*this);
         }
 
@@ -83,21 +84,13 @@ namespace sb::di
          * @brief Returns inner service instance provider
          * @throws sb::di::NullPointerException
          */
-        [[nodiscard]] const IServiceInstanceProvider &getInstanceProvider() const
-        {
-            details::utils::Require::notNull(_instanceProvider);
-            return *_instanceProvider;
-        }
+        [[nodiscard]] const IServiceInstanceProvider &getInstanceProvider() const { return *_instanceProvider; }
 
         /**
          * @brief Returns inner service instance provider
          * @throws sb::di::NullPointerException
          */
-        IServiceInstanceProvider &getInstanceProvider()
-        {
-            details::utils::Require::notNull(_instanceProvider);
-            return *_instanceProvider;
-        }
+        IServiceInstanceProvider &getInstanceProvider() { return *_instanceProvider; }
 
         /**
          * @brief Returns service pointer, might be null

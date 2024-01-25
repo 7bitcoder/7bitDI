@@ -11,8 +11,8 @@
 #include "SevenBit/DI/Details/Utils/Check.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
-#include "SevenBit/DI/ServiceProviderOptions.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
+#include "SevenBit/DI/ServiceProviderOptions.hpp"
 
 namespace sb::di::details::core
 {
@@ -31,7 +31,7 @@ namespace sb::di::details::core
     {
         _instanceCreator.setServiceProvider(serviceProvider);
         auto external = std::make_unique<services::ExternalService<ServiceProvider>>(&serviceProvider);
-        _scoped.insert(typeid(ServiceProvider), std::move(external)).seal();
+        _scoped.insert(external->getTypeId(), std::move(external)).seal();
     }
 
     INLINE IServiceInstanceProvider::Ptr ServiceInstanceProvider::createScope() const
@@ -70,7 +70,7 @@ namespace sb::di::details::core
         if (!instances->isSealed())
         {
             const auto descriptors = findDescriptors(serviceTypeId);
-            return descriptors ? &createRestInstances(*descriptors, *instances) : nullptr;
+            return descriptors ? createRestInstances(*descriptors, *instances) : nullptr;
         }
         return &instances->getInnerList();
     }
@@ -153,10 +153,10 @@ namespace sb::di::details::core
         return nullptr;
     }
 
-    INLINE OneOrList<IServiceInstance::Ptr> &ServiceInstanceProvider::createRestInstances(
+    INLINE OneOrList<IServiceInstance::Ptr> *ServiceInstanceProvider::createRestInstances(
         const containers::ServiceDescriptorList &descriptors, containers::ServiceInstanceList &instances)
     {
-        return makeResolver(descriptors).createRestInstancesInPlace(instances).getInnerList();
+        return &makeResolver(descriptors).createRestInstancesInPlace(instances).getInnerList();
     }
 
     INLINE const ServiceProviderOptions &ServiceInstanceProvider::getOptions() const { return _options; }
@@ -169,7 +169,11 @@ namespace sb::di::details::core
 
     INLINE containers::ServiceInstancesMap *ServiceInstanceProvider::tryGetInstancesMap(const ServiceLifeTime &lifeTime)
     {
-        return lifeTime.isTransient() ? nullptr : (lifeTime.isSingleton() ? &_root.getSingletons() : &_scoped);
+        if (lifeTime.isTransient())
+        {
+            return nullptr;
+        }
+        return lifeTime.isSingleton() ? &_root.getSingletons() : &_scoped;
     }
 
     INLINE const containers::ServiceDescriptorList *ServiceInstanceProvider::findDescriptors(

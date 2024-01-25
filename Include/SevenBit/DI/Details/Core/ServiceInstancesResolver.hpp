@@ -16,31 +16,31 @@ namespace sb::di::details::core
       public:
         ServiceInstancesResolver(ServiceInstanceCreator &creator, const containers::ServiceDescriptorList &descriptors);
 
-        IServiceInstance::Ptr createInstance();
+        [[nodiscard]] IServiceInstance::Ptr createInstance() const;
 
-        containers::ServiceInstanceList createOneInstance();
+        [[nodiscard]] containers::ServiceInstanceList createOneInstance() const;
 
-        containers::ServiceInstanceList createAllInstances();
+        [[nodiscard]] containers::ServiceInstanceList createAllInstances() const;
 
-        containers::ServiceInstanceList &createRestInstances(containers::ServiceInstanceList &instances);
+        containers::ServiceInstanceList &createRestInstances(containers::ServiceInstanceList &instances) const;
 
-        IServiceInstance::Ptr createInstanceInPlace();
+        [[nodiscard]] IServiceInstance::Ptr createInstanceInPlace() const;
 
-        containers::ServiceInstanceList createOneInstanceInPlace();
+        [[nodiscard]] containers::ServiceInstanceList createOneInstanceInPlace() const;
 
-        containers::ServiceInstanceList createAllInstancesInPlace();
+        [[nodiscard]] containers::ServiceInstanceList createAllInstancesInPlace() const;
 
-        containers::ServiceInstanceList &createRestInstancesInPlace(containers::ServiceInstanceList &instances);
+        containers::ServiceInstanceList &createRestInstancesInPlace(containers::ServiceInstanceList &instances) const;
 
       private:
-        IServiceInstance::Ptr createInstance(bool inPlaceRequest);
+        [[nodiscard]] IServiceInstance::Ptr createInstance(bool inPlaceRequest) const;
 
-        containers::ServiceInstanceList createOneInstance(bool inPlaceRequest);
+        [[nodiscard]] containers::ServiceInstanceList createOneInstance(bool inPlaceRequest) const;
 
-        containers::ServiceInstanceList createAllInstances(bool inPlaceRequest);
+        [[nodiscard]] containers::ServiceInstanceList createAllInstances(bool inPlaceRequest) const;
 
         containers::ServiceInstanceList &createRestInstances(containers::ServiceInstanceList &instances,
-                                                             bool inPlaceRequest);
+                                                             bool inPlaceRequest) const;
     };
 } // namespace sb::di::details::core
 

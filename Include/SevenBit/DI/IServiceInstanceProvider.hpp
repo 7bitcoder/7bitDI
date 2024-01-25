@@ -67,6 +67,12 @@ namespace sb::di
         virtual IServiceInstance::Ptr tryCreateInstance(TypeId serviceTypeId) = 0;
 
         /**
+         * @brief Creates service instances
+         * @details If service was not registered or was registered as scoped/singleton, method returns null option
+         */
+        virtual std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateInstances(TypeId serviceTypeId) = 0;
+
+        /**
          * @brief Creates service instance in place, might throw exception
          * @details If service was not registered or was registered as scoped/singleton, method throws exception
          * @throws sb::di::ServiceNotFoundException
@@ -78,12 +84,6 @@ namespace sb::di
          * @details If service was not registered or was registered as scoped/singleton, method returns null
          */
         virtual IServiceInstance::Ptr tryCreateInstanceInPlace(TypeId serviceTypeId) = 0;
-
-        /**
-         * @brief Creates service instances
-         * @details If service was not registered or was registered as scoped/singleton, method returns null option
-         */
-        virtual std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateInstances(TypeId serviceTypeId) = 0;
 
         virtual ~IServiceInstanceProvider() = default;
     };

@@ -15,48 +15,51 @@ namespace sb::di::details::core
     {
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstancesResolver::createInstance() { return createInstance(false); }
+    INLINE IServiceInstance::Ptr ServiceInstancesResolver::createInstance() const { return createInstance(false); }
 
-    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneInstance()
+    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneInstance() const
     {
         return createOneInstance(false);
     }
 
-    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllInstances()
+    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllInstances() const
     {
         return createAllInstances(false);
     }
 
     INLINE containers::ServiceInstanceList &ServiceInstancesResolver::createRestInstances(
-        containers::ServiceInstanceList &instances)
+        containers::ServiceInstanceList &instances) const
     {
         return createRestInstances(instances, false);
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstancesResolver::createInstanceInPlace() { return createInstance(true); }
+    INLINE IServiceInstance::Ptr ServiceInstancesResolver::createInstanceInPlace() const
+    {
+        return createInstance(true);
+    }
 
-    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneInstanceInPlace()
+    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneInstanceInPlace() const
     {
         return createOneInstance(true);
     }
 
-    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllInstancesInPlace()
+    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllInstancesInPlace() const
     {
         return createAllInstances(true);
     }
 
     INLINE containers::ServiceInstanceList &ServiceInstancesResolver::createRestInstancesInPlace(
-        containers::ServiceInstanceList &instances)
+        containers::ServiceInstanceList &instances) const
     {
         return createRestInstances(instances, true);
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstancesResolver::createInstance(const bool inPlaceRequest)
+    INLINE IServiceInstance::Ptr ServiceInstancesResolver::createInstance(const bool inPlaceRequest) const
     {
         return _creator.createInstance(_descriptors.last(), inPlaceRequest);
     }
 
-    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneInstance(const bool inPlaceRequest)
+    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneInstance(const bool inPlaceRequest) const
     {
         containers::ServiceInstanceList instances{_creator.createInstance(_descriptors.last(), inPlaceRequest)};
         if (_descriptors.size() == 1)
@@ -66,14 +69,14 @@ namespace sb::di::details::core
         return instances;
     }
 
-    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllInstances(const bool inPlaceRequest)
+    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllInstances(const bool inPlaceRequest) const
     {
         containers::ServiceInstanceList instances{_creator.createInstance(_descriptors.last(), inPlaceRequest)};
         return std::move(createRestInstances(instances, inPlaceRequest));
     }
 
     INLINE containers::ServiceInstanceList &ServiceInstancesResolver::createRestInstances(
-        containers::ServiceInstanceList &instances, const bool inPlaceRequest)
+        containers::ServiceInstanceList &instances, const bool inPlaceRequest) const
     {
         if (_descriptors.size() > 1)
         {
