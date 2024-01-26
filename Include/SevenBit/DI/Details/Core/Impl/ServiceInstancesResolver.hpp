@@ -6,6 +6,7 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Core/ServiceInstancesResolver.hpp"
+#include "SevenBit/DI/Details/Services/AliasService.hpp"
 
 namespace sb::di::details::core
 {
@@ -52,6 +53,41 @@ namespace sb::di::details::core
         containers::ServiceInstanceList &instances) const
     {
         return createRestInstances(instances, true);
+    }
+
+    INLINE IServiceInstance::Ptr ServiceInstancesResolver::createAlias(IServiceInstance &instance) const
+    {
+        return std::make_unique<services::AliasService>(instance.get(), _descriptors.last().getImplementationTypeId());
+    }
+
+    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneAliase(
+        containers::ServiceInstanceList &instances) const
+    {
+        return containers::ServiceInstanceList{createAlias(*instances.last())};
+    }
+
+    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllAliases(
+        containers::ServiceInstanceList &instances) const
+    {
+        containers::ServiceInstanceList aliases{createAlias(*instances.first())};
+        return std::move(createRestAliases(instances, aliases));
+    }
+
+    INLINE containers::ServiceInstanceList &ServiceInstancesResolver::createRestAliases(
+        containers::ServiceInstanceList &instances, containers::ServiceInstanceList &toFill) const
+    {
+        if (instances.size() > 1)
+        {
+            auto &list = instances.getInnerList().getAsList();
+            toFill.reserve(list.size());
+            const auto end = list.end();
+            for (auto it = ++list.begin(); it != end; ++it) // skip first and last
+            {
+                toFill.add(createAlias(**it));
+            }
+        }
+        toFill.seal();
+        return toFill;
     }
 
     INLINE IServiceInstance::Ptr ServiceInstancesResolver::createInstance(const bool inPlaceRequest) const

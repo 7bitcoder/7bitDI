@@ -21,6 +21,9 @@ namespace sb::di::details::containers
         ServiceInstanceList(const ServiceInstanceList &) = delete;
         ServiceInstanceList(ServiceInstanceList &&) = default;
 
+        ServiceInstanceList &operator=(const ServiceInstanceList &) = delete;
+        ServiceInstanceList &operator=(ServiceInstanceList &&) = default;
+
         void add(IServiceInstance::Ptr &&service);
 
         OneOrList<IServiceInstance::Ptr> &getInnerList();

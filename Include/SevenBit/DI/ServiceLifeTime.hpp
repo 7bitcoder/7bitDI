@@ -36,11 +36,12 @@ namespace sb::di
          * @brief creates transient service lifetime
          */
         static ServiceLifeTime transient();
+        static ServiceLifeTime alias();
 
         /**
          * @brief Construct a new Service Life Time object with specified type
          */
-        explicit ServiceLifeTime(Type type);
+        constexpr explicit ServiceLifeTime(Type type);
 
         ServiceLifeTime(ServiceLifeTime &&) = default;
         ServiceLifeTime(const ServiceLifeTime &) = default;
@@ -70,6 +71,16 @@ namespace sb::di
          * @brief checks if lifetime is alias
          */
         [[nodiscard]] bool isAlias() const;
+
+        template <class... TServiceLifeTime> [[nodiscard]] bool isAny(TServiceLifeTime... types) const
+        {
+            return ((*this == types) || ...);
+        }
+
+        template <class... TServiceLifeTime> [[nodiscard]] bool isNot(TServiceLifeTime... types) const
+        {
+            return ((*this != types) && ...);
+        }
 
         bool operator!=(const ServiceLifeTime &scope) const;
         bool operator==(const ServiceLifeTime &scope) const;

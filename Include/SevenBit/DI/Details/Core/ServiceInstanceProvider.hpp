@@ -24,6 +24,9 @@ namespace sb::di::details::core
         ServiceInstanceProviderRoot &_root;
         containers::ServiceInstancesMap _scoped;
 
+        using InstanceResult = std::pair<const IServiceInstance *, bool>;
+        using InstancesResult = std::pair<containers::ServiceInstanceList *, bool>;
+
       public:
         using Ptr = std::unique_ptr<ServiceInstanceProvider>;
 
@@ -55,15 +58,22 @@ namespace sb::di::details::core
         [[nodiscard]] const ServiceProviderOptions &getOptions() const override;
 
       protected:
-        IServiceInstance *tryCreateAndRegister(const containers::ServiceDescriptorList &descriptors);
-        OneOrList<IServiceInstance::Ptr> *tryCreateAndRegisterAll(const containers::ServiceDescriptorList &descriptors);
-        OneOrList<IServiceInstance::Ptr> *createRestInstances(const containers::ServiceDescriptorList &descriptors,
-                                                              containers::ServiceInstanceList &instances);
+        std::pair<IServiceInstance *, ServiceLifeTime> tryGetInstanceWithLifeTime(TypeId serviceTypeId);
+        std::pair<containers::ServiceInstanceList *, ServiceLifeTime> tryGetInstancesWithLifeTime(TypeId serviceTypeId);
+
+        std::pair<IServiceInstance *, ServiceLifeTime> tryCreateAndRegister(
+            const containers::ServiceDescriptorList &descriptors);
+        std::pair<containers::ServiceInstanceList *, ServiceLifeTime> tryCreateAndRegisterAll(
+            const containers::ServiceDescriptorList &descriptors);
+        std::pair<containers::ServiceInstanceList *, ServiceLifeTime> createRestInstances(
+            const containers::ServiceDescriptorList &descriptors, containers::ServiceInstanceList &instances);
 
         containers::ServiceInstancesMap *tryGetInstancesMap(const ServiceLifeTime &lifeTime);
 
-        containers::ServiceInstanceList *findRegisteredInstances(TypeId serviceTypeId);
+        std::pair<containers::ServiceInstanceList *, ServiceLifeTime> findRegisteredInstances(TypeId serviceTypeId);
 
+        [[nodiscard]] const containers::ServiceDescriptorList *findTransientDescriptors(TypeId serviceTypeId) const;
+        [[nodiscard]] const containers::ServiceDescriptorList *findNonTransientDescriptors(TypeId serviceTypeId) const;
         [[nodiscard]] const containers::ServiceDescriptorList *findDescriptors(TypeId serviceTypeId) const;
 
         ServiceInstancesResolver makeResolver(const containers::ServiceDescriptorList &descriptors);
