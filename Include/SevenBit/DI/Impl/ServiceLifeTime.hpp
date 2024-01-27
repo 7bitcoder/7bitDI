@@ -12,7 +12,7 @@ namespace sb::di
     INLINE ServiceLifeTime ServiceLifeTime::transient() { return ServiceLifeTime{Transient}; }
     INLINE ServiceLifeTime ServiceLifeTime::alias() { return ServiceLifeTime{Alias}; }
 
-    INLINE constexpr ServiceLifeTime::ServiceLifeTime(const Type type) : _type(details::utils::Require::validEnumAndGet(type)) {}
+    INLINE ServiceLifeTime::ServiceLifeTime(const Type type) : _type(details::utils::Require::validEnumAndGet(type)) {}
 
     INLINE ServiceLifeTime::Type ServiceLifeTime::getType() const { return _type; }
 

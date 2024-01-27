@@ -32,15 +32,16 @@ namespace sb::di::details::core
 
         containers::ServiceInstanceList &createRestInstancesInPlace(containers::ServiceInstanceList &instances) const;
 
-        [[nodiscard]] IServiceInstance::Ptr createAlias(IServiceInstance &instance) const;
+        [[nodiscard]] IServiceInstance::Ptr createAlias(const IServiceInstance &instance) const;
 
-        [[nodiscard]] containers::ServiceInstanceList createOneAliase(containers::ServiceInstanceList &instances) const;
+        [[nodiscard]] containers::ServiceInstanceList createOneAliase(
+            const OneOrList<IServiceInstance::Ptr> &instances) const;
 
         [[nodiscard]] containers::ServiceInstanceList createAllAliases(
-            containers::ServiceInstanceList &instances) const;
+            const OneOrList<IServiceInstance::Ptr> &instances) const;
 
-        [[nodiscard]] containers::ServiceInstanceList &createRestAliases(containers::ServiceInstanceList &instances,
-                                                                         containers::ServiceInstanceList &toFill) const;
+        [[nodiscard]] containers::ServiceInstanceList &createRestAliases(
+            const OneOrList<IServiceInstance::Ptr> &instances, containers::ServiceInstanceList &toFill) const;
 
       private:
         [[nodiscard]] IServiceInstance::Ptr createInstance(bool inPlaceRequest) const;
