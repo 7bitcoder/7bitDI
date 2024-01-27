@@ -137,8 +137,7 @@ namespace sb::di::details::core
     {
         if (descriptors.getLifeTime().isAlias())
         {
-            const auto aliasTypeId = descriptors.last().getImplementationTypeId();
-            if (const auto original = tryGetInstance(aliasTypeId))
+            if (const auto original = tryGetInstance(descriptors.last().getImplementationTypeId()))
             {
                 return makeResolver(descriptors).createOneAlias(*original);
             }
@@ -152,8 +151,7 @@ namespace sb::di::details::core
     {
         if (descriptors.getLifeTime().isAlias())
         {
-            const auto originalTypeId = descriptors.last().getImplementationTypeId();
-            if (const auto originals = tryGetInstances(originalTypeId))
+            if (const auto originals = tryGetInstances(descriptors.last().getImplementationTypeId()))
             {
                 return makeResolver(descriptors).createAllAliases(*originals);
             }
@@ -167,8 +165,7 @@ namespace sb::di::details::core
     {
         if (descriptors.getLifeTime().isAlias())
         {
-            const auto originalTypeId = descriptors.last().getImplementationTypeId();
-            if (const auto originals = tryGetInstances(originalTypeId))
+            if (const auto originals = tryGetInstances(descriptors.last().getImplementationTypeId()))
             {
                 return makeResolver(descriptors).createRestAliases(*originals, instances);
             }
