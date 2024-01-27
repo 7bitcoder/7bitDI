@@ -34,8 +34,7 @@ namespace sb::di::details::core
 
         [[nodiscard]] IServiceInstance::Ptr createAlias(const IServiceInstance &instance) const;
 
-        [[nodiscard]] containers::ServiceInstanceList createOneAliase(
-            const OneOrList<IServiceInstance::Ptr> &instances) const;
+        [[nodiscard]] containers::ServiceInstanceList createOneAlias(const IServiceInstance &instance) const;
 
         [[nodiscard]] containers::ServiceInstanceList createAllAliases(
             const OneOrList<IServiceInstance::Ptr> &instances) const;

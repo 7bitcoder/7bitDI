@@ -58,14 +58,18 @@ namespace sb::di::details::core
         [[nodiscard]] const ServiceProviderOptions &getOptions() const override;
 
       protected:
-        containers::ServiceInstanceList *tryCreateAndRegister(const containers::ServiceDescriptorList &descriptors);
-        containers::ServiceInstanceList *tryCreateAndRegisterAll(const containers::ServiceDescriptorList &descriptors);
-        containers::ServiceInstanceList *createRestInstances(const containers::ServiceDescriptorList &descriptors,
-                                                             containers::ServiceInstanceList &instances);
+        std::optional<containers::ServiceInstanceList> tryCreate(const containers::ServiceDescriptorList &descriptors);
+        std::optional<containers::ServiceInstanceList> tryCreateAll(
+            const containers::ServiceDescriptorList &descriptors);
+        containers::ServiceInstanceList &createRest(const containers::ServiceDescriptorList &descriptors,
+                                                    containers::ServiceInstanceList &instances);
 
         containers::ServiceInstancesMap *tryGetInstancesMap(const ServiceLifeTime &lifeTime);
 
         containers::ServiceInstanceList *findRegisteredInstances(TypeId serviceTypeId);
+
+        containers::ServiceInstanceList *tryRegister(const containers::ServiceDescriptorList &descriptors,
+                                                     std::optional<containers::ServiceInstanceList> instances);
 
         [[nodiscard]] const containers::ServiceDescriptorList *findTransientDescriptors(TypeId serviceTypeId) const;
         [[nodiscard]] const containers::ServiceDescriptorList *findNonTransientDescriptors(TypeId serviceTypeId) const;

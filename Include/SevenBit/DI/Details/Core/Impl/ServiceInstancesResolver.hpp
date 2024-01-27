@@ -60,10 +60,10 @@ namespace sb::di::details::core
         return std::make_unique<services::AliasService>(instance.get(), _descriptors.last().getImplementationTypeId());
     }
 
-    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneAliase(
-        const OneOrList<IServiceInstance::Ptr> &instances) const
+    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneAlias(
+        const IServiceInstance &instance) const
     {
-        return containers::ServiceInstanceList{createAlias(*instances.last())};
+        return containers::ServiceInstanceList{createAlias(instance)};
     }
 
     INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllAliases(
