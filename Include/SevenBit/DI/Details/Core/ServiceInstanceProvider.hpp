@@ -64,7 +64,7 @@ namespace sb::di::details::core
         containers::ServiceInstanceList &createRest(const containers::ServiceDescriptorList &descriptors,
                                                     containers::ServiceInstanceList &instances);
 
-        containers::ServiceInstancesMap *tryGetInstancesMap(const ServiceLifeTime &lifeTime);
+        containers::ServiceInstancesMap &getInstancesMap(const ServiceLifeTime &lifeTime);
 
         containers::ServiceInstanceList *findRegisteredInstances(TypeId serviceTypeId);
 

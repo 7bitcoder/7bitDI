@@ -2,9 +2,11 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Utils/Require.hpp"
+
 namespace sb::di
 {
-    class EXPORT ServiceLifeTime
+    class ServiceLifeTime
     {
       public:
         /**
@@ -27,67 +29,63 @@ namespace sb::di
         /**
          * @brief creates singleton service lifetime
          */
-        static ServiceLifeTime singleton();
+        constexpr static ServiceLifeTime singleton() { return ServiceLifeTime{Singleton}; }
         /**
          * @brief creates scoped service lifetime
          */
-        static ServiceLifeTime scoped();
+        constexpr static ServiceLifeTime scoped() { return ServiceLifeTime{Scoped}; }
         /**
          * @brief creates transient service lifetime
          */
-        static ServiceLifeTime transient();
-        static ServiceLifeTime alias();
+        constexpr static ServiceLifeTime transient() { return ServiceLifeTime{Transient}; }
+        constexpr static ServiceLifeTime alias() { return ServiceLifeTime{Alias}; }
 
         /**
          * @brief Construct a new Service Life Time object with specified type
          */
-        explicit ServiceLifeTime(Type type);
+        constexpr explicit ServiceLifeTime(const Type type) : _type(details::utils::Require::validEnumAndGet(type)) {}
 
-        ServiceLifeTime(ServiceLifeTime &&) = default;
-        ServiceLifeTime(const ServiceLifeTime &) = default;
+        constexpr ServiceLifeTime(ServiceLifeTime &&) = default;
+        constexpr ServiceLifeTime(const ServiceLifeTime &) = default;
 
-        ServiceLifeTime &operator=(ServiceLifeTime &&) = default;
-        ServiceLifeTime &operator=(const ServiceLifeTime &) = default;
-
-        [[nodiscard]] Type getType() const;
+        constexpr ServiceLifeTime &operator=(ServiceLifeTime &&) = default;
+        constexpr ServiceLifeTime &operator=(const ServiceLifeTime &) = default;
 
         /**
          * @brief checks if lifetime is given type
          */
-        [[nodiscard]] bool is(Type type) const;
+        [[nodiscard]] constexpr bool is(const Type type) const { return *this == type; }
         /**
          * @brief checks if lifetime is singleton
          */
-        [[nodiscard]] bool isSingleton() const;
+        [[nodiscard]] constexpr bool isSingleton() const { return is(Singleton); }
         /**
          * @brief checks if lifetime is scoped
          */
-        [[nodiscard]] bool isScoped() const;
+        [[nodiscard]] constexpr bool isScoped() const { return is(Scoped); }
         /**
          * @brief checks if lifetime is transient
          */
-        [[nodiscard]] bool isTransient() const;
+        [[nodiscard]] constexpr bool isTransient() const { return is(Transient); }
         /**
          * @brief checks if lifetime is alias
          */
-        [[nodiscard]] bool isAlias() const;
+        [[nodiscard]] constexpr bool isAlias() const { return is(Alias); }
 
-        template <class... TServiceLifeTime> [[nodiscard]] bool isAny(TServiceLifeTime... types) const
+        template <class... TServiceLifeTime> [[nodiscard]] constexpr bool isAny(TServiceLifeTime... types) const
         {
             return ((*this == types) || ...);
         }
 
-        template <class... TServiceLifeTime> [[nodiscard]] bool isNot(TServiceLifeTime... types) const
+        template <class... TServiceLifeTime> [[nodiscard]] constexpr bool isNot(TServiceLifeTime... types) const
         {
             return ((*this != types) && ...);
         }
 
-        bool operator!=(const ServiceLifeTime &scope) const;
-        bool operator==(const ServiceLifeTime &scope) const;
+        constexpr bool operator!=(const ServiceLifeTime &lifeTime) const { return _type != lifeTime._type; }
+        constexpr bool operator==(const ServiceLifeTime &lifeTime) const { return _type == lifeTime._type; }
+
+        constexpr bool operator!=(const Type type) const { return _type != type; }
+        constexpr bool operator==(const Type type) const { return _type == type; }
     };
-
 } // namespace sb::di
-
-#ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Impl/ServiceLifeTime.hpp"
-#endif

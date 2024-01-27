@@ -53,13 +53,13 @@ namespace sb::di::details::utils
             }
         }
 
-        template <class TEnum> static TEnum validEnumAndGet(TEnum value)
+        template <class TEnum> constexpr static TEnum validEnumAndGet(TEnum value)
         {
             validEnum(value);
             return value;
         }
 
-        template <class TEnum> static void validEnum(TEnum value)
+        template <class TEnum> constexpr static void validEnum(TEnum value)
         {
             if (!Check::enumValidity(value))
             {

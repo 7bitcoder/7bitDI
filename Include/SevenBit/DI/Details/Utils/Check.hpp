@@ -15,7 +15,7 @@ namespace sb::di::details::utils
 
         template <class T> static bool notNull(const T *ptr) { return ptr != nullptr; }
 
-        template <class TEnum> static bool enumValidity(TEnum value)
+        template <class TEnum> constexpr static bool enumValidity(TEnum value)
         {
             return std::is_enum_v<TEnum> && value >= 0 && value < TEnum::Count;
         }

@@ -69,7 +69,7 @@ namespace sb::di::details::core
     INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllAliases(
         const OneOrList<IServiceInstance::Ptr> &instances) const
     {
-        containers::ServiceInstanceList aliases{createAlias(*instances.first())};
+        containers::ServiceInstanceList aliases{createAlias(*instances.last())};
         return std::move(createRestAliases(instances, aliases));
     }
 
@@ -80,11 +80,14 @@ namespace sb::di::details::core
         {
             auto &list = instances.getAsList();
             toFill.reserve(list.size());
-            const auto end = list.end();
+            auto realFirst = createAlias(*list.front());
+            const auto end = --list.end();
             for (auto it = ++list.begin(); it != end; ++it) // skip first and last
             {
                 toFill.add(createAlias(**it));
             }
+            toFill.add(std::move(realFirst));
+            toFill.first().swap(toFill.last());
         }
         toFill.seal();
         return toFill;

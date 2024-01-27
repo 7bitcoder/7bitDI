@@ -11,6 +11,7 @@
 #include "SevenBit/DI/Details/Utils/Check.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
+#include "SevenBit/DI/ServiceLifeTimes.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 
@@ -176,20 +177,17 @@ namespace sb::di::details::core
     INLINE containers::ServiceInstanceList *ServiceInstanceProvider::tryRegister(
         const containers::ServiceDescriptorList &descriptors, std::optional<containers::ServiceInstanceList> instances)
     {
-        if (instances)
+        if (!instances)
         {
-            auto lifeTime = descriptors.getLifeTime();
-            if (lifeTime.isAlias())
-            {
-                const auto originalTypeId = descriptors.last().getImplementationTypeId();
-                lifeTime = _scoped.contains(originalTypeId) ? ServiceLifeTime::scoped() : ServiceLifeTime::singleton();
-            }
-            if (const auto instancesMap = tryGetInstancesMap(lifeTime))
-            {
-                return &instancesMap->insert(descriptors.getServiceTypeId(), std::move(*instances));
-            }
+            return nullptr;
         }
-        return nullptr;
+        auto lifeTime = descriptors.getLifeTime();
+        if (lifeTime.isAlias())
+        {
+            const auto originalTypeId = descriptors.last().getImplementationTypeId();
+            lifeTime = _scoped.contains(originalTypeId) ? ServiceLifeTimes::Scoped : ServiceLifeTimes::Singleton;
+        }
+        return &getInstancesMap(lifeTime).insert(descriptors.getServiceTypeId(), std::move(*instances));
     }
 
     INLINE const ServiceProviderOptions &ServiceInstanceProvider::getOptions() const { return _options; }
@@ -200,13 +198,9 @@ namespace sb::di::details::core
         return singletons ? singletons : _scoped.findServices(serviceTypeId);
     }
 
-    INLINE containers::ServiceInstancesMap *ServiceInstanceProvider::tryGetInstancesMap(const ServiceLifeTime &lifeTime)
+    INLINE containers::ServiceInstancesMap &ServiceInstanceProvider::getInstancesMap(const ServiceLifeTime &lifeTime)
     {
-        if (lifeTime.isTransient())
-        {
-            return nullptr;
-        }
-        return lifeTime.isSingleton() ? &_root.getSingletons() : &_scoped;
+        return lifeTime.isSingleton() ? _root.getSingletons() : _scoped;
     }
 
     INLINE const containers::ServiceDescriptorList *ServiceInstanceProvider::findTransientDescriptors(
@@ -214,7 +208,7 @@ namespace sb::di::details::core
     {
         if (const auto descriptors = findDescriptors(serviceTypeId))
         {
-            if (descriptors->getLifeTime().isAny(ServiceLifeTime::transient(), ServiceLifeTime::alias()))
+            if (descriptors->getLifeTime().isAny(ServiceLifeTimes::Transient, ServiceLifeTimes::Alias))
             {
                 return descriptors;
             }
@@ -227,8 +221,8 @@ namespace sb::di::details::core
     {
         if (const auto descriptors = findDescriptors(serviceTypeId))
         {
-            if (descriptors->getLifeTime().isAny(ServiceLifeTime::singleton(), ServiceLifeTime::scoped(),
-                                                 ServiceLifeTime::alias()))
+            if (descriptors->getLifeTime().isAny(ServiceLifeTimes::Singleton, ServiceLifeTimes::Scoped,
+                                                 ServiceLifeTimes::Alias))
             {
                 return descriptors;
             }

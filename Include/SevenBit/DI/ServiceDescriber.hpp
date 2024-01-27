@@ -15,7 +15,7 @@
 #include "SevenBit/DI/Details/Utils/IsPtr.hpp"
 #include "SevenBit/DI/Details/Utils/IsUniquePtr.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
-#include "SevenBit/DI/ServiceLifeTime.hpp"
+#include "SevenBit/DI/ServiceLifeTimes.hpp"
 
 namespace sb::di
 {
@@ -41,7 +41,7 @@ namespace sb::di
          */
         template <class TService, class TImplementation = TService> static ServiceDescriptor describeSingleton()
         {
-            return describe<TService, TImplementation>(ServiceLifeTime::singleton());
+            return describe<TService, TImplementation>(ServiceLifeTimes::Singleton);
         }
 
         /**
@@ -63,7 +63,7 @@ namespace sb::di
          */
         template <class TService, class TImplementation = TService> static ServiceDescriptor describeScoped()
         {
-            return describe<TService, TImplementation>(ServiceLifeTime::scoped());
+            return describe<TService, TImplementation>(ServiceLifeTimes::Scoped);
         }
         /**
          * @brief Creates service descriptor
@@ -84,7 +84,7 @@ namespace sb::di
          */
         template <class TService, class TImplementation = TService> static ServiceDescriptor describeTransient()
         {
-            return describe<TService, TImplementation>(ServiceLifeTime::transient());
+            return describe<TService, TImplementation>(ServiceLifeTimes::Transient);
         }
 
         /**
@@ -164,7 +164,7 @@ namespace sb::di
         {
             details::utils::Assert::inheritance<TService, TImplementation>();
             auto factory = std::make_unique<details::factories::ExternalServiceFactory<TImplementation>>(service);
-            return {typeid(TService), ServiceLifeTime::singleton(), std::move(factory)};
+            return {typeid(TService), ServiceLifeTimes::Singleton, std::move(factory)};
         }
 
         /**
@@ -187,7 +187,7 @@ namespace sb::di
          */
         template <class TService, class FactoryFcn> static ServiceDescriptor describeSingletonFrom(FactoryFcn &&factory)
         {
-            return describeFrom<TService, FactoryFcn, false>(ServiceLifeTime::singleton(),
+            return describeFrom<TService, FactoryFcn, false>(ServiceLifeTimes::Singleton,
                                                              std::forward<FactoryFcn>(factory));
         }
         /**
@@ -210,7 +210,7 @@ namespace sb::di
          */
         template <class TService, class FactoryFcn> static ServiceDescriptor describeScopedFrom(FactoryFcn &&factory)
         {
-            return describeFrom<TService, FactoryFcn, false>(ServiceLifeTime::scoped(),
+            return describeFrom<TService, FactoryFcn, false>(ServiceLifeTimes::Scoped,
                                                              std::forward<FactoryFcn>(factory));
         }
         /**
@@ -233,7 +233,7 @@ namespace sb::di
          */
         template <class TService, class FactoryFcn> static ServiceDescriptor describeTransientFrom(FactoryFcn &&factory)
         {
-            return describeFrom<TService, FactoryFcn, true>(ServiceLifeTime::transient(),
+            return describeFrom<TService, FactoryFcn, true>(ServiceLifeTimes::Transient,
                                                             std::forward<FactoryFcn>(factory));
         }
 
@@ -256,7 +256,7 @@ namespace sb::di
          */
         template <class FactoryFcn> static ServiceDescriptor describeSingletonFrom(FactoryFcn &&factory)
         {
-            return describeFrom<void, FactoryFcn, false>(ServiceLifeTime::singleton(),
+            return describeFrom<void, FactoryFcn, false>(ServiceLifeTimes::Singleton,
                                                          std::forward<FactoryFcn>(factory));
         }
 
@@ -280,7 +280,7 @@ namespace sb::di
 
         template <class FactoryFcn> static ServiceDescriptor describeScopedFrom(FactoryFcn &&factory)
         {
-            return describeFrom<void, FactoryFcn, false>(ServiceLifeTime::scoped(), std::forward<FactoryFcn>(factory));
+            return describeFrom<void, FactoryFcn, false>(ServiceLifeTimes::Scoped, std::forward<FactoryFcn>(factory));
         }
         /**
          * @brief Creates service descriptor
@@ -302,8 +302,7 @@ namespace sb::di
 
         template <class FactoryFcn> static ServiceDescriptor describeTransientFrom(FactoryFcn &&factory)
         {
-            return describeFrom<void, FactoryFcn, true>(ServiceLifeTime::transient(),
-                                                        std::forward<FactoryFcn>(factory));
+            return describeFrom<void, FactoryFcn, true>(ServiceLifeTimes::Transient, std::forward<FactoryFcn>(factory));
         }
 
         /**

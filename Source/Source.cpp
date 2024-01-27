@@ -16,4 +16,3 @@
 #include "SevenBit/DI/Impl/Exceptions.hpp"
 #include "SevenBit/DI/Impl/ServiceCollection.hpp"
 #include "SevenBit/DI/Impl/ServiceDescriptor.hpp"
-#include "SevenBit/DI/Impl/ServiceLifeTime.hpp"
