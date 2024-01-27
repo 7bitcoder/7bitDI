@@ -46,28 +46,29 @@ namespace sb::di::details::core
 
     INLINE const IServiceInstance *ServiceInstanceProvider::tryGetInstance(const TypeId serviceTypeId)
     {
-        if (const auto instances = findRegisteredInstances(serviceTypeId))
+        auto instances = findRegisteredInstances(serviceTypeId);
+        if (!instances)
         {
-            return instances->last().get();
+            const auto descriptors = findNonTransientDescriptors(serviceTypeId);
+            instances = descriptors ? tryCreateAndRegister(*descriptors) : nullptr;
         }
-        const auto descriptors = findNonTransientDescriptors(serviceTypeId);
-        return descriptors ? tryCreateAndRegister(*descriptors) : nullptr;
+        return instances ? instances->last().get() : nullptr;
     }
 
     INLINE const OneOrList<IServiceInstance::Ptr> *ServiceInstanceProvider::tryGetInstances(const TypeId serviceTypeId)
     {
-        const auto instances = findRegisteredInstances(serviceTypeId);
+        auto instances = findRegisteredInstances(serviceTypeId);
         if (!instances)
         {
             const auto descriptors = findNonTransientDescriptors(serviceTypeId);
-            return descriptors ? tryCreateAndRegisterAll(*descriptors) : nullptr;
+            instances = descriptors ? tryCreateAndRegisterAll(*descriptors) : nullptr;
         }
-        if (!instances->isSealed())
+        else if (!instances->isSealed())
         {
             const auto descriptors = findNonTransientDescriptors(serviceTypeId);
-            return descriptors ? createRestInstances(*descriptors, *instances) : nullptr;
+            instances = descriptors ? createRestInstances(*descriptors, *instances) : nullptr;
         }
-        return &instances->getInnerList();
+        return instances ? &instances->getInnerList() : nullptr;
     }
 
     INLINE IServiceInstance::Ptr ServiceInstanceProvider::createInstance(const TypeId serviceTypeId)
@@ -123,7 +124,7 @@ namespace sb::di::details::core
 
     INLINE void ServiceInstanceProvider::clear() { _scoped.clear(); }
 
-    INLINE IServiceInstance *ServiceInstanceProvider::tryCreateAndRegister(
+    INLINE containers::ServiceInstanceList *ServiceInstanceProvider::tryCreateAndRegister(
         const containers::ServiceDescriptorList &descriptors)
     {
         auto lifeTime = descriptors.getLifeTime();
@@ -143,12 +144,12 @@ namespace sb::di::details::core
         }
         if (const auto instancesMap = tryGetInstancesMap(lifeTime); instancesMap && instance)
         {
-            return instancesMap->insert(descriptors.getServiceTypeId(), std::move(instance)).last().get();
+            return &instancesMap->insert(descriptors.getServiceTypeId(), std::move(instance));
         }
         return nullptr;
     }
 
-    INLINE OneOrList<IServiceInstance::Ptr> *ServiceInstanceProvider::tryCreateAndRegisterAll(
+    INLINE containers::ServiceInstanceList *ServiceInstanceProvider::tryCreateAndRegisterAll(
         const containers::ServiceDescriptorList &descriptors)
     {
         auto lifeTime = descriptors.getLifeTime();
@@ -168,12 +169,12 @@ namespace sb::di::details::core
         }
         if (const auto instancesMap = tryGetInstancesMap(lifeTime))
         {
-            return &instancesMap->insert(descriptors.getServiceTypeId(), std::move(instances)).getInnerList();
+            return &instancesMap->insert(descriptors.getServiceTypeId(), std::move(instances));
         }
         return nullptr;
     }
 
-    INLINE OneOrList<IServiceInstance::Ptr> *ServiceInstanceProvider::createRestInstances(
+    INLINE containers::ServiceInstanceList *ServiceInstanceProvider::createRestInstances(
         const containers::ServiceDescriptorList &descriptors, containers::ServiceInstanceList &instances)
     {
         if (descriptors.getLifeTime().isAlias())
@@ -184,7 +185,7 @@ namespace sb::di::details::core
                 return &makeResolver(descriptors).createRestAliases(*originals, instances).getInnerList();
             }
         }
-        return &makeResolver(descriptors).createRestInstancesInPlace(instances).getInnerList();
+        return &makeResolver(descriptors).createRestInstancesInPlace(instances);
     }
 
     INLINE const ServiceProviderOptions &ServiceInstanceProvider::getOptions() const { return _options; }

@@ -58,10 +58,10 @@ namespace sb::di::details::core
         [[nodiscard]] const ServiceProviderOptions &getOptions() const override;
 
       protected:
-        IServiceInstance *tryCreateAndRegister(const containers::ServiceDescriptorList &descriptors);
-        OneOrList<IServiceInstance::Ptr> *tryCreateAndRegisterAll(const containers::ServiceDescriptorList &descriptors);
-        OneOrList<IServiceInstance::Ptr> *createRestInstances(const containers::ServiceDescriptorList &descriptors,
-                                                              containers::ServiceInstanceList &instances);
+        containers::ServiceInstanceList *tryCreateAndRegister(const containers::ServiceDescriptorList &descriptors);
+        containers::ServiceInstanceList *tryCreateAndRegisterAll(const containers::ServiceDescriptorList &descriptors);
+        containers::ServiceInstanceList *createRestInstances(const containers::ServiceDescriptorList &descriptors,
+                                                             containers::ServiceInstanceList &instances);
 
         containers::ServiceInstancesMap *tryGetInstancesMap(const ServiceLifeTime &lifeTime);
 
