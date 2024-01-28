@@ -17,7 +17,6 @@ namespace sb::di
             Singleton,
             Scoped,
             Transient,
-            Alias,
 
             Count
         };
@@ -38,7 +37,6 @@ namespace sb::di
          * @brief creates transient service lifetime
          */
         constexpr static ServiceLifeTime transient() { return ServiceLifeTime{Transient}; }
-        constexpr static ServiceLifeTime alias() { return ServiceLifeTime{Alias}; }
 
         /**
          * @brief Construct a new Service Life Time object with specified type
@@ -54,7 +52,7 @@ namespace sb::di
         /**
          * @brief checks if lifetime is given type
          */
-        [[nodiscard]] constexpr bool is(const Type type) const { return *this == type; }
+        [[nodiscard]] constexpr bool is(const Type type) const { return _type == type; }
         /**
          * @brief checks if lifetime is singleton
          */
@@ -67,10 +65,6 @@ namespace sb::di
          * @brief checks if lifetime is transient
          */
         [[nodiscard]] constexpr bool isTransient() const { return is(Transient); }
-        /**
-         * @brief checks if lifetime is alias
-         */
-        [[nodiscard]] constexpr bool isAlias() const { return is(Alias); }
 
         template <class... TServiceLifeTime> [[nodiscard]] constexpr bool isAny(TServiceLifeTime... types) const
         {
@@ -84,8 +78,5 @@ namespace sb::di
 
         constexpr bool operator!=(const ServiceLifeTime &lifeTime) const { return _type != lifeTime._type; }
         constexpr bool operator==(const ServiceLifeTime &lifeTime) const { return _type == lifeTime._type; }
-
-        constexpr bool operator!=(const Type type) const { return _type != type; }
-        constexpr bool operator==(const Type type) const { return _type == type; }
     };
 } // namespace sb::di

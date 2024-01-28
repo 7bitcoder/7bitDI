@@ -5,7 +5,6 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Factories/ExternalServiceFactory.hpp"
-#include "SevenBit/DI/Details/Factories/ExternalServiceFcnFactory.hpp"
 #include "SevenBit/DI/Details/Factories/ServiceFactory.hpp"
 #include "SevenBit/DI/Details/Factories/ServiceFcnFactory.hpp"
 #include "SevenBit/DI/Details/Factories/UniquePtrServiceFcnFactory.hpp"
@@ -355,7 +354,7 @@ namespace sb::di
             details::utils::Assert::isNotSame<TAlias, TService>();
             details::utils::Assert::inheritance<TAlias, TService>();
             auto factory = std::make_unique<details::factories::VoidServiceFactory<TService>>();
-            return {typeid(TAlias), ServiceLifeTimes::Alias, std::move(factory)};
+            return {typeid(TAlias), std::nullopt, std::move(factory)};
         }
 
       private:

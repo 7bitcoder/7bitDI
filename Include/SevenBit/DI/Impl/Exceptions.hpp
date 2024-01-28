@@ -51,6 +51,15 @@ namespace sb::di
     {
     }
 
+    INLINE ServiceAliasMismatchException::ServiceAliasMismatchException(const TypeId typeIndex, const TypeId interface,
+                                                                        const bool shoudBeAlias)
+        : InjectorException{std::string{"Service: '"} + typeIndex.name() +
+                            (shoudBeAlias ? "' should be" : "' should not be") +
+                            " alias as other services implementing this interface '" + interface.name() +
+                            "' that are already registered."}
+    {
+    }
+
     INLINE ServiceLifeTimeMismatchException::ServiceLifeTimeMismatchException(const TypeId typeIndex,
                                                                               const TypeId interface)
         : InjectorException{std::string{"Service: '"} + typeIndex.name() +

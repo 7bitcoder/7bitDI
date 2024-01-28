@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <variant>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
@@ -13,7 +14,7 @@ namespace sb::di
     class EXPORT ServiceDescriptor
     {
         TypeId _serviceTypeId;
-        ServiceLifeTime _lifetime;
+        std::optional<ServiceLifeTime> _lifeTime;
         IServiceFactory::SPtr _implementationFactory;
 
       public:
@@ -24,7 +25,8 @@ namespace sb::di
          * @details implementationFactory cannot be null, otherwise constructor will throw exception
          * @throws sb::di::NullPointerException
          */
-        ServiceDescriptor(TypeId serviceTypeId, ServiceLifeTime lifetime, IServiceFactory::Ptr implementationFactory);
+        ServiceDescriptor(TypeId serviceTypeId, std::optional<ServiceLifeTime> lifeTime,
+                          IServiceFactory::Ptr implementationFactory);
 
         ServiceDescriptor(const ServiceDescriptor &other) = default;
         ServiceDescriptor(ServiceDescriptor &&) = default;
@@ -35,7 +37,9 @@ namespace sb::di
         /**
          * @brief Get the lifetime object
          */
-        [[nodiscard]] const ServiceLifeTime &getLifeTime() const;
+        [[nodiscard]] ServiceLifeTime getLifeTime() const;
+
+        [[nodiscard]] std::optional<ServiceLifeTime> tryGetLifeTime() const;
 
         /**
          * @brief Get the service TypeId
@@ -47,6 +51,7 @@ namespace sb::di
          */
         [[nodiscard]] TypeId getImplementationTypeId() const;
 
+        [[nodiscard]] bool isAlias() const;
         /**
          * @brief Get the service implementation factory
          */

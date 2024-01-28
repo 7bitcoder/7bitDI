@@ -16,6 +16,8 @@ namespace sb::di::details::core
         void setServiceProvider(ServiceProvider &serviceProvider);
 
         IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor, bool inPlaceRequest);
+
+        IServiceInstance::Ptr createInstanceAlias(const IServiceInstance *instance, TypeId serviceTypeId);
     };
 } // namespace sb::di::details::core
 

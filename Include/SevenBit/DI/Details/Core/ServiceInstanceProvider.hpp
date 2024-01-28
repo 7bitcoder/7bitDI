@@ -61,15 +61,17 @@ namespace sb::di::details::core
         std::optional<containers::ServiceInstanceList> tryCreate(const containers::ServiceDescriptorList &descriptors);
         std::optional<containers::ServiceInstanceList> tryCreateAll(
             const containers::ServiceDescriptorList &descriptors);
-        containers::ServiceInstanceList &createRest(const containers::ServiceDescriptorList &descriptors,
+        containers::ServiceInstanceList *createRest(const containers::ServiceDescriptorList &descriptors,
                                                     containers::ServiceInstanceList &instances);
 
-        containers::ServiceInstancesMap &getInstancesMap(const ServiceLifeTime &lifeTime);
+        containers::ServiceInstancesMap &getInstancesMap(ServiceLifeTime lifeTime);
 
         containers::ServiceInstanceList *findRegisteredInstances(TypeId serviceTypeId);
 
         containers::ServiceInstanceList *tryRegister(const containers::ServiceDescriptorList &descriptors,
                                                      std::optional<containers::ServiceInstanceList> instances);
+
+        [[nodiscard]] ServiceLifeTime getLifeTime(const containers::ServiceDescriptorList &descriptors) const;
 
         [[nodiscard]] const containers::ServiceDescriptorList *findTransientDescriptors(TypeId serviceTypeId) const;
         [[nodiscard]] const containers::ServiceDescriptorList *findNonTransientDescriptors(TypeId serviceTypeId) const;

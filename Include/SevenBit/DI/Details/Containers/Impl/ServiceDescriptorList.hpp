@@ -17,8 +17,12 @@ namespace sb::di::details::containers
 
     INLINE void ServiceDescriptorList::add(ServiceDescriptor &&descriptor)
     {
-        checkBaseType(descriptor);
-        checkLifeTime(descriptor);
+        if (!empty())
+        {
+            checkBaseType(descriptor);
+            checkAlias(descriptor);
+            checkLifeTime(descriptor);
+        }
         _oneOrList.add(std::move(descriptor));
     }
 
@@ -30,21 +34,31 @@ namespace sb::di::details::containers
 
     INLINE size_t ServiceDescriptorList::size() const { return _oneOrList.size(); }
 
-    INLINE const ServiceLifeTime &ServiceDescriptorList::getLifeTime() const { return first().getLifeTime(); }
+    INLINE ServiceLifeTime ServiceDescriptorList::getLifeTime() const { return first().getLifeTime(); }
 
     INLINE TypeId ServiceDescriptorList::getServiceTypeId() const { return first().getServiceTypeId(); }
 
+    INLINE bool ServiceDescriptorList::isAlias() const { return first().isAlias(); }
+
     INLINE void ServiceDescriptorList::checkBaseType(const ServiceDescriptor &descriptor) const
     {
-        if (!empty() && descriptor.getServiceTypeId() != getServiceTypeId())
+        if (descriptor.getServiceTypeId() != getServiceTypeId())
         {
             throw ServiceBaseTypeMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
         }
     }
 
+    INLINE void ServiceDescriptorList::checkAlias(const ServiceDescriptor &descriptor) const
+    {
+        if (descriptor.isAlias() != isAlias())
+        {
+            throw ServiceAliasMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId(), isAlias()};
+        }
+    }
+
     INLINE void ServiceDescriptorList::checkLifeTime(const ServiceDescriptor &descriptor) const
     {
-        if (!empty() && descriptor.getLifeTime() != getLifeTime())
+        if (!isAlias() && !descriptor.isAlias() && descriptor.getLifeTime() != getLifeTime())
         {
             throw ServiceLifeTimeMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
         }

@@ -11,6 +11,5 @@ namespace sb::di
         constexpr static ServiceLifeTime Singleton = ServiceLifeTime::singleton();
         constexpr static ServiceLifeTime Scoped = ServiceLifeTime::scoped();
         constexpr static ServiceLifeTime Transient = ServiceLifeTime::transient();
-        constexpr static ServiceLifeTime Alias = ServiceLifeTime::alias();
     };
 } // namespace sb::di

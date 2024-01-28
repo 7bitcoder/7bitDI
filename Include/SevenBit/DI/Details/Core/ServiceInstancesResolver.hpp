@@ -32,9 +32,9 @@ namespace sb::di::details::core
 
         containers::ServiceInstanceList &createRestInstancesInPlace(containers::ServiceInstanceList &instances) const;
 
-        [[nodiscard]] IServiceInstance::Ptr createAlias(const IServiceInstance &instance) const;
+        [[nodiscard]] IServiceInstance::Ptr createAlias(const IServiceInstance *instance) const;
 
-        [[nodiscard]] containers::ServiceInstanceList createOneAlias(const IServiceInstance &instance) const;
+        [[nodiscard]] containers::ServiceInstanceList createOneAlias(const IServiceInstance *instance) const;
 
         [[nodiscard]] containers::ServiceInstanceList createAllAliases(
             const OneOrList<IServiceInstance::Ptr> &instances) const;

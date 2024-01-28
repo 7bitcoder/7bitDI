@@ -31,14 +31,17 @@ namespace sb::di::details::containers
 
         [[nodiscard]] size_t size() const;
 
-        [[nodiscard]] const ServiceLifeTime &getLifeTime() const;
+        [[nodiscard]] ServiceLifeTime getLifeTime() const;
 
         [[nodiscard]] TypeId getServiceTypeId() const;
+
+        [[nodiscard]] bool isAlias() const;
 
         void seal();
 
       private:
         void checkBaseType(const ServiceDescriptor &descriptor) const;
+        void checkAlias(const ServiceDescriptor &descriptor) const;
         void checkLifeTime(const ServiceDescriptor &descriptor) const;
     };
 

@@ -57,6 +57,11 @@ namespace sb::di
         ServiceLifeTimeMismatchException(TypeId typeIndex, TypeId interface);
     };
 
+    struct EXPORT ServiceAliasMismatchException : InjectorException
+    {
+        ServiceAliasMismatchException(TypeId typeIndex, TypeId interface, bool shoudBeAlias);
+    };
+
     struct EXPORT CircularDependencyException : InjectorException
     {
         explicit CircularDependencyException(TypeId typeIndex);

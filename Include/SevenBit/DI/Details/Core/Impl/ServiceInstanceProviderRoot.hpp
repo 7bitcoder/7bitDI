@@ -26,7 +26,7 @@ namespace sb::di::details::core
     {
         for (auto &[_, descriptors] : getDescriptorsMap())
         {
-            if (descriptors.getLifeTime().isSingleton())
+            if (!descriptors.isAlias() && descriptors.getLifeTime().isSingleton())
             {
                 tryRegister(descriptors, tryCreateAll(descriptors));
             }

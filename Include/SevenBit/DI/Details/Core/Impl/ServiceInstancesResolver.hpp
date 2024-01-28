@@ -55,13 +55,13 @@ namespace sb::di::details::core
         return createRestInstances(instances, true);
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstancesResolver::createAlias(const IServiceInstance &instance) const
+    INLINE IServiceInstance::Ptr ServiceInstancesResolver::createAlias(const IServiceInstance *instance) const
     {
-        return std::make_unique<services::AliasService>(instance.get(), _descriptors.last().getImplementationTypeId());
+        return _creator.createInstanceAlias(instance, _descriptors.last().getImplementationTypeId());
     }
 
     INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneAlias(
-        const IServiceInstance &instance) const
+        const IServiceInstance *instance) const
     {
         return containers::ServiceInstanceList{createAlias(instance)};
     }
@@ -69,7 +69,7 @@ namespace sb::di::details::core
     INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllAliases(
         const OneOrList<IServiceInstance::Ptr> &instances) const
     {
-        containers::ServiceInstanceList aliases{createAlias(*instances.last())};
+        containers::ServiceInstanceList aliases{createAlias(instances.last().get())};
         return std::move(createRestAliases(instances, aliases));
     }
 
@@ -80,11 +80,11 @@ namespace sb::di::details::core
         {
             auto &list = instances.getAsList();
             toFill.reserve(list.size());
-            auto realFirst = createAlias(*list.front());
+            auto realFirst = createAlias(list.front().get());
             const auto end = --list.end();
             for (auto it = ++list.begin(); it != end; ++it) // skip first and last
             {
-                toFill.add(createAlias(**it));
+                toFill.add(createAlias(it->get()));
             }
             toFill.add(std::move(realFirst));
             toFill.first().swap(toFill.last());
