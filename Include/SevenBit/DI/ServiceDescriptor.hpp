@@ -13,7 +13,8 @@ namespace sb::di
     class EXPORT ServiceDescriptor
     {
         TypeId _serviceTypeId;
-        std::optional<ServiceLifeTime> _lifeTime;
+        ServiceLifeTime _lifeTime;
+        bool _isAlias;
         IServiceFactory::SPtr _implementationFactory;
 
       public:
@@ -24,8 +25,8 @@ namespace sb::di
          * @details implementationFactory cannot be null, otherwise constructor will throw exception
          * @throws sb::di::NullPointerException
          */
-        ServiceDescriptor(TypeId serviceTypeId, std::optional<ServiceLifeTime> lifeTime,
-                          IServiceFactory::Ptr implementationFactory);
+        ServiceDescriptor(TypeId serviceTypeId, ServiceLifeTime lifeTime, IServiceFactory::Ptr implementationFactory,
+                          bool isAlias = false);
 
         ServiceDescriptor(const ServiceDescriptor &other) = default;
         ServiceDescriptor(ServiceDescriptor &&) = default;
@@ -37,8 +38,6 @@ namespace sb::di
          * @brief Get the lifetime object
          */
         [[nodiscard]] ServiceLifeTime getLifeTime() const;
-
-        [[nodiscard]] std::optional<ServiceLifeTime> tryGetLifeTime() const;
 
         /**
          * @brief Get the service TypeId

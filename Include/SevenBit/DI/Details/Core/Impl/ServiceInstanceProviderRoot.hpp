@@ -28,7 +28,7 @@ namespace sb::di::details::core
         {
             if (!descriptors.isAlias() && descriptors.getLifeTime().isSingleton())
             {
-                tryRegister(descriptors, tryCreateAll(descriptors));
+                tryRegisterAndGet(descriptors, tryCreateAll(descriptors));
             }
         }
     }

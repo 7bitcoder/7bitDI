@@ -66,16 +66,6 @@ namespace sb::di
          */
         [[nodiscard]] constexpr bool isTransient() const { return is(Transient); }
 
-        template <class... TServiceLifeTime> [[nodiscard]] constexpr bool isAny(TServiceLifeTime... types) const
-        {
-            return ((*this == types) || ...);
-        }
-
-        template <class... TServiceLifeTime> [[nodiscard]] constexpr bool isNot(TServiceLifeTime... types) const
-        {
-            return ((*this != types) && ...);
-        }
-
         constexpr bool operator!=(const ServiceLifeTime &lifeTime) const { return _type != lifeTime._type; }
         constexpr bool operator==(const ServiceLifeTime &lifeTime) const { return _type == lifeTime._type; }
     };

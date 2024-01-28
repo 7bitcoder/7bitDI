@@ -354,7 +354,7 @@ namespace sb::di
             details::utils::Assert::isNotSame<TAlias, TService>();
             details::utils::Assert::inheritance<TAlias, TService>();
             auto factory = std::make_unique<details::factories::VoidServiceFactory<TService>>();
-            return {typeid(TAlias), std::nullopt, std::move(factory)};
+            return {typeid(TAlias), ServiceLifeTimes::Scoped, std::move(factory), true};
         }
 
       private:

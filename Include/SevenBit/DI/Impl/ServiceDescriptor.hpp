@@ -7,24 +7,16 @@
 
 namespace sb::di
 {
-    INLINE ServiceDescriptor::ServiceDescriptor(const TypeId serviceTypeId,
-                                                const std::optional<ServiceLifeTime> lifeTime,
-                                                IServiceFactory::Ptr implementationFactory)
-        : _serviceTypeId(serviceTypeId), _lifeTime(lifeTime), _implementationFactory(std::move(implementationFactory))
+    INLINE ServiceDescriptor::ServiceDescriptor(const TypeId serviceTypeId, const ServiceLifeTime lifeTime,
+                                                IServiceFactory::Ptr implementationFactory, bool isAlias)
+        : _serviceTypeId(serviceTypeId), _lifeTime(lifeTime), _isAlias(isAlias),
+          _implementationFactory(std::move(implementationFactory))
+
     {
         details::utils::Require::notNull(_implementationFactory, "Implementation factory cannot be null");
     }
 
-    INLINE ServiceLifeTime ServiceDescriptor::getLifeTime() const
-    {
-        if (_lifeTime)
-        {
-            return *_lifeTime;
-        }
-        throw InjectorException("descriptor does not contain lifetime it is considered as alias");
-    }
-
-    INLINE std::optional<ServiceLifeTime> ServiceDescriptor::tryGetLifeTime() const { return _lifeTime; }
+    INLINE ServiceLifeTime ServiceDescriptor::getLifeTime() const { return _lifeTime; }
 
     INLINE TypeId ServiceDescriptor::getServiceTypeId() const { return _serviceTypeId; }
 
@@ -38,11 +30,12 @@ namespace sb::di
         return *_implementationFactory;
     }
 
-    INLINE bool ServiceDescriptor::isAlias() const { return !_lifeTime; }
+    INLINE bool ServiceDescriptor::isAlias() const { return _isAlias; }
 
     INLINE bool ServiceDescriptor::operator==(const ServiceDescriptor &descriptor) const
     {
-        return _serviceTypeId == descriptor.getServiceTypeId() && _lifeTime == descriptor.tryGetLifeTime() &&
+        return _isAlias == descriptor.isAlias() && _serviceTypeId == descriptor.getServiceTypeId() &&
+               _lifeTime == descriptor.getLifeTime() &&
                _implementationFactory.get() == &descriptor.getImplementationFactory();
     }
 
