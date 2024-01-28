@@ -1,7 +1,6 @@
 #pragma once
 
-#include <memory>
-#include <variant>
+#include <optional>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 

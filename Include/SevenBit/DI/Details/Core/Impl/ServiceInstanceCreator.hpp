@@ -28,7 +28,6 @@ namespace sb::di::details::core
                                                                              TypeId serviceTypeId)
     {
         utils::Require::notNull(instance);
-        // auto _ = _guard(serviceTypeId);
         return std::make_unique<services::AliasService>(instance->get(), serviceTypeId);
     }
 } // namespace sb::di::details::core

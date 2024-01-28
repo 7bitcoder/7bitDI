@@ -42,7 +42,7 @@ namespace sb::di
 
     INLINE bool ServiceDescriptor::operator==(const ServiceDescriptor &descriptor) const
     {
-        return _serviceTypeId == descriptor.getServiceTypeId() && _lifeTime == descriptor._lifeTime &&
+        return _serviceTypeId == descriptor.getServiceTypeId() && _lifeTime == descriptor.tryGetLifeTime() &&
                _implementationFactory.get() == &descriptor.getImplementationFactory();
     }
 

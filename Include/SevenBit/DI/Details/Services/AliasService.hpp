@@ -12,7 +12,7 @@ namespace sb::di::details::services
     class AliasService final : public IServiceInstance
     {
         void *_service = nullptr;
-        const TypeId _serviceTypeId;
+        TypeId _serviceTypeId;
 
       public:
         using Ptr = std::unique_ptr<AliasService>;

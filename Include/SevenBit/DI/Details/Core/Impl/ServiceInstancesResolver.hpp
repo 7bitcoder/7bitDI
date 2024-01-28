@@ -6,7 +6,6 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Core/ServiceInstancesResolver.hpp"
-#include "SevenBit/DI/Details/Services/AliasService.hpp"
 
 namespace sb::di::details::core
 {
@@ -55,42 +54,42 @@ namespace sb::di::details::core
         return createRestInstances(instances, true);
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstancesResolver::createAlias(const IServiceInstance *instance) const
+    INLINE IServiceInstance::Ptr ServiceInstancesResolver::createAlias(const IServiceInstance &original) const
     {
-        return _creator.createInstanceAlias(instance, _descriptors.last().getImplementationTypeId());
+        return createAlias(&original);
     }
 
     INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneAlias(
-        const IServiceInstance *instance) const
+        const IServiceInstance &original) const
     {
-        return containers::ServiceInstanceList{createAlias(instance)};
+        return containers::ServiceInstanceList{createAlias(&original)};
     }
 
     INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllAliases(
-        const OneOrList<IServiceInstance::Ptr> &instances) const
+        const OneOrList<IServiceInstance::Ptr> &originals) const
     {
-        containers::ServiceInstanceList aliases{createAlias(instances.last().get())};
-        return std::move(createRestAliases(instances, aliases));
+        containers::ServiceInstanceList aliases{createAlias(originals.last().get())};
+        return std::move(createRestAliases(originals, aliases));
     }
 
     INLINE containers::ServiceInstanceList &ServiceInstancesResolver::createRestAliases(
-        const OneOrList<IServiceInstance::Ptr> &instances, containers::ServiceInstanceList &toFill) const
+        const OneOrList<IServiceInstance::Ptr> &originals, containers::ServiceInstanceList &instances) const
     {
-        if (instances.size() > 1)
+        if (originals.size() > 1)
         {
-            auto &list = instances.getAsList();
-            toFill.reserve(list.size());
+            auto &list = originals.getAsList();
+            instances.reserve(list.size());
             auto realFirst = createAlias(list.front().get());
             const auto end = --list.end();
             for (auto it = ++list.begin(); it != end; ++it) // skip first and last
             {
-                toFill.add(createAlias(it->get()));
+                instances.add(createAlias(it->get()));
             }
-            toFill.add(std::move(realFirst));
-            toFill.first().swap(toFill.last());
+            instances.add(std::move(realFirst));
+            instances.first().swap(instances.last());
         }
-        toFill.seal();
-        return toFill;
+        instances.seal();
+        return instances;
     }
 
     INLINE IServiceInstance::Ptr ServiceInstancesResolver::createInstance(const bool inPlaceRequest) const
@@ -132,4 +131,10 @@ namespace sb::di::details::core
         instances.seal();
         return instances;
     }
+
+    INLINE IServiceInstance::Ptr ServiceInstancesResolver::createAlias(const IServiceInstance *original) const
+    {
+        return _creator.createInstanceAlias(original, _descriptors.last().getImplementationTypeId());
+    }
+
 } // namespace sb::di::details::core

@@ -140,7 +140,7 @@ namespace sb::di::details::core
         {
             if (const auto original = tryGetInstance(descriptors.last().getImplementationTypeId()))
             {
-                return makeResolver(descriptors).createOneAlias(original);
+                return makeResolver(descriptors).createOneAlias(*original);
             }
             return std::nullopt;
         }

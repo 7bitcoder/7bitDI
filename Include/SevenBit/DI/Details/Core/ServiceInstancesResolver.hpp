@@ -17,40 +17,30 @@ namespace sb::di::details::core
         ServiceInstancesResolver(ServiceInstanceCreator &creator, const containers::ServiceDescriptorList &descriptors);
 
         [[nodiscard]] IServiceInstance::Ptr createInstance() const;
-
         [[nodiscard]] containers::ServiceInstanceList createOneInstance() const;
-
         [[nodiscard]] containers::ServiceInstanceList createAllInstances() const;
-
         containers::ServiceInstanceList &createRestInstances(containers::ServiceInstanceList &instances) const;
 
         [[nodiscard]] IServiceInstance::Ptr createInstanceInPlace() const;
-
         [[nodiscard]] containers::ServiceInstanceList createOneInstanceInPlace() const;
-
         [[nodiscard]] containers::ServiceInstanceList createAllInstancesInPlace() const;
-
         containers::ServiceInstanceList &createRestInstancesInPlace(containers::ServiceInstanceList &instances) const;
 
-        [[nodiscard]] IServiceInstance::Ptr createAlias(const IServiceInstance *instance) const;
-
-        [[nodiscard]] containers::ServiceInstanceList createOneAlias(const IServiceInstance *instance) const;
-
+        [[nodiscard]] IServiceInstance::Ptr createAlias(const IServiceInstance &original) const;
+        [[nodiscard]] containers::ServiceInstanceList createOneAlias(const IServiceInstance &original) const;
         [[nodiscard]] containers::ServiceInstanceList createAllAliases(
-            const OneOrList<IServiceInstance::Ptr> &instances) const;
-
+            const OneOrList<IServiceInstance::Ptr> &originals) const;
         [[nodiscard]] containers::ServiceInstanceList &createRestAliases(
-            const OneOrList<IServiceInstance::Ptr> &instances, containers::ServiceInstanceList &toFill) const;
+            const OneOrList<IServiceInstance::Ptr> &originals, containers::ServiceInstanceList &instances) const;
 
       private:
         [[nodiscard]] IServiceInstance::Ptr createInstance(bool inPlaceRequest) const;
-
         [[nodiscard]] containers::ServiceInstanceList createOneInstance(bool inPlaceRequest) const;
-
         [[nodiscard]] containers::ServiceInstanceList createAllInstances(bool inPlaceRequest) const;
-
         containers::ServiceInstanceList &createRestInstances(containers::ServiceInstanceList &instances,
                                                              bool inPlaceRequest) const;
+
+        [[nodiscard]] IServiceInstance::Ptr createAlias(const IServiceInstance *original) const;
     };
 } // namespace sb::di::details::core
 
