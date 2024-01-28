@@ -449,6 +449,12 @@ namespace sb::di
         {
             return add(ServiceDescriber::describeSingleton<TService, TImplementation>(service));
         }
+
+        template <class TAlias, class TService> ServiceCollection &addAlias()
+        {
+            return add(ServiceDescriber::describeAlias<TAlias, TService>());
+        }
+
         /**
          * @brief Adds service descriptor
          * @details Adds service descriptor with:

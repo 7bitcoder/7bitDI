@@ -20,11 +20,12 @@ namespace sb::di::details::factories
     {
         using ServiceFactoryInvoker = helpers::ServiceFactoryInvoker<FactoryFcn>;
         using FactoryReturnType = typename ServiceFactoryInvoker::ReturnType;
-        using ServiceType = utils::RemoveUniquePtrT<FactoryReturnType>;
 
         mutable FactoryFcn _factoryFunction;
 
       public:
+        using ServiceType = utils::RemoveUniquePtrT<FactoryReturnType>;
+
         explicit UniquePtrServiceFcnFactory(FactoryFcn &&factoryFunction) : _factoryFunction{std::move(factoryFunction)}
         {
             static_assert(utils::IsUniquePtrV<FactoryReturnType> || utils::notSupportedType<FactoryFcn>,
