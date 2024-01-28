@@ -24,8 +24,8 @@ namespace sb::di::details::core
         return utils::Require::validInstanceAndGet(factory.createInstance(provider, inPlaceRequest));
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstanceCreator::createInstanceAlias(const IServiceInstance *instance,
-                                                                             TypeId serviceTypeId)
+    INLINE IServiceInstance::Ptr ServiceInstanceCreator::createInstanceAlias(TypeId serviceTypeId,
+                                                                             const IServiceInstance *instance)
     {
         utils::Require::notNull(instance);
         return std::make_unique<services::AliasService>(instance->get(), serviceTypeId);

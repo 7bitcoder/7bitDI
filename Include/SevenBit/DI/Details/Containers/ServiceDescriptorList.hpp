@@ -18,6 +18,12 @@ namespace sb::di::details::containers
       public:
         explicit ServiceDescriptorList(ServiceDescriptor &&descriptor);
 
+        ServiceDescriptorList(const ServiceDescriptorList &) = delete;
+        ServiceDescriptorList(ServiceDescriptorList &&) = default;
+
+        ServiceDescriptorList &operator=(const ServiceDescriptorList &) = delete;
+        ServiceDescriptorList &operator=(ServiceDescriptorList &&) = default;
+
         void add(ServiceDescriptor &&descriptor);
 
         [[nodiscard]] auto begin() const { return _oneOrList.getAsList().begin(); }

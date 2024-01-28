@@ -26,6 +26,9 @@ namespace sb::di::details::containers
 
         void add(IServiceInstance::Ptr &&service);
 
+        [[nodiscard]] auto begin() const { return _oneOrList.getAsList().begin(); }
+        [[nodiscard]] auto end() const { return _oneOrList.getAsList().end(); }
+
         OneOrList<IServiceInstance::Ptr> &getInnerList();
         [[nodiscard]] const OneOrList<IServiceInstance::Ptr> &getInnerList() const;
 

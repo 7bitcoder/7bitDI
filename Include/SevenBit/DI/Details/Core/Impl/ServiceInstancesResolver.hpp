@@ -134,7 +134,7 @@ namespace sb::di::details::core
 
     INLINE IServiceInstance::Ptr ServiceInstancesResolver::createAlias(const IServiceInstance *original) const
     {
-        return _creator.createInstanceAlias(original, _descriptors.last().getImplementationTypeId());
+        return _creator.createInstanceAlias(_descriptors.last().getImplementationTypeId(), original);
     }
 
 } // namespace sb::di::details::core
