@@ -6,23 +6,23 @@
 #include "SevenBit/DI/Details/Helpers/ServiceFactoryInvoker.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 
-class ServiceFactoryInvoker : public testing::Test
+class ServiceFactoryInvokerTest : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}
 
-    ServiceFactoryInvoker() {}
+    ServiceFactoryInvokerTest() {}
 
     void SetUp() override {}
 
     void TearDown() override {}
 
-    ~ServiceFactoryInvoker() override = default;
+    ~ServiceFactoryInvokerTest() override = default;
 
     static void TearDownTestSuite() {}
 };
 
-TEST_F(ServiceFactoryInvoker, ShouldInvokeFuncFactory)
+TEST_F(ServiceFactoryInvokerTest, ShouldInvokeFuncFactory)
 {
     ServiceProviderMock mock;
     sb::di::details::services::InPlaceService<TestDependencyClass> test1;

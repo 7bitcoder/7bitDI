@@ -34,6 +34,43 @@ TEST_F(ServiceDescriptorListTest, ShouldAddServiceDescriptors)
     EXPECT_NO_THROW(act());
 }
 
+TEST_F(ServiceDescriptorListTest, ShouldAddServiceAliasDescriptors)
+{
+    sb::di::details::containers::ServiceDescriptorList list(
+        sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass3>());
+
+    auto act = [&] {
+        list.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass4>());
+        list.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass5>());
+    };
+
+    EXPECT_NO_THROW(act());
+}
+
+TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorAliasMismatch1)
+{
+    sb::di::details::containers::ServiceDescriptorList list(
+        sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass3>());
+
+    list.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass4>());
+
+    auto act = [&] { list.add(sb::di::ServiceDescriber::describeScoped<TestInheritClass1, TestInheritClass5>()); };
+
+    EXPECT_THROW(act(), sb::di::ServiceAliasMismatchException);
+}
+
+TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorAliasMismatch2)
+{
+    sb::di::details::containers::ServiceDescriptorList list(
+        sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
+
+    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+
+    auto act = [&] { list.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass5>()); };
+
+    EXPECT_THROW(act(), sb::di::ServiceAliasMismatchException);
+}
+
 TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorLifeTimeMismatch)
 {
     sb::di::details::containers::ServiceDescriptorList list(

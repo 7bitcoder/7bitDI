@@ -313,14 +313,11 @@ TEST_F(ServiceInstanceProviderTest, ShouldCreateInstance)
     sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
-    //    EXPECT_THROW(provider.sb::di::IServiceInstanceProvider::createInstance(typeid(TestClass1)),
-    //                 sb::di::ServiceNotFoundException);
-    //    EXPECT_THROW(provider.sb::di::IServiceInstanceProvider::createInstance(typeid(TestClass2)),
-    //                 sb::di::ServiceNotFoundException);
-    //    EXPECT_NO_THROW(provider.sb::di::IServiceInstanceProvider::createInstance(typeid(TestClass3)));
-    //    EXPECT_TRUE(provider.sb::di::IServiceInstanceProvider::createInstance(typeid(TestClass3)));
-    //    EXPECT_THROW(provider.sb::di::IServiceInstanceProvider::createInstance(typeid(TestClass4)),
-    //                 sb::di::ServiceNotFoundException);
+    EXPECT_THROW(provider.createInstance(typeid(TestClass1)), sb::di::ServiceNotFoundException);
+    EXPECT_THROW(provider.createInstance(typeid(TestClass2)), sb::di::ServiceNotFoundException);
+    EXPECT_NO_THROW(provider.createInstance(typeid(TestClass3)));
+    EXPECT_TRUE(provider.createInstance(typeid(TestClass3)));
+    EXPECT_THROW(provider.createInstance(typeid(TestClass4)), sb::di::ServiceNotFoundException);
 }
 
 TEST_F(ServiceInstanceProviderTest, ShouldCreateInheritedInstance)
@@ -335,14 +332,11 @@ TEST_F(ServiceInstanceProviderTest, ShouldCreateInheritedInstance)
     sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
-    //    EXPECT_THROW(provider.sb::di::IServiceInstanceProvider::createInstance(typeid(TestInheritClass1)),
-    //                 sb::di::ServiceNotFoundException);
-    //    EXPECT_THROW(provider.sb::di::IServiceInstanceProvider::createInstance(typeid(TestInheritClass2)),
-    //                 sb::di::ServiceNotFoundException);
-    //    EXPECT_NO_THROW(provider.sb::di::IServiceInstanceProvider::createInstance(typeid(TestInheritClass3)));
-    //    EXPECT_TRUE(provider.sb::di::IServiceInstanceProvider::createInstance(typeid(TestInheritClass3)));
-    //    EXPECT_THROW(provider.sb::di::IServiceInstanceProvider::createInstance(typeid(TestInheritClass4)),
-    //                 sb::di::ServiceNotFoundException);
+    EXPECT_THROW(provider.createInstance(typeid(TestInheritClass1)), sb::di::ServiceNotFoundException);
+    EXPECT_THROW(provider.createInstance(typeid(TestInheritClass2)), sb::di::ServiceNotFoundException);
+    EXPECT_NO_THROW(provider.createInstance(typeid(TestInheritClass3)));
+    EXPECT_TRUE(provider.createInstance(typeid(TestInheritClass3)));
+    EXPECT_THROW(provider.createInstance(typeid(TestInheritClass4)), sb::di::ServiceNotFoundException);
 }
 
 TEST_F(ServiceInstanceProviderTest, ShouldTryCreateInstanceInPlace)

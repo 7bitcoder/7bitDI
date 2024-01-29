@@ -7,12 +7,8 @@
 #include "SevenBit/DI/Details/Factories/ExternalServiceFactory.hpp"
 #include "SevenBit/DI/Details/Factories/ServiceFactory.hpp"
 #include "SevenBit/DI/Details/Factories/ServiceFcnFactory.hpp"
-#include "SevenBit/DI/Details/Factories/UniquePtrServiceFcnFactory.hpp"
 #include "SevenBit/DI/Details/Factories/VoidServiceFactory.hpp"
-#include "SevenBit/DI/Details/Helpers/ServiceFactoryInvoker.hpp"
 #include "SevenBit/DI/Details/Utils/Assert.hpp"
-#include "SevenBit/DI/Details/Utils/IsInPlaceObject.hpp"
-#include "SevenBit/DI/Details/Utils/IsUniquePtr.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTimes.hpp"
 
@@ -109,6 +105,7 @@ namespace sb::di
         static ServiceDescriptor describe(const ServiceLifeTime lifetime)
         {
             details::utils::Assert::inheritance<TService, TImplementation>();
+
             auto factory = std::make_unique<details::factories::ServiceFactory<TImplementation>>();
             return {typeid(TService), lifetime, std::move(factory)};
         }
@@ -162,6 +159,7 @@ namespace sb::di
         static ServiceDescriptor describeSingleton(TImplementation *service)
         {
             details::utils::Assert::inheritance<TService, TImplementation>();
+
             auto factory = std::make_unique<details::factories::ExternalServiceFactory<TImplementation>>(service);
             return {typeid(TService), ServiceLifeTimes::Singleton, std::move(factory)};
         }
@@ -344,54 +342,22 @@ namespace sb::di
         template <class TService, class FactoryFcn>
         static ServiceDescriptor describeFrom(const ServiceLifeTime lifetime, FactoryFcn &&factoryFcn)
         {
-            auto factory = makeFactoryFrom<TService, FactoryFcn>(std::forward<FactoryFcn>(factoryFcn));
-            auto serviceTypeId = std::is_void_v<TService> ? factory->getServiceTypeId() : TypeId(typeid(TService));
-            return {serviceTypeId, lifetime, std::move(factory)};
+            using Factory = details::factories::ServiceFcnFactory<FactoryFcn>;
+            using TImplementation = typename Factory::ServiceType;
+            using TRealService = std::conditional_t<std::is_void_v<TService>, TImplementation, TService>;
+            details::utils::Assert::factoryInheritance<TRealService, TImplementation>();
+
+            auto factory = std::make_unique<Factory>(std::forward<FactoryFcn>(factoryFcn));
+            return {typeid(TRealService), lifetime, std::move(factory)};
         }
 
         template <class TAlias, class TService> static ServiceDescriptor describeAlias()
         {
-            details::utils::Assert::isNotSame<TAlias, TService>();
-            details::utils::Assert::inheritance<TAlias, TService>();
+            details::utils::Assert::aliasNotSame<TAlias, TService>();
+            details::utils::Assert::aliasInheritance<TAlias, TService>();
+
             auto factory = std::make_unique<details::factories::VoidServiceFactory<TService>>();
             return {typeid(TAlias), ServiceLifeTimes::Scoped, std::move(factory), true};
-        }
-
-      private:
-        template <class TService, class FactoryFcn> static IServiceFactory::Ptr makeFactoryFrom(FactoryFcn &&factoryFcn)
-        {
-            using ReturnType = typename details::helpers::ServiceFactoryInvoker<FactoryFcn>::ReturnType;
-            if constexpr (details::utils::IsUniquePtrV<ReturnType>)
-            {
-                using Factory = details::factories::UniquePtrServiceFcnFactory<FactoryFcn>;
-                tryCheckFactoryInheritance<TService, Factory>();
-                return std::make_unique<Factory>(std::forward<FactoryFcn>(factoryFcn));
-            }
-            else if constexpr (details::utils::IsInPlaceObjectConstructableV<ReturnType>)
-            {
-                using Factory = details::factories::ServiceFcnFactory<FactoryFcn>;
-                tryCheckFactoryInheritance<TService, Factory>();
-                return std::make_unique<Factory>(std::forward<FactoryFcn>(factoryFcn));
-            }
-            else
-            {
-                notSupportedReturnType<FactoryFcn>();
-                return nullptr;
-            }
-        }
-
-        template <class TService, class Factory> static void tryCheckFactoryInheritance()
-        {
-            if constexpr (!std::is_void_v<TService>)
-            {
-                details::utils::Assert::inheritance<TService, typename Factory::ServiceType>();
-            }
-        }
-
-        template <class FactoryFcn> static void notSupportedReturnType()
-        {
-            static_assert(details::utils::notSupportedType<FactoryFcn>,
-                          "Service factory return type must be std::unique_ptr<TService> or movable/copyable object");
         }
     };
 } // namespace sb::di

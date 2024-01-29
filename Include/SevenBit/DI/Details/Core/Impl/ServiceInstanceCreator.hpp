@@ -1,12 +1,12 @@
 #pragma once
 
 #include <memory>
-#include <utility>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Core/ServiceInstanceCreator.hpp"
-#include <SevenBit/DI/Details/Services/AliasService.hpp>
+#include "SevenBit/DI/Details/Services/AliasService.hpp"
+#include "SevenBit/DI/Details/Utils/Require.hpp"
 
 namespace sb::di::details::core
 {
@@ -27,7 +27,7 @@ namespace sb::di::details::core
     INLINE IServiceInstance::Ptr ServiceInstanceCreator::createInstanceAlias(TypeId serviceTypeId,
                                                                              const IServiceInstance *instance)
     {
-        utils::Require::notNull(instance);
+        utils::Require::validInstance(instance);
         return std::make_unique<services::AliasService>(instance->get(), serviceTypeId);
     }
 } // namespace sb::di::details::core

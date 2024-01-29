@@ -23,14 +23,6 @@ class ServiceFcnFactoryTest : public testing::Test
     static void TearDownTestSuite() {}
 };
 
-TEST_F(ServiceFcnFactoryTest, ShouldNotCompileWrongFactoryScheme)
-{
-    // TestClass1 test;
-    // auto fcn = [&](auto f) { return std::make_unique<TestClass1>(); };
-
-    // sb::di::details::ServiceFcnFactory factory{std::move(fcn)};
-}
-
 TEST_F(ServiceFcnFactoryTest, ShouldCreateService)
 {
     ServiceProviderMock mock;
@@ -41,8 +33,8 @@ TEST_F(ServiceFcnFactoryTest, ShouldCreateService)
     EXPECT_TRUE(instance);
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
-    // EXPECT_TRUE(dynamic_cast<sb::di::details::services::UniquePtrService<TestClass1> *>(instance.get()));
-    // EXPECT_EQ(factory.getServiceTypeId(), typeid(TestClass1));
+    EXPECT_TRUE(dynamic_cast<sb::di::details::services::UniquePtrService<TestClass1> *>(instance.get()));
+    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestClass1));
     EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
@@ -264,9 +256,9 @@ TEST_F(ServiceFcnFactoryTest, ShouldCreateDependencyUniq2Service)
     EXPECT_TRUE(instance);
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
-    // EXPECT_TRUE(
-    //     dynamic_cast<sb::di::details::services::UniquePtrService<TestDependencyUniquePtrClass2> *>(instance.get()));
-    // EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyUniquePtrClass2));
+    EXPECT_TRUE(
+        dynamic_cast<sb::di::details::services::UniquePtrService<TestDependencyUniquePtrClass2> *>(instance.get()));
+    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyUniquePtrClass2));
     EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
@@ -310,8 +302,8 @@ TEST_F(ServiceFcnFactoryTest, ShouldCreateDependencyVec2Service)
     EXPECT_TRUE(instance);
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
-    // EXPECT_TRUE(dynamic_cast<sb::di::details::services::UniquePtrService<TestDependencyVecClass2>
-    // *>(instance.get())); EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyVecClass2));
+    EXPECT_TRUE(dynamic_cast<sb::di::details::services::UniquePtrService<TestDependencyVecClass2> *>(instance.get()));
+    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyVecClass2));
     EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
@@ -358,7 +350,7 @@ TEST_F(ServiceFcnFactoryTest, ShouldCreateDependencyVec4Service)
     EXPECT_TRUE(instance);
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
-    // EXPECT_TRUE(dynamic_cast<sb::di::details::services::UniquePtrService<TestDependencyVecClass4>
-    // *>(instance.get())); EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyVecClass4));
+    EXPECT_TRUE(dynamic_cast<sb::di::details::services::UniquePtrService<TestDependencyVecClass4> *>(instance.get()));
+    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyVecClass4));
     EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }

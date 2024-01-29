@@ -50,7 +50,25 @@ TEST_F(RequireTest, ShouldFailRequireNotNull)
     EXPECT_THROW(sb::di::details::utils::Require::notNullAndGet(std::move(testSPtr)), sb::di::NullPointerException);
 }
 
-TEST_F(RequireTest, ShoulRequireInstanceValidity)
+TEST_F(RequireTest, ShouldRequireValidEnum)
+{
+    enum TestEnum
+    {
+        A,
+        B,
+        C,
+        Count,
+    };
+    EXPECT_THROW(sb::di::details::utils::Require::validEnum(static_cast<TestEnum>(123)), sb::di::InjectorException);
+    EXPECT_THROW(sb::di::details::utils::Require::validEnum(static_cast<TestEnum>(-123)), sb::di::InjectorException);
+    EXPECT_THROW(sb::di::details::utils::Require::validEnum(static_cast<TestEnum>(-1)), sb::di::InjectorException);
+    EXPECT_THROW(sb::di::details::utils::Require::validEnum(TestEnum::Count), sb::di::InjectorException);
+    EXPECT_NO_THROW(sb::di::details::utils::Require::validEnum(TestEnum::A));
+    EXPECT_NO_THROW(sb::di::details::utils::Require::validEnum(TestEnum::B));
+    EXPECT_NO_THROW(sb::di::details::utils::Require::validEnum(TestEnum::C));
+}
+
+TEST_F(RequireTest, ShoulRequireValidInstance)
 {
     TestClass1 test;
     EXPECT_THROW(sb::di::details::utils::Require::validInstance(nullptr), sb::di::NullPointerException);

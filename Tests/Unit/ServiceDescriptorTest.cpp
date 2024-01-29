@@ -55,6 +55,21 @@ TEST_F(ServiceDescriptorTest, ShouldGetProperInfoFromDescriptor)
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestClass1));
     EXPECT_EQ(&descriptor.getImplementationFactory(), factoryPtr);
+    EXPECT_FALSE(descriptor.isAlias());
+}
+
+TEST_F(ServiceDescriptorTest, ShouldGetProperInfoFromAliasDescriptor)
+{
+    auto factory = std::make_unique<sb::di::details::factories::ServiceFactory<TestClass1>>();
+    const auto factoryPtr = factory.get();
+    const sb::di::ServiceDescriptor descriptor{typeid(TestClass1), sb::di::ServiceLifeTime::singleton(),
+                                               std::move(factory), true};
+
+    EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
+    EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
+    EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestClass1));
+    EXPECT_EQ(&descriptor.getImplementationFactory(), factoryPtr);
+    EXPECT_TRUE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriptorTest, ShouldCompareDescriptors)

@@ -49,11 +49,15 @@ namespace sb::di
          */
         [[nodiscard]] TypeId getImplementationTypeId() const;
 
-        [[nodiscard]] bool isAlias() const;
         /**
          * @brief Get the service implementation factory
          */
         [[nodiscard]] const IServiceFactory &getImplementationFactory() const;
+
+        /**
+         * @brief Check if service is alias
+         */
+        [[nodiscard]] bool isAlias() const;
 
         bool operator!=(const ServiceDescriptor &descriptor) const;
         bool operator==(const ServiceDescriptor &descriptor) const;
