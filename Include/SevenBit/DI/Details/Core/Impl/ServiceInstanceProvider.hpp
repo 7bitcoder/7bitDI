@@ -1,8 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <utility>
-
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp"
@@ -13,7 +10,6 @@
 #include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/ServiceLifeTimes.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
-#include "SevenBit/DI/ServiceProviderOptions.hpp"
 
 namespace sb::di::details::core
 {

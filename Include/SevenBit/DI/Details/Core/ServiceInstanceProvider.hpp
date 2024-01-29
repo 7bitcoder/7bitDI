@@ -10,7 +10,7 @@
 #include "SevenBit/DI/Details/Core/ServiceInstanceCreator.hpp"
 #include "SevenBit/DI/Details/Core/ServiceInstancesResolver.hpp"
 #include "SevenBit/DI/IServiceInstanceProvider.hpp"
-#include "SevenBit/DI/ServiceLifeTime.hpp"
+#include "SevenBit/DI/ServiceProviderOptions.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di::details::core

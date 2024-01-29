@@ -9,10 +9,6 @@ namespace sb::di::details::utils
 {
     struct EXPORT Check
     {
-        template <class T, class I> constexpr static bool isSame() { return std::is_same_v<T, I>; }
-
-        template <class T, class I> constexpr static bool inheritance() {}
-
         template <class T> constexpr static bool notNull(const std::unique_ptr<T> &ptr) { return notNull(ptr.get()); }
 
         template <class T> constexpr static bool notNull(const std::shared_ptr<T> &ptr) { return notNull(ptr.get()); }
