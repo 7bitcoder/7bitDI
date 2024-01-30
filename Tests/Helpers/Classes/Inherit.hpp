@@ -25,8 +25,11 @@ struct TestInheritClass6 : TestInheritClass5
 {
     int number() override { return 6; }
 };
-
-struct TestInheritClass7 final : TestInheritClass6
+struct TestInheritClass7 : TestInheritClass6
 {
     int number() override { return 7; }
+};
+struct TestInheritClass8 final : TestInheritClass7
+{
+    int number() override { return 8; }
 };

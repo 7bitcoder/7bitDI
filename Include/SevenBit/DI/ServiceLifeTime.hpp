@@ -10,7 +10,7 @@ namespace sb::di
     {
       public:
         /**
-         * @brief 4 types of available service lifetimes
+         * @brief 3 types of available service lifetimes
          */
         enum Type
         {

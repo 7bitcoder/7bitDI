@@ -13,8 +13,8 @@ namespace sb::di::details::containers
 
     INLINE void ServiceDescriptorsMap::add(ServiceDescriptor descriptor)
     {
-        return _registeredServicesCheck ? addDescriptorWithCheck(std::move(descriptor))
-                                        : addDescriptor(std::move(descriptor));
+        return _registeredServicesCheck && !descriptor.isAlias() ? addDescriptorWithCheck(std::move(descriptor))
+                                                                 : addDescriptor(std::move(descriptor));
     }
 
     INLINE void ServiceDescriptorsMap::seal() { _registeredServicesCheck.reset(); }
