@@ -151,7 +151,7 @@ namespace sb::di
             if (auto instances = getInstanceProvider().tryGetInstances(typeid(TService)))
             {
                 return mapValidInstances(
-                    *instances, [](const IServiceInstance::Ptr &instance) { return instance->getAs<TService>(); });
+                    *instances, [](const ServiceInstance::Ptr &instance) { return instance->getAs<TService>(); });
             }
             return {};
         }
@@ -233,7 +233,7 @@ namespace sb::di
         {
             if (auto instances = getInstanceProvider().tryCreateInstances(typeid(TService)))
             {
-                return mapValidInstances(*instances, [](const IServiceInstance::Ptr &instance) {
+                return mapValidInstances(*instances, [](const ServiceInstance::Ptr &instance) {
                     return instance->moveOutAsUniquePtr<TService>();
                 });
             }

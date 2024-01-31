@@ -63,7 +63,7 @@ TEST_F(ServiceDescriptorTest, ShouldGetProperInfoFromAliasDescriptor)
     auto factory = std::make_unique<sb::di::details::factories::ServiceFactory<TestClass1>>();
     const auto factoryPtr = factory.get();
     const sb::di::ServiceDescriptor descriptor{typeid(TestClass1), sb::di::ServiceLifeTime::singleton(),
-                                               std::move(factory), true};
+                                               std::move(factory), 0, true};
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));

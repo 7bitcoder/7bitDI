@@ -11,7 +11,7 @@ namespace sb::di::details::containers
     {
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesMap::insert(const TypeId serviceTypeId, IServiceInstance::Ptr instance)
+    INLINE ServiceInstanceList &ServiceInstancesMap::insert(const TypeId serviceTypeId, ServiceInstance::Ptr instance)
     {
         return insert(serviceTypeId, ServiceInstanceList{std::move(instance)});
     }

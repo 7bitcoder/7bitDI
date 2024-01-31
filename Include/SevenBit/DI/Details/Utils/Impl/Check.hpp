@@ -6,12 +6,12 @@
 
 namespace sb::di::details::utils
 {
-    INLINE bool Check::instanceValidity(const IServiceInstance::Ptr &instance)
+    INLINE bool Check::instanceValidity(const ServiceInstance::Ptr &instance)
     {
         return instanceValidity(instance.get());
     }
 
-    INLINE bool Check::instanceValidity(const IServiceInstance *instance)
+    INLINE bool Check::instanceValidity(const ServiceInstance *instance)
     {
         return notNull(instance) && instance->isValid();
     }

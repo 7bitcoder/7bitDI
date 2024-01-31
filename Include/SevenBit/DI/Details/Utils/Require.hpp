@@ -6,7 +6,7 @@
 
 #include "SevenBit/DI/Details/Utils/Check.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/IServiceInstance.hpp"
+#include "SevenBit/DI/ServiceInstance.hpp"
 
 namespace sb::di::details::utils
 {
@@ -68,13 +68,13 @@ namespace sb::di::details::utils
             }
         }
 
-        static IServiceInstance::Ptr validInstanceAndGet(IServiceInstance::Ptr &&instance);
+        static ServiceInstance::Ptr validInstanceAndGet(ServiceInstance::Ptr &&instance);
 
-        static IServiceInstance &validInstanceAndGet(IServiceInstance *instance);
+        static ServiceInstance &validInstanceAndGet(ServiceInstance *instance);
 
-        static void validInstance(const IServiceInstance::Ptr &instance);
+        static void validInstance(const ServiceInstance::Ptr &instance);
 
-        static void validInstance(const IServiceInstance *instance);
+        static void validInstance(const ServiceInstance *instance);
     };
 } // namespace sb::di::details::utils
 

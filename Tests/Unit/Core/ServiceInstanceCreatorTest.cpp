@@ -45,12 +45,12 @@ TEST_F(ServiceInstanceCreatorTest, ShouldCreateInstanceAlias)
 {
     sb::di::details::core::ServiceInstanceCreator creator;
 
-    const auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestClass1>();
+    const auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestInheritClass3>();
 
     TestInheritClass5 test;
     const sb::di::details::services::ExternalService external{&test};
 
-    const auto instance = creator.createInstanceAlias(typeid(TestInheritClass3), &external);
+    const auto instance = creator.createInstanceAlias(descriptor, &external);
 
     EXPECT_TRUE(instance);
     EXPECT_TRUE(instance->isValid());
@@ -108,10 +108,10 @@ TEST_F(ServiceInstanceCreatorTest, ShouldFailCreateInstanceAlias)
 {
     sb::di::details::core::ServiceInstanceCreator creator;
 
-    const auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestClass1>();
+    const auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestInheritClass3>();
 
     TestInheritClass5 *test = nullptr;
     const sb::di::details::services::ExternalService external{test};
 
-    EXPECT_THROW(creator.createInstanceAlias(typeid(TestInheritClass3), &external), sb::di::InvalidServiceException);
+    EXPECT_THROW(creator.createInstanceAlias(descriptor, &external), sb::di::InvalidServiceException);
 }

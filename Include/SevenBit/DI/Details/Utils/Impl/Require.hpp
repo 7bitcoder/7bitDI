@@ -7,21 +7,21 @@
 
 namespace sb::di::details::utils
 {
-    INLINE IServiceInstance::Ptr Require::validInstanceAndGet(IServiceInstance::Ptr &&instance)
+    INLINE ServiceInstance::Ptr Require::validInstanceAndGet(ServiceInstance::Ptr &&instance)
     {
         validInstance(instance.get());
         return std::move(instance);
     }
 
-    INLINE IServiceInstance &Require::validInstanceAndGet(IServiceInstance *instance)
+    INLINE ServiceInstance &Require::validInstanceAndGet(ServiceInstance *instance)
     {
         validInstance(instance);
         return *instance;
     }
 
-    INLINE void Require::validInstance(const IServiceInstance::Ptr &instance) { validInstance(instance.get()); }
+    INLINE void Require::validInstance(const ServiceInstance::Ptr &instance) { validInstance(instance.get()); }
 
-    INLINE void Require::validInstance(const IServiceInstance *instance)
+    INLINE void Require::validInstance(const ServiceInstance *instance)
     {
         notNull(instance);
         if (!Check::instanceValidity(instance))

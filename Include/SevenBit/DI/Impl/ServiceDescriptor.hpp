@@ -8,9 +8,10 @@
 namespace sb::di
 {
     INLINE ServiceDescriptor::ServiceDescriptor(const TypeId serviceTypeId, const ServiceLifeTime lifeTime,
-                                                IServiceFactory::Ptr implementationFactory, bool isAlias)
+                                                IServiceFactory::Ptr implementationFactory, const int castOffset,
+                                                const bool isAlias)
         : _serviceTypeId(serviceTypeId), _lifeTime(lifeTime), _isAlias(isAlias),
-          _implementationFactory(std::move(implementationFactory))
+          _implementationFactory(std::move(implementationFactory)), _castOffset(castOffset)
 
     {
         details::utils::Require::notNull(_implementationFactory, "Implementation factory cannot be null");
@@ -29,6 +30,8 @@ namespace sb::di
     {
         return *_implementationFactory;
     }
+
+    INLINE int ServiceDescriptor::getCastOffset() const { return _castOffset; }
 
     INLINE bool ServiceDescriptor::isAlias() const { return _isAlias; }
 

@@ -5,11 +5,11 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/IServiceInstance.hpp"
+#include "SevenBit/DI/ServiceInstance.hpp"
 
 namespace sb::di::details::services
 {
-    template <class T> class InPlaceService final : public IServiceInstance
+    template <class T> class InPlaceService final : public ServiceInstance
     {
         T _service;
 

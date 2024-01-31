@@ -6,7 +6,7 @@
 
 #include "SevenBit/DI/Details/Services/ExternalService.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
-#include "SevenBit/DI/IServiceInstance.hpp"
+#include "SevenBit/DI/ServiceInstance.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di::details::factories
@@ -21,7 +21,7 @@ namespace sb::di::details::factories
 
         [[nodiscard]] TypeId getServiceTypeId() const override { return typeid(T); }
 
-        IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
+        ServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
             return std::make_unique<services::ExternalService<T>>(_service);
         }

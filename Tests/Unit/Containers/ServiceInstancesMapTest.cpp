@@ -31,7 +31,7 @@ TEST_F(ServiceInstancesMapTest, ShouldInsert)
     sb::di::details::containers::ServiceInstancesMap map{false};
 
     TestClass1 test;
-    sb::di::IServiceInstance::Ptr instance{new sb::di::details::services::ExternalService{&test}};
+    sb::di::ServiceInstance::Ptr instance{new sb::di::details::services::ExternalService{&test}};
     auto act = [&] { map.insert(typeid(TestClass1), std::move(instance)); };
 
     EXPECT_NO_THROW(act());
@@ -42,9 +42,9 @@ TEST_F(ServiceInstancesMapTest, ShouldCheckEmpty)
     sb::di::details::containers::ServiceInstancesMap map{false};
 
     TestInheritClass3 test;
-    sb::di::IServiceInstance::Ptr instance{new sb::di::details::services::ExternalService{&test}};
+    sb::di::ServiceInstance::Ptr instance{new sb::di::details::services::ExternalService{&test}};
     TestInheritClass2 test2;
-    sb::di::IServiceInstance::Ptr instance2{new sb::di::details::services::ExternalService{&test2}};
+    sb::di::ServiceInstance::Ptr instance2{new sb::di::details::services::ExternalService{&test2}};
     map.insert(typeid(TestInheritClass1), std::move(instance)).add(std::move(instance2));
 
     EXPECT_FALSE(map.empty());
@@ -55,9 +55,9 @@ TEST_F(ServiceInstancesMapTest, ShouldContainsList)
     sb::di::details::containers::ServiceInstancesMap map{false};
 
     TestInheritClass3 test;
-    sb::di::IServiceInstance::Ptr instance{new sb::di::details::services::ExternalService{&test}};
+    sb::di::ServiceInstance::Ptr instance{new sb::di::details::services::ExternalService{&test}};
     TestInheritClass2 test2;
-    sb::di::IServiceInstance::Ptr instance2{new sb::di::details::services::ExternalService{&test2}};
+    sb::di::ServiceInstance::Ptr instance2{new sb::di::details::services::ExternalService{&test2}};
     map.insert(typeid(TestInheritClass1), std::move(instance)).add(std::move(instance2));
 
     EXPECT_TRUE(map.contains(typeid(TestInheritClass1)));
@@ -69,9 +69,9 @@ TEST_F(ServiceInstancesMapTest, ShouldFindList)
     sb::di::details::containers::ServiceInstancesMap map{false};
 
     TestInheritClass3 test;
-    sb::di::IServiceInstance::Ptr instance{new sb::di::details::services::ExternalService{&test}};
+    sb::di::ServiceInstance::Ptr instance{new sb::di::details::services::ExternalService{&test}};
     TestInheritClass2 test2;
-    sb::di::IServiceInstance::Ptr instance2{new sb::di::details::services::ExternalService{&test2}};
+    sb::di::ServiceInstance::Ptr instance2{new sb::di::details::services::ExternalService{&test2}};
     map.insert(typeid(TestInheritClass1), std::move(instance)).add(std::move(instance2));
 
     const auto list = map.findServices(typeid(TestInheritClass1));

@@ -7,7 +7,7 @@
 #include "SevenBit/DI/Details/Services/ExternalService.hpp"
 #include "SevenBit/DI/Details/Utils/Check.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/IServiceInstance.hpp"
+#include "SevenBit/DI/ServiceInstance.hpp"
 #include "SevenBit/DI/ServiceLifeTimes.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 
@@ -33,7 +33,7 @@ namespace sb::di::details::core
         return std::make_unique<ServiceInstanceProvider>(_root, _options);
     }
 
-    INLINE const IServiceInstance &ServiceInstanceProvider::getInstance(const TypeId serviceTypeId)
+    INLINE const ServiceInstance &ServiceInstanceProvider::getInstance(const TypeId serviceTypeId)
     {
         if (const auto instance = tryGetInstance(serviceTypeId); utils::Check::instanceValidity(instance))
         {
@@ -43,7 +43,7 @@ namespace sb::di::details::core
                                        "Service was not registered or was registered as transient instance"};
     }
 
-    INLINE const IServiceInstance *ServiceInstanceProvider::tryGetInstance(const TypeId serviceTypeId)
+    INLINE const ServiceInstance *ServiceInstanceProvider::tryGetInstance(const TypeId serviceTypeId)
     {
         auto instances = findRegisteredInstances(serviceTypeId);
         if (!instances)
@@ -54,7 +54,7 @@ namespace sb::di::details::core
         return instances ? instances->last().get() : nullptr;
     }
 
-    INLINE const OneOrList<IServiceInstance::Ptr> *ServiceInstanceProvider::tryGetInstances(const TypeId serviceTypeId)
+    INLINE const OneOrList<ServiceInstance::Ptr> *ServiceInstanceProvider::tryGetInstances(const TypeId serviceTypeId)
     {
         auto instances = findRegisteredInstances(serviceTypeId);
         if (!instances)
@@ -70,7 +70,7 @@ namespace sb::di::details::core
         return instances ? &instances->getInnerList() : nullptr;
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstanceProvider::createInstance(const TypeId serviceTypeId)
+    INLINE ServiceInstance::Ptr ServiceInstanceProvider::createInstance(const TypeId serviceTypeId)
     {
         if (auto instance = tryCreateInstance(serviceTypeId); utils::Check::instanceValidity(instance))
         {
@@ -80,34 +80,38 @@ namespace sb::di::details::core
                                        "Service was not registered or was registered as singleton/scoped instance"};
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstanceProvider::tryCreateInstance(const TypeId serviceTypeId)
+    INLINE ServiceInstance::Ptr ServiceInstanceProvider::tryCreateInstance(const TypeId serviceTypeId)
     {
         if (const auto descriptors = findDescriptors(serviceTypeId, true))
         {
             if (descriptors->isAlias())
             {
-                return tryCreateInstance(descriptors->last().getImplementationTypeId());
+                auto alias = tryCreateInstance(descriptors->last().getImplementationTypeId());
+                tryAddOffset(alias.get(), descriptors->last());
+                return alias;
             }
             return makeResolver(*descriptors).createInstance();
         }
         return nullptr;
     }
 
-    INLINE std::optional<OneOrList<IServiceInstance::Ptr>> ServiceInstanceProvider::tryCreateInstances(
+    INLINE std::optional<OneOrList<ServiceInstance::Ptr>> ServiceInstanceProvider::tryCreateInstances(
         const TypeId serviceTypeId)
     {
         if (const auto descriptors = findDescriptors(serviceTypeId, true))
         {
             if (descriptors->isAlias())
             {
-                return tryCreateInstances(descriptors->last().getImplementationTypeId());
+                auto aliases = tryCreateInstances(descriptors->last().getImplementationTypeId());
+                tryAddOffset(aliases, descriptors->last());
+                return std::move(aliases);
             }
             return std::move(makeResolver(*descriptors).createAllInstances().getInnerList());
         }
         return std::nullopt;
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstanceProvider::createInstanceInPlace(const TypeId serviceTypeId)
+    INLINE ServiceInstance::Ptr ServiceInstanceProvider::createInstanceInPlace(const TypeId serviceTypeId)
     {
         if (auto instance = tryCreateInstanceInPlace(serviceTypeId); utils::Check::instanceValidity(instance))
         {
@@ -118,7 +122,7 @@ namespace sb::di::details::core
                                        "registered as singleton/scoped instance"};
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstanceProvider::tryCreateInstanceInPlace(const TypeId serviceTypeId)
+    INLINE ServiceInstance::Ptr ServiceInstanceProvider::tryCreateInstanceInPlace(const TypeId serviceTypeId)
     {
         if (const auto descriptors = findDescriptors(serviceTypeId, true);
             descriptors && !descriptors->isAlias() && descriptors->last().getImplementationTypeId() == serviceTypeId)
@@ -214,5 +218,29 @@ namespace sb::di::details::core
     {
         auto &creator = descriptors.getLifeTime().isSingleton() ? _root._instanceCreator : _instanceCreator;
         return ServiceInstancesResolver{creator, descriptors};
+    }
+
+    INLINE void ServiceInstanceProvider::tryAddOffset(ServiceInstance *instance, const ServiceDescriptor &descriptor)
+    {
+        if (instance && descriptor.getCastOffset())
+        {
+            instance->addGetOffset(descriptor.getCastOffset());
+        }
+    }
+
+    INLINE void ServiceInstanceProvider::tryAddOffset(std::optional<OneOrList<ServiceInstance::Ptr>> &instances,
+                                                      const ServiceDescriptor &descriptor)
+    {
+        if (instances && descriptor.getCastOffset())
+        {
+            if (instances->size() == 1)
+            {
+                return tryAddOffset(instances->first().get(), descriptor);
+            }
+            for (auto &instance : instances->getAsList())
+            {
+                tryAddOffset(instance.get(), descriptor);
+            }
+        }
     }
 } // namespace sb::di::details::core

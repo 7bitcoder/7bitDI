@@ -15,19 +15,24 @@ namespace sb::di::details::core
         _serviceProvider = &serviceProvider;
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstanceCreator::createInstance(const ServiceDescriptor &descriptor,
-                                                                        const bool inPlaceRequest)
+    INLINE ServiceInstance::Ptr ServiceInstanceCreator::createInstance(const ServiceDescriptor &descriptor,
+                                                                       const bool inPlaceRequest)
     {
         auto &provider = *utils::Require::notNullAndGet(_serviceProvider);
         auto &factory = descriptor.getImplementationFactory();
         auto _ = _guard(descriptor.getImplementationTypeId());
-        return utils::Require::validInstanceAndGet(factory.createInstance(provider, inPlaceRequest));
+        auto instance = utils::Require::validInstanceAndGet(factory.createInstance(provider, inPlaceRequest));
+        instance->addGetOffset(descriptor.getCastOffset());
+        return std::move(instance);
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstanceCreator::createInstanceAlias(TypeId serviceTypeId,
-                                                                             const IServiceInstance *instance)
+    INLINE ServiceInstance::Ptr ServiceInstanceCreator::createInstanceAlias(const ServiceDescriptor &descriptor,
+                                                                            const ServiceInstance *instance)
     {
         utils::Require::validInstance(instance);
-        return std::make_unique<services::AliasService>(instance->get(), serviceTypeId);
+        auto aliasInstance =
+            std::make_unique<services::AliasService>(instance->getAs<void>(), descriptor.getImplementationTypeId());
+        aliasInstance->addGetOffset(descriptor.getCastOffset());
+        return std::move(aliasInstance);
     }
 } // namespace sb::di::details::core

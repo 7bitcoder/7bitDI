@@ -8,10 +8,11 @@
 
 namespace sb::di
 {
-    struct IServiceInstance
+    class ServiceInstance
     {
-        using Ptr = std::unique_ptr<IServiceInstance>;
+        int _getOffset = 0;
 
+      public:
         /**
          * @brief Returns service pointer as void *
          */
@@ -43,6 +44,11 @@ namespace sb::di
          * @endcode
          */
         [[nodiscard]] virtual void *release() = 0;
+
+      public:
+        using Ptr = std::unique_ptr<ServiceInstance>;
+
+        void addGetOffset(const int offset) { _getOffset += offset; }
 
         /**
          * @brief Get the TypeId of service
@@ -77,7 +83,7 @@ namespace sb::di
          * T* service = instance->getAs<T>();
          * @endcode
          */
-        template <class T> [[nodiscard]] T *getAs() const { return static_cast<T *>(get()); }
+        template <class T> [[nodiscard]] T *getAs() const { return static_cast<T *>(applyOffset(get())); }
 
         /**
          * @brief Releases service ownership as pointer T *
@@ -88,7 +94,7 @@ namespace sb::di
          * T* service = instance->releaseAs<T>();
          * @endcode
          */
-        template <class T> T *releaseAs() { return static_cast<T *>(release()); }
+        template <class T> T *releaseAs() { return static_cast<T *>(applyOffset(release())); }
 
         /**
          * @brief Moves out service as unique_ptr<T>
@@ -110,8 +116,11 @@ namespace sb::di
          * T service = instance->moveOutAs<T>();
          * @endcode
          */
-        template <class T> T &&moveOutAs() { return std::move(*static_cast<T *>(getForMoveOut())); }
+        template <class T> T &&moveOutAs() { return std::move(*static_cast<T *>(applyOffset(getForMoveOut()))); }
 
-        virtual ~IServiceInstance() = default;
+        virtual ~ServiceInstance() = default;
+
+      private:
+        void *applyOffset(void *ptr) const { return static_cast<std::byte *>(ptr) + _getOffset; }
     };
 } // namespace sb::di

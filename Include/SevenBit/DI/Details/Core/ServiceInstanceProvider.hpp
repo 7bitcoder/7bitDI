@@ -43,16 +43,16 @@ namespace sb::di::details::core
 
         [[nodiscard]] IServiceInstanceProvider::Ptr createScope() const override;
 
-        const IServiceInstance &getInstance(TypeId serviceTypeId) override;
-        const IServiceInstance *tryGetInstance(TypeId serviceTypeId) override;
-        const OneOrList<IServiceInstance::Ptr> *tryGetInstances(TypeId serviceTypeId) override;
+        const ServiceInstance &getInstance(TypeId serviceTypeId) override;
+        const ServiceInstance *tryGetInstance(TypeId serviceTypeId) override;
+        const OneOrList<ServiceInstance::Ptr> *tryGetInstances(TypeId serviceTypeId) override;
 
-        IServiceInstance::Ptr createInstance(TypeId serviceTypeId) override;
-        IServiceInstance::Ptr tryCreateInstance(TypeId serviceTypeId) override;
-        std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateInstances(TypeId serviceTypeId) override;
+        ServiceInstance::Ptr createInstance(TypeId serviceTypeId) override;
+        ServiceInstance::Ptr tryCreateInstance(TypeId serviceTypeId) override;
+        std::optional<OneOrList<ServiceInstance::Ptr>> tryCreateInstances(TypeId serviceTypeId) override;
 
-        IServiceInstance::Ptr createInstanceInPlace(TypeId serviceTypeId) override;
-        IServiceInstance::Ptr tryCreateInstanceInPlace(TypeId serviceTypeId) override;
+        ServiceInstance::Ptr createInstanceInPlace(TypeId serviceTypeId) override;
+        ServiceInstance::Ptr tryCreateInstanceInPlace(TypeId serviceTypeId) override;
 
         void clear();
 
@@ -72,6 +72,10 @@ namespace sb::di::details::core
                                                           containers::ServiceInstanceList &instances);
 
         ServiceInstancesResolver makeResolver(const containers::ServiceDescriptorList &descriptors);
+
+        void tryAddOffset(ServiceInstance *instance, const ServiceDescriptor &descriptor);
+        void tryAddOffset(std::optional<OneOrList<ServiceInstance::Ptr>> &instances,
+                          const ServiceDescriptor &descriptor);
     };
 } // namespace sb::di::details::core
 

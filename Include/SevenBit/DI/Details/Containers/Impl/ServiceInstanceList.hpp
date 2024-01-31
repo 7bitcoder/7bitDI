@@ -4,30 +4,30 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
 #include "SevenBit/DI/Details/Utils/Require.hpp"
-#include "SevenBit/DI/IServiceInstance.hpp"
+#include "SevenBit/DI/ServiceInstance.hpp"
 
 namespace sb::di::details::containers
 {
     INLINE ServiceInstanceList::ServiceInstanceList(const size_t size) : _oneOrList(size) {}
 
-    INLINE ServiceInstanceList::ServiceInstanceList(IServiceInstance::Ptr instance)
+    INLINE ServiceInstanceList::ServiceInstanceList(ServiceInstance::Ptr instance)
         : _oneOrList(details::utils::Require::validInstanceAndGet(std::move(instance)))
     {
     }
 
-    INLINE void ServiceInstanceList::add(IServiceInstance::Ptr &&service)
+    INLINE void ServiceInstanceList::add(ServiceInstance::Ptr &&service)
     {
         _oneOrList.add(details::utils::Require::validInstanceAndGet(std::move(service)));
     }
 
-    INLINE OneOrList<IServiceInstance::Ptr> &ServiceInstanceList::getInnerList() { return _oneOrList; }
-    INLINE const OneOrList<IServiceInstance::Ptr> &ServiceInstanceList::getInnerList() const { return _oneOrList; }
+    INLINE OneOrList<ServiceInstance::Ptr> &ServiceInstanceList::getInnerList() { return _oneOrList; }
+    INLINE const OneOrList<ServiceInstance::Ptr> &ServiceInstanceList::getInnerList() const { return _oneOrList; }
 
-    INLINE IServiceInstance::Ptr &ServiceInstanceList::first() { return _oneOrList.first(); }
-    INLINE const IServiceInstance::Ptr &ServiceInstanceList::first() const { return _oneOrList.first(); }
+    INLINE ServiceInstance::Ptr &ServiceInstanceList::first() { return _oneOrList.first(); }
+    INLINE const ServiceInstance::Ptr &ServiceInstanceList::first() const { return _oneOrList.first(); }
 
-    INLINE IServiceInstance::Ptr &ServiceInstanceList::last() { return _oneOrList.last(); }
-    INLINE const IServiceInstance::Ptr &ServiceInstanceList::last() const { return _oneOrList.last(); }
+    INLINE ServiceInstance::Ptr &ServiceInstanceList::last() { return _oneOrList.last(); }
+    INLINE const ServiceInstance::Ptr &ServiceInstanceList::last() const { return _oneOrList.last(); }
 
     INLINE size_t ServiceInstanceList::size() const { return _oneOrList.size(); }
 

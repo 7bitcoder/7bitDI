@@ -6,7 +6,7 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
-#include "SevenBit/DI/IServiceInstance.hpp"
+#include "SevenBit/DI/ServiceInstance.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di::details::containers
@@ -27,7 +27,7 @@ namespace sb::di::details::containers
 
         ServiceInstancesMap &operator=(const ServiceInstancesMap &) = delete;
 
-        ServiceInstanceList &insert(TypeId serviceTypeId, IServiceInstance::Ptr instance);
+        ServiceInstanceList &insert(TypeId serviceTypeId, ServiceInstance::Ptr instance);
 
         ServiceInstanceList &insert(TypeId serviceTypeId, ServiceInstanceList instances);
 

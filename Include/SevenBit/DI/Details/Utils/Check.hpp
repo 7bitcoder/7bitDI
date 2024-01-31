@@ -3,7 +3,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/IServiceInstance.hpp"
+#include "SevenBit/DI/ServiceInstance.hpp"
 
 namespace sb::di::details::utils
 {
@@ -20,9 +20,9 @@ namespace sb::di::details::utils
             return std::is_enum_v<TEnum> && value >= 0 && value < TEnum::Count;
         }
 
-        static bool instanceValidity(const IServiceInstance::Ptr &instance);
+        static bool instanceValidity(const ServiceInstance::Ptr &instance);
 
-        static bool instanceValidity(const IServiceInstance *instance);
+        static bool instanceValidity(const ServiceInstance *instance);
     };
 } // namespace sb::di::details::utils
 

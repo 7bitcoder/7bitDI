@@ -266,7 +266,7 @@ TEST_F(ServiceFcnFactoryTest, ShouldCreateDependencyVec1Service)
 {
     ServiceProviderMock mock;
     auto test1 = std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>();
-    sb::di::OneOrList<sb::di::IServiceInstance::Ptr> result{std::move(test1)};
+    sb::di::OneOrList<sb::di::ServiceInstance::Ptr> result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryGetInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&result));
@@ -288,7 +288,7 @@ TEST_F(ServiceFcnFactoryTest, ShouldCreateDependencyVec2Service)
 {
     ServiceProviderMock mock;
     auto test1 = std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>();
-    sb::di::OneOrList<sb::di::IServiceInstance::Ptr> result{std::move(test1)};
+    sb::di::OneOrList<sb::di::ServiceInstance::Ptr> result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryGetInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&result));
@@ -312,7 +312,7 @@ TEST_F(ServiceFcnFactoryTest, ShouldCreateDependencyVec3Service)
     ServiceProviderMock mock;
     auto service = std::make_unique<TestDependencyClass>();
     auto test1 = std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service));
-    sb::di::OneOrList<sb::di::IServiceInstance::Ptr> result{std::move(test1)};
+    sb::di::OneOrList<sb::di::ServiceInstance::Ptr> result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryCreateInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(std::make_optional(std::move(result))));
@@ -335,7 +335,7 @@ TEST_F(ServiceFcnFactoryTest, ShouldCreateDependencyVec4Service)
     ServiceProviderMock mock;
     auto service = std::make_unique<TestDependencyClass>();
     auto test1 = std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service));
-    sb::di::OneOrList<sb::di::IServiceInstance::Ptr> result{std::move(test1)};
+    sb::di::OneOrList<sb::di::ServiceInstance::Ptr> result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryCreateInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(std::make_optional(std::move(result))));

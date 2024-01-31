@@ -16,6 +16,7 @@ namespace sb::di
         ServiceLifeTime _lifeTime;
         bool _isAlias;
         IServiceFactory::SPtr _implementationFactory;
+        int _castOffset;
 
       public:
         using Ptr = std::unique_ptr<ServiceDescriptor>;
@@ -26,7 +27,7 @@ namespace sb::di
          * @throws sb::di::NullPointerException
          */
         ServiceDescriptor(TypeId serviceTypeId, ServiceLifeTime lifeTime, IServiceFactory::Ptr implementationFactory,
-                          bool isAlias = false);
+                          int castOffset = 0, bool isAlias = false);
 
         ServiceDescriptor(const ServiceDescriptor &other) = default;
         ServiceDescriptor(ServiceDescriptor &&) = default;
@@ -53,6 +54,8 @@ namespace sb::di
          * @brief Get the service implementation factory
          */
         [[nodiscard]] const IServiceFactory &getImplementationFactory() const;
+
+        [[nodiscard]] int getCastOffset() const;
 
         /**
          * @brief Check if service is alias

@@ -15,7 +15,7 @@ namespace sb::di::details::core
     {
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstancesResolver::createInstance() const { return createInstance(false); }
+    INLINE ServiceInstance::Ptr ServiceInstancesResolver::createInstance() const { return createInstance(false); }
 
     INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneInstance() const
     {
@@ -33,10 +33,7 @@ namespace sb::di::details::core
         return createRestInstances(instances, false);
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstancesResolver::createInstanceInPlace() const
-    {
-        return createInstance(true);
-    }
+    INLINE ServiceInstance::Ptr ServiceInstancesResolver::createInstanceInPlace() const { return createInstance(true); }
 
     INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneInstanceInPlace() const
     {
@@ -54,26 +51,26 @@ namespace sb::di::details::core
         return createRestInstances(instances, true);
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstancesResolver::createAlias(const IServiceInstance &original) const
+    INLINE ServiceInstance::Ptr ServiceInstancesResolver::createAlias(const ServiceInstance &original) const
     {
         return createAlias(&original);
     }
 
     INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneAlias(
-        const IServiceInstance &original) const
+        const ServiceInstance &original) const
     {
         return containers::ServiceInstanceList{createAlias(&original)};
     }
 
     INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllAliases(
-        const OneOrList<IServiceInstance::Ptr> &originals) const
+        const OneOrList<ServiceInstance::Ptr> &originals) const
     {
         containers::ServiceInstanceList aliases{createAlias(originals.last().get())};
         return std::move(createRestAliases(originals, aliases));
     }
 
     INLINE containers::ServiceInstanceList &ServiceInstancesResolver::createRestAliases(
-        const OneOrList<IServiceInstance::Ptr> &originals, containers::ServiceInstanceList &instances) const
+        const OneOrList<ServiceInstance::Ptr> &originals, containers::ServiceInstanceList &instances) const
     {
         if (originals.size() > 1)
         {
@@ -92,7 +89,7 @@ namespace sb::di::details::core
         return instances;
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstancesResolver::createInstance(const bool inPlaceRequest) const
+    INLINE ServiceInstance::Ptr ServiceInstancesResolver::createInstance(const bool inPlaceRequest) const
     {
         return _creator.createInstance(_descriptors.last(), inPlaceRequest);
     }
@@ -132,9 +129,9 @@ namespace sb::di::details::core
         return instances;
     }
 
-    INLINE IServiceInstance::Ptr ServiceInstancesResolver::createAlias(const IServiceInstance *original) const
+    INLINE ServiceInstance::Ptr ServiceInstancesResolver::createAlias(const ServiceInstance *original) const
     {
-        return _creator.createInstanceAlias(_descriptors.last().getImplementationTypeId(), original);
+        return _creator.createInstanceAlias(_descriptors.last(), original);
     }
 
 } // namespace sb::di::details::core

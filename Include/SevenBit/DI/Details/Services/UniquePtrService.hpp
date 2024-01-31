@@ -4,11 +4,11 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/IServiceInstance.hpp"
+#include "SevenBit/DI/ServiceInstance.hpp"
 
 namespace sb::di::details::services
 {
-    template <class T> class UniquePtrService final : public IServiceInstance
+    template <class T> class UniquePtrService final : public ServiceInstance
     {
         std::unique_ptr<T> _service;
 
