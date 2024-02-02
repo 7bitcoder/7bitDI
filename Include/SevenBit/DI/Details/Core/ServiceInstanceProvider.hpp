@@ -45,14 +45,14 @@ namespace sb::di::details::core
 
         const ServiceInstance &getInstance(TypeId serviceTypeId) override;
         const ServiceInstance *tryGetInstance(TypeId serviceTypeId) override;
-        const OneOrList<ServiceInstance::Ptr> *tryGetInstances(TypeId serviceTypeId) override;
+        const OneOrList<ServiceInstance> *tryGetInstances(TypeId serviceTypeId) override;
 
-        ServiceInstance::Ptr createInstance(TypeId serviceTypeId) override;
-        ServiceInstance::Ptr tryCreateInstance(TypeId serviceTypeId) override;
-        std::optional<OneOrList<ServiceInstance::Ptr>> tryCreateInstances(TypeId serviceTypeId) override;
+        ServiceInstance createInstance(TypeId serviceTypeId) override;
+        ServiceInstance tryCreateInstance(TypeId serviceTypeId) override;
+        std::optional<OneOrList<ServiceInstance>> tryCreateInstances(TypeId serviceTypeId) override;
 
-        ServiceInstance::Ptr createInstanceInPlace(TypeId serviceTypeId) override;
-        ServiceInstance::Ptr tryCreateInstanceInPlace(TypeId serviceTypeId) override;
+        ServiceInstance createInstanceInPlace(TypeId serviceTypeId) override;
+        ServiceInstance tryCreateInstanceInPlace(TypeId serviceTypeId) override;
 
         void clear();
 
@@ -71,11 +71,10 @@ namespace sb::di::details::core
         containers::ServiceInstanceList *createRestAndGet(const containers::ServiceDescriptorList &descriptors,
                                                           containers::ServiceInstanceList &instances);
 
-        ServiceInstancesResolver makeResolver(const containers::ServiceDescriptorList &descriptors);
+        ServiceInstance tryCreateAlias(const ServiceDescriptor &descriptor);
+        std::optional<OneOrList<ServiceInstance>> tryCreateAliases(const ServiceDescriptor &descriptor);
 
-        void tryAddOffset(ServiceInstance *instance, const ServiceDescriptor &descriptor);
-        void tryAddOffset(std::optional<OneOrList<ServiceInstance::Ptr>> &instances,
-                          const ServiceDescriptor &descriptor);
+        ServiceInstancesResolver makeResolver(const containers::ServiceDescriptorList &descriptors);
     };
 } // namespace sb::di::details::core
 

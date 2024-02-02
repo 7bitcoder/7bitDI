@@ -106,7 +106,7 @@ namespace sb::di
         template <class TService> TService *tryGetService()
         {
             if (const auto instance = getInstanceProvider().tryGetInstance(typeid(TService));
-                details::utils::Check::instanceValidity(instance))
+                checkInstanceValidity(instance))
             {
                 return instance->getAs<TService>();
             }
@@ -128,7 +128,7 @@ namespace sb::di
         template <class TService> TService &getService()
         {
             auto &instance = getInstanceProvider().getInstance(typeid(TService));
-            details::utils::Require::validInstance(&instance);
+            requireValidInstance(instance);
             return *instance.getAs<TService>();
         }
 
@@ -150,8 +150,10 @@ namespace sb::di
         {
             if (auto instances = getInstanceProvider().tryGetInstances(typeid(TService)))
             {
-                return mapValidInstances(
-                    *instances, [](const ServiceInstance::Ptr &instance) { return instance->getAs<TService>(); });
+                return instances->map([&](const ServiceInstance &instance) {
+                    requireValidInstance(instance);
+                    return instance.getAs<TService>();
+                });
             }
             return {};
         }
@@ -169,10 +171,10 @@ namespace sb::di
          */
         template <class TService> std::unique_ptr<TService> tryCreateService()
         {
-            if (const auto instance = getInstanceProvider().tryCreateInstance(typeid(TService));
-                details::utils::Check::instanceValidity(instance))
+            if (auto instance = getInstanceProvider().tryCreateInstance(typeid(TService));
+                checkInstanceValidity(&instance))
             {
-                return instance->moveOutAsUniquePtr<TService>();
+                return instance.moveOutAsUniquePtr<TService>();
             }
             return nullptr;
         }
@@ -191,9 +193,9 @@ namespace sb::di
          */
         template <class TService> std::unique_ptr<TService> createService()
         {
-            const auto instance = getInstanceProvider().createInstance(typeid(TService));
-            details::utils::Require::validInstance(instance);
-            return instance->moveOutAsUniquePtr<TService>();
+            auto instance = getInstanceProvider().createInstance(typeid(TService));
+            requireValidInstance(instance);
+            return instance.moveOutAsUniquePtr<TService>();
         }
 
         /**
@@ -211,8 +213,8 @@ namespace sb::di
         template <class TService> TService createServiceInPlace()
         {
             const auto instance = getInstanceProvider().createInstanceInPlace(typeid(TService));
-            details::utils::Require::validInstance(instance);
-            return instance->moveOutAs<TService>();
+            requireValidInstance(instance);
+            return instance.moveOutAs<TService>();
         }
 
         /**
@@ -233,35 +235,23 @@ namespace sb::di
         {
             if (auto instances = getInstanceProvider().tryCreateInstances(typeid(TService)))
             {
-                return mapValidInstances(*instances, [](const ServiceInstance::Ptr &instance) {
-                    return instance->moveOutAsUniquePtr<TService>();
+                return instances->map([&](ServiceInstance &instance) {
+                    requireValidInstance(instance);
+                    return instance.moveOutAsUniquePtr<TService>();
                 });
             }
             return {};
         }
 
       private:
-        template <class OneOrList, class TFunc> auto mapValidInstances(OneOrList &instances, TFunc mapFunction)
+        static bool checkInstanceValidity(const ServiceInstance *instance) { return instance && instance->isValid(); }
+
+        static void requireValidInstance(const ServiceInstance &instance)
         {
-            std::vector<decltype(mapFunction(instances.first()))> result;
-            if (auto instance = instances.tryGetAsSingle())
+            if (!instance.isValid())
             {
-                if (details::utils::Check::instanceValidity(*instance))
-                {
-                    result.reserve(1);
-                    result.emplace_back(mapFunction(*instance));
-                }
-                return result;
+                throw InvalidServiceException(instance.getImplementation().getTypeId());
             }
-            result.reserve(instances.size());
-            for (auto &instance : instances.getAsList())
-            {
-                if (details::utils::Check::instanceValidity(instance))
-                {
-                    result.emplace_back(mapFunction(instance));
-                }
-            }
-            return result;
         }
     };
 } // namespace sb::di

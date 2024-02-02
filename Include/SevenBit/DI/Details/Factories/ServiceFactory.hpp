@@ -9,7 +9,7 @@
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 #include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
-#include "SevenBit/DI/ServiceInstance.hpp"
+#include "SevenBit/DI/IServiceInstance.hpp"
 
 namespace sb::di::details::factories
 {
@@ -18,7 +18,7 @@ namespace sb::di::details::factories
         using ServiceCtorInvoker = helpers::ServiceCtorInvoker<T>;
         struct InPlaceCreator
         {
-            template <class... Args> ServiceInstance::Ptr operator()(Args &&...params)
+            template <class... Args> IServiceInstance::Ptr operator()(Args &&...params)
             {
                 return std::make_unique<services::InPlaceService<T>>(std::forward<Args>(params)...);
             }
@@ -26,7 +26,7 @@ namespace sb::di::details::factories
 
         struct UniqueCreator
         {
-            template <class... Args> ServiceInstance::Ptr operator()(Args &&...params)
+            template <class... Args> IServiceInstance::Ptr operator()(Args &&...params)
             {
                 auto servicePtr = std::make_unique<T>(std::forward<Args>(params)...);
                 return std::make_unique<services::UniquePtrService<T>>(std::move(servicePtr));
@@ -34,9 +34,7 @@ namespace sb::di::details::factories
         };
 
       public:
-        [[nodiscard]] TypeId getServiceTypeId() const override { return typeid(T); }
-
-        ServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
+        IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
             ServiceCtorInvoker invoker{serviceProvider};
             if (inPlaceRequest)

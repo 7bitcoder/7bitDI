@@ -9,7 +9,7 @@
 #include "SevenBit/DI/Details/Factories/ServiceFcnFactory.hpp"
 #include "SevenBit/DI/Details/Factories/VoidServiceFactory.hpp"
 #include "SevenBit/DI/Details/Utils/Assert.hpp"
-#include "SevenBit/DI/Details/Utils/CastOffset.hpp"
+#include "SevenBit/DI/Details/Utils/Cast.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceLifeTimes.hpp"
 
@@ -108,8 +108,8 @@ namespace sb::di
             details::utils::Assert::inheritance<TService, TImplementation>();
 
             auto factory = std::make_unique<details::factories::ServiceFactory<TImplementation>>();
-            return {typeid(TService), lifetime, std::move(factory),
-                    details::utils::CastOffset<TService, TImplementation>::get()};
+            return {typeid(TService), typeid(TImplementation), lifetime, std::move(factory),
+                    details::utils::Cast::getCastOffset<TService, TImplementation>()};
         }
 
         /**
@@ -163,8 +163,8 @@ namespace sb::di
             details::utils::Assert::inheritance<TService, TImplementation>();
 
             auto factory = std::make_unique<details::factories::ExternalServiceFactory<TImplementation>>(service);
-            return {typeid(TService), ServiceLifeTimes::Singleton, std::move(factory),
-                    details::utils::CastOffset<TService, TImplementation>::get()};
+            return {typeid(TService), typeid(TImplementation), ServiceLifeTimes::Singleton, std::move(factory),
+                    details::utils::Cast::getCastOffset<TService, TImplementation>()};
         }
 
         /**
@@ -351,8 +351,8 @@ namespace sb::di
             details::utils::Assert::factoryInheritance<TRealService, TImplementation>();
 
             auto factory = std::make_unique<Factory>(std::forward<FactoryFcn>(factoryFcn));
-            return {typeid(TRealService), lifetime, std::move(factory),
-                    details::utils::CastOffset<TRealService, TImplementation>::get()};
+            return {typeid(TRealService), typeid(TImplementation), lifetime, std::move(factory),
+                    details::utils::Cast::getCastOffset<TRealService, TImplementation>()};
         }
 
         template <class TAlias, class TService> static ServiceDescriptor describeAlias()
@@ -360,9 +360,8 @@ namespace sb::di
             details::utils::Assert::aliasNotSame<TAlias, TService>();
             details::utils::Assert::aliasInheritance<TAlias, TService>();
 
-            auto factory = std::make_unique<details::factories::VoidServiceFactory<TService>>();
-            return {typeid(TAlias), ServiceLifeTimes::Scoped, std::move(factory),
-                    details::utils::CastOffset<TAlias, TService>::get(), true};
+            return {typeid(TAlias), typeid(TService), ServiceLifeTimes::Scoped, nullptr,
+                    details::utils::Cast::getCastOffset<TAlias, TService>()};
         }
     };
 } // namespace sb::di

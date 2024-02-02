@@ -11,7 +11,7 @@
 #include "SevenBit/DI/Details/Utils/IsUniquePtr.hpp"
 #include "SevenBit/DI/Details/Utils/RemoveUniquePtr.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
-#include "SevenBit/DI/ServiceInstance.hpp"
+#include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di::details::factories
@@ -33,9 +33,7 @@ namespace sb::di::details::factories
                           "Service factory return type must be std::unique_ptr<TService> or copyable/movable object");
         }
 
-        [[nodiscard]] TypeId getServiceTypeId() const override { return typeid(ServiceType); }
-
-        ServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
+        IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
             ServiceFactoryInvoker invoker{_factoryFunction, serviceProvider};
             if constexpr (utils::IsUniquePtrV<FactoryReturnType>)

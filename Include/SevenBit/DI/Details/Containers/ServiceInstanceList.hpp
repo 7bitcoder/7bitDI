@@ -11,11 +11,12 @@ namespace sb::di::details::containers
 {
     class EXPORT ServiceInstanceList
     {
-        OneOrList<ServiceInstance::Ptr> _oneOrList;
+        OneOrList<ServiceInstance> _oneOrList;
         bool _sealed = false;
 
       public:
-        explicit ServiceInstanceList(ServiceInstance::Ptr instance);
+        explicit ServiceInstanceList();
+        explicit ServiceInstanceList(ServiceInstance instance);
         explicit ServiceInstanceList(size_t size);
 
         ServiceInstanceList(const ServiceInstanceList &) = delete;
@@ -24,19 +25,19 @@ namespace sb::di::details::containers
         ServiceInstanceList &operator=(const ServiceInstanceList &) = delete;
         ServiceInstanceList &operator=(ServiceInstanceList &&) = default;
 
-        void add(ServiceInstance::Ptr &&service);
+        void add(ServiceInstance &&service);
 
         [[nodiscard]] auto begin() const { return _oneOrList.getAsList().begin(); }
         [[nodiscard]] auto end() const { return _oneOrList.getAsList().end(); }
 
-        OneOrList<ServiceInstance::Ptr> &getInnerList();
-        [[nodiscard]] const OneOrList<ServiceInstance::Ptr> &getInnerList() const;
+        OneOrList<ServiceInstance> &getInnerList();
+        [[nodiscard]] const OneOrList<ServiceInstance> &getInnerList() const;
 
-        ServiceInstance::Ptr &first();
-        [[nodiscard]] const ServiceInstance::Ptr &first() const;
+        ServiceInstance &first();
+        [[nodiscard]] const ServiceInstance &first() const;
 
-        ServiceInstance::Ptr &last();
-        [[nodiscard]] const ServiceInstance::Ptr &last() const;
+        ServiceInstance &last();
+        [[nodiscard]] const ServiceInstance &last() const;
 
         [[nodiscard]] size_t size() const;
 

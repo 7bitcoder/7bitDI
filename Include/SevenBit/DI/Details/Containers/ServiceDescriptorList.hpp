@@ -24,6 +24,9 @@ namespace sb::di::details::containers
         ServiceDescriptorList &operator=(const ServiceDescriptorList &) = delete;
         ServiceDescriptorList &operator=(ServiceDescriptorList &&) = default;
 
+        OneOrList<ServiceDescriptor> &getInnerList();
+        [[nodiscard]] const OneOrList<ServiceDescriptor> &getInnerList() const;
+
         void add(ServiceDescriptor &&descriptor);
 
         [[nodiscard]] auto begin() const { return _oneOrList.getAsList().begin(); }

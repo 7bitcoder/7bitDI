@@ -6,7 +6,6 @@
 
 #include "SevenBit/DI/Details/Utils/Check.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/ServiceInstance.hpp"
 
 namespace sb::di::details::utils
 {
@@ -67,17 +66,5 @@ namespace sb::di::details::utils
                                         std::to_string(TEnum::Count) + ")"};
             }
         }
-
-        static ServiceInstance::Ptr validInstanceAndGet(ServiceInstance::Ptr &&instance);
-
-        static ServiceInstance &validInstanceAndGet(ServiceInstance *instance);
-
-        static void validInstance(const ServiceInstance::Ptr &instance);
-
-        static void validInstance(const ServiceInstance *instance);
     };
 } // namespace sb::di::details::utils
-
-#ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Utils/Impl/Require.hpp"
-#endif

@@ -4,75 +4,44 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/TypeId.hpp"
+#include "SevenBit/DI/IServiceInstance.hpp"
 
 namespace sb::di
 {
     class ServiceInstance
     {
-        int _getOffset = 0;
-
-      public:
-        /**
-         * @brief Returns service pointer as void *
-         */
-        [[nodiscard]] virtual void *get() const = 0;
-
-        /**
-         * @brief Returns service pointer as void *,
-         * @details Method is used to ensure that service can be moved out
-         * @throws sb::di::CannotMoveOutServiceException
-         *
-         * Example:
-         * @code{.cpp}
-         * void* service = instance->getForMoveOut();
-         * @endcode
-         */
-        [[nodiscard]] virtual void *getForMoveOut() = 0;
-
-        /**
-         * @brief Releases service ownership as void *
-         * @details If instance is owner of service it will release this ownership just like
-         * std::unique_ptr<T>::release(), otherwise it will throw exception
-         * @throws sb::di::CannotReleaseServiceException
-         * @warning Using this method might cause memory leaks, client is responsible for managing this pointner
-         * lifetime, the best approach is to immediately wrap this pointer with proper std::unique_ptr<T>
-         *
-         * Example:
-         * @code{.cpp}
-         * std::unique_ptr<T> service{static_cast<T *>(instance->release())};
-         * @endcode
-         */
-        [[nodiscard]] virtual void *release() = 0;
+        IServiceInstance::Ptr _implementation;
+        ptrdiff_t _castOffset = 0;
 
       public:
         using Ptr = std::unique_ptr<ServiceInstance>;
 
-        void addGetOffset(const int offset) { _getOffset += offset; }
+        ServiceInstance() = default;
 
-        /**
-         * @brief Get the TypeId of service
-         * @details This method can be used to check if casting is safe
-         *
-         * Example:
-         * @code{.cpp}
-         * if(instance->getTypeId() == typeid(T)) {
-         *      T* service = instance->getAs<T>();
-         * }
-         * @endcode
-         */
-        [[nodiscard]] virtual TypeId getTypeId() const = 0;
+        explicit ServiceInstance(IServiceInstance::Ptr implementation, ptrdiff_t castOffset = 0);
+
+        ServiceInstance(const ServiceInstance &other) = delete;
+        ServiceInstance(ServiceInstance &&other) = default;
+
+        ServiceInstance &operator=(const ServiceInstance &other) = delete;
+        ServiceInstance &operator=(ServiceInstance &&other) = default;
+
+        IServiceInstance &getImplementation();
+
+        [[nodiscard]] const IServiceInstance &getImplementation() const;
+
+        void addCastOffset(ptrdiff_t castOffset);
 
         /**
          * @brief Checks if service instance is valid
          * @details If service instance is invalid, get and move methods might lead to undefined behaviour
          */
-        [[nodiscard]] virtual bool isValid() const = 0;
+        [[nodiscard]] bool isValid() const;
 
         /**
          * @brief Wrapper around isValid method
          */
-        explicit operator bool() const { return isValid(); }
+        explicit operator bool() const;
 
         /**
          * @brief Returns service pointer as T *
@@ -83,7 +52,10 @@ namespace sb::di
          * T* service = instance->getAs<T>();
          * @endcode
          */
-        template <class T> [[nodiscard]] T *getAs() const { return static_cast<T *>(applyOffset(get())); }
+        template <class T> [[nodiscard]] T *getAs() const
+        {
+            return static_cast<T *>(applyOffset(getImplementation().get()));
+        }
 
         /**
          * @brief Releases service ownership as pointer T *
@@ -94,7 +66,7 @@ namespace sb::di
          * T* service = instance->releaseAs<T>();
          * @endcode
          */
-        template <class T> T *releaseAs() { return static_cast<T *>(applyOffset(release())); }
+        template <class T> T *releaseAs() { return static_cast<T *>(applyOffset(getImplementation().release())); }
 
         /**
          * @brief Moves out service as unique_ptr<T>
@@ -116,11 +88,18 @@ namespace sb::di
          * T service = instance->moveOutAs<T>();
          * @endcode
          */
-        template <class T> T &&moveOutAs() { return std::move(*static_cast<T *>(applyOffset(getForMoveOut()))); }
+        template <class T> T &&moveOutAs()
+        {
+            return std::move(*static_cast<T *>(applyOffset(getImplementation().getForMoveOut())));
+        }
 
-        virtual ~ServiceInstance() = default;
+        void clear();
 
       private:
-        void *applyOffset(void *ptr) const { return static_cast<std::byte *>(ptr) + _getOffset; }
+        void *applyOffset(void *ptr) const;
     };
 } // namespace sb::di
+
+#ifdef _7BIT_DI_ADD_IMPL
+#include "SevenBit/DI/Impl/ServiceInstance.hpp"
+#endif

@@ -26,6 +26,9 @@ namespace sb::di::details::containers
         _oneOrList.add(std::move(descriptor));
     }
 
+    INLINE OneOrList<ServiceDescriptor> &ServiceDescriptorList::getInnerList() { return _oneOrList; }
+    INLINE const OneOrList<ServiceDescriptor> &ServiceDescriptorList::getInnerList() const { return _oneOrList; }
+
     INLINE const ServiceDescriptor &ServiceDescriptorList::first() const { return _oneOrList.first(); }
 
     INLINE const ServiceDescriptor &ServiceDescriptorList::last() const { return _oneOrList.last(); }

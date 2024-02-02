@@ -5,11 +5,11 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/ServiceInstance.hpp"
+#include "SevenBit/DI/IServiceInstance.hpp"
 
 namespace sb::di::details::services
 {
-    class AliasService final : public ServiceInstance
+    class AliasService final : public IServiceInstance
     {
         void *_service = nullptr;
         TypeId _serviceTypeId;

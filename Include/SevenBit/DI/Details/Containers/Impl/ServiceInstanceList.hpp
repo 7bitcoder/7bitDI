@@ -10,24 +10,28 @@ namespace sb::di::details::containers
 {
     INLINE ServiceInstanceList::ServiceInstanceList(const size_t size) : _oneOrList(size) {}
 
-    INLINE ServiceInstanceList::ServiceInstanceList(ServiceInstance::Ptr instance)
-        : _oneOrList(details::utils::Require::validInstanceAndGet(std::move(instance)))
+    INLINE ServiceInstanceList::ServiceInstanceList(ServiceInstance instance) : _oneOrList(std::move(instance)) {}
+
+    INLINE void ServiceInstanceList::add(ServiceInstance &&service)
     {
+        if (const auto single = _oneOrList.tryGetAsSingle(); single && !single->isValid())
+        {
+            *single = std::move(service);
+        }
+        else
+        {
+            _oneOrList.add(std::move(service));
+        }
     }
 
-    INLINE void ServiceInstanceList::add(ServiceInstance::Ptr &&service)
-    {
-        _oneOrList.add(details::utils::Require::validInstanceAndGet(std::move(service)));
-    }
+    INLINE OneOrList<ServiceInstance> &ServiceInstanceList::getInnerList() { return _oneOrList; }
+    INLINE const OneOrList<ServiceInstance> &ServiceInstanceList::getInnerList() const { return _oneOrList; }
 
-    INLINE OneOrList<ServiceInstance::Ptr> &ServiceInstanceList::getInnerList() { return _oneOrList; }
-    INLINE const OneOrList<ServiceInstance::Ptr> &ServiceInstanceList::getInnerList() const { return _oneOrList; }
+    INLINE ServiceInstance &ServiceInstanceList::first() { return _oneOrList.first(); }
+    INLINE const ServiceInstance &ServiceInstanceList::first() const { return _oneOrList.first(); }
 
-    INLINE ServiceInstance::Ptr &ServiceInstanceList::first() { return _oneOrList.first(); }
-    INLINE const ServiceInstance::Ptr &ServiceInstanceList::first() const { return _oneOrList.first(); }
-
-    INLINE ServiceInstance::Ptr &ServiceInstanceList::last() { return _oneOrList.last(); }
-    INLINE const ServiceInstance::Ptr &ServiceInstanceList::last() const { return _oneOrList.last(); }
+    INLINE ServiceInstance &ServiceInstanceList::last() { return _oneOrList.last(); }
+    INLINE const ServiceInstance &ServiceInstanceList::last() const { return _oneOrList.last(); }
 
     INLINE size_t ServiceInstanceList::size() const { return _oneOrList.size(); }
 
@@ -49,7 +53,7 @@ namespace sb::di::details::containers
     {
         if (const auto single = _oneOrList.tryGetAsSingle())
         {
-            single->reset();
+            single->clear();
         }
         else
         {

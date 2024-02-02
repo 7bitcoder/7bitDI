@@ -5,11 +5,11 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/ServiceInstance.hpp"
+#include "SevenBit/DI/IServiceInstance.hpp"
 
 namespace sb::di::details::services
 {
-    template <class T> class ExternalService final : public ServiceInstance
+    template <class T> class ExternalService final : public IServiceInstance
     {
         T *_service = nullptr;
 

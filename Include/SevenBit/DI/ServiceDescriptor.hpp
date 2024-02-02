@@ -13,10 +13,10 @@ namespace sb::di
     class EXPORT ServiceDescriptor
     {
         TypeId _serviceTypeId;
+        TypeId _implementationTypeId;
         ServiceLifeTime _lifeTime;
-        bool _isAlias;
         IServiceFactory::SPtr _implementationFactory;
-        int _castOffset;
+        ptrdiff_t _castOffset;
 
       public:
         using Ptr = std::unique_ptr<ServiceDescriptor>;
@@ -26,19 +26,14 @@ namespace sb::di
          * @details implementationFactory cannot be null, otherwise constructor will throw exception
          * @throws sb::di::NullPointerException
          */
-        ServiceDescriptor(TypeId serviceTypeId, ServiceLifeTime lifeTime, IServiceFactory::Ptr implementationFactory,
-                          int castOffset = 0, bool isAlias = false);
+        ServiceDescriptor(TypeId serviceTypeId, TypeId implementationTypeId, ServiceLifeTime lifeTime,
+                          IServiceFactory::Ptr implementationFactory, ptrdiff_t castOffset = 0);
 
         ServiceDescriptor(const ServiceDescriptor &other) = default;
-        ServiceDescriptor(ServiceDescriptor &&) = default;
+        ServiceDescriptor(ServiceDescriptor &&other) = default;
 
         ServiceDescriptor &operator=(const ServiceDescriptor &other) = default;
         ServiceDescriptor &operator=(ServiceDescriptor &&other) = default;
-
-        /**
-         * @brief Get the lifetime object
-         */
-        [[nodiscard]] ServiceLifeTime getLifeTime() const;
 
         /**
          * @brief Get the service TypeId
@@ -51,11 +46,16 @@ namespace sb::di
         [[nodiscard]] TypeId getImplementationTypeId() const;
 
         /**
+         * @brief Get the lifetime object
+         */
+        [[nodiscard]] ServiceLifeTime getLifeTime() const;
+
+        /**
          * @brief Get the service implementation factory
          */
         [[nodiscard]] const IServiceFactory &getImplementationFactory() const;
 
-        [[nodiscard]] int getCastOffset() const;
+        [[nodiscard]] ptrdiff_t getCastOffset() const;
 
         /**
          * @brief Check if service is alias
