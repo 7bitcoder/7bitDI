@@ -66,8 +66,19 @@ namespace sb::di::details::core
     INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllAliases(
         const OneOrList<ServiceInstance> &originals) const
     {
-        containers::ServiceInstanceList aliases{createAlias(originals.last())};
-        return std::move(createRestAliases(originals, aliases));
+        containers::ServiceInstanceList instances{createAlias(originals.first())};
+        if (const auto size = originals.size(); size > 1)
+        {
+            instances.reserve(size);
+            originals.forEach([&](const ServiceInstance &instance, const size_t index) {
+                if (index) // skip first
+                {
+                    instances.add(createAlias(instance));
+                }
+            });
+        }
+        instances.seal();
+        return instances;
     }
 
     INLINE containers::ServiceInstanceList &ServiceInstancesResolver::createRestAliases(
@@ -76,14 +87,13 @@ namespace sb::di::details::core
         if (const auto size = originals.size(); size > 1)
         {
             instances.reserve(size);
-            auto realFirst = createAlias(originals.first());
             originals.forEach([&](const ServiceInstance &instance, const size_t index) {
                 if (index && index < size - 1) // skip first and last
                 {
                     instances.add(createAlias(instance));
                 }
             });
-            instances.add(std::move(realFirst));
+            instances.add(createAlias(originals.first()));
             std::swap(instances.first(), instances.last());
         }
         instances.seal();
@@ -107,8 +117,19 @@ namespace sb::di::details::core
 
     INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllInstances(const bool inPlaceRequest) const
     {
-        containers::ServiceInstanceList instances{_creator.createInstance(_descriptors.last(), inPlaceRequest)};
-        return std::move(createRestInstances(instances, inPlaceRequest));
+        containers::ServiceInstanceList instances{_creator.createInstance(_descriptors.first(), inPlaceRequest)};
+        if (const auto size = _descriptors.size(); size > 1)
+        {
+            instances.reserve(size);
+            _descriptors.getInnerList().forEach([&](const ServiceDescriptor &descriptor, const size_t index) {
+                if (index) // skip first
+                {
+                    instances.add(_creator.createInstance(descriptor, inPlaceRequest));
+                }
+            });
+        }
+        instances.seal();
+        return instances;
     }
 
     INLINE containers::ServiceInstanceList &ServiceInstancesResolver::createRestInstances(
@@ -117,14 +138,13 @@ namespace sb::di::details::core
         if (const auto size = _descriptors.size(); size > 1)
         {
             instances.reserve(size);
-            auto realFirst = _creator.createInstance(_descriptors.first(), inPlaceRequest);
             _descriptors.getInnerList().forEach([&](const ServiceDescriptor &descriptor, const size_t index) {
                 if (index && index < size - 1) // skip first and last
                 {
                     instances.add(_creator.createInstance(descriptor, inPlaceRequest));
                 }
             });
-            instances.add(std::move(realFirst));
+            instances.add(_creator.createInstance(_descriptors.first(), inPlaceRequest));
             std::swap(instances.first(), instances.last());
         }
         instances.seal();

@@ -5,6 +5,8 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Utils/NotSupportedType.hpp"
+
 namespace sb::di
 {
     template <class T> class OneOrList
@@ -156,11 +158,11 @@ namespace sb::di
 
         template <class TFunc, class TItem> static auto callFcn(TFunc &fcn, TItem &item, size_t index)
         {
-            if constexpr (std::is_invocable_v<TFunc, TItem>)
+            if constexpr (std::is_invocable_v<TFunc, TItem &>)
             {
                 return fcn(item);
             }
-            else if constexpr (std::is_invocable_v<TFunc, TItem, size_t>)
+            else if constexpr (std::is_invocable_v<TFunc, TItem &, size_t>)
             {
                 return fcn(item, index);
             }
@@ -173,7 +175,7 @@ namespace sb::di
         template <class TFunc> static void badFunctor()
         {
             static_assert(details::utils::notSupportedType<TFunc>,
-                          "Functor should contain as arguments: T, additionally index");
+                          "Functor should take as arguments: T and additionally index");
         }
     };
 

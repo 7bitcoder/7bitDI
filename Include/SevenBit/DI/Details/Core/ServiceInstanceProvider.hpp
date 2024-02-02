@@ -24,14 +24,12 @@ namespace sb::di::details::core
         ServiceInstanceProviderRoot &_root;
         containers::ServiceInstancesMap _scoped;
 
-        using ServiceDescriptorList = containers::ServiceDescriptorList;
-
       public:
         using Ptr = std::unique_ptr<ServiceInstanceProvider>;
 
         ServiceInstanceProvider(ServiceInstanceProviderRoot &root, ServiceProviderOptions options);
 
-        ServiceInstanceProvider(ServiceInstanceProvider &&) noexcept = delete;
+        ServiceInstanceProvider(ServiceInstanceProvider &&) = delete;
         ServiceInstanceProvider(const ServiceInstanceProvider &) = delete;
 
         ServiceInstanceProvider &operator=(const ServiceInstanceProvider &) = delete;

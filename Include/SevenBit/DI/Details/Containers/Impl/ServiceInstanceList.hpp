@@ -12,17 +12,7 @@ namespace sb::di::details::containers
 
     INLINE ServiceInstanceList::ServiceInstanceList(ServiceInstance instance) : _oneOrList(std::move(instance)) {}
 
-    INLINE void ServiceInstanceList::add(ServiceInstance &&service)
-    {
-        if (const auto single = _oneOrList.tryGetAsSingle(); single && !single->isValid())
-        {
-            *single = std::move(service);
-        }
-        else
-        {
-            _oneOrList.add(std::move(service));
-        }
-    }
+    INLINE void ServiceInstanceList::add(ServiceInstance &&service) { _oneOrList.add(std::move(service)); }
 
     INLINE OneOrList<ServiceInstance> &ServiceInstanceList::getInnerList() { return _oneOrList; }
     INLINE const OneOrList<ServiceInstance> &ServiceInstanceList::getInnerList() const { return _oneOrList; }

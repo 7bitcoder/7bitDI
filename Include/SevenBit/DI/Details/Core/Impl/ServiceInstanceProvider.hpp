@@ -166,11 +166,8 @@ namespace sb::di::details::core
     {
         if (descriptors.isAlias())
         {
-            if (const auto original = tryGetInstance(descriptors.last().getImplementationTypeId()))
-            {
-                return makeResolver(descriptors).createOneAlias(*original);
-            }
-            return std::nullopt;
+            const auto original = tryGetInstance(descriptors.last().getImplementationTypeId());
+            return original ? std::make_optional(makeResolver(descriptors).createOneAlias(*original)) : std::nullopt;
         }
         return makeResolver(descriptors).createOneInstanceInPlace();
     }
@@ -180,11 +177,9 @@ namespace sb::di::details::core
     {
         if (descriptors.isAlias())
         {
-            if (const auto originals = tryGetInstances(descriptors.last().getImplementationTypeId()))
-            {
-                return makeResolver(descriptors).createAllAliases(*originals);
-            }
-            return std::nullopt;
+            const auto originals = tryGetInstances(descriptors.last().getImplementationTypeId());
+            return originals ? std::make_optional(makeResolver(descriptors).createAllAliases(*originals))
+                             : std::nullopt;
         }
         return makeResolver(descriptors).createAllInstancesInPlace();
     }
@@ -194,11 +189,8 @@ namespace sb::di::details::core
     {
         if (descriptors.isAlias())
         {
-            if (const auto originals = tryGetInstances(descriptors.last().getImplementationTypeId()))
-            {
-                return &makeResolver(descriptors).createRestAliases(*originals, instances);
-            }
-            return nullptr;
+            const auto originals = tryGetInstances(descriptors.last().getImplementationTypeId());
+            return originals ? &makeResolver(descriptors).createRestAliases(*originals, instances) : nullptr;
         }
         return &makeResolver(descriptors).createRestInstancesInPlace(instances);
     }

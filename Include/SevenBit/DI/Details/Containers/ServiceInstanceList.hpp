@@ -15,7 +15,6 @@ namespace sb::di::details::containers
         bool _sealed = false;
 
       public:
-        explicit ServiceInstanceList();
         explicit ServiceInstanceList(ServiceInstance instance);
         explicit ServiceInstanceList(size_t size);
 
