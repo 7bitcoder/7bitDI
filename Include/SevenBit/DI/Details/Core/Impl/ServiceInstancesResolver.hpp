@@ -87,13 +87,14 @@ namespace sb::di::details::core
         if (const auto size = originals.size(); size > 1)
         {
             instances.reserve(size);
+            auto first = createAlias(originals.first());
             originals.forEach([&](const ServiceInstance &instance, const size_t index) {
                 if (index && index < size - 1) // skip first and last
                 {
                     instances.add(createAlias(instance));
                 }
             });
-            instances.add(createAlias(originals.first()));
+            instances.add(std::move(first));
             std::swap(instances.first(), instances.last());
         }
         instances.seal();
@@ -138,13 +139,14 @@ namespace sb::di::details::core
         if (const auto size = _descriptors.size(); size > 1)
         {
             instances.reserve(size);
+            auto first = _creator.createInstance(_descriptors.first(), inPlaceRequest);
             _descriptors.getInnerList().forEach([&](const ServiceDescriptor &descriptor, const size_t index) {
                 if (index && index < size - 1) // skip first and last
                 {
                     instances.add(_creator.createInstance(descriptor, inPlaceRequest));
                 }
             });
-            instances.add(_creator.createInstance(_descriptors.first(), inPlaceRequest));
+            instances.add(std::move(first));
             std::swap(instances.first(), instances.last());
         }
         instances.seal();

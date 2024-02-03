@@ -53,19 +53,3 @@ TEST_F(CheckTest, ShouldCheckEnum)
     EXPECT_TRUE(sb::di::details::utils::Check::enumValidity(TestEnum::B));
     EXPECT_TRUE(sb::di::details::utils::Check::enumValidity(TestEnum::C));
 }
-
-TEST_F(CheckTest, ShouldCheckInstanceValidity)
-{
-    TestClass1 test;
-    EXPECT_FALSE(sb::di::details::utils::Check::instanceValidity(nullptr));
-    EXPECT_FALSE(sb::di::details::utils::Check::instanceValidity(
-        std::make_unique<sb::di::details::services::ExternalService<TestClass1>>(nullptr)));
-    EXPECT_TRUE(sb::di::details::utils::Check::instanceValidity(
-        std::make_unique<sb::di::details::services::ExternalService<TestClass1>>(&test)));
-    EXPECT_FALSE(sb::di::details::utils::Check::instanceValidity(
-        std::make_unique<sb::di::details::services::UniquePtrService<TestClass1>>(nullptr)));
-    EXPECT_TRUE(sb::di::details::utils::Check::instanceValidity(
-        std::make_unique<sb::di::details::services::UniquePtrService<TestClass1>>(std::make_unique<TestClass1>())));
-    EXPECT_TRUE(sb::di::details::utils::Check::instanceValidity(
-        std::make_unique<sb::di::details::services::InPlaceService<TestClass1>>()));
-}

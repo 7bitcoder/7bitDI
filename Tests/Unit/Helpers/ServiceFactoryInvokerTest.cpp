@@ -25,7 +25,7 @@ class ServiceFactoryInvokerTest : public testing::Test
 TEST_F(ServiceFactoryInvokerTest, ShouldInvokeFuncFactory)
 {
     ServiceProviderMock mock;
-    sb::di::details::services::InPlaceService<TestDependencyClass> test1;
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
     EXPECT_CALL(mock.getMock(), tryGetInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&test1));

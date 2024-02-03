@@ -24,6 +24,7 @@ namespace sb::di
 
     struct EXPORT InvalidServiceException : InjectorException
     {
+        explicit InvalidServiceException();
         explicit InvalidServiceException(TypeId typeId);
     };
 

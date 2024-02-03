@@ -28,28 +28,29 @@ TEST_F(ServiceDescriptorTest, ShouldConstructDescriptor)
 {
     auto factory = std::make_unique<sb::di::details::factories::ServiceFactory<TestClass1>>();
     auto act = [&] {
-        sb::di::ServiceDescriptor descriptor{typeid(TestClass1), sb::di::ServiceLifeTime::singleton(),
-                                             std::move(factory)};
+        sb::di::ServiceDescriptor descriptor{typeid(TestClass1), typeid(TestClass1),
+                                             sb::di::ServiceLifeTime::singleton(), std::move(factory)};
     };
 
     EXPECT_NO_THROW(act());
 }
 
-TEST_F(ServiceDescriptorTest, ShouldFailConstructDescriptor)
+TEST_F(ServiceDescriptorTest, ShouldNotFailConstructNullFactoryDescriptor)
 {
     auto act = [&] {
-        sb::di::ServiceDescriptor descriptor{typeid(TestClass1), sb::di::ServiceLifeTime::singleton(), nullptr};
+        sb::di::ServiceDescriptor descriptor{typeid(TestClass1), typeid(TestClass1),
+                                             sb::di::ServiceLifeTime::singleton(), nullptr};
     };
 
-    EXPECT_THROW(act(), sb::di::NullPointerException);
+    EXPECT_NO_THROW(act());
 }
 
 TEST_F(ServiceDescriptorTest, ShouldGetProperInfoFromDescriptor)
 {
     auto factory = std::make_unique<sb::di::details::factories::ServiceFactory<TestClass1>>();
     const auto factoryPtr = factory.get();
-    const sb::di::ServiceDescriptor descriptor{typeid(TestClass1), sb::di::ServiceLifeTime::singleton(),
-                                               std::move(factory)};
+    const sb::di::ServiceDescriptor descriptor{typeid(TestClass1), typeid(TestClass1),
+                                               sb::di::ServiceLifeTime::singleton(), std::move(factory)};
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
@@ -60,27 +61,26 @@ TEST_F(ServiceDescriptorTest, ShouldGetProperInfoFromDescriptor)
 
 TEST_F(ServiceDescriptorTest, ShouldGetProperInfoFromAliasDescriptor)
 {
-    auto factory = std::make_unique<sb::di::details::factories::ServiceFactory<TestClass1>>();
-    const auto factoryPtr = factory.get();
-    const sb::di::ServiceDescriptor descriptor{typeid(TestClass1), sb::di::ServiceLifeTime::singleton(),
-                                               std::move(factory), 0, true};
+    const sb::di::ServiceDescriptor descriptor{typeid(TestClass1), typeid(TestClass1),
+                                               sb::di::ServiceLifeTime::singleton(), nullptr};
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestClass1));
-    EXPECT_EQ(&descriptor.getImplementationFactory(), factoryPtr);
     EXPECT_TRUE(descriptor.isAlias());
+    auto getFactory = [&] { auto &f = descriptor.getImplementationFactory(); };
+    EXPECT_THROW((getFactory()), sb::di::NullPointerException);
 }
 
 TEST_F(ServiceDescriptorTest, ShouldCompareDescriptors)
 {
     auto factory = std::make_unique<sb::di::details::factories::ServiceFactory<TestClass1>>();
-    const sb::di::ServiceDescriptor descriptor{typeid(TestClass1), sb::di::ServiceLifeTime::singleton(),
-                                               std::move(factory)};
+    const sb::di::ServiceDescriptor descriptor{typeid(TestClass1), typeid(TestClass1),
+                                               sb::di::ServiceLifeTime::singleton(), std::move(factory)};
 
     auto factory2 = std::make_unique<sb::di::details::factories::ServiceFactory<TestClass1>>();
-    const sb::di::ServiceDescriptor descriptor2{typeid(TestClass1), sb::di::ServiceLifeTime::singleton(),
-                                                std::move(factory2)};
+    const sb::di::ServiceDescriptor descriptor2{typeid(TestClass1), typeid(TestClass1),
+                                                sb::di::ServiceLifeTime::singleton(), std::move(factory2)};
 
     const auto &descriptorCopy = descriptor;
     EXPECT_EQ(descriptor, descriptorCopy);

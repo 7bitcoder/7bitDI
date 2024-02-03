@@ -12,6 +12,11 @@ namespace sb::di
 
     INLINE NullPointerException::NullPointerException(const std::string &why) : InjectorException{why} {}
 
+    INLINE InvalidServiceException::InvalidServiceException()
+        : InjectorException{std::string{"Service is in not valid state."}}
+    {
+    }
+
     INLINE InvalidServiceException::InvalidServiceException(const TypeId typeId)
         : InjectorException{std::string{"Service: '"} + typeId.name() + "' is in not valid state."}
     {

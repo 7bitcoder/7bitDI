@@ -34,8 +34,6 @@ TEST_F(ServiceFactoryTest, ShouldCreateService)
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
     EXPECT_TRUE(dynamic_cast<sb::di::details::services::UniquePtrService<TestClass1> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestClass1));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
 TEST_F(ServiceFactoryTest, ShouldCreateInPlaceService)
@@ -49,14 +47,12 @@ TEST_F(ServiceFactoryTest, ShouldCreateInPlaceService)
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
     EXPECT_TRUE(dynamic_cast<sb::di::details::services::InPlaceService<TestClass1> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestClass1));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
 TEST_F(ServiceFactoryTest, ShouldCreateDependencyInPlaceService)
 {
     ServiceProviderMock mock;
-    auto test1 = std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>();
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
     EXPECT_CALL(mock.getMock(), createInstanceInPlace(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(std::move(test1)));
@@ -69,14 +65,12 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyInPlaceService)
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
     EXPECT_TRUE(dynamic_cast<sb::di::details::services::InPlaceService<TestDependencyInPlaceClass> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyInPlaceClass));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
 TEST_F(ServiceFactoryTest, ShouldCreateDependencyPtr1Service)
 {
     ServiceProviderMock mock;
-    sb::di::details::services::InPlaceService<TestDependencyClass> test1;
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
     EXPECT_CALL(mock.getMock(), tryGetInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&test1));
@@ -89,14 +83,12 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyPtr1Service)
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
     EXPECT_TRUE(dynamic_cast<sb::di::details::services::InPlaceService<TestDependencyPtrClass1> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyPtrClass1));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
 TEST_F(ServiceFactoryTest, ShouldCreateDependencyPtr2Service)
 {
     ServiceProviderMock mock;
-    sb::di::details::services::InPlaceService<TestDependencyClass> test1;
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
     EXPECT_CALL(mock.getMock(), tryGetInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&test1));
@@ -109,14 +101,12 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyPtr2Service)
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
     EXPECT_TRUE(dynamic_cast<sb::di::details::services::InPlaceService<TestDependencyPtrClass2> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyPtrClass2));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
 TEST_F(ServiceFactoryTest, ShouldCreateDependencyPtr3Service)
 {
     ServiceProviderMock mock;
-    sb::di::details::services::InPlaceService<TestDependencyClass> test1;
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
     EXPECT_CALL(mock.getMock(), tryGetInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&test1));
@@ -129,14 +119,12 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyPtr3Service)
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
     EXPECT_TRUE(dynamic_cast<sb::di::details::services::InPlaceService<TestDependencyPtrClass3> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyPtrClass3));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
 TEST_F(ServiceFactoryTest, ShouldCreateDependencyPtr4Service)
 {
     ServiceProviderMock mock;
-    sb::di::details::services::InPlaceService<TestDependencyClass> test1;
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
     EXPECT_CALL(mock.getMock(), tryGetInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&test1));
@@ -149,14 +137,12 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyPtr4Service)
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
     EXPECT_TRUE(dynamic_cast<sb::di::details::services::InPlaceService<TestDependencyPtrClass4> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyPtrClass4));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
 TEST_F(ServiceFactoryTest, ShouldCreateDependencyRef1Service)
 {
     ServiceProviderMock mock;
-    sb::di::details::services::InPlaceService<TestDependencyClass> test1;
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
     EXPECT_CALL(mock.getMock(), getInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::ReturnRef(test1));
@@ -169,14 +155,12 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyRef1Service)
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
     EXPECT_TRUE(dynamic_cast<sb::di::details::services::InPlaceService<TestDependencyRefClass1> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyRefClass1));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
 TEST_F(ServiceFactoryTest, ShouldCreateDependencyRef2Service)
 {
     ServiceProviderMock mock;
-    sb::di::details::services::InPlaceService<TestDependencyClass> test1;
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
     EXPECT_CALL(mock.getMock(), getInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::ReturnRef(test1));
@@ -189,15 +173,14 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyRef2Service)
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
     EXPECT_TRUE(dynamic_cast<sb::di::details::services::InPlaceService<TestDependencyRefClass2> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyRefClass2));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
 TEST_F(ServiceFactoryTest, ShouldCreateDependencyUniq1Service)
 {
     ServiceProviderMock mock;
     auto service = std::make_unique<TestDependencyClass>();
-    auto test1 = std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service));
+    sb::di::ServiceInstance test1{
+        std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service))};
 
     EXPECT_CALL(mock.getMock(), createInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(std::move(test1)));
@@ -211,15 +194,14 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyUniq1Service)
     EXPECT_TRUE(instance->get());
     EXPECT_TRUE(
         dynamic_cast<sb::di::details::services::InPlaceService<TestDependencyUniquePtrClass1> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyUniquePtrClass1));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
 TEST_F(ServiceFactoryTest, ShouldCreateDependencyUniq2Service)
 {
     ServiceProviderMock mock;
     auto service = std::make_unique<TestDependencyClass>();
-    auto test1 = std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service));
+    sb::di::ServiceInstance test1{
+        std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service))};
 
     EXPECT_CALL(mock.getMock(), createInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(std::move(test1)));
@@ -233,15 +215,14 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyUniq2Service)
     EXPECT_TRUE(instance->get());
     EXPECT_TRUE(
         dynamic_cast<sb::di::details::services::InPlaceService<TestDependencyUniquePtrClass2> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyUniquePtrClass2));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
 TEST_F(ServiceFactoryTest, ShouldCreateDependencyVec1Service)
 {
     ServiceProviderMock mock;
-    auto test1 = std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>();
-    sb::di::OneOrList<sb::di::ServiceInstance::Ptr> result{std::move(test1)};
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
+
+    sb::di::OneOrList<sb::di::ServiceInstance> result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryGetInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&result));
@@ -254,15 +235,14 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyVec1Service)
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
     EXPECT_TRUE(dynamic_cast<sb::di::details::services::InPlaceService<TestDependencyVecClass1> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyVecClass1));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
 TEST_F(ServiceFactoryTest, ShouldCreateDependencyVec2Service)
 {
     ServiceProviderMock mock;
-    auto test1 = std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>();
-    sb::di::OneOrList<sb::di::ServiceInstance::Ptr> result{std::move(test1)};
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
+
+    sb::di::OneOrList<sb::di::ServiceInstance> result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryGetInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&result));
@@ -275,16 +255,15 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyVec2Service)
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
     EXPECT_TRUE(dynamic_cast<sb::di::details::services::InPlaceService<TestDependencyVecClass2> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyVecClass2));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
 TEST_F(ServiceFactoryTest, ShouldCreateDependencyVec3Service)
 {
     ServiceProviderMock mock;
     auto service = std::make_unique<TestDependencyClass>();
-    auto test1 = std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service));
-    sb::di::OneOrList<sb::di::ServiceInstance::Ptr> result{std::move(test1)};
+    sb::di::ServiceInstance test1{
+        std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service))};
+    sb::di::OneOrList<sb::di::ServiceInstance> result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryCreateInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(std::make_optional(std::move(result))));
@@ -297,16 +276,16 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyVec3Service)
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
     EXPECT_TRUE(dynamic_cast<sb::di::details::services::InPlaceService<TestDependencyVecClass3> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyVecClass3));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
 TEST_F(ServiceFactoryTest, ShouldCreateDependencyVec4Service)
 {
     ServiceProviderMock mock;
     auto service = std::make_unique<TestDependencyClass>();
-    auto test1 = std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service));
-    sb::di::OneOrList<sb::di::ServiceInstance::Ptr> result{std::move(test1)};
+    sb::di::ServiceInstance test1{
+        std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service))};
+
+    sb::di::OneOrList<sb::di::ServiceInstance> result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryCreateInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(std::make_optional(std::move(result))));
@@ -319,6 +298,4 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyVec4Service)
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
     EXPECT_TRUE(dynamic_cast<sb::di::details::services::InPlaceService<TestDependencyVecClass4> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestDependencyVecClass4));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }

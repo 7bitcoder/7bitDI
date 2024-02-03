@@ -7,7 +7,6 @@
 #include "SevenBit/DI/Details/Factories/ExternalServiceFactory.hpp"
 #include "SevenBit/DI/Details/Factories/ServiceFactory.hpp"
 #include "SevenBit/DI/Details/Factories/ServiceFcnFactory.hpp"
-#include "SevenBit/DI/Details/Factories/VoidServiceFactory.hpp"
 #include "SevenBit/DI/Details/Utils/Assert.hpp"
 #include "SevenBit/DI/Details/Utils/Cast.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"

@@ -212,7 +212,7 @@ namespace sb::di
          */
         template <class TService> TService createServiceInPlace()
         {
-            const auto instance = getInstanceProvider().createInstanceInPlace(typeid(TService));
+            auto instance = getInstanceProvider().createInstanceInPlace(typeid(TService));
             requireValidInstance(instance);
             return instance.moveOutAs<TService>();
         }
@@ -250,7 +250,7 @@ namespace sb::di
         {
             if (!instance.isValid())
             {
-                throw InvalidServiceException(instance.getImplementation().getTypeId());
+                throw InvalidServiceException();
             }
         }
     };

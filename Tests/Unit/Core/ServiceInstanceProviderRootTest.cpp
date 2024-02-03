@@ -265,7 +265,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldGetSelf)
     provider.init(mock);
 
     auto &self = provider.getInstance(typeid(sb::di::ServiceProvider));
-    EXPECT_EQ(self.get(), &mock);
+    EXPECT_EQ(self.getAs<void>(), &mock);
 }
 
 TEST_F(ServiceInstanceProviderRootTest, ShouldGetInstances)
@@ -303,11 +303,11 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldGetInstancesInOrder)
 
     auto &services = *provider.tryGetInstances(typeid(TestInheritClass1));
     EXPECT_EQ(services.size(), 5);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[0]->get())->number(), 1);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[1]->get())->number(), 2);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[2]->get())->number(), 3);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[3]->get())->number(), 4);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[4]->get())->number(), 5);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[0].getAs<void>())->number(), 1);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[1].getAs<void>())->number(), 2);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[2].getAs<void>())->number(), 3);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[3].getAs<void>())->number(), 4);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[4].getAs<void>())->number(), 5);
     EXPECT_FALSE(provider.tryGetInstances(typeid(TestInheritClass5)));
     EXPECT_FALSE(provider.tryGetInstances(typeid(TestInheritClass4)));
 }
@@ -329,11 +329,11 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldGetAliasInstancesInOrder)
 
     auto &services = *provider.tryGetInstances(typeid(TestInheritClass1));
     EXPECT_EQ(services.size(), 5);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[0]->get())->number(), 2);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[1]->get())->number(), 3);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[2]->get())->number(), 4);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[3]->get())->number(), 5);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[4]->get())->number(), 6);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[0].getAs<void>())->number(), 2);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[1].getAs<void>())->number(), 3);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[2].getAs<void>())->number(), 4);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[3].getAs<void>())->number(), 5);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[4].getAs<void>())->number(), 6);
 }
 
 TEST_F(ServiceInstanceProviderRootTest, ShouldTryCreateInstance)
@@ -502,11 +502,11 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldCreateInstancesInOrder)
 
     auto services = *provider.tryCreateInstances(typeid(TestInheritClass1));
     EXPECT_EQ(services.size(), 5);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[0]->get())->number(), 1);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[1]->get())->number(), 2);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[2]->get())->number(), 3);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[3]->get())->number(), 4);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[4]->get())->number(), 5);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[0].getAs<void>())->number(), 1);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[1].getAs<void>())->number(), 2);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[2].getAs<void>())->number(), 3);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[3].getAs<void>())->number(), 4);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[4].getAs<void>())->number(), 5);
     EXPECT_FALSE(provider.tryCreateInstances(typeid(TestInheritClass5)));
     EXPECT_FALSE(provider.tryCreateInstances(typeid(TestInheritClass6)));
 }
@@ -528,9 +528,9 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldCreateAliasInstancesInOrder)
 
     auto services = *provider.tryCreateInstances(typeid(TestInheritClass1));
     EXPECT_EQ(services.size(), 5);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[0]->get())->number(), 2);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[1]->get())->number(), 3);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[2]->get())->number(), 4);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[3]->get())->number(), 5);
-    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[4]->get())->number(), 6);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[0].getAs<void>())->number(), 2);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[1].getAs<void>())->number(), 3);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[2].getAs<void>())->number(), 4);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[3].getAs<void>())->number(), 5);
+    EXPECT_EQ(static_cast<TestInheritClass1 *>(services[4].getAs<void>())->number(), 6);
 }

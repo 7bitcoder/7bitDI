@@ -39,9 +39,9 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateInstance)
     const auto instance = resolver.createInstance();
 
     EXPECT_TRUE(instance);
-    EXPECT_TRUE(instance->isValid());
-    EXPECT_TRUE(instance->get());
-    EXPECT_EQ(instance->getTypeId(), typeid(TestClass1));
+    EXPECT_TRUE(instance.isValid());
+    EXPECT_TRUE(instance.getAs<void>());
+    EXPECT_EQ(instance.getImplementation().getTypeId(), typeid(TestClass1));
 }
 
 TEST_F(ServiceInstanceResolverTest, ShouldCreateInheritedInstance)
@@ -59,9 +59,9 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateInheritedInstance)
     const auto instance = resolver.createInstance();
 
     EXPECT_TRUE(instance);
-    EXPECT_TRUE(instance->isValid());
-    EXPECT_TRUE(instance->get());
-    EXPECT_EQ(instance->getTypeId(), typeid(TestInheritClass4));
+    EXPECT_TRUE(instance.isValid());
+    EXPECT_TRUE(instance.getAs<void>());
+    EXPECT_EQ(instance.getImplementation().getTypeId(), typeid(TestInheritClass4));
 }
 
 TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInstance)
@@ -78,9 +78,9 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInstance)
 
     EXPECT_EQ(instances.size(), 1);
     EXPECT_TRUE(instances.isSealed());
-    EXPECT_TRUE(instances.getInnerList()[0]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[0]->get());
-    EXPECT_EQ(instances.getInnerList()[0]->getTypeId(), typeid(TestClass1));
+    EXPECT_TRUE(instances.getInnerList()[0].isValid());
+    EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[0].getImplementation().getTypeId(), typeid(TestClass1));
 }
 
 TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInheritedInstance)
@@ -99,9 +99,9 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInheritedInstance)
 
     EXPECT_EQ(instances.size(), 1);
     EXPECT_FALSE(instances.isSealed());
-    EXPECT_TRUE(instances.getInnerList()[0]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[0]->get());
-    EXPECT_EQ(instances.getInnerList()[0]->getTypeId(), typeid(TestInheritClass4));
+    EXPECT_TRUE(instances.getInnerList()[0].isValid());
+    EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[0].getImplementation().getTypeId(), typeid(TestInheritClass4));
 }
 
 TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInstances)
@@ -118,9 +118,9 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInstances)
 
     EXPECT_EQ(instances.size(), 1);
     EXPECT_TRUE(instances.isSealed());
-    EXPECT_TRUE(instances.getInnerList()[0]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[0]->get());
-    EXPECT_EQ(instances.getInnerList()[0]->getTypeId(), typeid(TestClass1));
+    EXPECT_TRUE(instances.getInnerList()[0].isValid());
+    EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[0].getImplementation().getTypeId(), typeid(TestClass1));
 }
 
 TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInheritedInstances)
@@ -139,15 +139,15 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInheritedInstances)
 
     EXPECT_EQ(instances.size(), 3);
     EXPECT_TRUE(instances.isSealed());
-    EXPECT_TRUE(instances.getInnerList()[0]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[0]->get());
-    EXPECT_EQ(instances.getInnerList()[0]->getTypeId(), typeid(TestInheritClass3));
-    EXPECT_TRUE(instances.getInnerList()[1]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[1]->get());
-    EXPECT_EQ(instances.getInnerList()[1]->getTypeId(), typeid(TestInheritClass5));
-    EXPECT_TRUE(instances.getInnerList()[2]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[2]->get());
-    EXPECT_EQ(instances.getInnerList()[2]->getTypeId(), typeid(TestInheritClass4));
+    EXPECT_TRUE(instances.getInnerList()[0].isValid());
+    EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[0].getImplementation().getTypeId(), typeid(TestInheritClass3));
+    EXPECT_TRUE(instances.getInnerList()[1].isValid());
+    EXPECT_TRUE(instances.getInnerList()[1].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[1].getImplementation().getTypeId(), typeid(TestInheritClass5));
+    EXPECT_TRUE(instances.getInnerList()[2].isValid());
+    EXPECT_TRUE(instances.getInnerList()[2].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[2].getImplementation().getTypeId(), typeid(TestInheritClass4));
 }
 
 TEST_F(ServiceInstanceResolverTest, ShouldCreateRestInheritedInstances)
@@ -163,20 +163,20 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateRestInheritedInstances)
     const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
 
     sb::di::details::containers::ServiceInstanceList instances{
-        descriptors.last().getImplementationFactory().createInstance(mock, false)};
+        sb::di::ServiceInstance{descriptors.last().getImplementationFactory().createInstance(mock, false)}};
     resolver.createRestInstances(instances);
 
     EXPECT_EQ(instances.size(), 3);
     EXPECT_TRUE(instances.isSealed());
-    EXPECT_TRUE(instances.getInnerList()[0]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[0]->get());
-    EXPECT_EQ(instances.getInnerList()[0]->getTypeId(), typeid(TestInheritClass3));
-    EXPECT_TRUE(instances.getInnerList()[1]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[1]->get());
-    EXPECT_EQ(instances.getInnerList()[1]->getTypeId(), typeid(TestInheritClass5));
-    EXPECT_TRUE(instances.getInnerList()[2]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[2]->get());
-    EXPECT_EQ(instances.getInnerList()[2]->getTypeId(), typeid(TestInheritClass4));
+    EXPECT_TRUE(instances.getInnerList()[0].isValid());
+    EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[0].getImplementation().getTypeId(), typeid(TestInheritClass3));
+    EXPECT_TRUE(instances.getInnerList()[1].isValid());
+    EXPECT_TRUE(instances.getInnerList()[1].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[1].getImplementation().getTypeId(), typeid(TestInheritClass5));
+    EXPECT_TRUE(instances.getInnerList()[2].isValid());
+    EXPECT_TRUE(instances.getInnerList()[2].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[2].getImplementation().getTypeId(), typeid(TestInheritClass4));
 }
 
 TEST_F(ServiceInstanceResolverTest, ShouldCreateInstanceInPlace)
@@ -192,9 +192,9 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateInstanceInPlace)
     const auto instance = resolver.createInstanceInPlace();
 
     EXPECT_TRUE(instance);
-    EXPECT_TRUE(instance->isValid());
-    EXPECT_TRUE(instance->get());
-    EXPECT_EQ(instance->getTypeId(), typeid(TestClass1));
+    EXPECT_TRUE(instance.isValid());
+    EXPECT_TRUE(instance.getAs<void>());
+    EXPECT_EQ(instance.getImplementation().getTypeId(), typeid(TestClass1));
 }
 
 TEST_F(ServiceInstanceResolverTest, ShouldCreateInheritedInstanceInPlace)
@@ -212,9 +212,9 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateInheritedInstanceInPlace)
     const auto instance = resolver.createInstanceInPlace();
 
     EXPECT_TRUE(instance);
-    EXPECT_TRUE(instance->isValid());
-    EXPECT_TRUE(instance->get());
-    EXPECT_EQ(instance->getTypeId(), typeid(TestInheritClass4));
+    EXPECT_TRUE(instance.isValid());
+    EXPECT_TRUE(instance.getAs<void>());
+    EXPECT_EQ(instance.getImplementation().getTypeId(), typeid(TestInheritClass4));
 }
 
 TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInstanceInPlace)
@@ -231,9 +231,9 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInstanceInPlace)
 
     EXPECT_EQ(instances.size(), 1);
     EXPECT_TRUE(instances.isSealed());
-    EXPECT_TRUE(instances.getInnerList()[0]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[0]->get());
-    EXPECT_EQ(instances.getInnerList()[0]->getTypeId(), typeid(TestClass1));
+    EXPECT_TRUE(instances.getInnerList()[0].isValid());
+    EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[0].getImplementation().getTypeId(), typeid(TestClass1));
 }
 
 TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInheritedInstanceInPlace)
@@ -252,9 +252,9 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInheritedInstanceInPlace)
 
     EXPECT_EQ(instances.size(), 1);
     EXPECT_FALSE(instances.isSealed());
-    EXPECT_TRUE(instances.getInnerList()[0]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[0]->get());
-    EXPECT_EQ(instances.getInnerList()[0]->getTypeId(), typeid(TestInheritClass4));
+    EXPECT_TRUE(instances.getInnerList()[0].isValid());
+    EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[0].getImplementation().getTypeId(), typeid(TestInheritClass4));
 }
 
 TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInstancesInPlace)
@@ -271,9 +271,9 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInstancesInPlace)
 
     EXPECT_EQ(instances.size(), 1);
     EXPECT_TRUE(instances.isSealed());
-    EXPECT_TRUE(instances.getInnerList()[0]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[0]->get());
-    EXPECT_EQ(instances.getInnerList()[0]->getTypeId(), typeid(TestClass1));
+    EXPECT_TRUE(instances.getInnerList()[0].isValid());
+    EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[0].getImplementation().getTypeId(), typeid(TestClass1));
 }
 
 TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInheritedInstancesInPlace)
@@ -292,15 +292,15 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInheritedInstancesInPlace)
 
     EXPECT_EQ(instances.size(), 3);
     EXPECT_TRUE(instances.isSealed());
-    EXPECT_TRUE(instances.getInnerList()[0]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[0]->get());
-    EXPECT_EQ(instances.getInnerList()[0]->getTypeId(), typeid(TestInheritClass3));
-    EXPECT_TRUE(instances.getInnerList()[1]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[1]->get());
-    EXPECT_EQ(instances.getInnerList()[1]->getTypeId(), typeid(TestInheritClass5));
-    EXPECT_TRUE(instances.getInnerList()[2]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[2]->get());
-    EXPECT_EQ(instances.getInnerList()[2]->getTypeId(), typeid(TestInheritClass4));
+    EXPECT_TRUE(instances.getInnerList()[0].isValid());
+    EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[0].getImplementation().getTypeId(), typeid(TestInheritClass3));
+    EXPECT_TRUE(instances.getInnerList()[1].isValid());
+    EXPECT_TRUE(instances.getInnerList()[1].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[1].getImplementation().getTypeId(), typeid(TestInheritClass5));
+    EXPECT_TRUE(instances.getInnerList()[2].isValid());
+    EXPECT_TRUE(instances.getInnerList()[2].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[2].getImplementation().getTypeId(), typeid(TestInheritClass4));
 }
 
 TEST_F(ServiceInstanceResolverTest, ShouldCreateRestInheritedInstancesInPlace)
@@ -316,20 +316,20 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateRestInheritedInstancesInPlace)
     const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
 
     sb::di::details::containers::ServiceInstanceList instances{
-        descriptors.last().getImplementationFactory().createInstance(mock, true)};
+        sb::di::ServiceInstance{descriptors.last().getImplementationFactory().createInstance(mock, true)}};
     resolver.createRestInstancesInPlace(instances);
 
     EXPECT_EQ(instances.size(), 3);
     EXPECT_TRUE(instances.isSealed());
-    EXPECT_TRUE(instances.getInnerList()[0]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[0]->get());
-    EXPECT_EQ(instances.getInnerList()[0]->getTypeId(), typeid(TestInheritClass3));
-    EXPECT_TRUE(instances.getInnerList()[1]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[1]->get());
-    EXPECT_EQ(instances.getInnerList()[1]->getTypeId(), typeid(TestInheritClass5));
-    EXPECT_TRUE(instances.getInnerList()[2]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[2]->get());
-    EXPECT_EQ(instances.getInnerList()[2]->getTypeId(), typeid(TestInheritClass4));
+    EXPECT_TRUE(instances.getInnerList()[0].isValid());
+    EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[0].getImplementation().getTypeId(), typeid(TestInheritClass3));
+    EXPECT_TRUE(instances.getInnerList()[1].isValid());
+    EXPECT_TRUE(instances.getInnerList()[1].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[1].getImplementation().getTypeId(), typeid(TestInheritClass5));
+    EXPECT_TRUE(instances.getInnerList()[2].isValid());
+    EXPECT_TRUE(instances.getInnerList()[2].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[2].getImplementation().getTypeId(), typeid(TestInheritClass4));
 }
 
 TEST_F(ServiceInstanceResolverTest, ShouldCreateAlias)
@@ -345,13 +345,15 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateAlias)
     const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
 
     TestInheritClass6 test;
-    const sb::di::details::services::ExternalService external(&test);
+    sb::di::ServiceInstance external{
+        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass6>>(&test)};
+
     const auto instance = resolver.createAlias(external);
 
     EXPECT_TRUE(instance);
-    EXPECT_TRUE(instance->isValid());
-    EXPECT_TRUE(instance->get());
-    EXPECT_EQ(instance->getTypeId(), typeid(TestInheritClass5));
+    EXPECT_TRUE(instance.isValid());
+    EXPECT_TRUE(instance.getAs<void>());
+    EXPECT_EQ(instance.getImplementation().getTypeId(), typeid(TestInheritClass5));
 }
 
 TEST_F(ServiceInstanceResolverTest, ShouldCreateOneAlias)
@@ -367,14 +369,16 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateOneAlias)
     const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
 
     TestInheritClass6 test;
-    const sb::di::details::services::ExternalService external(&test);
+    sb::di::ServiceInstance external{
+        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass6>>(&test)};
+
     const auto instances = resolver.createOneAlias(external);
 
     EXPECT_EQ(instances.size(), 1);
     EXPECT_FALSE(instances.isSealed());
-    EXPECT_TRUE(instances.getInnerList()[0]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[0]->get());
-    EXPECT_EQ(instances.getInnerList()[0]->getTypeId(), typeid(TestInheritClass5));
+    EXPECT_TRUE(instances.getInnerList()[0].isValid());
+    EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[0].getImplementation().getTypeId(), typeid(TestInheritClass5));
 }
 
 TEST_F(ServiceInstanceResolverTest, ShouldCreateAllAliases)
@@ -390,24 +394,26 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateAllAliases)
     TestInheritClass3 test3;
     TestInheritClass4 test4;
     TestInheritClass5 test5;
-    sb::di::details::containers::ServiceInstanceList externals{
-        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass3>>(&test3)};
-    externals.add(std::make_unique<sb::di::details::services::ExternalService<TestInheritClass4>>(&test4));
-    externals.add(std::make_unique<sb::di::details::services::ExternalService<TestInheritClass5>>(&test5));
+    sb::di::details::containers::ServiceInstanceList externals{sb::di::ServiceInstance{
+        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass3>>(&test3)}};
+    externals.add(sb::di::ServiceInstance{
+        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass4>>(&test4)});
+    externals.add(sb::di::ServiceInstance{
+        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass5>>(&test5)});
 
     const auto instances = resolver.createAllAliases(externals.getInnerList());
 
     EXPECT_EQ(instances.size(), 3);
     EXPECT_TRUE(instances.isSealed());
-    EXPECT_TRUE(instances.getInnerList()[0]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[0]->get());
-    EXPECT_EQ(instances.getInnerList()[0]->getTypeId(), typeid(TestInheritClass2));
-    EXPECT_TRUE(instances.getInnerList()[1]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[1]->get());
-    EXPECT_EQ(instances.getInnerList()[1]->getTypeId(), typeid(TestInheritClass2));
-    EXPECT_TRUE(instances.getInnerList()[2]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[2]->get());
-    EXPECT_EQ(instances.getInnerList()[2]->getTypeId(), typeid(TestInheritClass2));
+    EXPECT_TRUE(instances.getInnerList()[0].isValid());
+    EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[0].getImplementation().getTypeId(), typeid(TestInheritClass2));
+    EXPECT_TRUE(instances.getInnerList()[1].isValid());
+    EXPECT_TRUE(instances.getInnerList()[1].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[1].getImplementation().getTypeId(), typeid(TestInheritClass2));
+    EXPECT_TRUE(instances.getInnerList()[2].isValid());
+    EXPECT_TRUE(instances.getInnerList()[2].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[2].getImplementation().getTypeId(), typeid(TestInheritClass2));
 }
 
 TEST_F(ServiceInstanceResolverTest, ShouldCreateRestAliases)
@@ -423,25 +429,27 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateRestAliases)
     TestInheritClass3 test3;
     TestInheritClass4 test4;
     TestInheritClass5 test5;
-    sb::di::details::containers::ServiceInstanceList externals{
-        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass3>>(&test3)};
-    externals.add(std::make_unique<sb::di::details::services::ExternalService<TestInheritClass4>>(&test4));
-    externals.add(std::make_unique<sb::di::details::services::ExternalService<TestInheritClass5>>(&test5));
+    sb::di::details::containers::ServiceInstanceList externals{sb::di::ServiceInstance{
+        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass3>>(&test3)}};
+    externals.add(sb::di::ServiceInstance{
+        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass4>>(&test4)});
+    externals.add(sb::di::ServiceInstance{
+        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass5>>(&test5)});
 
-    sb::di::details::containers::ServiceInstanceList instances{
-        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass2>>(&test5)};
+    sb::di::details::containers::ServiceInstanceList instances{sb::di::ServiceInstance{
+        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass2>>(&test5)}};
 
     auto &_ = resolver.createRestAliases(externals.getInnerList(), instances);
 
     EXPECT_EQ(instances.size(), 3);
     EXPECT_TRUE(instances.isSealed());
-    EXPECT_TRUE(instances.getInnerList()[0]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[0]->get());
-    EXPECT_EQ(instances.getInnerList()[0]->getTypeId(), typeid(TestInheritClass2));
-    EXPECT_TRUE(instances.getInnerList()[1]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[1]->get());
-    EXPECT_EQ(instances.getInnerList()[1]->getTypeId(), typeid(TestInheritClass2));
-    EXPECT_TRUE(instances.getInnerList()[2]->isValid());
-    EXPECT_TRUE(instances.getInnerList()[2]->get());
-    EXPECT_EQ(instances.getInnerList()[2]->getTypeId(), typeid(TestInheritClass2));
+    EXPECT_TRUE(instances.getInnerList()[0].isValid());
+    EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[0].getImplementation().getTypeId(), typeid(TestInheritClass2));
+    EXPECT_TRUE(instances.getInnerList()[1].isValid());
+    EXPECT_TRUE(instances.getInnerList()[1].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[1].getImplementation().getTypeId(), typeid(TestInheritClass2));
+    EXPECT_TRUE(instances.getInnerList()[2].isValid());
+    EXPECT_TRUE(instances.getInnerList()[2].getAs<void>());
+    EXPECT_EQ(instances.getInnerList()[2].getImplementation().getTypeId(), typeid(TestInheritClass2));
 }

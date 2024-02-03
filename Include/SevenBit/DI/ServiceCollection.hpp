@@ -450,11 +450,6 @@ namespace sb::di
             return add(ServiceDescriber::describeSingleton<TService, TImplementation>(service));
         }
 
-        template <class TAlias, class TService> ServiceCollection &addAlias()
-        {
-            return add(ServiceDescriber::describeAlias<TAlias, TService>());
-        }
-
         /**
          * @brief Adds service descriptor
          * @details Adds service descriptor with:
@@ -621,6 +616,11 @@ namespace sb::di
         template <class FactoryFcn> ServiceCollection &addTransient(FactoryFcn factory)
         {
             return add(ServiceDescriber::describeTransientFrom(std::move(factory)));
+        }
+
+        template <class TAlias, class TService> ServiceCollection &addAlias()
+        {
+            return add(ServiceDescriber::describeAlias<TAlias, TService>());
         }
     };
 } // namespace sb::di

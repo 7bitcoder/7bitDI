@@ -25,7 +25,6 @@ TEST_F(InPlaceServiceTest, ShouldCreateInPlaceService)
 {
     const sb::di::details::services::InPlaceService<TestClass1> service{};
 
-    EXPECT_TRUE(service);
     EXPECT_TRUE(service.isValid());
     EXPECT_TRUE(service.get());
     EXPECT_EQ(service.getTypeId(), typeid(TestClass1));
@@ -36,9 +35,8 @@ TEST_F(InPlaceServiceTest, ShouldFailMoveAsUniquePtrInPlaceService)
     TestClass1 test;
     sb::di::details::services::InPlaceService<TestClass1> service{};
 
-    EXPECT_TRUE(service);
     EXPECT_TRUE(service.isValid());
-    EXPECT_THROW(service.moveOutAsUniquePtr<TestClass1>(), sb::di::CannotReleaseServiceException);
+    EXPECT_THROW(service.release(), sb::di::CannotReleaseServiceException);
     EXPECT_TRUE(service.isValid());
 }
 
@@ -47,8 +45,7 @@ TEST_F(InPlaceServiceTest, ShouldSuccedMoveOutInPlaceService)
     TestClass1 test;
     sb::di::details::services::InPlaceService<TestClass1> service{};
 
-    EXPECT_TRUE(service);
     EXPECT_TRUE(service.isValid());
-    EXPECT_NO_THROW(service.moveOutAs<TestClass1>());
+    EXPECT_NO_THROW(service.getForMoveOut());
     EXPECT_TRUE(service.isValid());
 }
