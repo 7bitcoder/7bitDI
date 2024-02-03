@@ -8,7 +8,7 @@
 
 namespace sb::di
 {
-    class ServiceInstance
+    class EXPORT ServiceInstance
     {
         IServiceInstance::Ptr _implementation;
         ptrdiff_t _castOffset = 0;
