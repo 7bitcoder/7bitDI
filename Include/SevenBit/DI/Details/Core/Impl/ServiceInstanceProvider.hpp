@@ -3,7 +3,6 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp"
-#include "SevenBit/DI/Details/Core/ServiceInstanceProviderRoot.hpp"
 #include "SevenBit/DI/Details/Services/ExternalService.hpp"
 #include "SevenBit/DI/Details/Utils/Check.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
@@ -13,7 +12,7 @@
 
 namespace sb::di::details::core
 {
-    INLINE ServiceInstanceProvider::ServiceInstanceProvider(ServiceInstanceProviderRoot &root,
+    INLINE ServiceInstanceProvider::ServiceInstanceProvider(IServiceInstanceProviderRoot &root,
                                                             const ServiceProviderOptions options)
         : _options(options), _root(root), _scoped(_options.strongDestructionOrder)
     {
@@ -216,7 +215,9 @@ namespace sb::di::details::core
     INLINE ServiceInstancesResolver
     ServiceInstanceProvider::makeResolver(const containers::ServiceDescriptorList &descriptors)
     {
-        auto &creator = descriptors.getLifeTime().isSingleton() ? _root._instanceCreator : _instanceCreator;
+        auto &creator = descriptors.getLifeTime().isSingleton() ? _root.getRootInstanceCreator() : getInstanceCreator();
         return ServiceInstancesResolver{creator, descriptors};
     }
+
+    INLINE ServiceInstanceCreator &ServiceInstanceProvider::getInstanceCreator() { return _instanceCreator; }
 } // namespace sb::di::details::core

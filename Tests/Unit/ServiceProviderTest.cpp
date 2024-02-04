@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include "SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp"
 #include "SevenBit/DI/Details/Core/ServiceInstanceProviderRoot.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 

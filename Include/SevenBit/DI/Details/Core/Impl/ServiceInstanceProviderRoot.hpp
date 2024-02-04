@@ -10,6 +10,7 @@ namespace sb::di::details::core
         : ServiceInstanceProvider(*this, options), _descriptorsMap(options.checkServiceGlobalUniqueness),
           _singletons(options.strongDestructionOrder)
     {
+        _descriptorsMap.seal();
     }
 
     INLINE void ServiceInstanceProviderRoot::init(ServiceProvider &serviceProvider)
@@ -27,6 +28,11 @@ namespace sb::di::details::core
     }
 
     INLINE containers::ServiceInstancesMap &ServiceInstanceProviderRoot::getSingletons() { return _singletons; }
+
+    INLINE ServiceInstanceCreator &ServiceInstanceProviderRoot::getRootInstanceCreator()
+    {
+        return getInstanceCreator();
+    }
 
     INLINE void ServiceInstanceProviderRoot::prebuildSingletons()
     {

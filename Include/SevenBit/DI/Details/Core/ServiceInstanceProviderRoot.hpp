@@ -7,11 +7,13 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorsMap.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
+#include "SevenBit/DI/Details/Core/IServiceInstanceProviderRoot.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 
 namespace sb::di::details::core
 {
-    class EXPORT ServiceInstanceProviderRoot : public ServiceInstanceProvider
+    class EXPORT ServiceInstanceProviderRoot : public ServiceInstanceProvider, public IServiceInstanceProviderRoot
     {
         containers::ServiceDescriptorsMap _descriptorsMap;
         containers::ServiceInstancesMap _singletons;
@@ -33,9 +35,11 @@ namespace sb::di::details::core
 
         void init(ServiceProvider &serviceProvider) override;
 
-        [[nodiscard]] const containers::ServiceDescriptorsMap &getDescriptorsMap() const;
+        [[nodiscard]] const containers::ServiceDescriptorsMap &getDescriptorsMap() const override;
 
-        containers::ServiceInstancesMap &getSingletons();
+        containers::ServiceInstancesMap &getSingletons() override;
+
+        ServiceInstanceCreator &getRootInstanceCreator() override;
 
       private:
         void prebuildSingletons();

@@ -7,6 +7,7 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
+#include "SevenBit/DI/Details/Core/IServiceInstanceProviderRoot.hpp"
 #include "SevenBit/DI/Details/Core/ServiceInstanceCreator.hpp"
 #include "SevenBit/DI/Details/Core/ServiceInstancesResolver.hpp"
 #include "SevenBit/DI/IServiceInstanceProvider.hpp"
@@ -15,19 +16,17 @@
 
 namespace sb::di::details::core
 {
-    class ServiceInstanceProviderRoot;
-
     class EXPORT ServiceInstanceProvider : public IServiceInstanceProvider
     {
         ServiceProviderOptions _options;
         ServiceInstanceCreator _instanceCreator;
-        ServiceInstanceProviderRoot &_root;
+        IServiceInstanceProviderRoot &_root;
         containers::ServiceInstancesMap _scoped;
 
       public:
         using Ptr = std::unique_ptr<ServiceInstanceProvider>;
 
-        ServiceInstanceProvider(ServiceInstanceProviderRoot &root, ServiceProviderOptions options);
+        ServiceInstanceProvider(IServiceInstanceProviderRoot &root, ServiceProviderOptions options);
 
         ServiceInstanceProvider(ServiceInstanceProvider &&) = delete;
         ServiceInstanceProvider(const ServiceInstanceProvider &) = delete;
@@ -73,6 +72,7 @@ namespace sb::di::details::core
         std::optional<OneOrList<ServiceInstance>> tryCreateAliases(const ServiceDescriptor &descriptor);
 
         ServiceInstancesResolver makeResolver(const containers::ServiceDescriptorList &descriptors);
+        ServiceInstanceCreator &getInstanceCreator();
     };
 } // namespace sb::di::details::core
 
