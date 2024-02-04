@@ -20,7 +20,7 @@ class AliasServiceTest : public testing::Test
     static void TearDownTestSuite() {}
 };
 
-TEST_F(AliasServiceTest, ShouldCreateExternalService)
+TEST_F(AliasServiceTest, ShouldCreateAliasService)
 {
     TestClass1 test;
     const sb::di::details::services::AliasService service{&test, typeid(TestClass1)};
@@ -30,7 +30,7 @@ TEST_F(AliasServiceTest, ShouldCreateExternalService)
     EXPECT_EQ(service.getTypeId(), typeid(TestClass1));
 }
 
-TEST_F(AliasServiceTest, ShouldFailMoveAsUniquePtrExternalService)
+TEST_F(AliasServiceTest, ShouldFailReleaseAliasService)
 {
     TestClass1 test;
     sb::di::details::services::AliasService service{&test, typeid(TestClass1)};
@@ -39,7 +39,7 @@ TEST_F(AliasServiceTest, ShouldFailMoveAsUniquePtrExternalService)
     EXPECT_THROW(service.release(), sb::di::CannotReleaseServiceException);
 }
 
-TEST_F(AliasServiceTest, ShouldFailMoveOutExternalService)
+TEST_F(AliasServiceTest, ShouldFailMoveOutAliasService)
 {
     TestClass1 test;
     sb::di::details::services::AliasService service{&test, typeid(TestClass1)};
@@ -48,16 +48,16 @@ TEST_F(AliasServiceTest, ShouldFailMoveOutExternalService)
     EXPECT_THROW(service.getForMoveOut(), sb::di::CannotMoveOutServiceException);
 }
 
-TEST_F(AliasServiceTest, ShouldCreateExternalNullService)
+TEST_F(AliasServiceTest, ShouldCreateAliasNullService)
 {
-    sb::di::details::services::AliasService service{nullptr, typeid(TestClass1)};
+    const sb::di::details::services::AliasService service{nullptr, typeid(TestClass1)};
 
     EXPECT_FALSE(service.isValid());
     EXPECT_FALSE(service.get());
     EXPECT_EQ(service.getTypeId(), typeid(TestClass1));
 }
 
-TEST_F(AliasServiceTest, ShouldFailMoveAsUniquePtrExternalNullService)
+TEST_F(AliasServiceTest, ShouldFailReleaseAliasNullService)
 {
     sb::di::details::services::AliasService service{nullptr, typeid(TestClass1)};
 
@@ -65,7 +65,7 @@ TEST_F(AliasServiceTest, ShouldFailMoveAsUniquePtrExternalNullService)
     EXPECT_THROW(service.release(), sb::di::CannotReleaseServiceException);
 }
 
-TEST_F(AliasServiceTest, ShouldFailMoveOutExternalNullService)
+TEST_F(AliasServiceTest, ShouldFailMoveOutAliasNullService)
 {
     sb::di::details::services::AliasService service{nullptr, typeid(TestClass1)};
 

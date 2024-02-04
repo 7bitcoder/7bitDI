@@ -21,15 +21,24 @@ namespace sb::di::details::core
         auto &provider = *utils::Require::notNullAndGet(_serviceProvider);
         auto &factory = descriptor.getImplementationFactory();
         auto _ = _guard(descriptor.getImplementationTypeId());
-        return ServiceInstance{factory.createInstance(provider, inPlaceRequest), descriptor.getCastOffset()};
+
+        auto implementation = factory.createInstance(provider, inPlaceRequest);
+        return createInstance(std::move(implementation), descriptor.getCastOffset());
     }
 
     INLINE ServiceInstance ServiceInstanceCreator::createInstanceAlias(const ServiceDescriptor &descriptor,
                                                                        const ServiceInstance *instance)
     {
-        utils::Require::notNull(instance);
-        auto aliasInstance =
-            std::make_unique<services::AliasService>(instance->getAs<void>(), descriptor.getImplementationTypeId());
-        return ServiceInstance{std::move(aliasInstance), descriptor.getCastOffset()};
+        utils::Require::validInstance(instance);
+        auto implementationType = descriptor.getImplementationTypeId();
+
+        auto implementation = std::make_unique<services::AliasService>(instance->getAs<void>(), implementationType);
+        return createInstance(std::move(implementation), descriptor.getCastOffset());
+    }
+
+    INLINE ServiceInstance ServiceInstanceCreator::createInstance(IServiceInstance::Ptr implementation,
+                                                                  const ptrdiff_t castOffset)
+    {
+        return utils::Require::validInstanceAndGet(ServiceInstance{std::move(implementation), castOffset});
     }
 } // namespace sb::di::details::core

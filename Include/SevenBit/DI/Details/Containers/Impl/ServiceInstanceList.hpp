@@ -10,9 +10,15 @@ namespace sb::di::details::containers
 {
     INLINE ServiceInstanceList::ServiceInstanceList(const size_t size) : _oneOrList(size) {}
 
-    INLINE ServiceInstanceList::ServiceInstanceList(ServiceInstance instance) : _oneOrList(std::move(instance)) {}
+    INLINE ServiceInstanceList::ServiceInstanceList(ServiceInstance instance)
+        : _oneOrList(utils::Require::validInstanceAndGet(std::move(instance)))
+    {
+    }
 
-    INLINE void ServiceInstanceList::add(ServiceInstance &&service) { _oneOrList.add(std::move(service)); }
+    INLINE void ServiceInstanceList::add(ServiceInstance &&instance)
+    {
+        _oneOrList.add(utils::Require::validInstanceAndGet(std::move(instance)));
+    }
 
     INLINE OneOrList<ServiceInstance> &ServiceInstanceList::getInnerList() { return _oneOrList; }
     INLINE const OneOrList<ServiceInstance> &ServiceInstanceList::getInnerList() const { return _oneOrList; }

@@ -47,7 +47,7 @@ TEST_F(ServiceDescriptorListTest, ShouldAddServiceAliasDescriptors)
     EXPECT_NO_THROW(act());
 }
 
-TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorAliasMismatch1)
+TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorAliasMismatch)
 {
     sb::di::details::containers::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass3>());
@@ -59,7 +59,7 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorAliasMismatch1)
     EXPECT_THROW(act(), sb::di::ServiceAliasMismatchException);
 }
 
-TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorAliasMismatch2)
+TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorAliasMismatchOpposite)
 {
     sb::di::details::containers::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
@@ -164,4 +164,22 @@ TEST_F(ServiceDescriptorListTest, ShouldGetLast)
     list.add(sb::di::ServiceDescriptor{describedLast});
 
     EXPECT_EQ(list.last(), describedLast);
+}
+
+TEST_F(ServiceDescriptorListTest, ShouldGetNotIsAlias)
+{
+    sb::di::details::containers::ServiceDescriptorList list(
+        sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
+    list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+
+    EXPECT_FALSE(list.isAlias());
+}
+
+TEST_F(ServiceDescriptorListTest, ShouldGetIsAlias)
+{
+    sb::di::details::containers::ServiceDescriptorList list(
+        sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass3>());
+    list.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass4>());
+
+    EXPECT_TRUE(list.isAlias());
 }

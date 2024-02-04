@@ -33,7 +33,7 @@ namespace sb::di::details::containers
 
         [[nodiscard]] bool contains(TypeId serviceTypeId) const;
 
-        ServiceInstanceList *findServices(TypeId serviceTypeId);
+        ServiceInstanceList *findInstances(TypeId serviceTypeId);
 
         [[nodiscard]] bool empty() const;
 

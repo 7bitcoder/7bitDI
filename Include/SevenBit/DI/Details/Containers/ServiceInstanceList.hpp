@@ -24,7 +24,7 @@ namespace sb::di::details::containers
         ServiceInstanceList &operator=(const ServiceInstanceList &) = delete;
         ServiceInstanceList &operator=(ServiceInstanceList &&) = default;
 
-        void add(ServiceInstance &&service);
+        void add(ServiceInstance &&instance);
 
         [[nodiscard]] auto begin() const { return _oneOrList.getAsList().begin(); }
         [[nodiscard]] auto end() const { return _oneOrList.getAsList().end(); }

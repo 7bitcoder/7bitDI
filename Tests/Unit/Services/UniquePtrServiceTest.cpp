@@ -30,7 +30,7 @@ TEST_F(UniquePtrServiceTest, ShouldCreateUniquePtrService)
     EXPECT_EQ(service.getTypeId(), typeid(TestClass1));
 }
 
-TEST_F(UniquePtrServiceTest, ShouldSuccedMoveAsUniquePtrUniquePtrService)
+TEST_F(UniquePtrServiceTest, ShouldSuccedReleasePtrService)
 {
     TestClass1 test;
     sb::di::details::services::UniquePtrService service{std::make_unique<TestClass1>()};
@@ -61,13 +61,13 @@ TEST_F(UniquePtrServiceTest, ShouldCreateExternalNullService)
     EXPECT_EQ(service.getTypeId(), typeid(TestClass1));
 }
 
-TEST_F(UniquePtrServiceTest, ShouldFailMoveAsUniquePtrExternalNullService)
+TEST_F(UniquePtrServiceTest, ShouldFailReleaseExternalNullService)
 {
     TestClass1 test;
     sb::di::details::services::UniquePtrService<TestClass1> service{nullptr};
 
     EXPECT_FALSE(service.isValid());
-    EXPECT_FALSE(service.getForMoveOut());
+    EXPECT_NO_THROW(service.release());
     EXPECT_FALSE(service.isValid());
 }
 
@@ -77,6 +77,6 @@ TEST_F(UniquePtrServiceTest, ShouldFailMoveOutExternalNullService)
     sb::di::details::services::UniquePtrService<TestClass1> service{nullptr};
 
     EXPECT_FALSE(service.isValid());
-    EXPECT_NO_THROW(service.release());
+    EXPECT_FALSE(service.getForMoveOut());
     EXPECT_FALSE(service.isValid());
 }

@@ -7,7 +7,6 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorsMap.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
-#include "SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 
 namespace sb::di::details::core
@@ -20,6 +19,8 @@ namespace sb::di::details::core
       public:
         using Ptr = std::unique_ptr<ServiceInstanceProviderRoot>;
         using SPtr = std::shared_ptr<ServiceInstanceProviderRoot>;
+
+        explicit ServiceInstanceProviderRoot(ServiceProviderOptions options = {});
 
         template <class TDescriptorIt>
         ServiceInstanceProviderRoot(TDescriptorIt begin, TDescriptorIt end, ServiceProviderOptions options = {})

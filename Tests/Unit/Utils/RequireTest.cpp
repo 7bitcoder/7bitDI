@@ -67,3 +67,23 @@ TEST_F(RequireTest, ShouldRequireValidEnum)
     EXPECT_NO_THROW(sb::di::details::utils::Require::validEnum(TestEnum::B));
     EXPECT_NO_THROW(sb::di::details::utils::Require::validEnum(TestEnum::C));
 }
+
+TEST_F(RequireTest, ShoulRequireValidInstance)
+{
+    TestClass1 test;
+    EXPECT_THROW(sb::di::details::utils::Require::validInstance(nullptr), sb::di::NullPointerException);
+    EXPECT_THROW(sb::di::details::utils::Require::validInstance(sb::di::ServiceInstance{}),
+                 sb::di::InvalidServiceException);
+    EXPECT_THROW(sb::di::details::utils::Require::validInstance(sb::di::ServiceInstance{
+                     std::make_unique<sb::di::details::services::ExternalService<TestClass1>>(nullptr)}),
+                 sb::di::InvalidServiceException);
+    EXPECT_NO_THROW(sb::di::details::utils::Require::validInstance(
+        sb::di::ServiceInstance{std::make_unique<sb::di::details::services::ExternalService<TestClass1>>(&test)}));
+    EXPECT_THROW(sb::di::details::utils::Require::validInstance(sb::di::ServiceInstance{
+                     std::make_unique<sb::di::details::services::UniquePtrService<TestClass1>>(nullptr)}),
+                 sb::di::InvalidServiceException);
+    EXPECT_NO_THROW(sb::di::details::utils::Require::validInstance(sb::di::ServiceInstance{
+        std::make_unique<sb::di::details::services::UniquePtrService<TestClass1>>(std::make_unique<TestClass1>())}));
+    EXPECT_NO_THROW(sb::di::details::utils::Require::validInstance(
+        sb::di::ServiceInstance{std::make_unique<sb::di::details::services::InPlaceService<TestClass1>>()}));
+}

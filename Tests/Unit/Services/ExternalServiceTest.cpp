@@ -30,7 +30,7 @@ TEST_F(ExternalServiceTest, ShouldCreateExternalService)
     EXPECT_EQ(service.getTypeId(), typeid(TestClass1));
 }
 
-TEST_F(ExternalServiceTest, ShouldFailMoveAsUniquePtrExternalService)
+TEST_F(ExternalServiceTest, ShouldFailReleaseExternalService)
 {
     TestClass1 test;
     sb::di::details::services::ExternalService service{&test};
@@ -50,7 +50,6 @@ TEST_F(ExternalServiceTest, ShouldFailMoveOutExternalService)
 
 TEST_F(ExternalServiceTest, ShouldCreateExternalNullService)
 {
-    TestClass1 test;
     const sb::di::details::services::ExternalService<TestClass1> service{nullptr};
 
     EXPECT_FALSE(service.isValid());
@@ -58,9 +57,8 @@ TEST_F(ExternalServiceTest, ShouldCreateExternalNullService)
     EXPECT_EQ(service.getTypeId(), typeid(TestClass1));
 }
 
-TEST_F(ExternalServiceTest, ShouldFailMoveAsUniquePtrExternalNullService)
+TEST_F(ExternalServiceTest, ShouldFailReleaseExternalNullService)
 {
-    TestClass1 test;
     sb::di::details::services::ExternalService<TestClass1> service{nullptr};
 
     EXPECT_FALSE(service.isValid());
@@ -69,7 +67,6 @@ TEST_F(ExternalServiceTest, ShouldFailMoveAsUniquePtrExternalNullService)
 
 TEST_F(ExternalServiceTest, ShouldFailMoveOutExternalNullService)
 {
-    TestClass1 test;
     sb::di::details::services::ExternalService<TestClass1> service{nullptr};
 
     EXPECT_FALSE(service.isValid());

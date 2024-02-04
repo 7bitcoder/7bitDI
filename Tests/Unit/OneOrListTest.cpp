@@ -194,3 +194,29 @@ TEST_F(OneOrListTest, ShouldTryGetAsSingle)
 
     EXPECT_FALSE(list.tryGetAsSingle());
 }
+
+TEST_F(OneOrListTest, ShouldForEach)
+{
+    sb::di::OneOrList<int> list{2};
+    list.add(3);
+    list.add(4);
+    list.add(5);
+
+    std::vector<int> result;
+
+    list.forEach([&](const int i) { result.push_back(i); });
+
+    EXPECT_EQ(result, (std::vector<int>{2, 3, 4, 5}));
+}
+
+TEST_F(OneOrListTest, ShouldMap)
+{
+    sb::di::OneOrList<int> list{2};
+    list.add(3);
+    list.add(4);
+    list.add(5);
+
+    const std::vector<int> result = list.map([&](const int i) { return i * 2; });
+
+    EXPECT_EQ(result, (std::vector<int>{4, 6, 8, 10}));
+}

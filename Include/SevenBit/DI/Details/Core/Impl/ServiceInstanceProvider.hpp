@@ -35,7 +35,7 @@ namespace sb::di::details::core
 
     INLINE const ServiceInstance &ServiceInstanceProvider::getInstance(const TypeId serviceTypeId)
     {
-        if (const auto instance = tryGetInstance(serviceTypeId); utils::Check::notNull(instance))
+        if (const auto instance = tryGetInstance(serviceTypeId); utils::Check::instanceValidity(instance))
         {
             return *instance;
         }
@@ -72,7 +72,7 @@ namespace sb::di::details::core
 
     INLINE ServiceInstance ServiceInstanceProvider::createInstance(const TypeId serviceTypeId)
     {
-        if (auto instance = tryCreateInstance(serviceTypeId); instance.isValid())
+        if (auto instance = tryCreateInstance(serviceTypeId); utils::Check::instanceValidity(instance))
         {
             return instance;
         }
@@ -103,7 +103,7 @@ namespace sb::di::details::core
 
     INLINE ServiceInstance ServiceInstanceProvider::createInstanceInPlace(const TypeId serviceTypeId)
     {
-        if (auto instance = tryCreateInstanceInPlace(serviceTypeId); instance.isValid())
+        if (auto instance = tryCreateInstanceInPlace(serviceTypeId); utils::Check::instanceValidity(instance))
         {
             return instance;
         }
@@ -126,8 +126,8 @@ namespace sb::di::details::core
 
     INLINE containers::ServiceInstanceList *ServiceInstanceProvider::findRegisteredInstances(const TypeId serviceTypeId)
     {
-        const auto singletons = _root.getSingletons().findServices(serviceTypeId);
-        return singletons ? singletons : _scoped.findServices(serviceTypeId);
+        const auto singletons = _root.getSingletons().findInstances(serviceTypeId);
+        return singletons ? singletons : _scoped.findInstances(serviceTypeId);
     }
 
     INLINE const containers::ServiceDescriptorList *ServiceInstanceProvider::findDescriptors(const TypeId serviceTypeId,

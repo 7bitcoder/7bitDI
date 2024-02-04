@@ -30,7 +30,7 @@ TEST_F(InPlaceServiceTest, ShouldCreateInPlaceService)
     EXPECT_EQ(service.getTypeId(), typeid(TestClass1));
 }
 
-TEST_F(InPlaceServiceTest, ShouldFailMoveAsUniquePtrInPlaceService)
+TEST_F(InPlaceServiceTest, ShouldFailReleaseInPlaceService)
 {
     TestClass1 test;
     sb::di::details::services::InPlaceService<TestClass1> service{};

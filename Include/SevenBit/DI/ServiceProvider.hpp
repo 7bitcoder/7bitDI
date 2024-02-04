@@ -11,7 +11,7 @@
 
 namespace sb::di
 {
-    class ServiceProvider
+    class EXPORT ServiceProvider
     {
         IServiceInstanceProvider::Ptr _instanceProvider;
 
@@ -21,12 +21,7 @@ namespace sb::di
         /**
          * @brief Constructs service provider with specified instance provider
          */
-        explicit ServiceProvider(IServiceInstanceProvider::Ptr instanceProvider)
-            : _instanceProvider(std::move(instanceProvider))
-        {
-            details::utils::Require::notNull(_instanceProvider);
-            getInstanceProvider().init(*this);
-        }
+        explicit ServiceProvider(IServiceInstanceProvider::Ptr instanceProvider);
 
         ServiceProvider(const ServiceProvider &parent) = delete;
         ServiceProvider(ServiceProvider &&) = delete;
@@ -44,7 +39,7 @@ namespace sb::di
          * auto& usedOptions = provider.getOptions();
          * @endcode
          */
-        [[nodiscard]] const ServiceProviderOptions &getOptions() const { return getInstanceProvider().getOptions(); }
+        [[nodiscard]] const ServiceProviderOptions &getOptions() const;
 
         /**
          * @brief Create a scoped service provider
@@ -58,10 +53,7 @@ namespace sb::di
          * &scoped.getService<TestClass>() != &provide.getService<TestClass>(); // True
          * @endcode
          */
-        [[nodiscard]] ServiceProvider createScope() const
-        {
-            return ServiceProvider{getInstanceProvider().createScope()};
-        }
+        [[nodiscard]] ServiceProvider createScope() const;
 
         /**
          * @brief Create a scoped service provider as unique_ptr
@@ -75,22 +67,18 @@ namespace sb::di
          * &scoped->getService<TestClass>() != &provider->getService<TestClass>(); // True
          * @endcode
          */
-        [[nodiscard]] ServiceProvider::Ptr createScopeAsPtr() const
-        {
-            return std::make_unique<ServiceProvider>(getInstanceProvider().createScope());
-        }
+        [[nodiscard]] Ptr createScopeAsPtr() const;
+        /**
+         * @brief Returns inner service instance provider
+         * @throws sb::di::NullPointerException
+         */
+        [[nodiscard]] const IServiceInstanceProvider &getInstanceProvider() const;
 
         /**
          * @brief Returns inner service instance provider
          * @throws sb::di::NullPointerException
          */
-        [[nodiscard]] const IServiceInstanceProvider &getInstanceProvider() const { return *_instanceProvider; }
-
-        /**
-         * @brief Returns inner service instance provider
-         * @throws sb::di::NullPointerException
-         */
-        IServiceInstanceProvider &getInstanceProvider() { return *_instanceProvider; }
+        IServiceInstanceProvider &getInstanceProvider();
 
         /**
          * @brief Returns service pointer, might be null
@@ -106,7 +94,7 @@ namespace sb::di
         template <class TService> TService *tryGetService()
         {
             if (const auto instance = getInstanceProvider().tryGetInstance(typeid(TService));
-                checkInstanceValidity(instance))
+                details::utils::Check::instanceValidity(instance))
             {
                 return instance->getAs<TService>();
             }
@@ -128,7 +116,7 @@ namespace sb::di
         template <class TService> TService &getService()
         {
             auto &instance = getInstanceProvider().getInstance(typeid(TService));
-            requireValidInstance(instance);
+            details::utils::Require::validInstance(instance);
             return *instance.getAs<TService>();
         }
 
@@ -151,7 +139,7 @@ namespace sb::di
             if (auto instances = getInstanceProvider().tryGetInstances(typeid(TService)))
             {
                 return instances->map([&](const ServiceInstance &instance) {
-                    requireValidInstance(instance);
+                    details::utils::Require::validInstance(instance);
                     return instance.getAs<TService>();
                 });
             }
@@ -172,7 +160,7 @@ namespace sb::di
         template <class TService> std::unique_ptr<TService> tryCreateService()
         {
             if (auto instance = getInstanceProvider().tryCreateInstance(typeid(TService));
-                checkInstanceValidity(&instance))
+                details::utils::Check::instanceValidity(&instance))
             {
                 return instance.moveOutAsUniquePtr<TService>();
             }
@@ -194,7 +182,7 @@ namespace sb::di
         template <class TService> std::unique_ptr<TService> createService()
         {
             auto instance = getInstanceProvider().createInstance(typeid(TService));
-            requireValidInstance(instance);
+            details::utils::Require::validInstance(instance);
             return instance.moveOutAsUniquePtr<TService>();
         }
 
@@ -213,7 +201,7 @@ namespace sb::di
         template <class TService> TService createServiceInPlace()
         {
             auto instance = getInstanceProvider().createInstanceInPlace(typeid(TService));
-            requireValidInstance(instance);
+            details::utils::Require::validInstance(instance);
             return instance.moveOutAs<TService>();
         }
 
@@ -236,22 +224,15 @@ namespace sb::di
             if (auto instances = getInstanceProvider().tryCreateInstances(typeid(TService)))
             {
                 return instances->map([&](ServiceInstance &instance) {
-                    requireValidInstance(instance);
+                    details::utils::Require::validInstance(instance);
                     return instance.moveOutAsUniquePtr<TService>();
                 });
             }
             return {};
         }
-
-      private:
-        static bool checkInstanceValidity(const ServiceInstance *instance) { return instance && instance->isValid(); }
-
-        static void requireValidInstance(const ServiceInstance &instance)
-        {
-            if (!instance.isValid())
-            {
-                throw InvalidServiceException();
-            }
-        }
     };
 } // namespace sb::di
+
+#ifdef _7BIT_DI_ADD_IMPL
+#include "SevenBit/DI/Impl/ServiceProvider.hpp"
+#endif

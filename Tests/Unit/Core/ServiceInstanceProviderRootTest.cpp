@@ -92,7 +92,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAliasMissmatchI
     EXPECT_THROW(act(), sb::di::ServiceAliasMismatchException);
 }
 
-TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAliasMissmatchInheritedService2)
+TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAliasMissmatchOpositeInheritedService)
 {
     ServiceProviderMock mock;
     std::vector<sb::di::ServiceDescriptor> describers;
@@ -164,6 +164,26 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToLifetimeMissmat
     };
 
     EXPECT_THROW(act(), sb::di::ServiceLifeTimeMismatchException);
+}
+
+TEST_F(ServiceInstanceProviderRootTest, ShouldPrebuildSingletons)
+{
+    ServiceProviderMock mock;
+    std::vector<sb::di::ServiceDescriptor> describers;
+
+    describers.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestClass1>());
+    describers.emplace_back(sb::di::ServiceDescriber::describeScoped<TestClass2>());
+    describers.emplace_back(sb::di::ServiceDescriber::describeTransient<TestClass3>());
+
+    sb::di::ServiceProviderOptions options;
+    options.prebuildSingletons = true;
+    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end(), options);
+    provider.init(mock);
+
+    EXPECT_TRUE(provider.tryGetInstance(typeid(TestClass1)));
+    EXPECT_TRUE(provider.tryGetInstance(typeid(TestClass2)));
+    EXPECT_FALSE(provider.tryGetInstance(typeid(TestClass3)));
+    EXPECT_FALSE(provider.tryGetInstance(typeid(TestClass4)));
 }
 
 TEST_F(ServiceInstanceProviderRootTest, ShouldTryGetInstance)

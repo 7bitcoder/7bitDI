@@ -28,25 +28,25 @@ class ServiceInstanceListTest : public testing::Test
 TEST_F(ServiceInstanceListTest, ShouldAddServices)
 {
     TestClass1 test;
-    sb::di::IServiceInstance::Ptr service{new sb::di::details::services::ExternalService{&test}};
-    sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{std::move(service)}};
+    auto implementation = std::make_unique<sb::di::details::services::ExternalService<TestClass1>>(&test);
+    sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{std::move(implementation)}};
 
-    sb::di::IServiceInstance::Ptr instance2{new sb::di::details::services::ExternalService{&test}};
-    list.add(sb::di::ServiceInstance{std::move(instance2)});
+    auto implementation2 = std::make_unique<sb::di::details::services::ExternalService<TestClass1>>(&test);
+    list.add(sb::di::ServiceInstance{std::move(implementation2)});
 }
 
-TEST_F(ServiceInstanceListTest, ShouldNotFailAddNullService)
+TEST_F(ServiceInstanceListTest, ShouldFailAddNullService)
 {
     auto act = [&]() { sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{}}; };
 
-    EXPECT_NO_THROW((act()));
+    EXPECT_THROW((act()), sb::di::InvalidServiceException);
 }
 
 TEST_F(ServiceInstanceListTest, ShouldFailAddInvalidService)
 {
     auto act = [&]() {
-        sb::di::IServiceInstance::Ptr service{new sb::di::details::services::UniquePtrService<TestClass1>{nullptr}};
-        sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{std::move(service)}};
+        auto implementation = std::make_unique<sb::di::details::services::UniquePtrService<TestClass1>>(nullptr);
+        sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{std::move(implementation)}};
     };
 
     EXPECT_THROW((act()), sb::di::InvalidServiceException);
@@ -54,36 +54,36 @@ TEST_F(ServiceInstanceListTest, ShouldFailAddInvalidService)
 
 TEST_F(ServiceInstanceListTest, ShouldReturnProperSize)
 {
-    sb::di::IServiceInstance::Ptr service{new sb::di::details::services::InPlaceService<TestClass1>{}};
-    sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{std::move(service)}};
+    auto implementation = std::make_unique<sb::di::details::services::InPlaceService<TestClass1>>();
+    sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{std::move(implementation)}};
 
     EXPECT_EQ(list.size(), 1);
 
     TestClass1 test;
-    sb::di::IServiceInstance::Ptr instance2{new sb::di::details::services::ExternalService{&test}};
-    list.add(sb::di::ServiceInstance{std::move(instance2)});
+    auto implementation2 = std::make_unique<sb::di::details::services::ExternalService<TestClass1>>(&test);
+    list.add(sb::di::ServiceInstance{std::move(implementation2)});
 
     EXPECT_EQ(list.size(), 2);
 }
 
 TEST_F(ServiceInstanceListTest, ShouldReturnEmpty)
 {
-    sb::di::IServiceInstance::Ptr service{new sb::di::details::services::InPlaceService<TestClass1>{}};
-    sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{std::move(service)}};
+    auto implementation = std::make_unique<sb::di::details::services::InPlaceService<TestClass1>>();
+    sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{std::move(implementation)}};
 
     EXPECT_FALSE(list.empty());
 
     TestClass1 test;
-    sb::di::IServiceInstance::Ptr instance2{new sb::di::details::services::ExternalService{&test}};
-    list.add(sb::di::ServiceInstance{std::move(instance2)});
+    auto implementation2 = std::make_unique<sb::di::details::services::ExternalService<TestClass1>>(&test);
+    list.add(sb::di::ServiceInstance{std::move(implementation2)});
 
     EXPECT_FALSE(list.empty());
 }
 
 TEST_F(ServiceInstanceListTest, ShouldSeal)
 {
-    sb::di::IServiceInstance::Ptr service{new sb::di::details::services::InPlaceService<TestClass1>{}};
-    sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{std::move(service)}};
+    auto implementation = std::make_unique<sb::di::details::services::InPlaceService<TestClass1>>();
+    sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{std::move(implementation)}};
 
     EXPECT_NO_THROW(list.seal());
     EXPECT_TRUE(list.isSealed());
@@ -91,30 +91,30 @@ TEST_F(ServiceInstanceListTest, ShouldSeal)
 
 TEST_F(ServiceInstanceListTest, ShouldGetFirst)
 {
-    sb::di::IServiceInstance::Ptr service{new sb::di::details::services::InPlaceService<TestClass1>{}};
-    const auto firstServicePtr = service.get();
-    sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{std::move(service)}};
+    auto implementation = std::make_unique<sb::di::details::services::InPlaceService<TestClass1>>();
+    const auto firstServicePtr = implementation.get();
+    sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{std::move(implementation)}};
 
     EXPECT_FALSE(list.empty());
 
     TestClass1 test;
-    sb::di::IServiceInstance::Ptr instance2{new sb::di::details::services::ExternalService{&test}};
-    list.add(sb::di::ServiceInstance{std::move(instance2)});
+    auto implementation2 = std::make_unique<sb::di::details::services::ExternalService<TestClass1>>(&test);
+    list.add(sb::di::ServiceInstance{std::move(implementation2)});
 
-    EXPECT_EQ(&list.first().getImplementation(), firstServicePtr);
+    EXPECT_EQ(list.first().tryGetImplementation(), firstServicePtr);
 }
 
 TEST_F(ServiceInstanceListTest, ShouldGetLast)
 {
-    sb::di::IServiceInstance::Ptr service{new sb::di::details::services::InPlaceService<TestClass1>{}};
-    sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{std::move(service)}};
+    auto implementation = std::make_unique<sb::di::details::services::InPlaceService<TestClass1>>();
+    sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{std::move(implementation)}};
 
     EXPECT_FALSE(list.empty());
 
     TestClass1 test;
-    sb::di::IServiceInstance::Ptr instance2{new sb::di::details::services::ExternalService{&test}};
-    const auto lastServicePtr = instance2.get();
-    list.add(sb::di::ServiceInstance{std::move(instance2)});
+    auto implementation2 = std::make_unique<sb::di::details::services::ExternalService<TestClass1>>(&test);
+    const auto lastServicePtr = implementation2.get();
+    list.add(sb::di::ServiceInstance{std::move(implementation2)});
 
-    EXPECT_EQ(&list.last().getImplementation(), lastServicePtr);
+    EXPECT_EQ(list.last().tryGetImplementation(), lastServicePtr);
 }

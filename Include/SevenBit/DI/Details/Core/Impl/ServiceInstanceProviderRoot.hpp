@@ -6,6 +6,12 @@
 
 namespace sb::di::details::core
 {
+    INLINE ServiceInstanceProviderRoot::ServiceInstanceProviderRoot(ServiceProviderOptions options)
+        : ServiceInstanceProvider(*this, options), _descriptorsMap(options.checkServiceGlobalUniqueness),
+          _singletons(options.strongDestructionOrder)
+    {
+    }
+
     INLINE void ServiceInstanceProviderRoot::init(ServiceProvider &serviceProvider)
     {
         ServiceInstanceProvider::init(serviceProvider);

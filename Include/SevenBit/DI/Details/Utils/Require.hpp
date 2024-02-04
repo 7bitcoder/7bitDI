@@ -12,14 +12,14 @@ namespace sb::di::details::utils
     struct EXPORT Require
     {
         template <class T>
-        static std::unique_ptr<T> notNullAndGet(std::unique_ptr<T> &&ptr, std::string_view failMessage = "")
+        static std::unique_ptr<T> &&notNullAndGet(std::unique_ptr<T> &&ptr, std::string_view failMessage = "")
         {
             notNull(ptr.get(), failMessage);
             return std::move(ptr);
         }
 
         template <class T>
-        static std::shared_ptr<T> notNullAndGet(std::shared_ptr<T> &&ptr, std::string_view failMessage = "")
+        static std::shared_ptr<T> &&notNullAndGet(std::shared_ptr<T> &&ptr, std::string_view failMessage = "")
         {
             notNull(ptr.get(), failMessage);
             return std::move(ptr);
@@ -66,5 +66,17 @@ namespace sb::di::details::utils
                                         std::to_string(TEnum::Count) + ")"};
             }
         }
+
+        static ServiceInstance *validInstanceAndGet(ServiceInstance *instance);
+
+        static ServiceInstance &&validInstanceAndGet(ServiceInstance &&instance);
+
+        static void validInstance(const ServiceInstance *instance);
+
+        static void validInstance(const ServiceInstance &instance);
     };
 } // namespace sb::di::details::utils
+
+#ifdef _7BIT_DI_ADD_IMPL
+#include "SevenBit/DI/Details/Utils/Impl/Require.hpp"
+#endif

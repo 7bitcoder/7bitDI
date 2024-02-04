@@ -38,7 +38,7 @@ TEST_F(ServiceInstanceCreatorTest, ShouldCreateInstance)
     EXPECT_TRUE(instance);
     EXPECT_TRUE(instance.isValid());
     EXPECT_TRUE(instance.getAs<void>());
-    EXPECT_EQ(instance.getImplementation().getTypeId(), typeid(TestClass1));
+    EXPECT_EQ(instance.tryGetImplementation()->getTypeId(), typeid(TestClass1));
 }
 
 TEST_F(ServiceInstanceCreatorTest, ShouldCreateInstanceAlias)
@@ -48,13 +48,13 @@ TEST_F(ServiceInstanceCreatorTest, ShouldCreateInstanceAlias)
     const auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestInheritClass3>();
 
     TestInheritClass5 test;
-    sb::di::ServiceInstance external{
+    const sb::di::ServiceInstance external{
         std::make_unique<sb::di::details::services::ExternalService<TestInheritClass5>>(&test)};
     const auto instance = creator.createInstanceAlias(descriptor, &external);
 
     EXPECT_TRUE(instance.isValid());
     EXPECT_TRUE(instance.getAs<void>());
-    EXPECT_EQ(instance.getImplementation().getTypeId(), typeid(TestInheritClass3));
+    EXPECT_EQ(instance.tryGetImplementation()->getTypeId(), typeid(TestInheritClass3));
 }
 
 TEST_F(ServiceInstanceCreatorTest, ShouldFailForNullProvider)
@@ -105,13 +105,13 @@ TEST_F(ServiceInstanceCreatorTest, ShouldFailForCirculatDependency)
 
 TEST_F(ServiceInstanceCreatorTest, ShouldFailCreateInstanceAlias)
 {
-    // sb::di::details::core::ServiceInstanceCreator creator;
-    //
-    // const auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestInheritClass3>();
-    //
-    // TestInheritClass5 *test = nullptr;
-    // sb::di::ServiceInstance external{
-    //     std::make_unique<sb::di::details::services::ExternalService<TestInheritClass5>>(test)};
-    //
-    // EXPECT_THROW(creator.createInstanceAlias(descriptor, &external), sb::di::InvalidServiceException);
+    sb::di::details::core::ServiceInstanceCreator creator;
+
+    const auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestInheritClass3>();
+
+    TestInheritClass5 *test = nullptr;
+    const sb::di::ServiceInstance external{
+        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass5>>(test)};
+
+    EXPECT_THROW(creator.createInstanceAlias(descriptor, &external), sb::di::InvalidServiceException);
 }

@@ -31,7 +31,7 @@ namespace sb::di::details::containers
         return _serviceListMap.count(serviceTypeId);
     }
 
-    INLINE ServiceInstanceList *ServiceInstancesMap::findServices(const TypeId serviceTypeId)
+    INLINE ServiceInstanceList *ServiceInstancesMap::findInstances(const TypeId serviceTypeId)
     {
         const auto it = _serviceListMap.find(serviceTypeId);
         return it != _serviceListMap.end() ? &it->second : nullptr;
@@ -45,7 +45,7 @@ namespace sb::di::details::containers
         {
             for (auto it = _constructionOrder.rbegin(); it != _constructionOrder.rend(); ++it)
             {
-                if (const auto list = findServices(*it))
+                if (const auto list = findInstances(*it))
                 {
                     list->clear();
                 }

@@ -26,11 +26,15 @@ namespace sb::di
         ServiceInstance &operator=(const ServiceInstance &other) = delete;
         ServiceInstance &operator=(ServiceInstance &&other) = default;
 
-        IServiceInstance &getImplementation();
+        IServiceInstance *tryGetImplementation();
+        [[nodiscard]] const IServiceInstance *tryGetImplementation() const;
 
+        IServiceInstance &getImplementation();
         [[nodiscard]] const IServiceInstance &getImplementation() const;
 
         void addCastOffset(ptrdiff_t castOffset);
+        void setCastOffset(ptrdiff_t castOffset);
+        [[nodiscard]] ptrdiff_t getCastOffset() const;
 
         /**
          * @brief Checks if service instance is valid

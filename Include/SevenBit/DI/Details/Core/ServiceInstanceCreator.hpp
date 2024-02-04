@@ -18,6 +18,9 @@ namespace sb::di::details::core
         ServiceInstance createInstance(const ServiceDescriptor &descriptor, bool inPlaceRequest);
 
         ServiceInstance createInstanceAlias(const ServiceDescriptor &descriptor, const ServiceInstance *instance);
+
+      private:
+        ServiceInstance createInstance(IServiceInstance::Ptr implementation, ptrdiff_t castOffset);
     };
 } // namespace sb::di::details::core
 
