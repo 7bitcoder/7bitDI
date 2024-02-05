@@ -6,44 +6,44 @@
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
 
-class BasicFactoryTest : public testing::Test
+class BasicUniqFactoryTest : public testing::Test
 {
   protected:
     static void SetUpTestSuite() {}
 
-    BasicFactoryTest() {}
+    BasicUniqFactoryTest() {}
 
     void SetUp() override {}
 
     void TearDown() override {}
 
-    ~BasicFactoryTest() override = default;
+    ~BasicUniqFactoryTest() override = default;
 
     static void TearDownTestSuite() {}
 };
 
 // buildServiceProvider Tests
 
-TEST_F(BasicFactoryTest, ShouldFailGetServiceDueToAlreadyRegisteredService)
+TEST_F(BasicUniqFactoryTest, ShouldFailGetServiceDueToAlreadyRegisteredService)
 {
     sb::di::ServiceCollection collection;
 
-    collection.addSingleton([] { return TestClass1{}; });
-    collection.addSingleton([] { return TestClass1{}; });
-    collection.addSingleton([] { return TestClass2{}; });
+    collection.addSingleton([] { return std::make_unique<TestClass1>(); });
+    collection.addSingleton([] { return std::make_unique<TestClass1>(); });
+    collection.addSingleton([] { return std::make_unique<TestClass2>(); });
 
     sb::di::ServiceProviderOptions options;
     options.checkServiceGlobalUniqueness = true;
     EXPECT_THROW(collection.buildServiceProvider(options), sb::di::ServiceAlreadyRegisteredException);
 }
 
-TEST_F(BasicFactoryTest, ShouldNotFailGetServiceDueToAlreadyRegisteredService)
+TEST_F(BasicUniqFactoryTest, ShouldNotFailGetServiceDueToAlreadyRegisteredService)
 {
     sb::di::ServiceCollection collection;
 
-    collection.addSingleton([] { return TestClass1{}; });
-    collection.addSingleton([] { return TestClass1{}; });
-    collection.addSingleton([] { return TestClass2{}; });
+    collection.addSingleton([] { return std::make_unique<TestClass1>(); });
+    collection.addSingleton([] { return std::make_unique<TestClass1>(); });
+    collection.addSingleton([] { return std::make_unique<TestClass2>(); });
 
     sb::di::ServiceProviderOptions options;
     options.checkServiceGlobalUniqueness = false;
@@ -52,12 +52,12 @@ TEST_F(BasicFactoryTest, ShouldNotFailGetServiceDueToAlreadyRegisteredService)
 
 // tryGetService Tests
 
-TEST_F(BasicFactoryTest, ShouldTryGetService)
+TEST_F(BasicUniqFactoryTest, ShouldTryGetService)
 {
     auto provider = sb::di::ServiceCollection{}
-                        .addSingleton([] { return TestClass1{}; })
-                        .addScoped([] { return TestClass2{}; })
-                        .addTransient([] { return TestClass3{}; })
+                        .addSingleton([] { return std::make_unique<TestClass1>(); })
+                        .addScoped([] { return std::make_unique<TestClass2>(); })
+                        .addTransient([] { return std::make_unique<TestClass3>(); })
                         .buildServiceProvider();
 
     EXPECT_TRUE(provider.tryGetService<TestClass1>());
@@ -66,11 +66,11 @@ TEST_F(BasicFactoryTest, ShouldTryGetService)
     EXPECT_FALSE(provider.tryGetService<TestClass4>());
 }
 
-TEST_F(BasicFactoryTest, ShouldFailTryGetServiceDueToCircularDependency)
+TEST_F(BasicUniqFactoryTest, ShouldFailTryGetServiceDueToCircularDependency)
 {
     auto provider = sb::di::ServiceCollection{}
-                        .addSingleton([](CircularDependencyB *b) { return CircularDependencyA{b}; })
-                        .addScoped([](CircularDependencyA *a) { return CircularDependencyB{a}; })
+                        .addSingleton([](CircularDependencyB *b) { return std::make_unique<CircularDependencyA>(b); })
+                        .addScoped([](CircularDependencyA *a) { return std::make_unique<CircularDependencyB>(a); })
                         .buildServiceProvider();
 
     EXPECT_THROW(provider.tryGetService<CircularDependencyA>(), sb::di::CircularDependencyException);
@@ -78,12 +78,12 @@ TEST_F(BasicFactoryTest, ShouldFailTryGetServiceDueToCircularDependency)
 
 // getService Tests
 
-TEST_F(BasicFactoryTest, ShouldGetService)
+TEST_F(BasicUniqFactoryTest, ShouldGetService)
 {
     auto provider = sb::di::ServiceCollection{}
-                        .addSingleton([] { return TestClass1{}; })
-                        .addScoped([] { return TestClass2{}; })
-                        .addTransient([] { return TestClass3{}; })
+                        .addSingleton([] { return std::make_unique<TestClass1>(); })
+                        .addScoped([] { return std::make_unique<TestClass2>(); })
+                        .addTransient([] { return std::make_unique<TestClass3>(); })
                         .buildServiceProvider();
 
     EXPECT_NO_THROW(provider.getService<TestClass1>());
@@ -91,12 +91,12 @@ TEST_F(BasicFactoryTest, ShouldGetService)
     EXPECT_THROW(provider.getService<TestClass3>(), sb::di::ServiceNotFoundException);
     EXPECT_THROW(provider.getService<TestClass4>(), sb::di::ServiceNotFoundException);
 }
-TEST_F(BasicFactoryTest, ShouldFailGetServiceDueToCircularDependency)
+TEST_F(BasicUniqFactoryTest, ShouldFailGetServiceDueToCircularDependency)
 {
 
     auto provider = sb::di::ServiceCollection{}
-                        .addSingleton([](CircularDependencyB *b) { return CircularDependencyA{b}; })
-                        .addScoped([](CircularDependencyA *a) { return CircularDependencyB{a}; })
+                        .addSingleton([](CircularDependencyB *b) { return std::make_unique<CircularDependencyA>(b); })
+                        .addScoped([](CircularDependencyA *a) { return std::make_unique<CircularDependencyB>(a); })
                         .buildServiceProvider();
 
     EXPECT_THROW(provider.getService<CircularDependencyA>(), sb::di::CircularDependencyException);
@@ -104,11 +104,11 @@ TEST_F(BasicFactoryTest, ShouldFailGetServiceDueToCircularDependency)
 
 // getServices Tests
 
-TEST_F(BasicFactoryTest, ShouldFailGetServicesDueToCircularDependency)
+TEST_F(BasicUniqFactoryTest, ShouldFailGetServicesDueToCircularDependency)
 {
     auto provider = sb::di::ServiceCollection{}
-                        .addSingleton([](CircularDependencyB *b) { return CircularDependencyA{b}; })
-                        .addScoped([](CircularDependencyA *a) { return CircularDependencyB{a}; })
+                        .addSingleton([](CircularDependencyB *b) { return std::make_unique<CircularDependencyA>(b); })
+                        .addScoped([](CircularDependencyA *a) { return std::make_unique<CircularDependencyB>(a); })
                         .buildServiceProvider();
 
     EXPECT_THROW(provider.getServices<CircularDependencyA>(), sb::di::CircularDependencyException);
@@ -116,12 +116,12 @@ TEST_F(BasicFactoryTest, ShouldFailGetServicesDueToCircularDependency)
 
 // tryCreateService Tests
 
-TEST_F(BasicFactoryTest, ShouldTryCreateService)
+TEST_F(BasicUniqFactoryTest, ShouldTryCreateService)
 {
     auto provider = sb::di::ServiceCollection{}
-                        .addSingleton([] { return TestClass1{}; })
-                        .addScoped([] { return TestClass2{}; })
-                        .addTransient([] { return TestClass3{}; })
+                        .addSingleton([] { return std::make_unique<TestClass1>(); })
+                        .addScoped([] { return std::make_unique<TestClass2>(); })
+                        .addTransient([] { return std::make_unique<TestClass3>(); })
                         .buildServiceProvider();
 
     EXPECT_FALSE(provider.tryCreateService<TestClass1>());
@@ -130,14 +130,14 @@ TEST_F(BasicFactoryTest, ShouldTryCreateService)
     EXPECT_FALSE(provider.tryCreateService<TestClass4>());
 }
 
-TEST_F(BasicFactoryTest, ShouldFailTryCreateServiceDueToCircularDependency)
+TEST_F(BasicUniqFactoryTest, ShouldFailTryCreateServiceDueToCircularDependency)
 {
     auto provider = sb::di::ServiceCollection{}
                         .addTransient([](std::unique_ptr<CircularDependencyUniqueB> b) {
-                            return CircularDependencyUniqueA{std::move(b)};
+                            return std::make_unique<CircularDependencyUniqueA>(std::move(b));
                         })
                         .addTransient([](std::unique_ptr<CircularDependencyUniqueA> a) {
-                            return CircularDependencyUniqueB{std::move(a)};
+                            return std::make_unique<CircularDependencyUniqueB>(std::move(a));
                         })
                         .buildServiceProvider();
 
@@ -146,12 +146,12 @@ TEST_F(BasicFactoryTest, ShouldFailTryCreateServiceDueToCircularDependency)
 
 // createService Tests
 
-TEST_F(BasicFactoryTest, ShouldCreateService)
+TEST_F(BasicUniqFactoryTest, ShouldCreateService)
 {
     auto provider = sb::di::ServiceCollection{}
-                        .addSingleton([] { return TestClass1{}; })
-                        .addScoped([] { return TestClass2{}; })
-                        .addTransient([] { return TestClass3{}; })
+                        .addSingleton([] { return std::make_unique<TestClass1>(); })
+                        .addScoped([] { return std::make_unique<TestClass2>(); })
+                        .addTransient([] { return std::make_unique<TestClass3>(); })
                         .buildServiceProvider();
 
     EXPECT_THROW(provider.createService<TestClass1>(), sb::di::ServiceNotFoundException);
@@ -160,14 +160,14 @@ TEST_F(BasicFactoryTest, ShouldCreateService)
     EXPECT_THROW(provider.createService<TestClass4>(), sb::di::ServiceNotFoundException);
 }
 
-TEST_F(BasicFactoryTest, ShouldFailCreateServiceDueToCircularDependency)
+TEST_F(BasicUniqFactoryTest, ShouldFailCreateServiceDueToCircularDependency)
 {
     auto provider = sb::di::ServiceCollection{}
                         .addTransient([](std::unique_ptr<CircularDependencyUniqueB> b) {
-                            return CircularDependencyUniqueA{std::move(b)};
+                            return std::make_unique<CircularDependencyUniqueA>(std::move(b));
                         })
                         .addTransient([](std::unique_ptr<CircularDependencyUniqueA> a) {
-                            return CircularDependencyUniqueB{std::move(a)};
+                            return std::make_unique<CircularDependencyUniqueB>(std::move(a));
                         })
                         .buildServiceProvider();
 
@@ -176,12 +176,12 @@ TEST_F(BasicFactoryTest, ShouldFailCreateServiceDueToCircularDependency)
 
 // createServiceInPlace Tests
 
-TEST_F(BasicFactoryTest, ShouldCreateServiceInPlace)
+TEST_F(BasicUniqFactoryTest, ShouldCreateServiceInPlace)
 {
     auto provider = sb::di::ServiceCollection{}
-                        .addSingleton([] { return TestClass1{}; })
-                        .addScoped([] { return TestClass2{}; })
-                        .addTransient([] { return TestClass3{}; })
+                        .addSingleton([] { return std::make_unique<TestClass1>(); })
+                        .addScoped([] { return std::make_unique<TestClass2>(); })
+                        .addTransient([] { return std::make_unique<TestClass3>(); })
                         .buildServiceProvider();
 
     EXPECT_THROW(provider.createServiceInPlace<TestClass1>(), sb::di::ServiceNotFoundException);
@@ -190,14 +190,14 @@ TEST_F(BasicFactoryTest, ShouldCreateServiceInPlace)
     EXPECT_THROW(provider.createServiceInPlace<TestClass4>(), sb::di::ServiceNotFoundException);
 }
 
-TEST_F(BasicFactoryTest, ShouldFailCreateServiceInPlaceDueToCircularDependency)
+TEST_F(BasicUniqFactoryTest, ShouldFailCreateServiceInPlaceDueToCircularDependency)
 {
     auto provider = sb::di::ServiceCollection{}
                         .addTransient([](std::unique_ptr<CircularDependencyUniqueB> b) {
-                            return CircularDependencyUniqueA{std::move(b)};
+                            return std::make_unique<CircularDependencyUniqueA>(std::move(b));
                         })
                         .addTransient([](std::unique_ptr<CircularDependencyUniqueA> a) {
-                            return CircularDependencyUniqueB{std::move(a)};
+                            return std::make_unique<CircularDependencyUniqueB>(std::move(a));
                         })
                         .buildServiceProvider();
 
@@ -206,14 +206,14 @@ TEST_F(BasicFactoryTest, ShouldFailCreateServiceInPlaceDueToCircularDependency)
 
 // createServices Tests
 
-TEST_F(BasicFactoryTest, ShouldFaildCreateServicesDueToCircularDependency)
+TEST_F(BasicUniqFactoryTest, ShouldFaildCreateServicesDueToCircularDependency)
 {
     auto provider = sb::di::ServiceCollection{}
                         .addTransient([](std::unique_ptr<CircularDependencyUniqueB> b) {
-                            return CircularDependencyUniqueA{std::move(b)};
+                            return std::make_unique<CircularDependencyUniqueA>(std::move(b));
                         })
                         .addTransient([](std::unique_ptr<CircularDependencyUniqueA> a) {
-                            return CircularDependencyUniqueB{std::move(a)};
+                            return std::make_unique<CircularDependencyUniqueB>(std::move(a));
                         })
                         .buildServiceProvider();
 
