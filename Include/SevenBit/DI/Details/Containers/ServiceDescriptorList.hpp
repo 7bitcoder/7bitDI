@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/OneOrList.hpp"

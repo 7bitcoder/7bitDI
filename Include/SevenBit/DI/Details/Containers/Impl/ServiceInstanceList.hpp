@@ -4,7 +4,6 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
 #include "SevenBit/DI/Details/Utils/Require.hpp"
-#include "SevenBit/DI/ServiceInstance.hpp"
 
 namespace sb::di::details::containers
 {

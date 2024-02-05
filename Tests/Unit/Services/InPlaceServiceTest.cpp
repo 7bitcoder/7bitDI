@@ -32,7 +32,6 @@ TEST_F(InPlaceServiceTest, ShouldCreateInPlaceService)
 
 TEST_F(InPlaceServiceTest, ShouldFailReleaseInPlaceService)
 {
-    TestClass1 test;
     sb::di::details::services::InPlaceService<TestClass1> service{};
 
     EXPECT_TRUE(service.isValid());
@@ -42,7 +41,6 @@ TEST_F(InPlaceServiceTest, ShouldFailReleaseInPlaceService)
 
 TEST_F(InPlaceServiceTest, ShouldSuccedMoveOutInPlaceService)
 {
-    TestClass1 test;
     sb::di::details::services::InPlaceService<TestClass1> service{};
 
     EXPECT_TRUE(service.isValid());

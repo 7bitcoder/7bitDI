@@ -1,7 +1,5 @@
 #pragma once
 
-#include <type_traits>
-
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Utils/Inheritance.hpp"

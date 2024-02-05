@@ -6,7 +6,6 @@
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Core/ServiceInstancesResolver.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
 
 class ServiceInstanceResolverTest : public testing::Test
@@ -344,7 +343,7 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateAlias)
     const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
 
     TestInheritClass6 test;
-    sb::di::ServiceInstance external{
+    const sb::di::ServiceInstance external{
         std::make_unique<sb::di::details::services::ExternalService<TestInheritClass6>>(&test)};
 
     const auto instance = resolver.createAlias(external);

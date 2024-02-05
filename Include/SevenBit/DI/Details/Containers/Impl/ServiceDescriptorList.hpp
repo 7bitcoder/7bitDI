@@ -1,7 +1,5 @@
 #pragma once
 
-#include <algorithm>
-
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"

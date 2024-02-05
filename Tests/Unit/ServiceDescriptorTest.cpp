@@ -70,7 +70,7 @@ TEST_F(ServiceDescriptorTest, ShouldGetProperInfoFromAliasDescriptor)
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestClass1));
     EXPECT_TRUE(descriptor.isAlias());
     auto getFactory = [&] { auto &f = descriptor.getImplementationFactory(); };
-    EXPECT_THROW((getFactory()), sb::di::NullPointerException);
+    EXPECT_THROW(getFactory(), sb::di::NullPointerException);
     EXPECT_EQ(descriptor.getCastOffset(), 2);
 }
 

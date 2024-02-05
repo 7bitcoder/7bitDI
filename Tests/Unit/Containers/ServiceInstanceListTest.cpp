@@ -37,19 +37,19 @@ TEST_F(ServiceInstanceListTest, ShouldAddServices)
 
 TEST_F(ServiceInstanceListTest, ShouldFailAddNullService)
 {
-    auto act = [&]() { sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{}}; };
+    auto act = [&] { sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{}}; };
 
-    EXPECT_THROW((act()), sb::di::InvalidServiceException);
+    EXPECT_THROW(act(), sb::di::InvalidServiceException);
 }
 
 TEST_F(ServiceInstanceListTest, ShouldFailAddInvalidService)
 {
-    auto act = [&]() {
+    auto act = [&] {
         auto implementation = std::make_unique<sb::di::details::services::UniquePtrService<TestClass1>>(nullptr);
         sb::di::details::containers::ServiceInstanceList list{sb::di::ServiceInstance{std::move(implementation)}};
     };
 
-    EXPECT_THROW((act()), sb::di::InvalidServiceException);
+    EXPECT_THROW(act(), sb::di::InvalidServiceException);
 }
 
 TEST_F(ServiceInstanceListTest, ShouldReturnProperSize)

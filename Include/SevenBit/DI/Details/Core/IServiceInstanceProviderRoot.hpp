@@ -10,7 +10,7 @@ namespace sb::di::details::core
 {
     struct IServiceInstanceProviderRoot
     {
-        virtual const containers::ServiceDescriptorsMap &getDescriptorsMap() const = 0;
+        [[nodiscard]] virtual const containers::ServiceDescriptorsMap &getDescriptorsMap() const = 0;
 
         virtual containers::ServiceInstancesMap &getSingletons() = 0;
 

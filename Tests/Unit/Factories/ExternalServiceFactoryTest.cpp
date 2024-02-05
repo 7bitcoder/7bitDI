@@ -3,7 +3,6 @@
 #include "../../Helpers/Classes/Basic.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/DI/Details/Factories/ExternalServiceFactory.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
 
 class ExternalServiceFactoryTest : public testing::Test
 {

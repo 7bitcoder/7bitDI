@@ -5,22 +5,22 @@ struct CircularDependencyB;
 
 struct CircularDependencyA
 {
-    CircularDependencyA(CircularDependencyB *b) {}
+    explicit CircularDependencyA(CircularDependencyB *b) {}
 };
 
 struct CircularDependencyB
 {
-    CircularDependencyB(CircularDependencyA *a) {}
+    explicit CircularDependencyB(CircularDependencyA *a) {}
 };
 
 struct CircularDependencyUniqueB;
 
 struct CircularDependencyUniqueA
 {
-    CircularDependencyUniqueA(std::unique_ptr<CircularDependencyUniqueB> b) {}
+    explicit CircularDependencyUniqueA(std::unique_ptr<CircularDependencyUniqueB> b) {}
 };
 
 struct CircularDependencyUniqueB
 {
-    CircularDependencyUniqueB(std::unique_ptr<CircularDependencyUniqueA> a) {}
+    explicit CircularDependencyUniqueB(std::unique_ptr<CircularDependencyUniqueA> a) {}
 };

@@ -35,7 +35,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldGetOptions)
     sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
-    const auto options = provider.getOptions();
+    const auto &options = provider.getOptions();
     EXPECT_FALSE(options.prebuildSingletons);
     EXPECT_FALSE(options.strongDestructionOrder);
     EXPECT_TRUE(options.checkServiceGlobalUniqueness);

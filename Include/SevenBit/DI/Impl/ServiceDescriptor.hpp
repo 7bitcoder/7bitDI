@@ -2,7 +2,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Utils/Require.hpp"
+#include "SevenBit/DI/Details/Utils/RequireBase.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 
 namespace sb::di
@@ -24,7 +24,7 @@ namespace sb::di
 
     INLINE const IServiceFactory &ServiceDescriptor::getImplementationFactory() const
     {
-        return *details::utils::Require::notNullAndGet(_implementationFactory.get());
+        return *details::utils::RequireBase::notNullAndGet(_implementationFactory.get());
     }
 
     INLINE ptrdiff_t ServiceDescriptor::getCastOffset() const { return _castOffset; }

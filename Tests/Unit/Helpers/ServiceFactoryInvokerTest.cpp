@@ -30,8 +30,8 @@ TEST_F(ServiceFactoryInvokerTest, ShouldInvokeFuncFactory)
     EXPECT_CALL(mock.getMock(), tryGetInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&test1));
 
-    auto func = [&](TestDependencyClass *test1) {
-        EXPECT_TRUE(test1);
+    auto func = [&](TestDependencyClass *service) {
+        EXPECT_TRUE(service);
         return 1;
     };
 

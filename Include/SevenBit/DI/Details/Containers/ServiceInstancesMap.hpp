@@ -2,11 +2,11 @@
 
 #include <memory>
 #include <unordered_map>
+#include <vector>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
-#include "SevenBit/DI/ServiceInstance.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di::details::containers

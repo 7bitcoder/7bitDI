@@ -1,7 +1,5 @@
 #include <gtest/gtest.h>
 
-#include "SevenBit/DI/Details/Utils/Check.hpp"
-
 #include "../../Helpers/Classes/Complex.hpp"
 #include "SevenBit/DI/Details/Utils/IsInPlaceObject.hpp"
 

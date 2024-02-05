@@ -9,7 +9,6 @@
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 #include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
-#include "SevenBit/DI/IServiceInstance.hpp"
 
 namespace sb::di::details::factories
 {

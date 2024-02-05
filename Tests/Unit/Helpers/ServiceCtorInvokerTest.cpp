@@ -32,8 +32,8 @@ TEST_F(ServiceCtorInvokerTest, ShouldInvokeFuncWithCtorParams)
 
     sb::di::details::helpers::ServiceCtorInvoker<TestDependencyPtrClass1> invoker{mock};
 
-    auto func = [&](TestDependencyClass *test1) {
-        EXPECT_TRUE(test1);
+    auto func = [&](TestDependencyClass *service) {
+        EXPECT_TRUE(service);
         return 1;
     };
     EXPECT_EQ(invoker.invokeWithCtorParams(func), 1);

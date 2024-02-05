@@ -6,8 +6,6 @@
 
 #include "SevenBit/DI/Details/Services/ExternalService.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
-#include "SevenBit/DI/IServiceInstance.hpp"
-#include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di::details::factories
 {

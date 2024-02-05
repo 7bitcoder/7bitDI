@@ -2,10 +2,9 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/ServiceInstance.hpp"
-
 #include "SevenBit/DI/Details/Utils/Cast.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
+#include "SevenBit/DI/Details/Utils/RequireBase.hpp"
+#include "SevenBit/DI/ServiceInstance.hpp"
 
 namespace sb::di
 {
@@ -20,20 +19,12 @@ namespace sb::di
 
     INLINE IServiceInstance &ServiceInstance::getImplementation()
     {
-        if (!_implementation)
-        {
-            throw NullPointerException{"service implementation cannot be null"};
-        }
-        return *_implementation;
+        return *details::utils::RequireBase::notNullAndGet(_implementation.get());
     }
 
     INLINE const IServiceInstance &ServiceInstance::getImplementation() const
     {
-        if (!_implementation)
-        {
-            throw NullPointerException{"service implementation cannot be null"};
-        }
-        return *_implementation;
+        return *details::utils::RequireBase::notNullAndGet(_implementation.get());
     }
 
     INLINE void ServiceInstance::addCastOffset(const ptrdiff_t castOffset) { _castOffset += castOffset; }

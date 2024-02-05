@@ -4,6 +4,8 @@
 
 #include "SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
+#include "SevenBit/DI/ServiceInstance.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 
 namespace sb::di::details::core
 {
@@ -20,7 +22,7 @@ namespace sb::di::details::core
         ServiceInstance createInstanceAlias(const ServiceDescriptor &descriptor, const ServiceInstance *instance);
 
       private:
-        ServiceInstance createInstance(IServiceInstance::Ptr implementation, ptrdiff_t castOffset);
+        ServiceInstance createInstance(IServiceInstance::Ptr &&implementation, ptrdiff_t castOffset);
     };
 } // namespace sb::di::details::core
 

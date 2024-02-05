@@ -222,7 +222,7 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyVec1Service)
     ServiceProviderMock mock;
     sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
-    sb::di::OneOrList<sb::di::ServiceInstance> result{std::move(test1)};
+    sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryGetInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&result));
@@ -242,7 +242,7 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyVec2Service)
     ServiceProviderMock mock;
     sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
-    sb::di::OneOrList<sb::di::ServiceInstance> result{std::move(test1)};
+    sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryGetInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&result));
@@ -263,7 +263,7 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyVec3Service)
     auto service = std::make_unique<TestDependencyClass>();
     sb::di::ServiceInstance test1{
         std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service))};
-    sb::di::OneOrList<sb::di::ServiceInstance> result{std::move(test1)};
+    sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryCreateInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(std::make_optional(std::move(result))));
@@ -285,7 +285,7 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyVec4Service)
     sb::di::ServiceInstance test1{
         std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service))};
 
-    sb::di::OneOrList<sb::di::ServiceInstance> result{std::move(test1)};
+    sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryCreateInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(std::make_optional(std::move(result))));

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <optional>
-
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/IServiceFactory.hpp"

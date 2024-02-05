@@ -11,7 +11,7 @@ namespace sb::di
 {
     template <class T> class OneOrList
     {
-        std::variant<T, std::vector<T>> _variant;
+        std::variant<T, std::vector<T>> _variant{};
 
       public:
         explicit OneOrList(const size_t size) : _variant(std::vector<T>{}) { reserve(size); }

@@ -1,7 +1,5 @@
 #include <gtest/gtest.h>
 
-#include "SevenBit/DI/Details/Utils/Check.hpp"
-
 #include "../../Helpers/Classes/Complex.hpp"
 #include "../../Helpers/Classes/MultiInherit.hpp"
 #include "SevenBit/DI/Details/Utils/Inheritance.hpp"

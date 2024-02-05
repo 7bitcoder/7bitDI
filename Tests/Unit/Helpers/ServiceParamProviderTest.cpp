@@ -3,7 +3,6 @@
 #include "../../Helpers/Classes/Dependencies.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/DI/Details/Helpers/ServiceParamProvider.hpp"
-#include "SevenBit/DI/Details/Services/ExternalService.hpp"
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 #include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
@@ -177,7 +176,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyVec1Service)
     ServiceProviderMock mock;
     sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
-    sb::di::OneOrList<sb::di::ServiceInstance> result{std::move(test1)};
+    sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryGetInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&result));
@@ -194,7 +193,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyVec2Service)
 {
     ServiceProviderMock mock;
     sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
-    sb::di::OneOrList<sb::di::ServiceInstance> result{std::move(test1)};
+    sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryGetInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&result));
@@ -213,7 +212,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyVec3Service)
     auto service = std::make_unique<TestDependencyClass>();
     sb::di::ServiceInstance test1{
         std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service))};
-    sb::di::OneOrList<sb::di::ServiceInstance> result{std::move(test1)};
+    sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryCreateInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(std::make_optional(std::move(result))));
@@ -234,7 +233,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyVec4Service)
     sb::di::ServiceInstance test1{
         std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service))};
 
-    sb::di::OneOrList<sb::di::ServiceInstance> result{std::move(test1)};
+    sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryCreateInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(std::make_optional(std::move(result))));

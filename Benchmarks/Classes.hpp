@@ -144,7 +144,7 @@ struct ITestComplexClass6
     virtual ~ITestComplexClass6() = default;
 };
 
-class TestComplexClass6 : ITestComplexClass6
+class TestComplexClass6 : public ITestComplexClass6
 {
     std::vector<ITestComplexClass1 *> _vec;
 

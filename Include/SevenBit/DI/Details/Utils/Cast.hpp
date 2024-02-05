@@ -1,7 +1,6 @@
 #pragma once
 
 #include <limits>
-#include <unordered_set>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
@@ -9,10 +8,10 @@ namespace sb::di::details::utils
 {
     struct Cast
     {
-        template <class T, class I> static constexpr intptr_t getCastOffset()
+        template <class TService, class TImplementation> static constexpr intptr_t getCastOffset()
         {
-            auto implementation = reinterpret_cast<I *>(std::numeric_limits<size_t>::max() / 2);
-            auto service = static_cast<T *>(implementation);
+            auto implementation = reinterpret_cast<TImplementation *>(std::numeric_limits<size_t>::max() / 2);
+            auto service = static_cast<TService *>(implementation);
             return reinterpret_cast<intptr_t>(service) - reinterpret_cast<intptr_t>(implementation);
         };
 

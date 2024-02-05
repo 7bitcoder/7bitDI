@@ -7,6 +7,7 @@
 #include "SevenBit/DI/Details/Core/ServiceInstanceCreator.hpp"
 #include "SevenBit/DI/Details/Services/AliasService.hpp"
 #include "SevenBit/DI/Details/Utils/Require.hpp"
+#include "SevenBit/DI/Details/Utils/RequireBase.hpp"
 
 namespace sb::di::details::core
 {
@@ -18,7 +19,8 @@ namespace sb::di::details::core
     INLINE ServiceInstance ServiceInstanceCreator::createInstance(const ServiceDescriptor &descriptor,
                                                                   const bool inPlaceRequest)
     {
-        auto &provider = *utils::Require::notNullAndGet(_serviceProvider);
+        utils::Require::nonAliasDescriptor(descriptor);
+        auto &provider = *utils::RequireBase::notNullAndGet(_serviceProvider);
         auto &factory = descriptor.getImplementationFactory();
         auto _ = _guard(descriptor.getImplementationTypeId());
 
@@ -29,6 +31,7 @@ namespace sb::di::details::core
     INLINE ServiceInstance ServiceInstanceCreator::createInstanceAlias(const ServiceDescriptor &descriptor,
                                                                        const ServiceInstance *instance)
     {
+        utils::Require::aliasDescriptor(descriptor);
         utils::Require::validInstance(instance);
         auto implementationType = descriptor.getImplementationTypeId();
 
@@ -36,7 +39,7 @@ namespace sb::di::details::core
         return createInstance(std::move(implementation), descriptor.getCastOffset());
     }
 
-    INLINE ServiceInstance ServiceInstanceCreator::createInstance(IServiceInstance::Ptr implementation,
+    INLINE ServiceInstance ServiceInstanceCreator::createInstance(IServiceInstance::Ptr &&implementation,
                                                                   const ptrdiff_t castOffset)
     {
         return utils::Require::validInstanceAndGet(ServiceInstance{std::move(implementation), castOffset});
