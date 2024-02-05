@@ -8,7 +8,6 @@
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
 #include "SevenBit/DI/Details/Services/ExternalService.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
-#include "SevenBit/DI/ServiceDescriptor.hpp"
 
 class ServiceInstancesMapTest : public testing::Test
 {

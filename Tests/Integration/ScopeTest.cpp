@@ -5,7 +5,6 @@
 #include "../Helpers/Classes/Complex.hpp"
 #include "../Helpers/Classes/Dependencies.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
 
 class ScopeTest : public testing::Test
 {

@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include "SevenBit/DI/Details/Services/ExternalService.hpp"
 #include "SevenBit/DI/Details/Utils/CheckBase.hpp"
 
 class CheckBaseTest : public testing::Test

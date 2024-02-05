@@ -6,7 +6,6 @@
 #include "SevenBit/DI/Details/Factories/ServiceFactory.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
-#include "SevenBit/DI/ServiceLifeTime.hpp"
 
 class ServiceDescriptorTest : public testing::Test
 {

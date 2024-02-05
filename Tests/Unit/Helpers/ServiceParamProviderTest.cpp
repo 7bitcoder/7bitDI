@@ -5,7 +5,6 @@
 #include "SevenBit/DI/Details/Helpers/ServiceParamProvider.hpp"
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 #include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
 
 class ServiceParamProviderTest : public testing::Test
 {

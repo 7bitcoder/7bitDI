@@ -5,7 +5,6 @@
 #include "../../Helpers/Classes/Dependencies.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/DI/Details/Factories/ServiceFactory.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
 
 class ServiceFactoryTest : public testing::Test
 {

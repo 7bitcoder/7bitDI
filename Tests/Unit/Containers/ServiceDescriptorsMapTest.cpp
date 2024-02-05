@@ -3,8 +3,6 @@
 #include "../../Helpers/Classes/Inherit.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorsMap.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
-#include "SevenBit/DI/ServiceDescriptor.hpp"
-#include "SevenBit/DI/ServiceLifeTime.hpp"
 
 class ServiceDescriptorsMapTest : public testing::Test
 {

@@ -1,10 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "SevenBit/DI/Details/Utils/Cast.hpp"
-
 #include "../../Helpers/Classes/MultiInherit.hpp"
-#include "SevenBit/DI/Details/Services/ExternalService.hpp"
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
+#include "SevenBit/DI/Details/Utils/Cast.hpp"
 
 class CastTest : public testing::Test
 {
@@ -49,11 +47,11 @@ TEST_F(CastTest, ShouldGetCastOffset)
 TEST_F(CastTest, ShouldApplyCastOffset)
 {
     EXPECT_EQ((sb::di::details::utils::Cast::applyCastOffset(reinterpret_cast<void *>(1), 0)),
-                reinterpret_cast<void *>(1));
+              reinterpret_cast<void *>(1));
     EXPECT_EQ((sb::di::details::utils::Cast::applyCastOffset(reinterpret_cast<void *>(1), 1)),
-                reinterpret_cast<void *>(2));
+              reinterpret_cast<void *>(2));
     EXPECT_EQ((sb::di::details::utils::Cast::applyCastOffset(reinterpret_cast<void *>(22), 11)),
-                reinterpret_cast<void *>(33));
+              reinterpret_cast<void *>(33));
     EXPECT_EQ((sb::di::details::utils::Cast::applyCastOffset(reinterpret_cast<void *>(22), -11)),
-                reinterpret_cast<void *>(11));
+              reinterpret_cast<void *>(11));
 }

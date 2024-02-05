@@ -7,7 +7,7 @@
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/DI/Details/Core/ServiceInstanceCreator.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/ServiceCollection.hpp"
+#include "SevenBit/DI/ServiceDescriber.hpp"
 
 class ServiceInstanceCreatorTest : public testing::Test
 {

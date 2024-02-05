@@ -2,9 +2,8 @@
 
 #include "../../Helpers/Classes/Dependencies.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
-#include "SevenBit/DI/Details/Factories/ServiceFactory.hpp"
 #include "SevenBit/DI/Details/Helpers/ServiceFactoryInvoker.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
+#include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 
 class ServiceFactoryInvokerTest : public testing::Test
 {

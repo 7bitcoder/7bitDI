@@ -5,6 +5,7 @@
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 #include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
 #include "SevenBit/DI/Details/Utils/Require.hpp"
+#include "SevenBit/DI/Exceptions.hpp"
 
 class RequireTest : public testing::Test
 {

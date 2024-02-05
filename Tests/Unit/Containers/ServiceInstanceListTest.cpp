@@ -7,7 +7,6 @@
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 #include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/ServiceInstance.hpp"
 
 class ServiceInstanceListTest : public testing::Test
 {

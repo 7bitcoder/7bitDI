@@ -5,7 +5,6 @@
 #include "../../Helpers/Classes/Dependencies.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/DI/Details/Factories/ServiceFcnFactory.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
 
 class ServiceFcnFactoryTest : public testing::Test
 {

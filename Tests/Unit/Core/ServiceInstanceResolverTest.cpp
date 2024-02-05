@@ -4,9 +4,8 @@
 #include "../../Helpers/Classes/Basic.hpp"
 #include "../../Helpers/Classes/Inherit.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
-#include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Core/ServiceInstancesResolver.hpp"
-#include "SevenBit/DI/ServiceCollection.hpp"
+#include "SevenBit/DI/ServiceDescriber.hpp"
 
 class ServiceInstanceResolverTest : public testing::Test
 {
