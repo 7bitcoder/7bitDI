@@ -9,5 +9,6 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
+add_subdirectory(EndToEnd)
 add_subdirectory(Integration)
 add_subdirectory(Unit)
