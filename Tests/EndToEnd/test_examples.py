@@ -7,7 +7,6 @@ import json
 
 def getBinDir():
     if len(sys.argv) != 2:
-        return "C:\\Users\\Sylwek\\Desktop\\7bitDI\\cmake-build-debug\\bin"
         raise Exception("binary directory not provided")
     binDir = sys.argv[1]
     if not os.path.exists(binDir):
