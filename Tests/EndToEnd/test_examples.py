@@ -7,8 +7,12 @@ import json
 
 def getBinDir():
     if len(sys.argv) != 2:
+        return "C:\\Users\\Sylwek\\Desktop\\7bitDI\\cmake-build-debug\\bin"
         raise Exception("binary directory not provided")
-    return sys.argv[1]
+    binDir = sys.argv[1]
+    if not os.path.exists(binDir):
+        raise Exception("Binary directory does not exist")
+    return binDir
 
 
 class ExamplesTest:
@@ -18,7 +22,8 @@ class ExamplesTest:
         self.expectedTestMap = self.__getExpectedTestMap()
 
     def __getAvailableExamples(self):
-        paths = [os.path.join(self.binDir, f) for f in os.listdir(self.binDir) if "Example" in f]
+        paths = [os.path.join(self.binDir, f) for f in os.listdir(self.binDir) if
+                 "Example" in f and os.path.splitext(f)[1] in [".exe", ""]]
         return [f for f in paths if os.path.isfile(f)]
 
     def __getExpectedTestMap(self):
@@ -35,7 +40,8 @@ class ExamplesTest:
             raise Exception(f"result of running example: '{result.stdout}' does not match expected: '{expected}'")
 
     def __runTestAndSummarize(self, examplePath):
-        name = os.path.basename(examplePath).split('.')[-1].replace("Example", "")
+        fileName = os.path.basename(examplePath)
+        name = os.path.splitext(fileName)[0].replace("Example", "")
         try:
             self.__runTest(examplePath, self.expectedTestMap.get(name))
             print(f"{name} example test succeeded")
