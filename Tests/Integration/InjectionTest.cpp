@@ -69,6 +69,6 @@ TEST_F(InjectionTest, ShouldTryGetDeepNestedService)
 
     auto provider = collection.buildServiceProvider();
 
-    auto nested = provider.getService<TestNested<60>>();
+    auto &nested = provider.getService<TestNested<60>>();
     nested.checkRecurse(provider);
 }

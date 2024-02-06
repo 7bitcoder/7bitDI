@@ -121,6 +121,19 @@ TEST_F(BasicTest, ShouldGetSelf)
 
 // getServices Tests
 
+TEST_F(BasicTest, ShouldGetServices)
+{
+    auto provider = sb::di::ServiceCollection{}
+                        .addSingleton<TestClass1>()
+                        .addScoped<TestClass2>()
+                        .addTransient<TestClass3>()
+                        .buildServiceProvider();
+
+    EXPECT_EQ(provider.getServices<TestClass1>().size(), 1);
+    EXPECT_EQ(provider.getServices<TestClass2>().size(), 1);
+    EXPECT_EQ(provider.getServices<TestClass3>().size(), 0);
+}
+
 TEST_F(BasicTest, ShouldGetEmptyServicesForNotExisting)
 {
     auto provider = sb::di::ServiceCollection{}.buildServiceProvider();
@@ -241,6 +254,19 @@ TEST_F(BasicTest, ShouldFailCreateServiceInPlaceDueToCircularDependency)
 }
 
 // createServices Tests
+
+TEST_F(BasicTest, ShouldCreateServicess)
+{
+    auto provider = sb::di::ServiceCollection{}
+                        .addSingleton<TestClass1>()
+                        .addScoped<TestClass2>()
+                        .addTransient<TestClass3>()
+                        .buildServiceProvider();
+
+    EXPECT_EQ(provider.createServices<TestClass1>().size(), 0);
+    EXPECT_EQ(provider.createServices<TestClass2>().size(), 0);
+    EXPECT_EQ(provider.createServices<TestClass3>().size(), 1);
+}
 
 TEST_F(BasicTest, ShouldCreateEmptyServicesForNotExisting)
 {

@@ -104,6 +104,19 @@ TEST_F(BasicFactoryTest, ShouldFailGetServiceDueToCircularDependency)
 
 // getServices Tests
 
+TEST_F(BasicFactoryTest, ShouldGetServices)
+{
+    auto provider = sb::di::ServiceCollection{}
+                        .addSingleton([] { return TestClass1{}; })
+                        .addScoped([] { return TestClass2{}; })
+                        .addTransient([] { return TestClass3{}; })
+                        .buildServiceProvider();
+
+    EXPECT_EQ(provider.getServices<TestClass1>().size(), 1);
+    EXPECT_EQ(provider.getServices<TestClass2>().size(), 1);
+    EXPECT_EQ(provider.getServices<TestClass3>().size(), 0);
+}
+
 TEST_F(BasicFactoryTest, ShouldFailGetServicesDueToCircularDependency)
 {
     auto provider = sb::di::ServiceCollection{}
@@ -205,6 +218,19 @@ TEST_F(BasicFactoryTest, ShouldFailCreateServiceInPlaceDueToCircularDependency)
 }
 
 // createServices Tests
+
+TEST_F(BasicFactoryTest, ShouldCreateServicess)
+{
+    auto provider = sb::di::ServiceCollection{}
+                        .addSingleton([] { return TestClass1{}; })
+                        .addScoped([] { return TestClass2{}; })
+                        .addTransient([] { return TestClass3{}; })
+                        .buildServiceProvider();
+
+    EXPECT_EQ(provider.createServices<TestClass1>().size(), 0);
+    EXPECT_EQ(provider.createServices<TestClass2>().size(), 0);
+    EXPECT_EQ(provider.createServices<TestClass3>().size(), 1);
+}
 
 TEST_F(BasicFactoryTest, ShouldFaildCreateServicesDueToCircularDependency)
 {

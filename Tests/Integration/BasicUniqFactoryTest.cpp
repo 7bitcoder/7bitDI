@@ -104,6 +104,19 @@ TEST_F(BasicUniqFactoryTest, ShouldFailGetServiceDueToCircularDependency)
 
 // getServices Tests
 
+TEST_F(BasicUniqFactoryTest, ShouldGetServices)
+{
+    auto provider = sb::di::ServiceCollection{}
+                        .addSingleton([] { return std::make_unique<TestClass1>(); })
+                        .addScoped([] { return std::make_unique<TestClass2>(); })
+                        .addTransient([] { return std::make_unique<TestClass3>(); })
+                        .buildServiceProvider();
+
+    EXPECT_EQ(provider.getServices<TestClass1>().size(), 1);
+    EXPECT_EQ(provider.getServices<TestClass2>().size(), 1);
+    EXPECT_EQ(provider.getServices<TestClass3>().size(), 0);
+}
+
 TEST_F(BasicUniqFactoryTest, ShouldFailGetServicesDueToCircularDependency)
 {
     auto provider = sb::di::ServiceCollection{}
@@ -205,6 +218,19 @@ TEST_F(BasicUniqFactoryTest, ShouldFailCreateServiceInPlaceDueToCircularDependen
 }
 
 // createServices Tests
+
+TEST_F(BasicUniqFactoryTest, ShouldCreateServicess)
+{
+    auto provider = sb::di::ServiceCollection{}
+                        .addSingleton([] { return std::make_unique<TestClass1>(); })
+                        .addScoped([] { return std::make_unique<TestClass2>(); })
+                        .addTransient([] { return std::make_unique<TestClass3>(); })
+                        .buildServiceProvider();
+
+    EXPECT_EQ(provider.createServices<TestClass1>().size(), 0);
+    EXPECT_EQ(provider.createServices<TestClass2>().size(), 0);
+    EXPECT_EQ(provider.createServices<TestClass3>().size(), 1);
+}
 
 TEST_F(BasicUniqFactoryTest, ShouldFaildCreateServicesDueToCircularDependency)
 {
