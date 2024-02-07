@@ -12,19 +12,19 @@ set(SPHINX_OUT ${SPHINX_SOURCE}/conf.py)
 configure_file(${SPHINX_IN} ${SPHINX_OUT} @ONLY)
 
 add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
-        COMMAND
-        ${SPHINX_EXECUTABLE} -b html
-        ${SPHINX_SOURCE} ${SPHINX_BUILD}
-        WORKING_DIRECTORY ${SPHINX_SOURCE}
-        DEPENDS
-        ${SPHINX_RST_FILES}
-        ${EXAMPLES}
-        ${SOURCES}
-        MAIN_DEPENDENCY ${SPHINX_OUT}
-        COMMENT "Generating documentation with Sphinx")
+    COMMAND
+    ${SPHINX_EXECUTABLE} -b html
+    ${SPHINX_SOURCE} ${SPHINX_BUILD}
+    WORKING_DIRECTORY ${SPHINX_SOURCE}
+    DEPENDS
+    ${SPHINX_RST_FILES}
+    ${EXAMPLES}
+    ${SOURCES}
+    MAIN_DEPENDENCY ${SPHINX_OUT}
+    COMMENT "Generating documentation with Sphinx")
 
 add_custom_target(GenerateDoc
-        ALL DEPENDS
-        ${SPHINX_INDEX_FILE}
-        ${SPHINX_RST_FILES}
+    ALL DEPENDS
+    ${SPHINX_INDEX_FILE}
+    ${SPHINX_RST_FILES}
 )
