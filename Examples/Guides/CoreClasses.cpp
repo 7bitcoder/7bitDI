@@ -11,6 +11,7 @@ struct ServiceB
 struct ServiceC
 {
 };
+
 int main()
 {
     // Service registration

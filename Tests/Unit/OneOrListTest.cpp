@@ -20,7 +20,7 @@ class OneOrListTest : public testing::Test
 
 TEST_F(OneOrListTest, ShouldCreateSingle)
 {
-    sb::di::OneOrList<int> list{2};
+    sb::di::OneOrList list{2};
 
     EXPECT_FALSE(list.isList());
     EXPECT_EQ(list.first(), 2);
@@ -28,7 +28,7 @@ TEST_F(OneOrListTest, ShouldCreateSingle)
 
 TEST_F(OneOrListTest, ShouldCreateList)
 {
-    sb::di::OneOrList<int> list(2);
+    sb::di::OneOrList list(2);
     list.reserve(2);
 
     EXPECT_TRUE(list.isList());
@@ -37,7 +37,7 @@ TEST_F(OneOrListTest, ShouldCreateList)
 
 TEST_F(OneOrListTest, ShouldMove)
 {
-    sb::di::OneOrList<int> list{2};
+    sb::di::OneOrList list{2};
 
     auto newList = std::move(list);
 
@@ -49,7 +49,7 @@ TEST_F(OneOrListTest, ShouldMove)
 
 TEST_F(OneOrListTest, ShouldAdd)
 {
-    sb::di::OneOrList<int> list{2};
+    sb::di::OneOrList list{2};
 
     list.add(3);
     list.add(4);
@@ -62,7 +62,7 @@ TEST_F(OneOrListTest, ShouldAdd)
 
 TEST_F(OneOrListTest, ShouldGetFirst)
 {
-    sb::di::OneOrList<int> list{2};
+    sb::di::OneOrList list{2};
 
     EXPECT_EQ(list.first(), 2);
 
@@ -75,7 +75,7 @@ TEST_F(OneOrListTest, ShouldGetFirst)
 
 TEST_F(OneOrListTest, ShouldGetLast)
 {
-    sb::di::OneOrList<int> list{2};
+    sb::di::OneOrList list{2};
 
     EXPECT_EQ(list.last(), 2);
 
@@ -88,7 +88,9 @@ TEST_F(OneOrListTest, ShouldGetLast)
 
 TEST_F(OneOrListTest, ShouldGetIndexed)
 {
-    sb::di::OneOrList<int> list{2};
+    sb::di::OneOrList list{2};
+
+    EXPECT_EQ(list[0], 2);
 
     list.add(3);
     list.add(4);
@@ -102,7 +104,7 @@ TEST_F(OneOrListTest, ShouldGetIndexed)
 
 TEST_F(OneOrListTest, ShouldGetSize)
 {
-    sb::di::OneOrList<int> list{2};
+    sb::di::OneOrList list{2};
 
     EXPECT_EQ(list.size(), 1);
 
@@ -117,7 +119,7 @@ TEST_F(OneOrListTest, ShouldGetSize)
 
 TEST_F(OneOrListTest, ShouldGetEmpty)
 {
-    sb::di::OneOrList<int> list{2};
+    sb::di::OneOrList list{2};
 
     EXPECT_FALSE(list.empty());
 
@@ -132,7 +134,7 @@ TEST_F(OneOrListTest, ShouldGetEmpty)
 
 TEST_F(OneOrListTest, ShouldGetIsList)
 {
-    sb::di::OneOrList<int> list{2};
+    sb::di::OneOrList list{2};
 
     EXPECT_FALSE(list.isList());
 
@@ -145,7 +147,7 @@ TEST_F(OneOrListTest, ShouldGetIsList)
 
 TEST_F(OneOrListTest, ShouldGetAsList)
 {
-    sb::di::OneOrList<int> list{2};
+    sb::di::OneOrList list{2};
 
     EXPECT_THROW(list.getAsList(), std::bad_variant_access);
 
@@ -153,12 +155,12 @@ TEST_F(OneOrListTest, ShouldGetAsList)
     list.add(4);
     list.add(5);
 
-    EXPECT_EQ(list.getAsList(), (std::vector<int>{2, 3, 4, 5}));
+    EXPECT_EQ(list.getAsList(), (std::vector{2, 3, 4, 5}));
 }
 
 TEST_F(OneOrListTest, ShouldGetAsSingle)
 {
-    sb::di::OneOrList<int> list{2};
+    sb::di::OneOrList list{2};
 
     EXPECT_EQ(list.getAsSingle(), 2);
 
@@ -171,7 +173,7 @@ TEST_F(OneOrListTest, ShouldGetAsSingle)
 
 TEST_F(OneOrListTest, ShouldGetTryGetAsList)
 {
-    sb::di::OneOrList<int> list{2};
+    sb::di::OneOrList list{2};
 
     EXPECT_FALSE(list.tryGetAsList());
 
@@ -179,12 +181,12 @@ TEST_F(OneOrListTest, ShouldGetTryGetAsList)
     list.add(4);
     list.add(5);
 
-    EXPECT_EQ(*list.tryGetAsList(), (std::vector<int>{2, 3, 4, 5}));
+    EXPECT_EQ(*list.tryGetAsList(), (std::vector{2, 3, 4, 5}));
 }
 
 TEST_F(OneOrListTest, ShouldTryGetAsSingle)
 {
-    sb::di::OneOrList<int> list{2};
+    sb::di::OneOrList list{2};
 
     EXPECT_EQ(*list.tryGetAsSingle(), 2);
 
@@ -193,4 +195,40 @@ TEST_F(OneOrListTest, ShouldTryGetAsSingle)
     list.add(5);
 
     EXPECT_FALSE(list.tryGetAsSingle());
+}
+
+TEST_F(OneOrListTest, ShouldForEach)
+{
+    sb::di::OneOrList list{2};
+    std::vector<int> result;
+
+    list.forEach([&](const int i) { result.push_back(i); });
+
+    EXPECT_EQ(result, std::vector{2});
+    result.clear();
+
+    list.add(3);
+    list.add(4);
+    list.add(5);
+
+    list.forEach([&](const int i) { result.push_back(i); });
+
+    EXPECT_EQ(result, (std::vector{2, 3, 4, 5}));
+}
+
+TEST_F(OneOrListTest, ShouldMap)
+{
+    sb::di::OneOrList list{2};
+
+    std::vector result = list.map([&](const int i) { return i * 2; });
+
+    EXPECT_EQ(result, std::vector{4});
+
+    list.add(3);
+    list.add(4);
+    list.add(5);
+
+    result = list.map([&](const int i) { return i * 2; });
+
+    EXPECT_EQ(result, (std::vector{4, 6, 8, 10}));
 }

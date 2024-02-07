@@ -43,6 +43,7 @@ class ServiceExecutor
         return _serviceA.actionA() + ", " + _serviceB->actionB() + " executed.";
     }
 };
+
 int main()
 {
     ServiceProvider provider = ServiceCollection{}

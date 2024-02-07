@@ -4,7 +4,6 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp"
 #include "SevenBit/DI/Details/Core/ServiceInstanceProviderRoot.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
 

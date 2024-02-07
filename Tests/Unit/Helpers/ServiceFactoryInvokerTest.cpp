@@ -2,36 +2,35 @@
 
 #include "../../Helpers/Classes/Dependencies.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
-#include "SevenBit/DI/Details/Factories/ServiceFactory.hpp"
 #include "SevenBit/DI/Details/Helpers/ServiceFactoryInvoker.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
+#include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 
-class ServiceFactoryInvoker : public testing::Test
+class ServiceFactoryInvokerTest : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}
 
-    ServiceFactoryInvoker() {}
+    ServiceFactoryInvokerTest() {}
 
     void SetUp() override {}
 
     void TearDown() override {}
 
-    ~ServiceFactoryInvoker() override = default;
+    ~ServiceFactoryInvokerTest() override = default;
 
     static void TearDownTestSuite() {}
 };
 
-TEST_F(ServiceFactoryInvoker, ShouldInvokeFuncFactory)
+TEST_F(ServiceFactoryInvokerTest, ShouldInvokeFuncFactory)
 {
     ServiceProviderMock mock;
-    sb::di::details::services::InPlaceService<TestDependencyClass> test1;
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
     EXPECT_CALL(mock.getMock(), tryGetInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&test1));
 
-    auto func = [&](TestDependencyClass *test1) {
-        EXPECT_TRUE(test1);
+    auto func = [&](TestDependencyClass *service) {
+        EXPECT_TRUE(service);
         return 1;
     };
 

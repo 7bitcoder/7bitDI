@@ -20,8 +20,9 @@ Using this command several cache variables can be set:
 * <variable cache name>: [possible values] (default value) - Description
 * _7BIT_DI_LIBRARY_TYPE: ["Shared", "Static", "HeaderOnly"] ("Static") - Library build type
 * _7BIT_DI_BUILD_DOCS: ["ON", "OFF"] ("OFF") - Turn on to build documentation (requires Sphinx_, Breathe_ and Doxygen_ to be installed)
-* _7BIT_DI_BUILD_TESTS: ["ON", "OFF"] ("OFF") - Turn on to build tests (requires Gtest_ to be installed, see `Build Library With Conan`_)
+* _7BIT_DI_BUILD_TESTS: ["ON", "OFF"] ("OFF") - Turn on to build tests
 * _7BIT_DI_BUILD_EXAMPLES: ["ON", "OFF"] ("OFF") - Turn on to build examples
+* _7BIT_DI_BUILD_BENCHMARKS: ["ON", "OFF"] ("OFF") - Turn on to build benchmarks
 * _7BIT_DI_BUILD_SINGLE_HEADER: ["ON", "OFF"] ("OFF") - Turn on to build single header SevenBitDI.hpp (requires Quom_ to be installed)
 * _7BIT_DI_INSTALL: ["ON", "OFF"] ("OFF") - Turn on to install the library
 
@@ -39,45 +40,10 @@ Build the library using the command:
     cmake --build .
 
 
-Build Library With Conan
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Gtest_ library is added to project using Conan_ package manager (`Conan Installation`_), 
-If Conan was freshly installed run detect command:
-
-.. code-block:: sh
-
-    conan profile detect
-
-To install Conan packages run this command in the library root folder:
-
-.. code-block:: sh
-
-    conan install . --output-folder=build --build=missing
-
-Navigate to the build directory:
-
-.. code-block:: sh
-
-    cd build
-
-Configure the CMake project, and add also toolchain file as a CMAKE_TOOLCHAIN_FILE cache variable:
-
-.. code-block:: sh
-
-    cmake .. -DCMAKE_TOOLCHAIN_FILE:PATH="./conan_toolchain.cmake" -DCMAKE_BUILD_TYPE=Release -D_7BIT_DI_BUILD_TESTS=ON
-
-Build the library using the command:
-
-.. code-block:: sh
-
-    cmake --build .
-
-
 Install Library
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To install the library set additional cache variables _7BIT_DI_BUILD_TESTS=ON and specify installation dir with CMAKE_INSTALL_PREFIX, then run the command
+To install the library set additional cache variables _7BIT_DI_INSTALL=ON and specify installation dir with CMAKE_INSTALL_PREFIX, then run the command
 
 .. code-block:: sh
 

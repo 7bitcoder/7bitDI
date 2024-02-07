@@ -5,7 +5,7 @@ Multiple services can inherit one interface and can be injected using a vector.
 
 .. Note::
    Service objects are ordered in vectors using registration order.
-   The last registered service of base type is used when resolving one service
+   The last registered service with the same base type is used when resolving one service
 
    Injection rules are simple:
 

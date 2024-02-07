@@ -3,8 +3,6 @@
 #include "../../Helpers/Classes/Inherit.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorsMap.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
-#include "SevenBit/DI/ServiceDescriptor.hpp"
-#include "SevenBit/DI/ServiceLifeTime.hpp"
 
 class ServiceDescriptorsMapTest : public testing::Test
 {
@@ -47,6 +45,19 @@ TEST_F(ServiceDescriptorsMapTest, ShouldCheckUniqeness)
     auto act = [&] { map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>()); };
 
     EXPECT_THROW(act(), sb::di::ServiceAlreadyRegisteredException);
+}
+
+TEST_F(ServiceDescriptorsMapTest, ShouldCheckUniqenessForAlias)
+{
+    std::vector<sb::di::ServiceDescriptor> _descriptors;
+    sb::di::details::containers::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end(), true};
+
+    map.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass2, TestInheritClass3>());
+    map.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass4>());
+
+    auto act = [&] { map.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass3>()); };
+
+    EXPECT_NO_THROW(act());
 }
 
 TEST_F(ServiceDescriptorsMapTest, ShouldNotCheckUniqeness)

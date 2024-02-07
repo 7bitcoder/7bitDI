@@ -25,37 +25,18 @@ TEST_F(ExternalServiceTest, ShouldCreateExternalService)
     TestClass1 test;
     const sb::di::details::services::ExternalService service{&test};
 
-    EXPECT_TRUE(service);
     EXPECT_TRUE(service.isValid());
     EXPECT_EQ(service.get(), &test);
     EXPECT_EQ(service.getTypeId(), typeid(TestClass1));
 }
 
-TEST_F(ExternalServiceTest, ShouldUpdateExternalService)
+TEST_F(ExternalServiceTest, ShouldFailReleaseExternalService)
 {
     TestClass1 test;
     sb::di::details::services::ExternalService service{&test};
 
-    EXPECT_TRUE(service);
     EXPECT_TRUE(service.isValid());
-    EXPECT_EQ(service.get(), &test);
-
-    TestClass1 test2;
-    service.update(&test2);
-
-    EXPECT_TRUE(service);
-    EXPECT_TRUE(service.isValid());
-    EXPECT_EQ(service.get(), &test2);
-}
-
-TEST_F(ExternalServiceTest, ShouldFailMoveAsUniquePtrExternalService)
-{
-    TestClass1 test;
-    sb::di::details::services::ExternalService service{&test};
-
-    EXPECT_TRUE(service);
-    EXPECT_TRUE(service.isValid());
-    EXPECT_THROW(service.moveOutAsUniquePtr<TestClass1>(), sb::di::CannotReleaseServiceException);
+    EXPECT_THROW(service.release(), sb::di::CannotReleaseServiceException);
 }
 
 TEST_F(ExternalServiceTest, ShouldFailMoveOutExternalService)
@@ -63,38 +44,31 @@ TEST_F(ExternalServiceTest, ShouldFailMoveOutExternalService)
     TestClass1 test;
     sb::di::details::services::ExternalService service{&test};
 
-    EXPECT_TRUE(service);
     EXPECT_TRUE(service.isValid());
-    EXPECT_THROW(service.moveOutAs<TestClass1>(), sb::di::CannotMoveOutServiceException);
+    EXPECT_THROW(service.getForMoveOut(), sb::di::CannotMoveOutServiceException);
 }
 
 TEST_F(ExternalServiceTest, ShouldCreateExternalNullService)
 {
-    TestClass1 test;
     const sb::di::details::services::ExternalService<TestClass1> service{nullptr};
 
-    EXPECT_FALSE(service);
     EXPECT_FALSE(service.isValid());
     EXPECT_FALSE(service.get());
     EXPECT_EQ(service.getTypeId(), typeid(TestClass1));
 }
 
-TEST_F(ExternalServiceTest, ShouldFailMoveAsUniquePtrExternalNullService)
+TEST_F(ExternalServiceTest, ShouldFailReleaseExternalNullService)
 {
-    TestClass1 test;
     sb::di::details::services::ExternalService<TestClass1> service{nullptr};
 
-    EXPECT_FALSE(service);
     EXPECT_FALSE(service.isValid());
-    EXPECT_THROW(service.moveOutAsUniquePtr<TestClass1>(), sb::di::CannotReleaseServiceException);
+    EXPECT_THROW(service.release(), sb::di::CannotReleaseServiceException);
 }
 
 TEST_F(ExternalServiceTest, ShouldFailMoveOutExternalNullService)
 {
-    TestClass1 test;
     sb::di::details::services::ExternalService<TestClass1> service{nullptr};
 
-    EXPECT_FALSE(service);
     EXPECT_FALSE(service.isValid());
-    EXPECT_THROW(service.moveOutAs<TestClass1>(), sb::di::CannotMoveOutServiceException);
+    EXPECT_THROW(service.getForMoveOut(), sb::di::CannotMoveOutServiceException);
 }

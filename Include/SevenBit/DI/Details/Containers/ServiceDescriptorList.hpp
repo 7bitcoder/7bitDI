@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/OneOrList.hpp"
@@ -18,6 +16,15 @@ namespace sb::di::details::containers
       public:
         explicit ServiceDescriptorList(ServiceDescriptor &&descriptor);
 
+        ServiceDescriptorList(const ServiceDescriptorList &) = delete;
+        ServiceDescriptorList(ServiceDescriptorList &&) = default;
+
+        ServiceDescriptorList &operator=(const ServiceDescriptorList &) = delete;
+        ServiceDescriptorList &operator=(ServiceDescriptorList &&) = default;
+
+        OneOrList<ServiceDescriptor> &getInnerList();
+        [[nodiscard]] const OneOrList<ServiceDescriptor> &getInnerList() const;
+
         void add(ServiceDescriptor &&descriptor);
 
         [[nodiscard]] auto begin() const { return _oneOrList.getAsList().begin(); }
@@ -31,14 +38,17 @@ namespace sb::di::details::containers
 
         [[nodiscard]] size_t size() const;
 
-        [[nodiscard]] const ServiceLifeTime &getLifeTime() const;
+        [[nodiscard]] ServiceLifeTime getLifeTime() const;
 
         [[nodiscard]] TypeId getServiceTypeId() const;
+
+        [[nodiscard]] bool isAlias() const;
 
         void seal();
 
       private:
         void checkBaseType(const ServiceDescriptor &descriptor) const;
+        void checkAlias(const ServiceDescriptor &descriptor) const;
         void checkLifeTime(const ServiceDescriptor &descriptor) const;
     };
 

@@ -9,7 +9,6 @@
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 #include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
-#include "SevenBit/DI/IServiceInstance.hpp"
 
 namespace sb::di::details::factories
 {
@@ -34,8 +33,6 @@ namespace sb::di::details::factories
         };
 
       public:
-        [[nodiscard]] TypeId getServiceTypeId() const override { return typeid(T); }
-
         IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
             ServiceCtorInvoker invoker{serviceProvider};

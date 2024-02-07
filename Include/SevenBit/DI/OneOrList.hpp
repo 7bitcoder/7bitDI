@@ -1,15 +1,18 @@
 #pragma once
 
+#include <cstddef>
 #include <variant>
 #include <vector>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Utils/NotSupportedType.hpp"
+
 namespace sb::di
 {
     template <class T> class OneOrList
     {
-        std::variant<T, std::vector<T>> _variant;
+        std::variant<T, std::vector<T>> _variant{};
 
       public:
         explicit OneOrList(const size_t size) : _variant(std::vector<T>{}) { reserve(size); }
@@ -99,6 +102,50 @@ namespace sb::di
             }
         }
 
+        template <class TFunc> void forEach(TFunc fcn)
+        {
+            if (auto instance = tryGetAsSingle())
+            {
+                callFcn(fcn, *instance, 0);
+                return;
+            }
+            size_t index = 0;
+            for (auto &instance : getAsList())
+            {
+                callFcn(fcn, instance, index++);
+            }
+        }
+
+        template <class TFunc> void forEach(TFunc fcn) const
+        {
+            if (const auto instance = tryGetAsSingle())
+            {
+                callFcn(fcn, *instance, 0);
+                return;
+            }
+            size_t index = 0;
+            for (const auto &instance : getAsList())
+            {
+                callFcn(fcn, instance, index++);
+            }
+        }
+
+        template <class TFunc> auto map(TFunc mapFcn)
+        {
+            std::vector<decltype(callFcn(mapFcn, first(), 0))> result;
+            result.reserve(size());
+            forEach([&](T &item, size_t index) { result.push_back(callFcn(mapFcn, item, index)); });
+            return result;
+        }
+
+        template <class TFunc> auto map(TFunc mapFcn) const
+        {
+            std::vector<decltype(callFcn(mapFcn, first(), 0))> result;
+            result.reserve(size());
+            forEach([&](const T &item, size_t index) { result.push_back(callFcn(mapFcn, item, index)); });
+            return result;
+        }
+
       private:
         void tryConvertToList()
         {
@@ -108,6 +155,28 @@ namespace sb::di
                 vec.emplace_back(std::move(*single));
                 _variant = std::move(vec);
             }
+        }
+
+        template <class TFunc, class TItem> static auto callFcn(TFunc &fcn, TItem &item, size_t index)
+        {
+            if constexpr (std::is_invocable_v<TFunc, TItem &>)
+            {
+                return fcn(item);
+            }
+            else if constexpr (std::is_invocable_v<TFunc, TItem &, size_t>)
+            {
+                return fcn(item, index);
+            }
+            else
+            {
+                badFunctor<TFunc>();
+            }
+        }
+
+        template <class TFunc> static void badFunctor()
+        {
+            static_assert(details::utils::notSupportedType<TFunc>,
+                          "Functor should take as arguments: T and additionally index");
         }
     };
 

@@ -4,7 +4,6 @@
 
 #include "../Helpers/Classes/Basic.hpp"
 #include "../Helpers/Classes/Complex.hpp"
-#include "../Helpers/Classes/Dependencies.hpp"
 #include "../Helpers/Classes/Inherit.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
 
@@ -37,6 +36,8 @@ TEST_F(ServiceCollectionTest, ShouldAddServices)
 
         services.addTransient<TestClass1>();
         services.addTransient<TestInheritClass1, TestInheritClass5>();
+
+        services.addAlias<TestInheritClass1, TestInheritClass5>();
     };
     EXPECT_NO_THROW(act());
 }
@@ -289,6 +290,8 @@ TEST_F(ServiceCollectionTest, ShouldAddDescriptor)
 
         services.add(sb::di::ServiceDescriber::describeTransient<TestClass1>());
         services.add(sb::di::ServiceDescriber::describeTransient<TestInheritClass1, TestInheritClass5>());
+
+        services.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass5>());
     };
 
     EXPECT_NO_THROW(act());
@@ -445,11 +448,13 @@ TEST_F(ServiceCollectionTest, ShouldAddBasicServices)
     services.addSingleton<TestInheritClass5>();
     services.addScoped<TestInheritClass4>();
     services.addTransient<TestInheritClass3>();
+    services.addAlias<TestInheritClass1, TestInheritClass3>();
 
+    EXPECT_TRUE(services.contains<TestInheritClass1>());
     EXPECT_TRUE(services.contains<TestInheritClass5>());
     EXPECT_TRUE(services.contains<TestInheritClass4>());
     EXPECT_TRUE(services.contains<TestInheritClass3>());
-    EXPECT_EQ(services.size(), 3);
+    EXPECT_EQ(services.size(), 4);
 }
 
 TEST_F(ServiceCollectionTest, ShouldAddInheritedServices)
@@ -459,6 +464,18 @@ TEST_F(ServiceCollectionTest, ShouldAddInheritedServices)
     services.addSingleton<TestInheritClass1, TestInheritClass5>();
     services.addScoped<TestInheritClass1, TestInheritClass4>();
     services.addTransient<TestInheritClass1, TestInheritClass3>();
+
+    EXPECT_TRUE(services.contains<TestInheritClass1>());
+    EXPECT_EQ(services.size(), 3);
+}
+
+TEST_F(ServiceCollectionTest, ShouldAddInheritedAliasServices)
+{
+    sb::di::ServiceCollection services;
+
+    services.addAlias<TestInheritClass1, TestInheritClass5>();
+    services.addAlias<TestInheritClass1, TestInheritClass4>();
+    services.addAlias<TestInheritClass1, TestInheritClass3>();
 
     EXPECT_TRUE(services.contains<TestInheritClass1>());
     EXPECT_EQ(services.size(), 3);
@@ -561,11 +578,4 @@ TEST_F(ServiceCollectionTest, ShouldAddInheritedServicesWithFactory)
 
     EXPECT_TRUE(services.contains<TestInheritClass1>());
     EXPECT_EQ(services.size(), 3);
-}
-
-TEST_F(ServiceCollectionTest, ShouldNotCompileDueToNotInheritedServices)
-{
-    sb::di::ServiceCollection services;
-
-    // services.addTransient<TestClass1, TestInheritClass1>();
 }

@@ -11,5 +11,9 @@ namespace sb::di
      */
     using TypeId = std::type_index;
 
+    /**
+     * @brief Alias of std::type_info
+     */
     using TypeInfo = std::type_info;
+
 } // namespace sb::di

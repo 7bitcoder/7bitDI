@@ -2,15 +2,15 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/IServiceInstance.hpp"
+#include "SevenBit/DI/ServiceInstance.hpp"
 
 namespace sb::di::details::utils
 {
     struct EXPORT Check
     {
-        static bool instanceValidity(const IServiceInstance::Ptr &instance);
+        static bool instanceValidity(const ServiceInstance *instance);
 
-        static bool instanceValidity(const IServiceInstance *instance);
+        static bool instanceValidity(const ServiceInstance &instance);
     };
 } // namespace sb::di::details::utils
 

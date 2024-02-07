@@ -30,6 +30,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeSingletonCtorService)
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestClass1));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeSingletonCtorInterfaceService)
@@ -39,6 +40,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeSingletonCtorInterfaceService)
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestInheritClass5));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeScopedCtorService)
@@ -48,6 +50,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeScopedCtorService)
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::scoped());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestClass1));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeScopedCtorInterfaceService)
@@ -57,6 +60,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeScopedCtorInterfaceService)
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::scoped());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestInheritClass5));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeTransientCtorService)
@@ -66,6 +70,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeTransientCtorService)
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::transient());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestClass1));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeTransientCtorInterfaceService)
@@ -75,6 +80,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeTransientCtorInterfaceService)
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::transient());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestInheritClass5));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeSingletonExternalService)
@@ -85,6 +91,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeSingletonExternalService)
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestClass1));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeSingletonExternalInterfaceService)
@@ -95,6 +102,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeSingletonExternalInterfaceService)
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestInheritClass5));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeSingletonFcnService)
@@ -107,6 +115,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeSingletonFcnService)
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestClass1));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeSingletonEmptyFcnService)
@@ -116,6 +125,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeSingletonEmptyFcnService)
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestClass1));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeSingletonFcnInterfaceService)
@@ -128,6 +138,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeSingletonFcnInterfaceService)
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestInheritClass5));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeSingletonEmptyFcnInterfaceService)
@@ -138,6 +149,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeSingletonEmptyFcnInterfaceService)
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::singleton());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestInheritClass5));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeScopedFcnService)
@@ -150,6 +162,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeScopedFcnService)
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::scoped());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestClass1));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeScopedEmptyFcnService)
@@ -159,6 +172,7 @@ TEST_F(ServiceDescriberTest, ShouldDescribeScopedEmptyFcnService)
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::scoped());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestClass1));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeScopedFcnInterfaceService)
@@ -171,16 +185,18 @@ TEST_F(ServiceDescriberTest, ShouldDescribeScopedFcnInterfaceService)
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::scoped());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestInheritClass5));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeScopedEmptyFcnInterfaceService)
 {
-    const auto descriptor = sb::di::ServiceDescriber::describeScopedFrom<TestInheritClass1>(
-        [] { return TestInheritClass5(); });
+    const auto descriptor =
+        sb::di::ServiceDescriber::describeScopedFrom<TestInheritClass1>([] { return TestInheritClass5(); });
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::scoped());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestInheritClass5));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeTransientFcnService)
@@ -193,16 +209,17 @@ TEST_F(ServiceDescriberTest, ShouldDescribeTransientFcnService)
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::transient());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestClass1));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeEmptyTransientFcnService)
 {
-    const auto descriptor =
-        sb::di::ServiceDescriber::describeTransientFrom([] { return TestClass1(); });
+    const auto descriptor = sb::di::ServiceDescriber::describeTransientFrom([] { return TestClass1(); });
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::transient());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestClass1));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeTransientFcnInterfaceService)
@@ -215,14 +232,26 @@ TEST_F(ServiceDescriberTest, ShouldDescribeTransientFcnInterfaceService)
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::transient());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestInheritClass5));
+    EXPECT_FALSE(descriptor.isAlias());
 }
 
 TEST_F(ServiceDescriberTest, ShouldDescribeTransientEmptyFcnInterfaceService)
 {
-    const auto descriptor = sb::di::ServiceDescriber::describeTransientFrom<TestInheritClass1>(
-        [] { return TestInheritClass5(); });
+    const auto descriptor =
+        sb::di::ServiceDescriber::describeTransientFrom<TestInheritClass1>([] { return TestInheritClass5(); });
 
     EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::transient());
     EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestInheritClass5));
+    EXPECT_FALSE(descriptor.isAlias());
+}
+
+TEST_F(ServiceDescriberTest, ShouldDescribeAliasService)
+{
+    const auto descriptor = sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass5>();
+
+    EXPECT_EQ(descriptor.getLifeTime(), sb::di::ServiceLifeTime::scoped());
+    EXPECT_EQ(descriptor.getServiceTypeId(), typeid(TestInheritClass1));
+    EXPECT_EQ(descriptor.getImplementationTypeId(), typeid(TestInheritClass5));
+    EXPECT_TRUE(descriptor.isAlias());
 }

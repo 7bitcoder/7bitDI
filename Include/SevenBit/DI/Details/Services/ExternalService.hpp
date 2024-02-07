@@ -24,8 +24,6 @@ namespace sb::di::details::services
         ExternalService &operator=(const ExternalService &) = default;
         ExternalService &operator=(ExternalService &&) = default;
 
-        void update(T *service) { _service = service; }
-
         [[nodiscard]] void *get() const override { return _service; }
 
         void *getForMoveOut() override

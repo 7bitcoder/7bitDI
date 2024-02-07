@@ -2,6 +2,8 @@
 [![Linux](https://github.com/7bitcoder/7bitDI/actions/workflows/Linux.yml/badge.svg)](https://github.com/7bitcoder/7bitDI/actions/workflows/Linux.yml)
 [![Windows](https://github.com/7bitcoder/7bitDI/actions/workflows/Windows.yml/badge.svg)](https://github.com/7bitcoder/7bitDI/actions/workflows/Windows.yml)
 [![MacOs](https://github.com/7bitcoder/7bitDI/actions/workflows/MacOs.yml/badge.svg)](https://github.com/7bitcoder/7bitDI/actions/workflows/MacOs.yml)
+[![Conan Center](https://img.shields.io/conan/v/7bitdi)](https://conan.io/center/recipes/7bitdi)
+
 <div align="center">
 
   <img src="Docs/_static/logo.svg" alt="logo" width="500" height="auto" />
@@ -24,6 +26,10 @@
 ## Built With
 
 - [Google Test](https://github.com/google/googletest)
+- [Google Benchmark](https://github.com/google/benchmark)
+- [Sphinx](https://www.sphinx-doc.org/en/master/)
+- [Breathe](https://breathe.readthedocs.io/en/latest/)
+- [Quom](https://pypi.org/project/quom/)
 
 ## Supported Platforms
 
@@ -33,15 +39,15 @@ The library is officially supported on the following platforms:
 
 **Operating systems:**
 
-* Linux
-* macOS
-* Windows
+- Linux
+- macOS
+- Windows
 
 **Compilers:**
 
-* gcc 7.0+
-* clang 6.0+
-* MSVC 2015+
+- gcc 7.0+
+- clang 6.0+
+- MSVC 2015+
 
 If you notice any problems/bugs, please file an issue on the repository GitHub Issue Tracker. Pull requests containing
 fixes are welcome!
@@ -52,7 +58,7 @@ fixes are welcome!
 
 ### 1. Using Cmake fetch content api - Recommended
 
-Update CMakeLists.txt file with following code
+Update CMakeLists.txt file with the following code
 
 ```cmake
 include(FetchContent)
@@ -72,7 +78,7 @@ Download and install A [Conan](https://conan.io/), and create conanfile.txt in t
 
 ```
 [requires]
-7bitdi/2.0.0
+7bitdi/2.1.0
 ```
 
 change the version to newer if available, then run the command:
@@ -81,15 +87,13 @@ change the version to newer if available, then run the command:
 conan install . --output-folder=build --build=missing
 ```
 
-Follow in detail instructions available
+Follow in detailed instructions available
 at [Conan Tutorial](https://docs.conan.io/2/tutorial/consuming_packages/build_simple_cmake_project.html)
 
 ### 3. Header only
 
-Download source code from the most recent release,
+Download the source code from the most recent release,
 copy include folder into your project location.
-For example copy into the '/SevenBitDI' folder.
-Include this folder into the project, with [Cmake](https://cmake.org/), u can use:
 
 ```cmake
 include_directories(/SevenBitDI/Include)
@@ -110,55 +114,50 @@ in [Documentation](https://7bitdi.readthedocs.io/en/latest/getting-started.html)
 
 ### The library relies on two core classes:
 
-* ServiceCollection: class is responsible for registering services and building service provider
-* ServiceProvider: class is responsible for delivering real services and managing its lifetime
+- ServiceCollection: class is responsible for registering services and building service provider
+- ServiceProvider: class is responsible for delivering real services and managing its lifetime
 
-The dependency injection system relies heavily on template metaprogramming, and it has some limitations.
+The dependency injection mechanism relies heavily on template metaprogramming and it has some limitations.
 
 ### General
 
-* Only one constructor should be defined for each instance implementation
-* If the service is registered with interface and implementation, the interface should have a virtual destructor
-* If multiple services are registered by the same interface, all should have the same lifetime singleton, scoped or
-  transient (the build method will throw an exception)
-* Only one service implementation can be registered (the build method will throw an exception)
+- Only one constructor should be defined for each instance implementation
+- If the service is registered with interface and implementation, the interface should have a virtual destructor
+- If multiple services are registered by the same interface, all should have the same lifetime (the build method will
+  throw an exception)
+- Only one service implementation can be registered (the build method will throw an exception)
 
 ### Service lifetime
 
 Service can be registered as a singleton, scoped, or transient.
 
-* Singleton: service provider will create only one instance of this service (accessible via the getService
+- Singleton: service provider will create only one instance of this service (accessible via the getService method)
+- Scoped: instance provider will create only one instance of this instance for each scope (accessible via the getService
   method)
-* Scoped: instance provider will create only one instance of this instance for each scope (accessible via the getService
-  method)
-* Transient: services are always unique, a new service is provided every time it is requested, and the service provider
-  returns, in this case, std::unique_ptr (accessible via createService method)
+- Transient: services are always unique, a new service is provided every time it is requested (accessible via
+  createService or createInstanceInPlace method)
 
 ### Injecting Services
 
-* Singleton/scoped services can be injected using one of:
-    * References: (T&)
-    * Const references: (const T&)
-    * Pointers: (T*)
-    * Const pointer: (T* const)
-    * Pointer to const object: (const T*)
-    * Const pointer to const object: (const T* const)
-* Transient services can be injected using one of:
-    * std::unique_ptr: (unique_ptr< T>)
-    * In place object if type is movable or copyable: T
-* Multiple services implementing specified interface can be injected using std::vector:
-    * Transient (std::vector<std::unique_ptr < T>>)
-    * Singleton/scoped (std::vector<T *>)
+- Singleton/scoped services can be injected using one of:
+  - References: (T&)
+  - Pointers: (T\*)
+- Transient services can be injected using one of:
+  - std::unique_ptr: (unique_ptr< T>)
+  - In place object if the type is movable or copyable: T
+- Multiple services implementing the same interface can be injected using std::vector:
+  - Transient (std::vector<std::unique_ptr< T>>)
+  - Singleton/scoped (std::vector<T\*>)
 
 ### Injection Table
 
 | Constructor param type           | ServiceProvider method used         |
-|----------------------------------|-------------------------------------|
+| -------------------------------- | ----------------------------------- |
 | T - if movable or copyable       | provider.createServiceInPlace< T>() |
 | std::unique_ptr< T>              | provider.createService< T>()        |
 | T&                               | provider.getService< T>()           |
-| T*                               | provider.tryGetService< T>()        |
-| std::vector<T*>                  | provider.getServices< T>()          |
+| T\*                              | provider.tryGetService< T>()        |
+| std::vector<T\*>                 | provider.getServices< T>()          |
 | std::vector<std::unique_ptr< T>> | provider.createServices< T>()       |
 
 ### Sample Usage

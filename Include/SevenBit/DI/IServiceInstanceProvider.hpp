@@ -5,8 +5,8 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/IServiceInstance.hpp"
 #include "SevenBit/DI/OneOrList.hpp"
+#include "SevenBit/DI/ServiceInstance.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
@@ -39,51 +39,51 @@ namespace sb::di
          * @details If service was not registered or was registered as transient, method throws exception
          * @throws sb::di::ServiceNotFoundException
          */
-        virtual const IServiceInstance &getInstance(TypeId serviceTypeId) = 0;
+        virtual const ServiceInstance &getInstance(TypeId serviceTypeId) = 0;
 
         /**
          * @brief Returns service instance pointer
          * @details If service was not registered or was registered as transient, method returns null
          */
-        virtual const IServiceInstance *tryGetInstance(TypeId serviceTypeId) = 0;
+        virtual const ServiceInstance *tryGetInstance(TypeId serviceTypeId) = 0;
 
         /**
          * @brief Returns service instances
          * @details If service instance was not registered or was registered as transient, method returns null
          */
-        virtual const OneOrList<IServiceInstance::Ptr> *tryGetInstances(TypeId serviceTypeId) = 0;
+        virtual const OneOrList<ServiceInstance> *tryGetInstances(TypeId serviceTypeId) = 0;
 
         /**
          * @brief Creates service instance unique pointer, might throw exception
          * @details If service was not registered or was registered as scoped/singleton, method throw exception
          * @throws sb::di::ServiceNotFoundException
          */
-        virtual IServiceInstance::Ptr createInstance(TypeId serviceTypeId) = 0;
+        virtual ServiceInstance createInstance(TypeId serviceTypeId) = 0;
 
         /**
          * @brief Creates service instance unique pointer, might be null
-         * @details If service was not registered or was registered as scoped/singleton, method returns null
+         * @details If service was not registered or was registered as scoped/singleton, method returns invalid instance
          */
-        virtual IServiceInstance::Ptr tryCreateInstance(TypeId serviceTypeId) = 0;
+        virtual ServiceInstance tryCreateInstance(TypeId serviceTypeId) = 0;
+
+        /**
+         * @brief Creates service instances
+         * @details If service was not registered or was registered as scoped/singleton, method returns null option
+         */
+        virtual std::optional<OneOrList<ServiceInstance>> tryCreateInstances(TypeId serviceTypeId) = 0;
 
         /**
          * @brief Creates service instance in place, might throw exception
          * @details If service was not registered or was registered as scoped/singleton, method throws exception
          * @throws sb::di::ServiceNotFoundException
          */
-        virtual IServiceInstance::Ptr createInstanceInPlace(TypeId serviceTypeId) = 0;
+        virtual ServiceInstance createInstanceInPlace(TypeId serviceTypeId) = 0;
 
         /**
          * @brief Creates service instance in place
-         * @details If service was not registered or was registered as scoped/singleton, method returns null
+         * @details If service was not registered or was registered as scoped/singleton, method returns invalid instance
          */
-        virtual IServiceInstance::Ptr tryCreateInstanceInPlace(TypeId serviceTypeId) = 0;
-
-        /**
-         * @brief Creates service instances
-         * @details If service was not registered or was registered as scoped/singleton, method returns null option
-         */
-        virtual std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateInstances(TypeId serviceTypeId) = 0;
+        virtual ServiceInstance tryCreateInstanceInPlace(TypeId serviceTypeId) = 0;
 
         virtual ~IServiceInstanceProvider() = default;
     };

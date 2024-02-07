@@ -8,7 +8,7 @@ This example shows the main purpose of this library, injecting services into ser
 
    * Service should have one constructor
    * Singleton/scoped service should be injected using pointers or references
-   * Transient services should be injected using std::unique_ptr 
+   * Transient services should be injected using std::unique_ptr or directly by type if an object is movable or copyable
 
 .. literalinclude:: ../../Examples/Guides/InjectingServices.cpp
    :caption: Examples/Guides/InjectingServices

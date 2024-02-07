@@ -48,7 +48,7 @@ Installation
     .. code-block:: Txt
 
         [requires]
-        7bitdi/2.0.0
+        7bitdi/2.1.0
     
     change the version to newer if available, then run the command:
 
@@ -56,7 +56,7 @@ Installation
 
         conan install . --output-folder=build --build=missing
 
-    Follow in detail instructions available at `Conan Tutorial`_
+    Follow in detailed instructions available at `Conan Tutorial`_
 
 #. Header only
     Download source code from the most recent release, 

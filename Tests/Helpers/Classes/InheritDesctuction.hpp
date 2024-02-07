@@ -16,7 +16,7 @@ struct TestInheritDestrClass4 : TestInheritDestrClass3
 template <class Fcn> struct TestInheritDestrClass5 final : TestInheritDestrClass4
 {
     Fcn _fcn;
-    TestInheritDestrClass5(Fcn fcn) : _fcn(fcn) {}
+    explicit TestInheritDestrClass5(Fcn fcn) : _fcn(fcn) {}
 
-    ~TestInheritDestrClass5() { _fcn(); }
+    ~TestInheritDestrClass5() override { _fcn(); }
 };

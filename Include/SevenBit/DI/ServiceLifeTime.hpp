@@ -2,9 +2,11 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Utils/RequireBase.hpp"
+
 namespace sb::di
 {
-    class EXPORT ServiceLifeTime
+    class ServiceLifeTime
     {
       public:
         /**
@@ -14,7 +16,9 @@ namespace sb::di
         {
             Singleton,
             Scoped,
-            Transient
+            Transient,
+
+            Count
         };
 
       private:
@@ -24,51 +28,47 @@ namespace sb::di
         /**
          * @brief creates singleton service lifetime
          */
-        static ServiceLifeTime singleton();
+        constexpr static ServiceLifeTime singleton() { return ServiceLifeTime{Singleton}; }
         /**
          * @brief creates scoped service lifetime
          */
-        static ServiceLifeTime scoped();
+        constexpr static ServiceLifeTime scoped() { return ServiceLifeTime{Scoped}; }
         /**
          * @brief creates transient service lifetime
          */
-        static ServiceLifeTime transient();
+        constexpr static ServiceLifeTime transient() { return ServiceLifeTime{Transient}; }
 
         /**
          * @brief Construct a new Service Life Time object with specified type
          */
-        explicit ServiceLifeTime(Type type);
+        constexpr explicit ServiceLifeTime(const Type type) : _type(details::utils::RequireBase::validEnumAndGet(type))
+        {
+        }
 
-        ServiceLifeTime(ServiceLifeTime &&) = default;
-        ServiceLifeTime(const ServiceLifeTime &) = default;
+        constexpr ServiceLifeTime(ServiceLifeTime &&) = default;
+        constexpr ServiceLifeTime(const ServiceLifeTime &) = default;
 
-        ServiceLifeTime &operator=(ServiceLifeTime &&) = default;
-        ServiceLifeTime &operator=(const ServiceLifeTime &) = default;
-
-        /**
-         * @brief checks if lifetime is singleton
-         */
-        [[nodiscard]] bool isSingleton() const;
-        /**
-         * @brief checks if lifetime is scoped
-         */
-        [[nodiscard]] bool isScoped() const;
-        /**
-         * @brief checks if lifetime is transient
-         */
-        [[nodiscard]] bool isTransient() const;
+        constexpr ServiceLifeTime &operator=(ServiceLifeTime &&) = default;
+        constexpr ServiceLifeTime &operator=(const ServiceLifeTime &) = default;
 
         /**
          * @brief checks if lifetime is given type
          */
-        [[nodiscard]] bool is(Type type) const;
+        [[nodiscard]] constexpr bool is(const Type type) const { return _type == type; }
+        /**
+         * @brief checks if lifetime is singleton
+         */
+        [[nodiscard]] constexpr bool isSingleton() const { return is(Singleton); }
+        /**
+         * @brief checks if lifetime is scoped
+         */
+        [[nodiscard]] constexpr bool isScoped() const { return is(Scoped); }
+        /**
+         * @brief checks if lifetime is transient
+         */
+        [[nodiscard]] constexpr bool isTransient() const { return is(Transient); }
 
-        bool operator!=(const ServiceLifeTime &scope) const;
-        bool operator==(const ServiceLifeTime &scope) const;
+        constexpr bool operator!=(const ServiceLifeTime &lifeTime) const { return _type != lifeTime._type; }
+        constexpr bool operator==(const ServiceLifeTime &lifeTime) const { return _type == lifeTime._type; }
     };
-
 } // namespace sb::di
-
-#ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Impl/ServiceLifeTime.hpp"
-#endif

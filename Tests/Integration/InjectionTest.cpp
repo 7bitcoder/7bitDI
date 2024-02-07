@@ -4,25 +4,25 @@
 #include "../Helpers/Classes/Complex.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
 
-class ComplexInjectionsTest : public testing::Test
+class InjectionTest : public testing::Test
 {
   protected:
     static void SetUpTestSuite() {}
 
-    ComplexInjectionsTest() {}
+    InjectionTest() {}
 
     void SetUp() override {}
 
     void TearDown() override {}
 
-    ~ComplexInjectionsTest() override = default;
+    ~InjectionTest() override = default;
 
     static void TearDownTestSuite() {}
 };
 
 // buildServiceProvider Tests
 
-TEST_F(ComplexInjectionsTest, ShouldGetService)
+TEST_F(InjectionTest, ShouldGetService)
 {
     auto provider = sb::di::ServiceCollection{}
                         .addSingleton<ITestComplexClass1, TestComplexClass1>()
@@ -61,14 +61,14 @@ TEST_F(ComplexInjectionsTest, ShouldGetService)
     EXPECT_NE(service6.makeThree(), service3);
 }
 
-TEST_F(ComplexInjectionsTest, ShouldTryGetDeepNestedService)
+TEST_F(InjectionTest, ShouldTryGetDeepNestedService)
 {
 
     sb::di::ServiceCollection collection;
-    TestNested<50>::addAllRecurse(collection);
+    TestNested<60>::addAllRecurse(collection);
 
     auto provider = collection.buildServiceProvider();
 
-    auto nested = provider.getService<TestNested<50>>();
+    auto &nested = provider.getService<TestNested<60>>();
     nested.checkRecurse(provider);
 }

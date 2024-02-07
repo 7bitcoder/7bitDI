@@ -24,6 +24,7 @@ namespace sb::di
 
     struct EXPORT InvalidServiceException : InjectorException
     {
+        explicit InvalidServiceException();
         explicit InvalidServiceException(TypeId typeId);
     };
 
@@ -55,6 +56,11 @@ namespace sb::di
     struct EXPORT ServiceLifeTimeMismatchException : InjectorException
     {
         ServiceLifeTimeMismatchException(TypeId typeIndex, TypeId interface);
+    };
+
+    struct EXPORT ServiceAliasMismatchException : InjectorException
+    {
+        ServiceAliasMismatchException(TypeId typeIndex, TypeId interface, bool shoudBeAlias);
     };
 
     struct EXPORT CircularDependencyException : InjectorException

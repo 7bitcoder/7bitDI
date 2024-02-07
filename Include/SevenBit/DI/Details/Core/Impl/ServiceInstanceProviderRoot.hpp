@@ -6,6 +6,13 @@
 
 namespace sb::di::details::core
 {
+    INLINE ServiceInstanceProviderRoot::ServiceInstanceProviderRoot(ServiceProviderOptions options)
+        : ServiceInstanceProvider(*this, options), _descriptorsMap(options.checkServiceGlobalUniqueness),
+          _singletons(options.strongDestructionOrder)
+    {
+        _descriptorsMap.seal();
+    }
+
     INLINE void ServiceInstanceProviderRoot::init(ServiceProvider &serviceProvider)
     {
         ServiceInstanceProvider::init(serviceProvider);
@@ -22,15 +29,18 @@ namespace sb::di::details::core
 
     INLINE containers::ServiceInstancesMap &ServiceInstanceProviderRoot::getSingletons() { return _singletons; }
 
-    INLINE helpers::ScopedGuard ServiceInstanceProviderRoot::spawnGuard(const TypeId typeId) { return _guard(typeId); }
+    INLINE ServiceInstanceCreator &ServiceInstanceProviderRoot::getRootInstanceCreator()
+    {
+        return getInstanceCreator();
+    }
 
     INLINE void ServiceInstanceProviderRoot::prebuildSingletons()
     {
         for (auto &[_, descriptors] : getDescriptorsMap())
         {
-            if (descriptors.getLifeTime().isSingleton())
+            if (!descriptors.isAlias() && descriptors.getLifeTime().isSingleton())
             {
-                tryCreateAndRegisterAll(descriptors);
+                tryRegisterAndGet(descriptors, tryCreateAllNonTransient(descriptors));
             }
         }
     }

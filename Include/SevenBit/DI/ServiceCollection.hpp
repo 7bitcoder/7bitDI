@@ -9,11 +9,8 @@
 
 #include "SevenBit/DI/Details/Utils/Container.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
-#include "SevenBit/DI/ServiceDescriptor.hpp"
-#include "SevenBit/DI/ServiceLifeTime.hpp"
+#include "SevenBit/DI/ServiceLifeTimes.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
-#include "SevenBit/DI/ServiceProviderOptions.hpp"
-#include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di
 {
@@ -243,6 +240,7 @@ namespace sb::di
          * @details Returns iterator following the last removed element
          */
         Iterator remove(Iterator pos);
+
         /**
          * @brief Removes descriptor with given iterator
          * @details Returns iterator following the last removed element
@@ -254,6 +252,7 @@ namespace sb::di
          * @details Returns iterator following the last removed element
          */
         Iterator removeRange(Iterator begin, Iterator end);
+
         /**
          * @brief Removes descriptors between given iterators
          * @details Returns iterator following the last removed element
@@ -333,8 +332,8 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.add<TestClass>(ServiceLifeTime::scoped());
-         * ServiceCollection{}.add<BaseClass, ImplementationClass>(ServiceLifeTime::transient());
+         * ServiceCollection{}.add<TestClass>(ServiceLifeTimes::Scoped);
+         * ServiceCollection{}.add<BaseClass, ImplementationClass>(ServiceLifeTimes::Transient);
          * @endcode
          */
         template <class TService, class TImplementation = TService>
@@ -342,6 +341,7 @@ namespace sb::di
         {
             return add(ServiceDescriber::describe<TService, TImplementation>(lifeTime));
         }
+
         /**
          * @brief Adds service descriptor
          * @details Adds service descriptor with:
@@ -364,6 +364,7 @@ namespace sb::di
         {
             return add(ServiceDescriber::describeSingleton<TService, TImplementation>());
         }
+
         /**
          * @brief Adds service descriptor
          * @details Adds service descriptor with:
@@ -386,6 +387,7 @@ namespace sb::di
         {
             return add(ServiceDescriber::describeScoped<TService, TImplementation>());
         }
+
         /**
          * @brief Adds service descriptor
          * @details Adds service descriptor with:
@@ -428,6 +430,7 @@ namespace sb::di
         {
             return add(ServiceDescriber::describeSingleton<TService, TService>(service));
         }
+
         /**
          * @brief Adds service descriptor
          * @details Adds service descriptor with:
@@ -449,6 +452,7 @@ namespace sb::di
         {
             return add(ServiceDescriber::describeSingleton<TService, TImplementation>(service));
         }
+
         /**
          * @brief Adds service descriptor
          * @details Adds service descriptor with:
@@ -463,7 +467,7 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.add<BaseClass>(ServiceLifeTime::scoped(),
+         * ServiceCollection{}.add<BaseClass>(ServiceLifeTimes::Scoped,
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
@@ -472,6 +476,7 @@ namespace sb::di
         {
             return add(ServiceDescriber::describeFrom<TService, FactoryFcn>(lifeTime, std::move(factory)));
         }
+
         /**
          * @brief Adds service descriptor
          * @details Adds service descriptor with:
@@ -493,6 +498,7 @@ namespace sb::di
         {
             return add(ServiceDescriber::describeSingletonFrom<TService, FactoryFcn>(std::move(factory)));
         }
+
         /**
          * @brief Adds service descriptor
          * @details Adds service descriptor with:
@@ -514,6 +520,7 @@ namespace sb::di
         {
             return add(ServiceDescriber::describeScopedFrom<TService, FactoryFcn>(std::move(factory)));
         }
+
         /**
          * @brief Adds service descriptor
          * @details Adds service descriptor with:
@@ -549,13 +556,14 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.add(ServiceLifeTime::transient(), []() { return std::make_unique<TestClass>(); });
+         * ServiceCollection{}.add(ServiceLifeTimes::Transient, []() { return std::make_unique<TestClass>(); });
          * @endcode
          */
         template <class FactoryFcn> ServiceCollection &add(const ServiceLifeTime lifeTime, FactoryFcn factory)
         {
             return add(ServiceDescriber::describeFrom(lifeTime, std::move(factory)));
         }
+
         /**
          * @brief Adds service descriptor
          * @details Adds service descriptor with:
@@ -576,6 +584,7 @@ namespace sb::di
         {
             return add(ServiceDescriber::describeSingletonFrom(std::move(factory)));
         }
+
         /**
          * @brief Adds service descriptor
          * @details Adds service descriptor with:
@@ -596,6 +605,7 @@ namespace sb::di
         {
             return add(ServiceDescriber::describeScopedFrom(std::move(factory)));
         }
+
         /**
          * @brief Adds service descriptor
          * @details Adds service descriptor with:
@@ -615,6 +625,26 @@ namespace sb::di
         template <class FactoryFcn> ServiceCollection &addTransient(FactoryFcn factory)
         {
             return add(ServiceDescriber::describeTransientFrom(std::move(factory)));
+        }
+
+        /**
+         * @brief Adds service descriptor
+         * @details Adds service descriptor with:
+         * lifetime - scoped,
+         * serviceTypeId - typeid(TAlias),
+         * implementationTypeId - typeid(TService),
+         * factory - nullptr
+         * @tparam TAlias base service type - alias type
+         * @tparam TService service type must inherit from TService
+         *
+         * Example:
+         * @code{.cpp}
+         * ServiceCollection{}.addAlias<AliasClass, ServiceClass>();
+         * @endcode
+         */
+        template <class TAlias, class TService> ServiceCollection &addAlias()
+        {
+            return add(ServiceDescriber::describeAlias<TAlias, TService>());
         }
     };
 } // namespace sb::di

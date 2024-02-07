@@ -11,9 +11,14 @@ namespace sb::di::details::containers
     {
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesMap::insert(const TypeId serviceTypeId, IServiceInstance::Ptr service)
+    INLINE ServiceInstanceList &ServiceInstancesMap::insert(const TypeId serviceTypeId, ServiceInstance instance)
     {
-        auto [it, inserted] = _serviceListMap.emplace(serviceTypeId, std::move(service));
+        return insert(serviceTypeId, ServiceInstanceList{std::move(instance)});
+    }
+
+    INLINE ServiceInstanceList &ServiceInstancesMap::insert(const TypeId serviceTypeId, ServiceInstanceList instances)
+    {
+        auto [it, inserted] = _serviceListMap.emplace(serviceTypeId, std::move(instances));
         if (inserted && _strongDestructionOrder)
         {
             _constructionOrder.push_back(serviceTypeId);
@@ -23,12 +28,12 @@ namespace sb::di::details::containers
 
     INLINE bool ServiceInstancesMap::contains(const TypeId serviceTypeId) const
     {
-        return _serviceListMap.find(serviceTypeId) != _serviceListMap.end();
+        return _serviceListMap.count(serviceTypeId);
     }
 
-    INLINE ServiceInstanceList *ServiceInstancesMap::findServices(const TypeId serviceTypeId)
+    INLINE ServiceInstanceList *ServiceInstancesMap::findInstances(const TypeId serviceTypeId)
     {
-        auto it = _serviceListMap.find(serviceTypeId);
+        const auto it = _serviceListMap.find(serviceTypeId);
         return it != _serviceListMap.end() ? &it->second : nullptr;
     }
 
@@ -40,7 +45,7 @@ namespace sb::di::details::containers
         {
             for (auto it = _constructionOrder.rbegin(); it != _constructionOrder.rend(); ++it)
             {
-                if (const auto list = findServices(*it))
+                if (const auto list = findInstances(*it))
                 {
                     list->clear();
                 }

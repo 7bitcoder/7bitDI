@@ -13,7 +13,9 @@ sb::di
    di/servicecollection
    di/servicedescriber
    di/servicedescriptor
+   di/serviceinstance
    di/servicelifetime
+   di/servicelifetimes
    di/serviceprovider
    di/serviceprovideroptions
    di/typeid

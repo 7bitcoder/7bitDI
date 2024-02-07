@@ -13,8 +13,7 @@ namespace sb::di::details::helpers
                                     std::unordered_set<TypeId> &typeIdsUnderConstruction)
         : _typeIdsUnderConstruction(typeIdsUnderConstruction), _typeIdUnderConstruction(typeIdUnderConstruction)
     {
-        if (const auto it = _typeIdsUnderConstruction.find(_typeIdUnderConstruction);
-            it != _typeIdsUnderConstruction.end())
+        if (_typeIdsUnderConstruction.count(_typeIdUnderConstruction))
         {
             throw CircularDependencyException{_typeIdUnderConstruction};
         }

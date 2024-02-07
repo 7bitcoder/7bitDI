@@ -7,73 +7,73 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
-#include "SevenBit/DI/IServiceInstance.hpp"
-#include "SevenBit/DI/ServiceDescriptor.hpp"
-#include "SevenBit/DI/ServiceLifeTime.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
-#include "SevenBit/DI/TypeId.hpp"
+#include "SevenBit/DI/Details/Core/IServiceInstanceProviderRoot.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstanceCreator.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstancesResolver.hpp"
+#include "SevenBit/DI/IServiceInstanceProvider.hpp"
+#include "SevenBit/DI/ServiceProviderOptions.hpp"
 
 namespace sb::di::details::core
 {
-    class ServiceInstanceProviderRoot;
-
     class EXPORT ServiceInstanceProvider : public IServiceInstanceProvider
     {
         ServiceProviderOptions _options;
-        ServiceInstanceProviderRoot &_root;
+        ServiceInstanceCreator _instanceCreator;
+        IServiceInstanceProviderRoot &_root;
         containers::ServiceInstancesMap _scoped;
-        ServiceProvider *_serviceProvider = nullptr;
-
-        ServiceInstanceProvider(const ServiceInstanceProvider &provider);
 
       public:
         using Ptr = std::unique_ptr<ServiceInstanceProvider>;
 
-        explicit ServiceInstanceProvider(ServiceInstanceProviderRoot &root, ServiceProviderOptions options);
+        ServiceInstanceProvider(IServiceInstanceProviderRoot &root, ServiceProviderOptions options);
 
-        ServiceInstanceProvider(ServiceInstanceProvider &&) noexcept = default;
+        ServiceInstanceProvider(ServiceInstanceProvider &&) = delete;
+        ServiceInstanceProvider(const ServiceInstanceProvider &) = delete;
 
         ServiceInstanceProvider &operator=(const ServiceInstanceProvider &) = delete;
+        ServiceInstanceProvider &operator=(ServiceInstanceProvider &&) = delete;
 
         void init(ServiceProvider &serviceProvider) override;
 
+        [[nodiscard]] const ServiceProviderOptions &getOptions() const override;
+
         [[nodiscard]] IServiceInstanceProvider::Ptr createScope() const override;
 
-        const IServiceInstance &getInstance(TypeId serviceTypeId) override;
-        const IServiceInstance *tryGetInstance(TypeId serviceTypeId) override;
-        const OneOrList<IServiceInstance::Ptr> *tryGetInstances(TypeId serviceTypeId) override;
+        const ServiceInstance &getInstance(TypeId serviceTypeId) override;
+        const ServiceInstance *tryGetInstance(TypeId serviceTypeId) override;
+        const OneOrList<ServiceInstance> *tryGetInstances(TypeId serviceTypeId) override;
 
-        IServiceInstance::Ptr createInstance(TypeId serviceTypeId) override;
-        IServiceInstance::Ptr tryCreateInstance(TypeId serviceTypeId) override;
-        std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateInstances(TypeId serviceTypeId) override;
+        ServiceInstance createInstance(TypeId serviceTypeId) override;
+        ServiceInstance tryCreateInstance(TypeId serviceTypeId) override;
+        std::optional<OneOrList<ServiceInstance>> tryCreateInstances(TypeId serviceTypeId) override;
 
-        IServiceInstance::Ptr createInstanceInPlace(TypeId serviceTypeId) override;
-        IServiceInstance::Ptr tryCreateInstanceInPlace(TypeId serviceTypeId) override;
+        ServiceInstance createInstanceInPlace(TypeId serviceTypeId) override;
+        ServiceInstance tryCreateInstanceInPlace(TypeId serviceTypeId) override;
 
         void clear();
 
-        [[nodiscard]] const ServiceProviderOptions &getOptions() const override;
-
       protected:
-        const IServiceInstance *tryCreateAndRegister(const containers::ServiceDescriptorList &descriptors);
-        const OneOrList<IServiceInstance::Ptr> *tryCreateAndRegisterAll(
-            const containers::ServiceDescriptorList &descriptors);
-
-        IServiceInstance::Ptr tryCreate(const ServiceDescriptor &descriptor, bool inPlaceRequest);
-        std::optional<OneOrList<IServiceInstance::Ptr>> tryCreateAll(
-            const containers::ServiceDescriptorList &descriptors);
-
-        OneOrList<IServiceInstance::Ptr> &createRestInstances(const containers::ServiceDescriptorList &descriptors,
-                                                              containers::ServiceInstanceList &instances,
-                                                              bool inPlaceRequest);
-
-        IServiceInstance::Ptr createInstance(const ServiceDescriptor &descriptor, bool inPlaceRequest);
-
-        containers::ServiceInstancesMap *tryGetInstancesMap(const ServiceLifeTime &lifeTime);
-
         containers::ServiceInstanceList *findRegisteredInstances(TypeId serviceTypeId);
 
-        [[nodiscard]] const containers::ServiceDescriptorList *findDescriptors(TypeId serviceTypeId) const;
+        [[nodiscard]] const containers::ServiceDescriptorList *findDescriptors(TypeId serviceTypeId,
+                                                                               bool transient) const;
+
+        containers::ServiceInstanceList *tryRegisterAndGet(const containers::ServiceDescriptorList &descriptors,
+                                                           std::optional<containers::ServiceInstanceList> &&instances);
+
+        std::optional<containers::ServiceInstanceList> tryCreateNonTransient(
+            const containers::ServiceDescriptorList &descriptors);
+        std::optional<containers::ServiceInstanceList> tryCreateAllNonTransient(
+            const containers::ServiceDescriptorList &descriptors);
+        containers::ServiceInstanceList *createRestNonTransientAndGet(
+            const containers::ServiceDescriptorList &descriptors, containers::ServiceInstanceList &instances);
+
+        ServiceInstance tryCreateTransient(const containers::ServiceDescriptorList &descriptors);
+        std::optional<OneOrList<ServiceInstance>> tryCreateAllTransient(
+            const containers::ServiceDescriptorList &descriptors);
+
+        ServiceInstancesResolver makeResolver(const containers::ServiceDescriptorList &descriptors);
+        ServiceInstanceCreator &getInstanceCreator();
     };
 } // namespace sb::di::details::core
 

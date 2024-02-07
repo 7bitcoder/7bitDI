@@ -13,8 +13,8 @@ namespace sb::di::details::utils
         {
             explicit Conv(size_t paramNumber) {}
 
-            template <class U, class = typename std::enable_if_t<!utils::IsCopyCtorV<T, U>>> operator U();
-            template <class U, class = typename std::enable_if_t<!utils::IsCopyCtorV<T, U>>> operator U &() const;
+            template <class U, class = std::enable_if_t<!utils::IsCopyCtorV<T, U>>> operator U();
+            template <class U, class = std::enable_if_t<!utils::IsCopyCtorV<T, U>>> operator U &() const;
         };
 
         template <class T, size_t... Ns> constexpr auto paramsNumber(size_t) -> decltype(T{Conv<T>{Ns}...}, 0)
@@ -29,7 +29,7 @@ namespace sb::di::details::utils
             {
                 static_assert(
                     details::utils::notSupportedType<T>,
-                    "Proper constructor for cpecified type was not found, reached maximum constructor params number "
+                    "Proper constructor for specified type was not found, reached maximum constructor params number "
                     "limit, to bump limit define macro _7BIT_DI_CTOR_PARAMS_LIMIT with new value befor including lib");
                 return 0;
             }

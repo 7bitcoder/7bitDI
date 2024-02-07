@@ -3,10 +3,8 @@
 #include "../../Helpers/Classes/Dependencies.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/DI/Details/Helpers/ServiceParamProvider.hpp"
-#include "SevenBit/DI/Details/Services/ExternalService.hpp"
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 #include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
 
 class ServiceParamProviderTest : public testing::Test
 {
@@ -27,7 +25,7 @@ class ServiceParamProviderTest : public testing::Test
 TEST_F(ServiceParamProviderTest, ShouldGetDependencyInPlaceService)
 {
     ServiceProviderMock mock;
-    auto test1 = std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>();
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
     EXPECT_CALL(mock.getMock(), createInstanceInPlace(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(std::move(test1)));
@@ -43,7 +41,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyInPlaceService)
 TEST_F(ServiceParamProviderTest, ShouldGetDependencyPtr1Service)
 {
     ServiceProviderMock mock;
-    sb::di::details::services::InPlaceService<TestDependencyClass> test1;
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
     EXPECT_CALL(mock.getMock(), tryGetInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&test1));
@@ -59,7 +57,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyPtr1Service)
 TEST_F(ServiceParamProviderTest, ShouldGetDependencyPtr2Service)
 {
     ServiceProviderMock mock;
-    sb::di::details::services::InPlaceService<TestDependencyClass> test1;
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
     EXPECT_CALL(mock.getMock(), tryGetInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&test1));
@@ -75,7 +73,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyPtr2Service)
 TEST_F(ServiceParamProviderTest, ShouldGetDependencyPtr3Service)
 {
     ServiceProviderMock mock;
-    sb::di::details::services::InPlaceService<TestDependencyClass> test1;
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
     EXPECT_CALL(mock.getMock(), tryGetInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&test1));
@@ -91,7 +89,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyPtr3Service)
 TEST_F(ServiceParamProviderTest, ShouldGetDependencyPtr4Service)
 {
     ServiceProviderMock mock;
-    sb::di::details::services::InPlaceService<TestDependencyClass> test1;
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
     EXPECT_CALL(mock.getMock(), tryGetInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&test1));
@@ -107,7 +105,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyPtr4Service)
 TEST_F(ServiceParamProviderTest, ShouldGetDependencyRef1Service)
 {
     ServiceProviderMock mock;
-    sb::di::details::services::InPlaceService<TestDependencyClass> test1;
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
     EXPECT_CALL(mock.getMock(), getInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::ReturnRef(test1));
@@ -123,7 +121,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyRef1Service)
 TEST_F(ServiceParamProviderTest, ShouldGetDependencyRef2Service)
 {
     ServiceProviderMock mock;
-    sb::di::details::services::InPlaceService<TestDependencyClass> test1;
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
 
     EXPECT_CALL(mock.getMock(), getInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::ReturnRef(test1));
@@ -140,7 +138,8 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyUniq1Service)
 {
     ServiceProviderMock mock;
     auto service = std::make_unique<TestDependencyClass>();
-    auto test1 = std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service));
+    sb::di::ServiceInstance test1{
+        std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service))};
 
     EXPECT_CALL(mock.getMock(), createInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(std::move(test1)));
@@ -157,7 +156,8 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyUniq2Service)
 {
     ServiceProviderMock mock;
     auto service = std::make_unique<TestDependencyClass>();
-    auto test1 = std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service));
+    sb::di::ServiceInstance test1{
+        std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service))};
 
     EXPECT_CALL(mock.getMock(), createInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(std::move(test1)));
@@ -173,8 +173,9 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyUniq2Service)
 TEST_F(ServiceParamProviderTest, ShouldGetDependencyVec1Service)
 {
     ServiceProviderMock mock;
-    auto test1 = std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>();
-    sb::di::OneOrList<sb::di::IServiceInstance::Ptr> result{std::move(test1)};
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
+
+    sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryGetInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&result));
@@ -190,8 +191,8 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyVec1Service)
 TEST_F(ServiceParamProviderTest, ShouldGetDependencyVec2Service)
 {
     ServiceProviderMock mock;
-    auto test1 = std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>();
-    sb::di::OneOrList<sb::di::IServiceInstance::Ptr> result{std::move(test1)};
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
+    sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryGetInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&result));
@@ -208,8 +209,9 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyVec3Service)
 {
     ServiceProviderMock mock;
     auto service = std::make_unique<TestDependencyClass>();
-    auto test1 = std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service));
-    sb::di::OneOrList<sb::di::IServiceInstance::Ptr> result{std::move(test1)};
+    sb::di::ServiceInstance test1{
+        std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service))};
+    sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryCreateInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(std::make_optional(std::move(result))));
@@ -227,8 +229,10 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyVec4Service)
 {
     ServiceProviderMock mock;
     auto service = std::make_unique<TestDependencyClass>();
-    auto test1 = std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service));
-    sb::di::OneOrList<sb::di::IServiceInstance::Ptr> result{std::move(test1)};
+    sb::di::ServiceInstance test1{
+        std::make_unique<sb::di::details::services::UniquePtrService<TestDependencyClass>>(std::move(service))};
+
+    sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryCreateInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(std::make_optional(std::move(result))));

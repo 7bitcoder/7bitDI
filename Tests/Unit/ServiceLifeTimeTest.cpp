@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "SevenBit/DI/ServiceLifeTime.hpp"
+#include "SevenBit/DI/ServiceLifeTimes.hpp"
 
 class ServiceLifeTime : public testing::Test
 {
@@ -29,6 +29,14 @@ TEST_F(ServiceLifeTime, ShouldConstructProperLifetime)
     EXPECT_NO_THROW(act());
 }
 
+TEST_F(ServiceLifeTime, ShouldFailConstructLifetime)
+{
+    EXPECT_THROW(sb::di::ServiceLifeTime{sb::di::ServiceLifeTime::Count}, sb::di::InjectorException);
+    EXPECT_THROW(sb::di::ServiceLifeTime{static_cast<sb::di::ServiceLifeTime::Type>(-123)}, sb::di::InjectorException);
+    EXPECT_THROW(sb::di::ServiceLifeTime{static_cast<sb::di::ServiceLifeTime::Type>(123)}, sb::di::InjectorException);
+    EXPECT_THROW(sb::di::ServiceLifeTime{static_cast<sb::di::ServiceLifeTime::Type>(-1)}, sb::di::InjectorException);
+}
+
 TEST_F(ServiceLifeTime, ShouldConstructProperLifetimeUsingFactories)
 {
     auto act = [] {
@@ -40,9 +48,20 @@ TEST_F(ServiceLifeTime, ShouldConstructProperLifetimeUsingFactories)
     EXPECT_NO_THROW(act());
 }
 
+TEST_F(ServiceLifeTime, ShouldConstructProperLifetimeUsingList)
+{
+    auto act = [] {
+        auto singleton = sb::di::ServiceLifeTimes::Singleton;
+        auto scoped = sb::di::ServiceLifeTimes::Scoped;
+        auto transient = sb::di::ServiceLifeTimes::Transient;
+    };
+
+    EXPECT_NO_THROW(act());
+}
+
 TEST_F(ServiceLifeTime, ShouldCheckLifetime)
 {
-    const auto lifeTime = sb::di::ServiceLifeTime::singleton();
+    constexpr auto lifeTime = sb::di::ServiceLifeTime::singleton();
 
     EXPECT_TRUE(lifeTime.isSingleton());
     EXPECT_TRUE(lifeTime.is(sb::di::ServiceLifeTime::Singleton));

@@ -20,12 +20,16 @@ struct TransientService
 class ServiceExecutor
 {
   public:
-    ServiceExecutor(NotReqisteredService *notRegistered, const SingletonService &singleton,
-                    const std::vector<ScopedService *> scoped, std::vector<std::unique_ptr<TransientService>> trasients)
+    ServiceExecutor(NotReqisteredService *notRegistered, SingletonService &singleton, ScopedService *scoped,
+                    std::unique_ptr<TransientService> transient, TransientService transientInPlace,
+                    std::vector<ScopedService *> scopedList,
+                    std::vector<std::unique_ptr<TransientService>> trasientList)
     {
         assert(notRegistered == nullptr);
-        assert(scoped.size() == 1);
-        assert(trasients.size() == 1);
+        assert(scoped != nullptr);
+        assert(transient != nullptr);
+        assert(scopedList.size() == 1);
+        assert(trasientList.size() == 1);
     }
 };
 int main()

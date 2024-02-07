@@ -1,6 +1,5 @@
-import subprocess
 import os
-
+import subprocess
 
 currentPath = os.path.dirname(__file__)
 

@@ -12,6 +12,11 @@ namespace sb::di
 
     INLINE NullPointerException::NullPointerException(const std::string &why) : InjectorException{why} {}
 
+    INLINE InvalidServiceException::InvalidServiceException()
+        : InjectorException{std::string{"Service is in not valid state."}}
+    {
+    }
+
     INLINE InvalidServiceException::InvalidServiceException(const TypeId typeId)
         : InjectorException{std::string{"Service: '"} + typeId.name() + "' is in not valid state."}
     {
@@ -48,6 +53,15 @@ namespace sb::di
                                                                               const TypeId interface)
         : InjectorException{std::string{"Service: '"} + typeIndex.name() + "' should implement this base type '" +
                             interface.name() + "' ."}
+    {
+    }
+
+    INLINE ServiceAliasMismatchException::ServiceAliasMismatchException(const TypeId typeIndex, const TypeId interface,
+                                                                        const bool shoudBeAlias)
+        : InjectorException{std::string{"Service: '"} + typeIndex.name() +
+                            (shoudBeAlias ? "' should be" : "' should not be") +
+                            " alias as other services implementing this interface '" + interface.name() +
+                            "' that are already registered."}
     {
     }
 

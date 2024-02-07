@@ -14,11 +14,11 @@ namespace sb::di::details::helpers
       public:
         explicit ServiceCtorParamConverter(ServiceProvider &provider, size_t argPos) : _provider(provider) {}
 
-        template <class U, class = typename std::enable_if_t<!utils::IsCopyCtorV<T, U>>> operator U()
+        template <class U, class = std::enable_if_t<!utils::IsCopyCtorV<T, U>>> operator U()
         {
             return helpers::ServiceParamProvider<U>::getParam(_provider);
         }
-        template <class U, class = typename std::enable_if_t<!utils::IsCopyCtorV<T, U>>> operator U &() const
+        template <class U, class = std::enable_if_t<!utils::IsCopyCtorV<T, U>>> operator U &() const
         {
             return helpers::ServiceParamProvider<U &>::getParam(_provider);
         }

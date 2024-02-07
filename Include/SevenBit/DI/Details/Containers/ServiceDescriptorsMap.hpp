@@ -15,8 +15,7 @@ namespace sb::di::details::containers
     class EXPORT ServiceDescriptorsMap
     {
         std::unordered_map<TypeId, ServiceDescriptorList> _serviceCreatorsMap;
-        std::unordered_set<TypeId> _registeredServices;
-        const bool _checkDescriptorUniqueness = false;
+        std::unique_ptr<std::unordered_set<TypeId>> _registeredServicesCheck;
 
       public:
         using Ptr = std::unique_ptr<ServiceDescriptorsMap>;
@@ -48,10 +47,8 @@ namespace sb::di::details::containers
         [[nodiscard]] const ServiceDescriptorList *findDescriptors(TypeId typeId) const;
 
       private:
+        void addDescriptorWithCheck(ServiceDescriptor &&descriptor);
         void addDescriptor(ServiceDescriptor &&descriptor);
-
-        void checkIfAlreadyRegistered(TypeId implementationTypeId);
-        void registerService(TypeId implementationTypeId);
     };
 } // namespace sb::di::details::containers
 

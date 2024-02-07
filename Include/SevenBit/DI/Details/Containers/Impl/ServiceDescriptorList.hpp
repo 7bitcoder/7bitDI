@@ -1,7 +1,5 @@
 #pragma once
 
-#include <algorithm>
-
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
@@ -17,10 +15,17 @@ namespace sb::di::details::containers
 
     INLINE void ServiceDescriptorList::add(ServiceDescriptor &&descriptor)
     {
-        checkBaseType(descriptor);
-        checkLifeTime(descriptor);
+        if (!empty())
+        {
+            checkBaseType(descriptor);
+            checkAlias(descriptor);
+            checkLifeTime(descriptor);
+        }
         _oneOrList.add(std::move(descriptor));
     }
+
+    INLINE OneOrList<ServiceDescriptor> &ServiceDescriptorList::getInnerList() { return _oneOrList; }
+    INLINE const OneOrList<ServiceDescriptor> &ServiceDescriptorList::getInnerList() const { return _oneOrList; }
 
     INLINE const ServiceDescriptor &ServiceDescriptorList::first() const { return _oneOrList.first(); }
 
@@ -30,21 +35,31 @@ namespace sb::di::details::containers
 
     INLINE size_t ServiceDescriptorList::size() const { return _oneOrList.size(); }
 
-    INLINE const ServiceLifeTime &ServiceDescriptorList::getLifeTime() const { return first().getLifeTime(); }
+    INLINE ServiceLifeTime ServiceDescriptorList::getLifeTime() const { return first().getLifeTime(); }
 
     INLINE TypeId ServiceDescriptorList::getServiceTypeId() const { return first().getServiceTypeId(); }
 
+    INLINE bool ServiceDescriptorList::isAlias() const { return first().isAlias(); }
+
     INLINE void ServiceDescriptorList::checkBaseType(const ServiceDescriptor &descriptor) const
     {
-        if (!empty() && descriptor.getServiceTypeId() != getServiceTypeId())
+        if (descriptor.getServiceTypeId() != getServiceTypeId())
         {
             throw ServiceBaseTypeMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
         }
     }
 
+    INLINE void ServiceDescriptorList::checkAlias(const ServiceDescriptor &descriptor) const
+    {
+        if (descriptor.isAlias() != isAlias())
+        {
+            throw ServiceAliasMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId(), isAlias()};
+        }
+    }
+
     INLINE void ServiceDescriptorList::checkLifeTime(const ServiceDescriptor &descriptor) const
     {
-        if (!empty() && descriptor.getLifeTime() != getLifeTime())
+        if (!isAlias() && !descriptor.isAlias() && descriptor.getLifeTime() != getLifeTime())
         {
             throw ServiceLifeTimeMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
         }

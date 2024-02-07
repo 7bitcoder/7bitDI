@@ -3,7 +3,6 @@
 #include "../../Helpers/Classes/Basic.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
 #include "SevenBit/DI/Details/Factories/ExternalServiceFactory.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
 
 class ExternalServiceFactoryTest : public testing::Test
 {
@@ -33,8 +32,6 @@ TEST_F(ExternalServiceFactoryTest, ShouldCreateService)
     EXPECT_TRUE(instance->isValid());
     EXPECT_EQ(instance->get(), &test);
     EXPECT_TRUE(dynamic_cast<sb::di::details::services::ExternalService<TestClass1> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestClass1));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
 TEST_F(ExternalServiceFactoryTest, ShouldCreateInPlaceService)
@@ -49,8 +46,6 @@ TEST_F(ExternalServiceFactoryTest, ShouldCreateInPlaceService)
     EXPECT_TRUE(instance->isValid());
     EXPECT_EQ(instance->get(), &test);
     EXPECT_TRUE(dynamic_cast<sb::di::details::services::ExternalService<TestClass1> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestClass1));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
 TEST_F(ExternalServiceFactoryTest, ShouldCreateNullService)
@@ -64,8 +59,6 @@ TEST_F(ExternalServiceFactoryTest, ShouldCreateNullService)
     EXPECT_FALSE(instance->isValid());
     EXPECT_FALSE(instance->get());
     EXPECT_TRUE(dynamic_cast<sb::di::details::services::ExternalService<TestClass1> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestClass1));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
 
 TEST_F(ExternalServiceFactoryTest, ShouldCreateNullInPlaceService)
@@ -79,6 +72,4 @@ TEST_F(ExternalServiceFactoryTest, ShouldCreateNullInPlaceService)
     EXPECT_FALSE(instance->isValid());
     EXPECT_FALSE(instance->get());
     EXPECT_TRUE(dynamic_cast<sb::di::details::services::ExternalService<TestClass1> *>(instance.get()));
-    EXPECT_EQ(factory.getServiceTypeId(), typeid(TestClass1));
-    EXPECT_EQ(instance->getTypeId(), factory.getServiceTypeId());
 }
