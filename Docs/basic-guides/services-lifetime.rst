@@ -9,14 +9,17 @@ Service providers can create scoped service providers:
    
    ServiceProvider scoped = provider.createScope()
 
+.. warning::
+   Root/main service provider cannot be destroyed before its children scoped providers this can lead to undefined behavior
+
 Service can be registered as a singleton, scoped, or transient.
 
 * Singleton: service provider will create only one instance of this service (accessible via the getService method)
 * Scoped: instance provider will create only one instance of this instance for each scope (accessible via the getService method)
-* Transient: services are always unique, a new service is provided every time it is requested, and the service provider returns, in this case, std::unique_ptr (accessible via createService method)
+* Transient: services are always unique, a new service is provided every time it is requested (accessible via createService or createInstanceInPlace method)
 
 .. warning::
-   Only transient services can be created using createInstance method otherwise the method will throw an exception
+   Only transient services can be created using createInstance/createInstanceInPlace method otherwise the method will throw an exception
   
    Only singleton/scoped services can be accessed using the getService method otherwise the method will throw an exception 
 

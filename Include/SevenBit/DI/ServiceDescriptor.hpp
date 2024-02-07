@@ -21,8 +21,13 @@ namespace sb::di
 
         /**
          * @brief Construct a new service descriptor object
-         * @details implementationFactory cannot be null, otherwise constructor will throw exception
-         * @throws sb::di::NullPointerException
+         * @param serviceTypeId - service type identifier
+         * @param implementationTypeId - service implementation type identifier, type must inhetit from service type
+         * @param lifeTime - service life time: Singleton, Scoped or Transient
+         * @param implementationFactory - service implementation factory, can be nullptr in that case describer is
+         * treated as alias
+         * @param castOffset - cast offset is a difference in bytes between implementation pointer and casted service
+         * pointer, should be non zero for multiinheritance scenarios
          */
         ServiceDescriptor(TypeId serviceTypeId, TypeId implementationTypeId, ServiceLifeTime lifeTime,
                           IServiceFactory::Ptr implementationFactory, ptrdiff_t castOffset = 0);
@@ -53,10 +58,14 @@ namespace sb::di
          */
         [[nodiscard]] const IServiceFactory &getImplementationFactory() const;
 
+        /**
+         * @brief Get the service cast offset, non zero for multiinheritance
+         * @details
+         */
         [[nodiscard]] ptrdiff_t getCastOffset() const;
 
         /**
-         * @brief Check if service is alias
+         * @brief Check if service is alias (implementation factory is nullptr)
          */
         [[nodiscard]] bool isAlias() const;
 

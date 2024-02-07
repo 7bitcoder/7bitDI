@@ -62,7 +62,7 @@ namespace sb::di
 
         /**
          * @brief Creates service instance unique pointer, might be null
-         * @details If service was not registered or was registered as scoped/singleton, method returns null
+         * @details If service was not registered or was registered as scoped/singleton, method returns invalid instance
          */
         virtual ServiceInstance tryCreateInstance(TypeId serviceTypeId) = 0;
 
@@ -81,7 +81,7 @@ namespace sb::di
 
         /**
          * @brief Creates service instance in place
-         * @details If service was not registered or was registered as scoped/singleton, method returns null
+         * @details If service was not registered or was registered as scoped/singleton, method returns invalid instance
          */
         virtual ServiceInstance tryCreateInstanceInPlace(TypeId serviceTypeId) = 0;
 

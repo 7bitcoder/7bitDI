@@ -3,6 +3,8 @@
 struct TestInheritClass1
 {
     virtual int number() { return 1; }
+
+    virtual ~TestInheritClass1() = default;
 };
 struct TestInheritClass2 : TestInheritClass1
 {

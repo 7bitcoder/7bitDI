@@ -14,15 +14,11 @@ Injecting Services
 ---------------------
 * Singleton/scoped services can be injected using one of:
     * References: (T&)
-    * Const references: (const T&)
     * Pointers: (T*)
-    * Const pointer: (T* const)
-    * Pointer to const object: (const T*)
-    * Const pointer to const object: (const T* const)
 * Transient services can be injected using one of:
     * std::unique_ptr: (unique_ptr<T>)
-    * In place object if type is movable or copyable: T
-* Multiple services implementing specified interface can be injected using std::vector:
+    * In-place object if type is movable or copyable: T
+* Multiple services implementing the same interface can be injected using std::vector:
     * Transient (std::vector<std::unique_ptr<T>>)
     * Singleton/scoped (std::vector<T*>)
 

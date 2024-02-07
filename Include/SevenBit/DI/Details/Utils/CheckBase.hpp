@@ -7,7 +7,7 @@
 
 namespace sb::di::details::utils
 {
-    struct EXPORT CheckBase
+    struct CheckBase
     {
         template <class T> constexpr static bool notNull(const std::unique_ptr<T> &ptr) { return notNull(ptr.get()); }
 

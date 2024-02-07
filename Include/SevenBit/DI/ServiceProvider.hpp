@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <type_traits>
 #include <vector>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
@@ -8,6 +9,7 @@
 #include "SevenBit/DI/Details/Utils/Check.hpp"
 #include "SevenBit/DI/Details/Utils/Require.hpp"
 #include "SevenBit/DI/IServiceInstanceProvider.hpp"
+#include "SevenBit/DI/ServiceProviderOptions.hpp"
 
 namespace sb::di
 {
@@ -68,14 +70,17 @@ namespace sb::di
          * @endcode
          */
         [[nodiscard]] Ptr createScopeAsPtr() const;
+
         /**
          * @brief Returns inner service instance provider
+         * @details If service instance provider is nullptr, method throws exception
          * @throws sb::di::NullPointerException
          */
         [[nodiscard]] const IServiceInstanceProvider &getInstanceProvider() const;
 
         /**
          * @brief Returns inner service instance provider
+         * @details If service instance provider is nullptr, method throws exception
          * @throws sb::di::NullPointerException
          */
         IServiceInstanceProvider &getInstanceProvider();
@@ -202,7 +207,14 @@ namespace sb::di
         {
             auto instance = getInstanceProvider().createInstanceInPlace(typeid(TService));
             details::utils::Require::validInstance(instance);
-            return instance.moveOutAs<TService>();
+            if constexpr (std::is_move_constructible_v<TService>)
+            {
+                return instance.moveOutAs<TService>();
+            }
+            else
+            {
+                return instance.copyAs<TService>();
+            }
         }
 
         /**

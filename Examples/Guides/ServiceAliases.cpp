@@ -17,38 +17,44 @@ struct IServiceB
     virtual ~IServiceB() = default;
 };
 
-struct ServiceA final : IServiceA
+struct ServiceA : IServiceA
 {
     std::string actionA() override { return "actionA"; }
 };
 
-struct ServiceB final : IServiceB
+struct ServiceB : IServiceB
 {
     std::string actionB() override { return "actionB"; }
+};
+
+struct Service final : ServiceA, ServiceB
+{
+    std::string actionA() override { return "actionA from top service"; }
+    std::string actionB() override { return "actionB from top service"; }
 };
 
 class ServiceExecutor
 {
     IServiceA &_serviceA;
-    std::unique_ptr<IServiceB> _serviceB;
+    IServiceB &_serviceB;
 
   public:
-    ServiceExecutor(IServiceA &serviceA, std::unique_ptr<IServiceB> serviceB)
-        : _serviceA(serviceA), _serviceB(std::move(serviceB))
-    {
-    }
+    ServiceExecutor(IServiceA &serviceA, IServiceB &serviceB) : _serviceA(serviceA), _serviceB(serviceB) {}
 
     [[nodiscard]] std::string execute() const
     {
-        return _serviceA.actionA() + ", " + _serviceB->actionB() + " executed.";
+        return _serviceA.actionA() + ", " + _serviceB.actionB() + " executed.";
     }
 };
 
 int main()
 {
     ServiceProvider provider = ServiceCollection{}
-                                   .addSingleton<IServiceA, ServiceA>()
-                                   .addTransient<IServiceB, ServiceB>()
+                                   .addSingleton<Service>()
+                                   .addAlias<ServiceA, Service>()
+                                   .addAlias<ServiceB, Service>()
+                                   .addAlias<IServiceA, ServiceA>()
+                                   .addAlias<IServiceB, ServiceB>()
                                    .addScoped<ServiceExecutor>()
                                    .buildServiceProvider();
 

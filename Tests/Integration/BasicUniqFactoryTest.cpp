@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <memory>
+#include <vector>
 
 #include "../Helpers/Classes/Basic.hpp"
 #include "../Helpers/Classes/CirularDependency.hpp"

@@ -60,6 +60,7 @@ namespace sb::di
         {
             return describe<TService, TImplementation>(ServiceLifeTimes::Scoped);
         }
+
         /**
          * @brief Creates service descriptor
          * @details Creates service descriptor with:
@@ -96,9 +97,9 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceDescriptor descriptor1 = ServiceDescriber::describe<TestClass>(ServiceLifeTime::scoped());
+         * ServiceDescriptor descriptor1 = ServiceDescriber::describe<TestClass>(ServiceLifeTimes::Scoped);
          * ServiceDescriptor descriptor2 =
-         *          ServiceDescriber::describe<BaseClass, ImplementationClass>(ServiceLifeTime::transient());
+         *          ServiceDescriber::describe<BaseClass, ImplementationClass>(ServiceLifeTimes::Transient);
          * @endcode
          */
         template <class TService, class TImplementation = TService>
@@ -136,6 +137,7 @@ namespace sb::di
         {
             return describeSingleton<TService, TImplementation>(&service);
         }
+
         /**
          * @brief Creates service descriptor
          * @details Creates service descriptor with:
@@ -205,11 +207,11 @@ namespace sb::di
          *       [](const ServiceDescriptor &) { return std::make_unique<TestClass>(); });
          * @endcode
          */
-
         template <class FactoryFcn> static ServiceDescriptor describeScopedFrom(FactoryFcn &&factory)
         {
             return describeFrom<void, FactoryFcn>(ServiceLifeTimes::Scoped, std::forward<FactoryFcn>(factory));
         }
+
         /**
          * @brief Creates service descriptor
          * @details Creates service descriptor with:
@@ -227,7 +229,6 @@ namespace sb::di
          *       [](const ServiceDescriptor &) { return std::make_unique<TestClass>(); });
          * @endcode
          */
-
         template <class FactoryFcn> static ServiceDescriptor describeTransientFrom(FactoryFcn &&factory)
         {
             return describeFrom<void, FactoryFcn>(ServiceLifeTimes::Transient, std::forward<FactoryFcn>(factory));
@@ -246,8 +247,8 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceDescriptor descriptor = ServiceDescriber::describeFrom(
-         *       []() { return std::make_unique<TestClass>(); }, ServiceLifeTime::scoped());
+         * ServiceDescriptor descriptor = ServiceDescriber::describeFrom(ServiceLifeTimes::Scoped,
+         *       []() { return std::make_unique<TestClass>(); });
          * @endcode
          */
         template <class FactoryFcn>
@@ -278,6 +279,7 @@ namespace sb::di
         {
             return describeFrom<TService, FactoryFcn>(ServiceLifeTimes::Singleton, std::forward<FactoryFcn>(factory));
         }
+
         /**
          * @brief Creates service descriptor
          * @details Creates service descriptor with:
@@ -300,6 +302,7 @@ namespace sb::di
         {
             return describeFrom<TService, FactoryFcn>(ServiceLifeTimes::Scoped, std::forward<FactoryFcn>(factory));
         }
+
         /**
          * @brief Creates service descriptor
          * @details Creates service descriptor with:
@@ -337,8 +340,8 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceDescriptor descriptor = ServiceDescriber::describeFrom<BaseClass>(
-         *       []() { return std::make_unique<ImplementationClass>(); }, ServiceLifeTime::scoped());
+         * ServiceDescriptor descriptor = ServiceDescriber::describeFrom<BaseClass>(ServiceLifeTimes::Scoped,
+         *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
         template <class TService, class FactoryFcn>
@@ -354,6 +357,21 @@ namespace sb::di
                     details::utils::Cast::getCastOffset<TRealService, TImplementation>()};
         }
 
+        /**
+         * @brief Creates service descriptor
+         * @details Creates service descriptor with:
+         * lifetime - scoped,
+         * serviceTypeId - typeid(TAlias),
+         * implementationTypeId - typeid(TService),
+         * factory - nullptr
+         * @tparam TAlias base service type - alias type
+         * @tparam TService service type must inherit from TService
+         *
+         * Example:
+         * @code{.cpp}
+         * ServiceDescriptor descriptor = ServiceDescriber::describeAlias<AliasClass, ServiceClass>();
+         * @endcode
+         */
         template <class TAlias, class TService> static ServiceDescriptor describeAlias()
         {
             details::utils::Assert::aliasNotSame<TAlias, TService>();

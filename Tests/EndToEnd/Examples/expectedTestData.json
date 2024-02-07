@@ -1,0 +1,14 @@
+{
+  "Cli": "",
+  "CoreClasses": "",
+  "ExternalSingleton": "^Hello from service!",
+  "FactoryFunctions": "^Hello from service!",
+  "InjectingMultipleServices": "^work all: work A done! work B done! work C done! \nsingle work: work C done!",
+  "InjectingServiceProvider": "^actionA, actionB executed.",
+  "InjectingServices": "^actionA, actionB executed.",
+  "InjectionRules": "",
+  "SeparateImplementation": "^Hello from service.",
+  "ServicesLifeTime": "\nSingletons comparison\nrootProvider\\s+== rootProvider:\\s+1\nrootProvider\\s+== scopedProvider:\\s+1\nscopedProvider\\s+== scopedProvider:\\s+1\n\nScoped comparison\nrootProvider\\s+== rootProvider:\\s+1\nrootProvider\\s+== scopedProvider:\\s+0\nscopedProvider\\s+== scopedProvider:\\s+1\n\nTransient comparison\nrootProvider\\s+== rootProvider:\\s+0\nrootProvider\\s+== scopedProvider:\\s+0\nscopedProvider\\s+== scopedProvider:\\s+0\n",
+  "Simple": "^part a done!\npart b done!\n",
+  "ServiceAliases": "actionA from top service, actionB from top service executed."
+}

@@ -14,6 +14,7 @@ namespace sb::di
          * @details If set to true service provider will destruct services in opposite order to construction.
          */
         bool strongDestructionOrder = false;
+
         /**
          * @brief Set prebuilds singletons
          * @details If set to true when service provider is constructed it will also construct all singletons

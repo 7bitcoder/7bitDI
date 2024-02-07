@@ -60,7 +60,7 @@ namespace sb::di
 
         /**
          * @brief Checks if service instance is valid
-         * @details If service instance is invalid, get and move methods might lead to undefined behaviour
+         * @details If service instance is invalid, get and release methods might lead to undefined behaviour
          */
         [[nodiscard]] virtual bool isValid() const = 0;
 
