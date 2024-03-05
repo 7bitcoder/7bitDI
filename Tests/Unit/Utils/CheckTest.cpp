@@ -1,40 +1,49 @@
 #include <gtest/gtest.h>
 
-#include "../../Helpers/Classes/Basic.hpp"
-#include "SevenBit/DI/Details/Services/ExternalService.hpp"
-#include "SevenBit/DI/Details/Services/InPlaceService.hpp"
-#include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
-#include "SevenBit/DI/Details/Utils/ExtCheck.hpp"
+#include "SevenBit/DI/Details/Utils/Check.hpp"
 
-class CheckExtTest : public testing::Test
+class CheckTest : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}
 
-    CheckExtTest() {}
+    CheckTest() {}
 
     void SetUp() override {}
 
     void TearDown() override {}
 
-    ~CheckExtTest() override = default;
+    ~CheckTest() override = default;
 
     static void TearDownTestSuite() {}
 };
 
-TEST_F(CheckExtTest, ShoulCheckInstanceValidity)
+TEST_F(CheckTest, ShouldCheckNotNull)
 {
-    TestClass1 test;
-    EXPECT_FALSE(sb::di::details::ExtCheck::instanceValidity(nullptr));
-    EXPECT_FALSE(sb::di::details::ExtCheck::instanceValidity(sb::di::ServiceInstance{}));
-    EXPECT_FALSE(sb::di::details::ExtCheck::instanceValidity(
-        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestClass1>>(nullptr)}));
-    EXPECT_TRUE(sb::di::details::ExtCheck::instanceValidity(
-        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestClass1>>(&test)}));
-    EXPECT_FALSE(sb::di::details::ExtCheck::instanceValidity(
-        sb::di::ServiceInstance{std::make_unique<sb::di::details::UniquePtrService<TestClass1>>(nullptr)}));
-    EXPECT_TRUE(sb::di::details::ExtCheck::instanceValidity(sb::di::ServiceInstance{
-        std::make_unique<sb::di::details::UniquePtrService<TestClass1>>(std::make_unique<TestClass1>())}));
-    EXPECT_TRUE(sb::di::details::ExtCheck::instanceValidity(
-        sb::di::ServiceInstance{std::make_unique<sb::di::details::InPlaceService<TestClass1>>()}));
+    EXPECT_FALSE(sb::di::details::Check::notNull<int>(nullptr));
+    EXPECT_FALSE(sb::di::details::Check::notNull(std::unique_ptr<int>()));
+    EXPECT_FALSE(sb::di::details::Check::notNull(std::shared_ptr<int>()));
+
+    int intTest = 123;
+    EXPECT_TRUE(sb::di::details::Check::notNull(&intTest));
+    EXPECT_TRUE(sb::di::details::Check::notNull(std::make_unique<int>(intTest)));
+    EXPECT_TRUE(sb::di::details::Check::notNull(std::make_shared<int>(intTest)));
+}
+
+TEST_F(CheckTest, ShouldCheckEnum)
+{
+    enum TestEnum
+    {
+        A,
+        B,
+        C,
+        Count,
+    };
+    EXPECT_FALSE(sb::di::details::Check::enumValidity(static_cast<TestEnum>(123)));
+    EXPECT_FALSE(sb::di::details::Check::enumValidity(static_cast<TestEnum>(-123)));
+    EXPECT_FALSE(sb::di::details::Check::enumValidity(static_cast<TestEnum>(-1)));
+    EXPECT_FALSE(sb::di::details::Check::enumValidity(TestEnum::Count));
+    EXPECT_TRUE(sb::di::details::Check::enumValidity(TestEnum::A));
+    EXPECT_TRUE(sb::di::details::Check::enumValidity(TestEnum::B));
+    EXPECT_TRUE(sb::di::details::Check::enumValidity(TestEnum::C));
 }
