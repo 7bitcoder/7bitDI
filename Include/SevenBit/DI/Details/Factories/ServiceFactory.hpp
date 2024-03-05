@@ -14,7 +14,6 @@ namespace sb::di::details
 {
     template <class T> class ServiceFactory final : public IServiceFactory
     {
-        using ServiceCtorInvoker = ServiceCtorInvoker<T>;
         struct InPlaceCreator
         {
             template <class... Args> IServiceInstance::Ptr operator()(Args &&...params)
@@ -35,7 +34,7 @@ namespace sb::di::details
       public:
         IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
-            ServiceCtorInvoker invoker{serviceProvider};
+            ServiceCtorInvoker<T> invoker{serviceProvider};
             if (inPlaceRequest)
             {
                 return invoker.invokeWithCtorParams(InPlaceCreator{});
