@@ -4,7 +4,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-namespace sb::di::details::utils
+namespace sb::di::details
 {
     template <class T> struct RemoveUniquePtr
     {
@@ -17,4 +17,4 @@ namespace sb::di::details::utils
     };
 
     template <class T> using RemoveUniquePtrT = typename RemoveUniquePtr<T>::Type;
-} // namespace sb::di::details::utils
+} // namespace sb::di::details

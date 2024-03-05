@@ -175,7 +175,7 @@ namespace sb::di
 
         template <class TFunc> static void badFunctor()
         {
-            static_assert(details::utils::notSupportedType<TFunc>,
+            static_assert(details::notSupportedType<TFunc>,
                           "Functor should take as arguments: T and additionally index");
         }
     };

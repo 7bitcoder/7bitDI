@@ -5,7 +5,7 @@
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorsMap.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 
-namespace sb::di::details::containers
+namespace sb::di::details
 {
     INLINE ServiceDescriptorsMap::ServiceDescriptorsMap(const bool checkDescriptorUniqueness)
     {
@@ -53,4 +53,4 @@ namespace sb::di::details::containers
         }
     }
 
-} // namespace sb::di::details::containers
+} // namespace sb::di::details

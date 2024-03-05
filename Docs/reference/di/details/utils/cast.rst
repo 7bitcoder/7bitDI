@@ -1,6 +1,6 @@
 Cast
 ========================================
 
-.. doxygenstruct:: sb::di::details::utils::Cast
+.. doxygenstruct:: sb::di::details::Cast
    :members:
    :undoc-members:

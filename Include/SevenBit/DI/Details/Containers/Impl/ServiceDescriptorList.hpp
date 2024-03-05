@@ -5,7 +5,7 @@
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 
-namespace sb::di::details::containers
+namespace sb::di::details
 {
 
     INLINE ServiceDescriptorList::ServiceDescriptorList(ServiceDescriptor &&descriptor)
@@ -67,4 +67,4 @@ namespace sb::di::details::containers
 
     INLINE void ServiceDescriptorList::seal() { _oneOrList.shrink(); }
 
-} // namespace sb::di::details::containers
+} // namespace sb::di::details

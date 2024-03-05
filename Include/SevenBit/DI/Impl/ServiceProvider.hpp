@@ -10,7 +10,7 @@ namespace sb::di
     INLINE ServiceProvider::ServiceProvider(IServiceInstanceProvider::Ptr instanceProvider)
         : _instanceProvider(std::move(instanceProvider))
     {
-        details::utils::RequireBase::notNull(_instanceProvider);
+        details::RequireBase::notNull(_instanceProvider);
         getInstanceProvider().init(*this);
     }
 

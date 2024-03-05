@@ -7,12 +7,12 @@
 #include "SevenBit/DI/Details/Core/IServiceInstanceProviderRoot.hpp"
 #include "SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp"
 
-namespace sb::di::details::core
+namespace sb::di::details
 {
     class EXPORT ServiceInstanceProviderRoot : public ServiceInstanceProvider, public IServiceInstanceProviderRoot
     {
-        containers::ServiceDescriptorsMap _descriptorsMap;
-        containers::ServiceInstancesMap _singletons;
+        ServiceDescriptorsMap _descriptorsMap;
+        ServiceInstancesMap _singletons;
 
       public:
         using Ptr = std::unique_ptr<ServiceInstanceProviderRoot>;
@@ -31,16 +31,16 @@ namespace sb::di::details::core
 
         void init(ServiceProvider &serviceProvider) override;
 
-        [[nodiscard]] const containers::ServiceDescriptorsMap &getDescriptorsMap() const override;
+        [[nodiscard]] const ServiceDescriptorsMap &getDescriptorsMap() const override;
 
-        containers::ServiceInstancesMap &getSingletons() override;
+        ServiceInstancesMap &getSingletons() override;
 
         ServiceInstanceCreator &getRootInstanceCreator() override;
 
       private:
         void prebuildSingletons();
     };
-} // namespace sb::di::details::core
+} // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
 #include "SevenBit/DI/Details/Core/Impl/ServiceInstanceProviderRoot.hpp"

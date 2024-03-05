@@ -7,7 +7,7 @@
 #include "SevenBit/DI/ServiceLifeTime.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
-namespace sb::di::details::containers
+namespace sb::di::details
 {
     class EXPORT ServiceDescriptorList
     {
@@ -52,7 +52,7 @@ namespace sb::di::details::containers
         void checkLifeTime(const ServiceDescriptor &descriptor) const;
     };
 
-} // namespace sb::di::details::containers
+} // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
 #include "SevenBit/DI/Details/Containers/Impl/ServiceDescriptorList.hpp"

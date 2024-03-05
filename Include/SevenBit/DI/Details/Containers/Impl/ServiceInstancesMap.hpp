@@ -4,7 +4,7 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
 
-namespace sb::di::details::containers
+namespace sb::di::details
 {
     INLINE ServiceInstancesMap::ServiceInstancesMap(const bool strongDestructionOrder)
         : _strongDestructionOrder(strongDestructionOrder)
@@ -56,4 +56,4 @@ namespace sb::di::details::containers
     }
 
     INLINE ServiceInstancesMap::~ServiceInstancesMap() { clear(); }
-} // namespace sb::di::details::containers
+} // namespace sb::di::details

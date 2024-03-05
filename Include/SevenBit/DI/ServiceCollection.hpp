@@ -266,7 +266,7 @@ namespace sb::di
          */
         template <class TPred> size_t removeIf(TPred pred)
         {
-            auto it = details::utils::Container::removeIf(begin(), end(), std::move(pred));
+            auto it = details::Container::removeIf(begin(), end(), std::move(pred));
             auto r = std::distance(it, end());
             removeRange(it, end());
             return r;

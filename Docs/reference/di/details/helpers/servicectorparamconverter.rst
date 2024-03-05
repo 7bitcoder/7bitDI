@@ -1,6 +1,6 @@
 ServiceCtorParamConverter
 ========================================
 
-.. doxygenclass:: sb::di::details::helpers::ServiceCtorParamConverter
+.. doxygenclass:: sb::di::details::ServiceCtorParamConverter
    :members:
    :undoc-members:

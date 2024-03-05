@@ -1,6 +1,6 @@
 ServiceInstancesResolver
 ========================================
 
-.. doxygenclass:: sb::di::details::core::ServiceInstancesResolver
+.. doxygenclass:: sb::di::details::ServiceInstancesResolver
    :members:
    :undoc-members:

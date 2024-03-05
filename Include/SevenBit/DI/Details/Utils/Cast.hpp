@@ -4,7 +4,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-namespace sb::di::details::utils
+namespace sb::di::details
 {
     struct Cast
     {
@@ -21,4 +21,4 @@ namespace sb::di::details::utils
             return reinterpret_cast<void *>(casted);
         };
     };
-} // namespace sb::di::details::utils
+} // namespace sb::di::details

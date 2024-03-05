@@ -5,7 +5,7 @@
 #include "SevenBit/DI/Details/Utils/Require.hpp"
 #include "SevenBit/DI/Details/Utils/RequireBase.hpp"
 
-namespace sb::di::details::utils
+namespace sb::di::details
 {
     INLINE ServiceInstance *Require::validInstanceAndGet(ServiceInstance *instance)
     {
@@ -37,7 +37,7 @@ namespace sb::di::details::utils
         }
     }
 
-    INLINE void Require::transientDescriptors(const containers::ServiceDescriptorList &descriptors)
+    INLINE void Require::transientDescriptors(const ServiceDescriptorList &descriptors)
     {
         if (!descriptors.getLifeTime().isTransient())
         {
@@ -45,7 +45,7 @@ namespace sb::di::details::utils
         }
     }
 
-    INLINE void Require::nonTransientDescriptors(const containers::ServiceDescriptorList &descriptors)
+    INLINE void Require::nonTransientDescriptors(const ServiceDescriptorList &descriptors)
     {
         if (descriptors.getLifeTime().isTransient())
         {
@@ -68,4 +68,4 @@ namespace sb::di::details::utils
             throw InjectorException{"Expected non alias descriptor"};
         }
     }
-} // namespace sb::di::details::utils
+} // namespace sb::di::details

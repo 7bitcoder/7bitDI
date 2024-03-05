@@ -5,7 +5,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-namespace sb::di::details::utils
+namespace sb::di::details
 {
     template <class T> struct IsUniquePtr : std::false_type
     {
@@ -17,4 +17,4 @@ namespace sb::di::details::utils
 
     template <class T> inline constexpr bool IsUniquePtrV = IsUniquePtr<T>::value;
 
-} // namespace sb::di::details::utils
+} // namespace sb::di::details

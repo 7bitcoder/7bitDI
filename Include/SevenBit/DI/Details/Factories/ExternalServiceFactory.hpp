@@ -7,7 +7,7 @@
 #include "SevenBit/DI/Details/Services/ExternalService.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
 
-namespace sb::di::details::factories
+namespace sb::di::details
 {
 
     template <class T> class ExternalServiceFactory final : public IServiceFactory
@@ -19,8 +19,8 @@ namespace sb::di::details::factories
 
         IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
-            return std::make_unique<services::ExternalService<T>>(_service);
+            return std::make_unique<ExternalService<T>>(_service);
         }
     };
 
-} // namespace sb::di::details::factories
+} // namespace sb::di::details

@@ -24,11 +24,11 @@ TEST_F(ScopeGuardTest, ShouldNotDetectCirtularDependency)
 {
     std::unordered_set<sb::di::TypeId> typeIdsUnderConstruction;
     auto act = [&] {
-        sb::di::details::helpers::ScopedGuard guard{typeid(TestClass1), typeIdsUnderConstruction};
+        sb::di::details::ScopedGuard guard{typeid(TestClass1), typeIdsUnderConstruction};
         {
-            sb::di::details::helpers::ScopedGuard guard2{typeid(TestClass2), typeIdsUnderConstruction};
+            sb::di::details::ScopedGuard guard2{typeid(TestClass2), typeIdsUnderConstruction};
             {
-                sb::di::details::helpers::ScopedGuard guard3{typeid(TestClass3), typeIdsUnderConstruction};
+                sb::di::details::ScopedGuard guard3{typeid(TestClass3), typeIdsUnderConstruction};
             }
         }
     };
@@ -41,17 +41,17 @@ TEST_F(ScopeGuardTest, ShouldDetectCirtularDependency)
 {
     std::unordered_set<sb::di::TypeId> typeIdsUnderConstruction;
     auto act = [&] {
-        sb::di::details::helpers::ScopedGuard guard{typeid(TestClass1), typeIdsUnderConstruction};
+        sb::di::details::ScopedGuard guard{typeid(TestClass1), typeIdsUnderConstruction};
         {
-            sb::di::details::helpers::ScopedGuard guard2{typeid(TestClass2), typeIdsUnderConstruction};
+            sb::di::details::ScopedGuard guard2{typeid(TestClass2), typeIdsUnderConstruction};
             {
-                sb::di::details::helpers::ScopedGuard guard3{typeid(TestClass3), typeIdsUnderConstruction};
+                sb::di::details::ScopedGuard guard3{typeid(TestClass3), typeIdsUnderConstruction};
                 {
-                    sb::di::details::helpers::ScopedGuard guar4{typeid(TestClass4), typeIdsUnderConstruction};
+                    sb::di::details::ScopedGuard guar4{typeid(TestClass4), typeIdsUnderConstruction};
                     {
-                        sb::di::details::helpers::ScopedGuard guard5{typeid(TestClass5), typeIdsUnderConstruction};
+                        sb::di::details::ScopedGuard guard5{typeid(TestClass5), typeIdsUnderConstruction};
                         {
-                            sb::di::details::helpers::ScopedGuard guard6{typeid(TestClass1), typeIdsUnderConstruction};
+                            sb::di::details::ScopedGuard guard6{typeid(TestClass1), typeIdsUnderConstruction};
                         }
                     }
                 }

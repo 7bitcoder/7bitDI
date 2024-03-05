@@ -105,11 +105,11 @@ namespace sb::di
         template <class TService, class TImplementation = TService>
         static ServiceDescriptor describe(const ServiceLifeTime lifetime)
         {
-            details::utils::Assert::inheritance<TService, TImplementation>();
+            details::Assert::inheritance<TService, TImplementation>();
 
-            auto factory = std::make_unique<details::factories::ServiceFactory<TImplementation>>();
+            auto factory = std::make_unique<details::ServiceFactory<TImplementation>>();
             return {typeid(TService), typeid(TImplementation), lifetime, std::move(factory),
-                    details::utils::Cast::getCastOffset<TService, TImplementation>()};
+                    details::Cast::getCastOffset<TService, TImplementation>()};
         }
 
         /**
@@ -161,11 +161,11 @@ namespace sb::di
         template <class TService, class TImplementation = TService>
         static ServiceDescriptor describeSingleton(TImplementation *service)
         {
-            details::utils::Assert::inheritance<TService, TImplementation>();
+            details::Assert::inheritance<TService, TImplementation>();
 
-            auto factory = std::make_unique<details::factories::ExternalServiceFactory<TImplementation>>(service);
+            auto factory = std::make_unique<details::ExternalServiceFactory<TImplementation>>(service);
             return {typeid(TService), typeid(TImplementation), ServiceLifeTimes::Singleton, std::move(factory),
-                    details::utils::Cast::getCastOffset<TService, TImplementation>()};
+                    details::Cast::getCastOffset<TService, TImplementation>()};
         }
 
         /**
@@ -347,14 +347,14 @@ namespace sb::di
         template <class TService, class FactoryFcn>
         static ServiceDescriptor describeFrom(const ServiceLifeTime lifetime, FactoryFcn &&factoryFcn)
         {
-            using Factory = details::factories::ServiceFcnFactory<FactoryFcn>;
+            using Factory = details::ServiceFcnFactory<FactoryFcn>;
             using TImplementation = typename Factory::ServiceType;
             using TRealService = std::conditional_t<std::is_void_v<TService>, TImplementation, TService>;
-            details::utils::Assert::factoryInheritance<TRealService, TImplementation>();
+            details::Assert::factoryInheritance<TRealService, TImplementation>();
 
             auto factory = std::make_unique<Factory>(std::forward<FactoryFcn>(factoryFcn));
             return {typeid(TRealService), typeid(TImplementation), lifetime, std::move(factory),
-                    details::utils::Cast::getCastOffset<TRealService, TImplementation>()};
+                    details::Cast::getCastOffset<TRealService, TImplementation>()};
         }
 
         /**
@@ -374,11 +374,11 @@ namespace sb::di
          */
         template <class TAlias, class TService> static ServiceDescriptor describeAlias()
         {
-            details::utils::Assert::aliasNotSame<TAlias, TService>();
-            details::utils::Assert::aliasInheritance<TAlias, TService>();
+            details::Assert::aliasNotSame<TAlias, TService>();
+            details::Assert::aliasInheritance<TAlias, TService>();
 
             return {typeid(TAlias), typeid(TService), ServiceLifeTimes::Scoped, nullptr,
-                    details::utils::Cast::getCastOffset<TAlias, TService>()};
+                    details::Cast::getCastOffset<TAlias, TService>()};
         }
     };
 } // namespace sb::di

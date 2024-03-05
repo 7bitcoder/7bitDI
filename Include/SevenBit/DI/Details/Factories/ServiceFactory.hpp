@@ -10,16 +10,16 @@
 #include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
 
-namespace sb::di::details::factories
+namespace sb::di::details
 {
     template <class T> class ServiceFactory final : public IServiceFactory
     {
-        using ServiceCtorInvoker = helpers::ServiceCtorInvoker<T>;
+        using ServiceCtorInvoker = ServiceCtorInvoker<T>;
         struct InPlaceCreator
         {
             template <class... Args> IServiceInstance::Ptr operator()(Args &&...params)
             {
-                return std::make_unique<services::InPlaceService<T>>(std::forward<Args>(params)...);
+                return std::make_unique<InPlaceService<T>>(std::forward<Args>(params)...);
             }
         };
 
@@ -28,7 +28,7 @@ namespace sb::di::details::factories
             template <class... Args> IServiceInstance::Ptr operator()(Args &&...params)
             {
                 auto servicePtr = std::make_unique<T>(std::forward<Args>(params)...);
-                return std::make_unique<services::UniquePtrService<T>>(std::move(servicePtr));
+                return std::make_unique<UniquePtrService<T>>(std::move(servicePtr));
             }
         };
 
@@ -44,4 +44,4 @@ namespace sb::di::details::factories
         }
     };
 
-} // namespace sb::di::details::factories
+} // namespace sb::di::details

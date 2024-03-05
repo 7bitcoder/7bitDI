@@ -1,4 +1,4 @@
-sb::di::details::utils
+sb::di::details
 ========================================
 
 .. toctree::

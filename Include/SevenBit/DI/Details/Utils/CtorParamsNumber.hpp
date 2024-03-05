@@ -5,7 +5,7 @@
 #include "SevenBit/DI/Details/Helpers/ServiceCtorParamConverter.hpp"
 #include "SevenBit/DI/Details/Utils/NotSupportedType.hpp"
 
-namespace sb::di::details::utils
+namespace sb::di::details
 {
     namespace ctorParamsNumberInternals
     {
@@ -13,8 +13,8 @@ namespace sb::di::details::utils
         {
             explicit Conv(size_t paramNumber) {}
 
-            template <class U, class = std::enable_if_t<!utils::IsCopyCtorV<T, U>>> operator U();
-            template <class U, class = std::enable_if_t<!utils::IsCopyCtorV<T, U>>> operator U &() const;
+            template <class U, class = std::enable_if_t<!IsCopyCtorV<T, U>>> operator U();
+            template <class U, class = std::enable_if_t<!IsCopyCtorV<T, U>>> operator U &() const;
         };
 
         template <class T, size_t... Ns> constexpr auto paramsNumber(size_t) -> decltype(T{Conv<T>{Ns}...}, 0)
@@ -28,7 +28,7 @@ namespace sb::di::details::utils
             if constexpr (sizeof...(Ns) > _7BIT_DI_CTOR_PARAMS_LIMIT)
             {
                 static_assert(
-                    details::utils::notSupportedType<T>,
+                    details::notSupportedType<T>,
                     "Proper constructor for specified type was not found, reached maximum constructor params number "
                     "limit, to bump limit define macro _7BIT_DI_CTOR_PARAMS_LIMIT with new value befor including lib");
                 return 0;
@@ -42,4 +42,4 @@ namespace sb::di::details::utils
 
     template <class T> constexpr size_t ctorParamsNumber() { return ctorParamsNumberInternals::paramsNumber<T>(0); };
 
-} // namespace sb::di::details::utils
+} // namespace sb::di::details

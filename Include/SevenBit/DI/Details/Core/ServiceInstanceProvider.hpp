@@ -13,14 +13,14 @@
 #include "SevenBit/DI/IServiceInstanceProvider.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 
-namespace sb::di::details::core
+namespace sb::di::details
 {
     class EXPORT ServiceInstanceProvider : public IServiceInstanceProvider
     {
         ServiceProviderOptions _options;
         ServiceInstanceCreator _instanceCreator;
         IServiceInstanceProviderRoot &_root;
-        containers::ServiceInstancesMap _scoped;
+        ServiceInstancesMap _scoped;
 
       public:
         using Ptr = std::unique_ptr<ServiceInstanceProvider>;
@@ -53,29 +53,29 @@ namespace sb::di::details::core
         void clear();
 
       protected:
-        containers::ServiceInstanceList *findRegisteredInstances(TypeId serviceTypeId);
+        ServiceInstanceList *findRegisteredInstances(TypeId serviceTypeId);
 
-        [[nodiscard]] const containers::ServiceDescriptorList *findDescriptors(TypeId serviceTypeId,
+        [[nodiscard]] const ServiceDescriptorList *findDescriptors(TypeId serviceTypeId,
                                                                                bool transient) const;
 
-        containers::ServiceInstanceList *tryRegisterAndGet(const containers::ServiceDescriptorList &descriptors,
-                                                           std::optional<containers::ServiceInstanceList> &&instances);
+        ServiceInstanceList *tryRegisterAndGet(const ServiceDescriptorList &descriptors,
+                                                           std::optional<ServiceInstanceList> &&instances);
 
-        std::optional<containers::ServiceInstanceList> tryCreateNonTransient(
-            const containers::ServiceDescriptorList &descriptors);
-        std::optional<containers::ServiceInstanceList> tryCreateAllNonTransient(
-            const containers::ServiceDescriptorList &descriptors);
-        containers::ServiceInstanceList *createRestNonTransientAndGet(
-            const containers::ServiceDescriptorList &descriptors, containers::ServiceInstanceList &instances);
+        std::optional<ServiceInstanceList> tryCreateNonTransient(
+            const ServiceDescriptorList &descriptors);
+        std::optional<ServiceInstanceList> tryCreateAllNonTransient(
+            const ServiceDescriptorList &descriptors);
+        ServiceInstanceList *createRestNonTransientAndGet(
+            const ServiceDescriptorList &descriptors, ServiceInstanceList &instances);
 
-        ServiceInstance tryCreateTransient(const containers::ServiceDescriptorList &descriptors);
+        ServiceInstance tryCreateTransient(const ServiceDescriptorList &descriptors);
         std::optional<OneOrList<ServiceInstance>> tryCreateAllTransient(
-            const containers::ServiceDescriptorList &descriptors);
+            const ServiceDescriptorList &descriptors);
 
-        ServiceInstancesResolver makeResolver(const containers::ServiceDescriptorList &descriptors);
+        ServiceInstancesResolver makeResolver(const ServiceDescriptorList &descriptors);
         ServiceInstanceCreator &getInstanceCreator();
     };
-} // namespace sb::di::details::core
+} // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
 #include "SevenBit/DI/Details/Core/Impl/ServiceInstanceProvider.hpp"

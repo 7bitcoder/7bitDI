@@ -1,6 +1,6 @@
 CheckBase
 ========================================
 
-.. doxygenstruct:: sb::di::details::utils::CheckBase
+.. doxygenstruct:: sb::di::details::CheckBase
    :members:
    :undoc-members:

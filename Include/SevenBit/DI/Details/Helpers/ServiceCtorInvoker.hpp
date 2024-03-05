@@ -7,7 +7,7 @@
 #include "SevenBit/DI/Details/Utils/CtorParamsNumber.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 
-namespace sb::di::details::helpers
+namespace sb::di::details
 {
     template <class T> class ServiceCtorInvoker
     {
@@ -19,7 +19,7 @@ namespace sb::di::details::helpers
         template <class TFunc> auto invokeWithCtorParams(TFunc &&func)
         {
             return invokeWithCtorParams<TFunc>(std::forward<TFunc>(func),
-                                               std::make_index_sequence<utils::ctorParamsNumber<T>()>{});
+                                               std::make_index_sequence<ctorParamsNumber<T>()>{});
         };
 
       private:
@@ -29,4 +29,4 @@ namespace sb::di::details::helpers
         }
     };
 
-} // namespace sb::di::details::helpers
+} // namespace sb::di::details

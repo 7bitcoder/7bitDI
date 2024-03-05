@@ -27,10 +27,10 @@ class ServiceInstancesMapTest : public testing::Test
 
 TEST_F(ServiceInstancesMapTest, ShouldInsert)
 {
-    sb::di::details::containers::ServiceInstancesMap map{false};
+    sb::di::details::ServiceInstancesMap map{false};
 
     TestClass1 test;
-    auto implementation = std::make_unique<sb::di::details::services::ExternalService<TestClass1>>(&test);
+    auto implementation = std::make_unique<sb::di::details::ExternalService<TestClass1>>(&test);
     auto act = [&] {
         map.insert(typeid(TestClass1), sb::di::ServiceInstance{sb::di::ServiceInstance{std::move(implementation)}});
     };
@@ -40,12 +40,12 @@ TEST_F(ServiceInstancesMapTest, ShouldInsert)
 
 TEST_F(ServiceInstancesMapTest, ShouldCheckEmpty)
 {
-    sb::di::details::containers::ServiceInstancesMap map{false};
+    sb::di::details::ServiceInstancesMap map{false};
 
     TestInheritClass3 test;
-    auto implementation = std::make_unique<sb::di::details::services::ExternalService<TestInheritClass3>>(&test);
+    auto implementation = std::make_unique<sb::di::details::ExternalService<TestInheritClass3>>(&test);
     TestInheritClass2 test2;
-    auto implementation2 = std::make_unique<sb::di::details::services::ExternalService<TestInheritClass2>>(&test2);
+    auto implementation2 = std::make_unique<sb::di::details::ExternalService<TestInheritClass2>>(&test2);
     map.insert(typeid(TestInheritClass1), sb::di::ServiceInstance{sb::di::ServiceInstance{std::move(implementation)}})
         .add(sb::di::ServiceInstance{sb::di::ServiceInstance{std::move(implementation2)}});
 
@@ -54,12 +54,12 @@ TEST_F(ServiceInstancesMapTest, ShouldCheckEmpty)
 
 TEST_F(ServiceInstancesMapTest, ShouldContainsList)
 {
-    sb::di::details::containers::ServiceInstancesMap map{false};
+    sb::di::details::ServiceInstancesMap map{false};
 
     TestInheritClass3 test;
-    auto implementation = std::make_unique<sb::di::details::services::ExternalService<TestInheritClass3>>(&test);
+    auto implementation = std::make_unique<sb::di::details::ExternalService<TestInheritClass3>>(&test);
     TestInheritClass2 test2;
-    auto implementation2 = std::make_unique<sb::di::details::services::ExternalService<TestInheritClass2>>(&test2);
+    auto implementation2 = std::make_unique<sb::di::details::ExternalService<TestInheritClass2>>(&test2);
     map.insert(typeid(TestInheritClass1), sb::di::ServiceInstance{std::move(implementation)})
         .add(sb::di::ServiceInstance{std::move(implementation2)});
 
@@ -69,12 +69,12 @@ TEST_F(ServiceInstancesMapTest, ShouldContainsList)
 
 TEST_F(ServiceInstancesMapTest, ShouldFindInstances)
 {
-    sb::di::details::containers::ServiceInstancesMap map{false};
+    sb::di::details::ServiceInstancesMap map{false};
 
     TestInheritClass3 test;
-    auto implementation = std::make_unique<sb::di::details::services::ExternalService<TestInheritClass3>>(&test);
+    auto implementation = std::make_unique<sb::di::details::ExternalService<TestInheritClass3>>(&test);
     TestInheritClass2 test2;
-    auto implementation2 = std::make_unique<sb::di::details::services::ExternalService<TestInheritClass2>>(&test2);
+    auto implementation2 = std::make_unique<sb::di::details::ExternalService<TestInheritClass2>>(&test2);
     map.insert(typeid(TestInheritClass1), sb::di::ServiceInstance{std::move(implementation)})
         .add(sb::di::ServiceInstance{std::move(implementation2)});
 
@@ -91,7 +91,7 @@ TEST_F(ServiceInstancesMapTest, ShouldFindInstances)
 TEST_F(ServiceInstancesMapTest, ShouldDestructInProperOrder)
 {
     ServiceProviderMock mock;
-    sb::di::details::containers::ServiceInstancesMap map{true};
+    sb::di::details::ServiceInstancesMap map{true};
 
     struct DestructionOrderCheck
     {

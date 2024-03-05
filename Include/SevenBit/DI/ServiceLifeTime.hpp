@@ -41,7 +41,7 @@ namespace sb::di
         /**
          * @brief Construct a new Service Life Time object with specified type
          */
-        constexpr explicit ServiceLifeTime(const Type type) : _type(details::utils::RequireBase::validEnumAndGet(type))
+        constexpr explicit ServiceLifeTime(const Type type) : _type(details::RequireBase::validEnumAndGet(type))
         {
         }
 

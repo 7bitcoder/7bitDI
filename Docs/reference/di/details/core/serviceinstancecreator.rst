@@ -1,6 +1,6 @@
 ServiceInstanceCreator
 ========================================
 
-.. doxygenclass:: sb::di::details::core::ServiceInstanceCreator
+.. doxygenclass:: sb::di::details::ServiceInstanceCreator
    :members:
    :undoc-members:

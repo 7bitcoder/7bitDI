@@ -31,7 +31,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldGetOptions)
 
     describers.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestClass1>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     const auto &options = provider.getOptions();
@@ -50,7 +50,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAlreadyRegister
     describers.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestClass2>());
 
     auto act = [&] {
-        sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+        sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
         provider.init(mock);
     };
 
@@ -67,7 +67,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAlreadyRegister
     describers.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
     auto act = [&] {
-        sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+        sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
         provider.init(mock);
     };
 
@@ -84,7 +84,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAliasMissmatchI
     describers.emplace_back(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass3>());
 
     auto act = [&] {
-        sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+        sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
         provider.init(mock);
     };
 
@@ -101,7 +101,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAliasMissmatchO
     describers.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
     auto act = [&] {
-        sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+        sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
         provider.init(mock);
     };
 
@@ -121,7 +121,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldNotFailGetServiceDueToAlreadyRegis
         sb::di::ServiceProviderOptions options;
         options.checkServiceGlobalUniqueness = false;
 
-        sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end(), options);
+        sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end(), options);
         provider.init(mock);
     };
 
@@ -141,7 +141,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldNotFailGetServiceDueToAlreadyRegis
         sb::di::ServiceProviderOptions options;
         options.checkServiceGlobalUniqueness = false;
 
-        sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end(), options);
+        sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end(), options);
         provider.init(mock);
     };
 
@@ -158,7 +158,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToLifetimeMissmat
     describers.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
     auto act = [&] {
-        sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+        sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
         provider.init(mock);
     };
 
@@ -176,7 +176,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldPrebuildSingletons)
 
     sb::di::ServiceProviderOptions options;
     options.prebuildSingletons = true;
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end(), options);
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end(), options);
     provider.init(mock);
 
     EXPECT_TRUE(provider.tryGetInstance(typeid(TestClass1)));
@@ -194,7 +194,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldTryGetInstance)
     describers.emplace_back(sb::di::ServiceDescriber::describeScoped<TestClass2>());
     describers.emplace_back(sb::di::ServiceDescriber::describeTransient<TestClass3>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     EXPECT_TRUE(provider.tryGetInstance(typeid(TestClass1)));
@@ -214,7 +214,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldTryGetInheritedInstance)
     describers.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass4, TestInheritClass5>());
     describers.emplace_back(sb::di::ServiceDescriber::describeAlias<TestInheritClass5, TestInheritClass7>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     EXPECT_TRUE(provider.tryGetInstance(typeid(TestInheritClass1)));
@@ -234,7 +234,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldGetInstance)
     describers.emplace_back(sb::di::ServiceDescriber::describeScoped<TestClass2>());
     describers.emplace_back(sb::di::ServiceDescriber::describeTransient<TestClass3>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     EXPECT_NO_THROW(provider.getInstance(typeid(TestClass1)));
@@ -256,7 +256,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldGetInheritedInstance)
     describers.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass4, TestInheritClass5>());
     describers.emplace_back(sb::di::ServiceDescriber::describeAlias<TestInheritClass5, TestInheritClass7>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     EXPECT_NO_THROW(provider.getInstance(typeid(TestInheritClass1)));
@@ -280,7 +280,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldGetSelf)
     describers.emplace_back(sb::di::ServiceDescriber::describeTransient<TestInheritClass3, TestInheritClass4>());
     describers.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass4, TestInheritClass5>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     auto &self = provider.getInstance(typeid(sb::di::ServiceProvider));
@@ -296,7 +296,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldGetInstances)
     describers.emplace_back(sb::di::ServiceDescriber::describeScoped<TestClass2>());
     describers.emplace_back(sb::di::ServiceDescriber::describeTransient<TestClass3>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     EXPECT_EQ(provider.tryGetInstances(typeid(TestClass1))->size(), 1);
@@ -317,7 +317,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldGetInstancesInOrder)
     describers.emplace_back(sb::di::ServiceDescriber::describeScoped<TestInheritClass1, TestInheritClass5>());
     describers.emplace_back(sb::di::ServiceDescriber::describeAlias<TestInheritClass5, TestInheritClass7>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     auto &services = *provider.tryGetInstances(typeid(TestInheritClass1));
@@ -343,7 +343,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldGetAliasInstancesInOrder)
     describers.emplace_back(sb::di::ServiceDescriber::describeScoped<TestInheritClass2, TestInheritClass6>());
     describers.emplace_back(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass2>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     auto &services = *provider.tryGetInstances(typeid(TestInheritClass1));
@@ -364,7 +364,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldTryCreateInstance)
     describers.emplace_back(sb::di::ServiceDescriber::describeScoped<TestClass2>());
     describers.emplace_back(sb::di::ServiceDescriber::describeTransient<TestClass3>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     EXPECT_FALSE(provider.tryCreateInstance(typeid(TestClass1)));
@@ -385,7 +385,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldTryCreateInheritedInstance)
     describers.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass6, TestInheritClass7>());
     describers.emplace_back(sb::di::ServiceDescriber::describeAlias<TestInheritClass7, TestInheritClass8>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     EXPECT_TRUE(provider.tryCreateInstance(typeid(TestInheritClass1)));
@@ -407,7 +407,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldCreateInstance)
     describers.emplace_back(sb::di::ServiceDescriber::describeScoped<TestClass2>());
     describers.emplace_back(sb::di::ServiceDescriber::describeTransient<TestClass3>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     EXPECT_THROW(provider.createInstance(typeid(TestClass1)), sb::di::ServiceNotFoundException);
@@ -429,7 +429,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldCreateInheritedInstance)
     describers.emplace_back(sb::di::ServiceDescriber::describeSingleton<TestInheritClass6, TestInheritClass7>());
     describers.emplace_back(sb::di::ServiceDescriber::describeAlias<TestInheritClass7, TestInheritClass8>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     EXPECT_TRUE(provider.createInstance(typeid(TestInheritClass1)));
@@ -452,7 +452,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldTryCreateInstanceInPlace)
     describers.emplace_back(sb::di::ServiceDescriber::describeTransient<TestClass3>());
     describers.emplace_back(sb::di::ServiceDescriber::describeAlias<TestInheritClass5, TestInheritClass7>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     EXPECT_FALSE(provider.tryCreateInstanceInPlace(typeid(TestClass1)));
@@ -472,7 +472,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldCreateInstanceInPlace)
     describers.emplace_back(sb::di::ServiceDescriber::describeTransient<TestClass3>());
     describers.emplace_back(sb::di::ServiceDescriber::describeAlias<TestInheritClass5, TestInheritClass7>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     EXPECT_THROW(provider.createInstanceInPlace(typeid(TestClass1)), sb::di::ServiceNotFoundException);
@@ -493,7 +493,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldCreateInstances)
     describers.emplace_back(sb::di::ServiceDescriber::describeTransient<TestClass3>());
     describers.emplace_back(sb::di::ServiceDescriber::describeAlias<TestInheritClass5, TestInheritClass7>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     EXPECT_FALSE(provider.tryCreateInstances(typeid(TestClass1)));
@@ -516,7 +516,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldCreateInstancesInOrder)
     describers.emplace_back(sb::di::ServiceDescriber::describeTransient<TestInheritClass1, TestInheritClass5>());
     describers.emplace_back(sb::di::ServiceDescriber::describeAlias<TestInheritClass5, TestInheritClass7>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     auto services = *provider.tryCreateInstances(typeid(TestInheritClass1));
@@ -542,7 +542,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldCreateAliasInstancesInOrder)
     describers.emplace_back(sb::di::ServiceDescriber::describeTransient<TestInheritClass2, TestInheritClass6>());
     describers.emplace_back(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass2>());
 
-    sb::di::details::core::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
+    sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
     auto services = *provider.tryCreateInstances(typeid(TestInheritClass1));

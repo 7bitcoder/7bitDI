@@ -22,7 +22,7 @@ class CircularDependencyGuardTest : public testing::Test
 
 TEST_F(CircularDependencyGuardTest, ShouldNotDetectCirtularDependency)
 {
-    sb::di::details::helpers::CircularDependencyGuard guard;
+    sb::di::details::CircularDependencyGuard guard;
     auto act = [&] {
         auto a = guard(typeid(TestClass1));
         {
@@ -38,7 +38,7 @@ TEST_F(CircularDependencyGuardTest, ShouldNotDetectCirtularDependency)
 
 TEST_F(CircularDependencyGuardTest, ShouldDetectCirtularDependency)
 {
-    sb::di::details::helpers::CircularDependencyGuard guard;
+    sb::di::details::CircularDependencyGuard guard;
     auto act = [&] {
         auto a = guard(typeid(TestClass1));
         {

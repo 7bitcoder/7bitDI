@@ -1,6 +1,6 @@
 Container
 ========================================
 
-.. doxygenstruct:: sb::di::details::utils::Container
+.. doxygenstruct:: sb::di::details::Container
    :members:
    :undoc-members:

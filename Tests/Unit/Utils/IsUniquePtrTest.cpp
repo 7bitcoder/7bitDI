@@ -21,20 +21,20 @@ class IsUniquePtrTest : public testing::Test
 
 TEST_F(IsUniquePtrTest, ShouldCheckIfObjectIsUniquePtr)
 {
-    EXPECT_TRUE(sb::di::details::utils::IsUniquePtrV<std::unique_ptr<TestComplexClass1>>);
-    EXPECT_TRUE(sb::di::details::utils::IsUniquePtrV<std::unique_ptr<TestComplexClass2>>);
-    EXPECT_TRUE(sb::di::details::utils::IsUniquePtrV<std::unique_ptr<TestComplexClass3>>);
-    EXPECT_TRUE(sb::di::details::utils::IsUniquePtrV<std::unique_ptr<TestComplexClass4>>);
-    EXPECT_TRUE(sb::di::details::utils::IsUniquePtrV<std::unique_ptr<TestComplexClass5>>);
-    EXPECT_TRUE(sb::di::details::utils::IsUniquePtrV<std::unique_ptr<int>>);
-    EXPECT_FALSE(sb::di::details::utils::IsUniquePtrV<TestComplexClass2>);
-    EXPECT_FALSE(sb::di::details::utils::IsUniquePtrV<TestComplexClass3>);
-    EXPECT_FALSE(sb::di::details::utils::IsUniquePtrV<TestComplexClass4>);
-    EXPECT_FALSE(sb::di::details::utils::IsUniquePtrV<TestComplexClass5>);
-    EXPECT_FALSE(sb::di::details::utils::IsUniquePtrV<int>);
-    EXPECT_FALSE(sb::di::details::utils::IsUniquePtrV<double>);
-    EXPECT_FALSE(sb::di::details::utils::IsUniquePtrV<float>);
-    EXPECT_FALSE(sb::di::details::utils::IsUniquePtrV<size_t>);
-    EXPECT_FALSE(sb::di::details::utils::IsUniquePtrV<int[12]>);
-    EXPECT_FALSE(sb::di::details::utils::IsUniquePtrV<TestComplexClass1[12]>);
+    EXPECT_TRUE(sb::di::details::IsUniquePtrV<std::unique_ptr<TestComplexClass1>>);
+    EXPECT_TRUE(sb::di::details::IsUniquePtrV<std::unique_ptr<TestComplexClass2>>);
+    EXPECT_TRUE(sb::di::details::IsUniquePtrV<std::unique_ptr<TestComplexClass3>>);
+    EXPECT_TRUE(sb::di::details::IsUniquePtrV<std::unique_ptr<TestComplexClass4>>);
+    EXPECT_TRUE(sb::di::details::IsUniquePtrV<std::unique_ptr<TestComplexClass5>>);
+    EXPECT_TRUE(sb::di::details::IsUniquePtrV<std::unique_ptr<int>>);
+    EXPECT_FALSE(sb::di::details::IsUniquePtrV<TestComplexClass2>);
+    EXPECT_FALSE(sb::di::details::IsUniquePtrV<TestComplexClass3>);
+    EXPECT_FALSE(sb::di::details::IsUniquePtrV<TestComplexClass4>);
+    EXPECT_FALSE(sb::di::details::IsUniquePtrV<TestComplexClass5>);
+    EXPECT_FALSE(sb::di::details::IsUniquePtrV<int>);
+    EXPECT_FALSE(sb::di::details::IsUniquePtrV<double>);
+    EXPECT_FALSE(sb::di::details::IsUniquePtrV<float>);
+    EXPECT_FALSE(sb::di::details::IsUniquePtrV<size_t>);
+    EXPECT_FALSE(sb::di::details::IsUniquePtrV<int[12]>);
+    EXPECT_FALSE(sb::di::details::IsUniquePtrV<TestComplexClass1[12]>);
 }

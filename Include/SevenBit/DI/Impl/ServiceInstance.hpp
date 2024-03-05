@@ -19,12 +19,12 @@ namespace sb::di
 
     INLINE IServiceInstance &ServiceInstance::getImplementation()
     {
-        return *details::utils::RequireBase::notNullAndGet(_implementation.get());
+        return *details::RequireBase::notNullAndGet(_implementation.get());
     }
 
     INLINE const IServiceInstance &ServiceInstance::getImplementation() const
     {
-        return *details::utils::RequireBase::notNullAndGet(_implementation.get());
+        return *details::RequireBase::notNullAndGet(_implementation.get());
     }
 
     INLINE void ServiceInstance::addCastOffset(const ptrdiff_t castOffset) { _castOffset += castOffset; }
@@ -45,7 +45,7 @@ namespace sb::di
 
     INLINE void *ServiceInstance::applyOffset(void *ptr) const
     {
-        return details::utils::Cast::applyCastOffset(ptr, _castOffset);
+        return details::Cast::applyCastOffset(ptr, _castOffset);
     }
 
 } // namespace sb::di

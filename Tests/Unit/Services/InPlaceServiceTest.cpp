@@ -23,7 +23,7 @@ class InPlaceServiceTest : public testing::Test
 
 TEST_F(InPlaceServiceTest, ShouldCreateInPlaceService)
 {
-    const sb::di::details::services::InPlaceService<TestClass1> service{};
+    const sb::di::details::InPlaceService<TestClass1> service{};
 
     EXPECT_TRUE(service.isValid());
     EXPECT_TRUE(service.get());
@@ -32,7 +32,7 @@ TEST_F(InPlaceServiceTest, ShouldCreateInPlaceService)
 
 TEST_F(InPlaceServiceTest, ShouldFailReleaseInPlaceService)
 {
-    sb::di::details::services::InPlaceService<TestClass1> service{};
+    sb::di::details::InPlaceService<TestClass1> service{};
 
     EXPECT_TRUE(service.isValid());
     EXPECT_THROW(service.release(), sb::di::CannotReleaseServiceException);
@@ -41,7 +41,7 @@ TEST_F(InPlaceServiceTest, ShouldFailReleaseInPlaceService)
 
 TEST_F(InPlaceServiceTest, ShouldSuccedMoveOutInPlaceService)
 {
-    sb::di::details::services::InPlaceService<TestClass1> service{};
+    sb::di::details::InPlaceService<TestClass1> service{};
 
     EXPECT_TRUE(service.isValid());
     EXPECT_NO_THROW(service.getForMoveOut());

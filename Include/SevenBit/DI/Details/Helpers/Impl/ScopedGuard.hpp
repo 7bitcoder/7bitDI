@@ -7,7 +7,7 @@
 #include "SevenBit/DI/Details/Helpers/ScopedGuard.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 
-namespace sb::di::details::helpers
+namespace sb::di::details
 {
     INLINE ScopedGuard::ScopedGuard(const TypeId typeIdUnderConstruction,
                                     std::unordered_set<TypeId> &typeIdsUnderConstruction)
@@ -22,4 +22,4 @@ namespace sb::di::details::helpers
 
     INLINE ScopedGuard::~ScopedGuard() { _typeIdsUnderConstruction.erase(_typeIdUnderConstruction); }
 
-} // namespace sb::di::details::helpers
+} // namespace sb::di::details

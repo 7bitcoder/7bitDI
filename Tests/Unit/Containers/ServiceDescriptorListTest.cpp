@@ -23,7 +23,7 @@ class ServiceDescriptorListTest : public testing::Test
 
 TEST_F(ServiceDescriptorListTest, ShouldAddServiceDescriptors)
 {
-    sb::di::details::containers::ServiceDescriptorList list(
+    sb::di::details::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
     auto act = [&] {
@@ -36,7 +36,7 @@ TEST_F(ServiceDescriptorListTest, ShouldAddServiceDescriptors)
 
 TEST_F(ServiceDescriptorListTest, ShouldAddServiceAliasDescriptors)
 {
-    sb::di::details::containers::ServiceDescriptorList list(
+    sb::di::details::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass3>());
 
     auto act = [&] {
@@ -49,7 +49,7 @@ TEST_F(ServiceDescriptorListTest, ShouldAddServiceAliasDescriptors)
 
 TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorAliasMismatch)
 {
-    sb::di::details::containers::ServiceDescriptorList list(
+    sb::di::details::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass3>());
 
     list.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass4>());
@@ -61,7 +61,7 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorAliasMismatch)
 
 TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorAliasMismatchOpposite)
 {
-    sb::di::details::containers::ServiceDescriptorList list(
+    sb::di::details::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
@@ -73,7 +73,7 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorAliasMismatchOpp
 
 TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorLifeTimeMismatch)
 {
-    sb::di::details::containers::ServiceDescriptorList list(
+    sb::di::details::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
@@ -85,7 +85,7 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorLifeTimeMismatch
 
 TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorBaseTypeMismatch)
 {
-    sb::di::details::containers::ServiceDescriptorList list(
+    sb::di::details::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
@@ -97,7 +97,7 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorBaseTypeMismatch
 
 TEST_F(ServiceDescriptorListTest, ShouldReturnProperSize)
 {
-    sb::di::details::containers::ServiceDescriptorList list(
+    sb::di::details::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
     EXPECT_EQ(list.size(), 1);
@@ -110,7 +110,7 @@ TEST_F(ServiceDescriptorListTest, ShouldReturnProperSize)
 
 TEST_F(ServiceDescriptorListTest, ShouldReturnEmpty)
 {
-    sb::di::details::containers::ServiceDescriptorList list(
+    sb::di::details::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
     EXPECT_FALSE(list.empty());
@@ -123,7 +123,7 @@ TEST_F(ServiceDescriptorListTest, ShouldReturnEmpty)
 
 TEST_F(ServiceDescriptorListTest, ShouldGetLifeTime)
 {
-    sb::di::details::containers::ServiceDescriptorList list(
+    sb::di::details::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
@@ -134,7 +134,7 @@ TEST_F(ServiceDescriptorListTest, ShouldGetLifeTime)
 
 TEST_F(ServiceDescriptorListTest, ShouldGetServiceTypeId)
 {
-    sb::di::details::containers::ServiceDescriptorList list(
+    sb::di::details::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
@@ -146,7 +146,7 @@ TEST_F(ServiceDescriptorListTest, ShouldGetServiceTypeId)
 TEST_F(ServiceDescriptorListTest, ShouldGetFirst)
 {
     const auto describedFirst = sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>();
-    sb::di::details::containers::ServiceDescriptorList list(sb::di::ServiceDescriptor{describedFirst});
+    sb::di::details::ServiceDescriptorList list(sb::di::ServiceDescriptor{describedFirst});
 
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
@@ -157,7 +157,7 @@ TEST_F(ServiceDescriptorListTest, ShouldGetFirst)
 TEST_F(ServiceDescriptorListTest, ShouldGetLast)
 {
     const auto describedLast = sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>();
-    sb::di::details::containers::ServiceDescriptorList list(
+    sb::di::details::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
@@ -168,7 +168,7 @@ TEST_F(ServiceDescriptorListTest, ShouldGetLast)
 
 TEST_F(ServiceDescriptorListTest, ShouldGetNotIsAlias)
 {
-    sb::di::details::containers::ServiceDescriptorList list(
+    sb::di::details::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
@@ -177,7 +177,7 @@ TEST_F(ServiceDescriptorListTest, ShouldGetNotIsAlias)
 
 TEST_F(ServiceDescriptorListTest, ShouldGetIsAlias)
 {
-    sb::di::details::containers::ServiceDescriptorList list(
+    sb::di::details::ServiceDescriptorList list(
         sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass3>());
     list.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass4>());
 

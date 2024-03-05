@@ -7,7 +7,7 @@
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 
-namespace sb::di::details::services
+namespace sb::di::details
 {
     class AliasService final : public IServiceInstance
     {
@@ -44,4 +44,4 @@ namespace sb::di::details::services
 
         [[nodiscard]] bool isValid() const override { return _service != nullptr; }
     };
-} // namespace sb::di::details::services
+} // namespace sb::di::details

@@ -6,7 +6,7 @@
 
 #include "SevenBit/DI/IServiceInstance.hpp"
 
-namespace sb::di::details::services
+namespace sb::di::details
 {
     template <class T> class UniquePtrService final : public IServiceInstance
     {
@@ -32,4 +32,4 @@ namespace sb::di::details::services
 
         [[nodiscard]] bool isValid() const override { return bool{_service}; }
     };
-} // namespace sb::di::details::services
+} // namespace sb::di::details

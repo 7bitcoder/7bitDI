@@ -5,7 +5,7 @@
 #include "SevenBit/DI/OneOrList.hpp"
 #include "SevenBit/DI/ServiceInstance.hpp"
 
-namespace sb::di::details::containers
+namespace sb::di::details
 {
     class EXPORT ServiceInstanceList
     {
@@ -52,7 +52,7 @@ namespace sb::di::details::containers
 
         ~ServiceInstanceList() = default;
     };
-} // namespace sb::di::details::containers
+} // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
 #include "SevenBit/DI/Details/Containers/Impl/ServiceInstanceList.hpp"

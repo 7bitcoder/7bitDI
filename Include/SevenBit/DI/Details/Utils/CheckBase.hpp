@@ -5,7 +5,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-namespace sb::di::details::utils
+namespace sb::di::details
 {
     struct CheckBase
     {
@@ -20,4 +20,4 @@ namespace sb::di::details::utils
             return std::is_enum_v<TEnum> && value >= 0 && value < TEnum::Count;
         }
     };
-} // namespace sb::di::details::utils
+} // namespace sb::di::details

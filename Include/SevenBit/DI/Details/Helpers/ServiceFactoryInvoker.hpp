@@ -4,7 +4,7 @@
 
 #include "SevenBit/DI/Details/Helpers/ServiceParamProvider.hpp"
 
-namespace sb::di::details::helpers
+namespace sb::di::details
 {
     namespace ServiceFactoryInvokerInternals
     {
@@ -30,7 +30,7 @@ namespace sb::di::details::helpers
 
             BadFunctor(F &factory, ServiceProvider &serviceProvider)
             {
-                static_assert(utils::notSupportedType<F>, "Object is not functor/lambda");
+                static_assert(notSupportedType<F>, "Object is not functor/lambda");
             }
 
             int invoke() { return 0; }
@@ -56,4 +56,4 @@ namespace sb::di::details::helpers
     template <class FactoryFcn>
     using ServiceFactoryInvoker =
         typename ServiceFactoryInvokerInternals::FunctorInvokerResolver<decltype(&FactoryFcn::operator())>::Invoker;
-} // namespace sb::di::details::helpers
+} // namespace sb::di::details

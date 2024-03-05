@@ -25,7 +25,7 @@ class ServiceDescriptorTest : public testing::Test
 
 TEST_F(ServiceDescriptorTest, ShouldConstructDescriptor)
 {
-    auto factory = std::make_unique<sb::di::details::factories::ServiceFactory<TestClass1>>();
+    auto factory = std::make_unique<sb::di::details::ServiceFactory<TestClass1>>();
     auto act = [&] {
         sb::di::ServiceDescriptor descriptor{typeid(TestClass1), typeid(TestClass1),
                                              sb::di::ServiceLifeTime::singleton(), std::move(factory), 12};
@@ -46,7 +46,7 @@ TEST_F(ServiceDescriptorTest, ShouldNotFailConstructNullFactoryDescriptor)
 
 TEST_F(ServiceDescriptorTest, ShouldGetProperInfoFromDescriptor)
 {
-    auto factory = std::make_unique<sb::di::details::factories::ServiceFactory<TestClass1>>();
+    auto factory = std::make_unique<sb::di::details::ServiceFactory<TestClass1>>();
     const auto factoryPtr = factory.get();
     const sb::di::ServiceDescriptor descriptor{typeid(TestClass1), typeid(TestClass1),
                                                sb::di::ServiceLifeTime::singleton(), std::move(factory), 13};
@@ -75,11 +75,11 @@ TEST_F(ServiceDescriptorTest, ShouldGetProperInfoFromAliasDescriptor)
 
 TEST_F(ServiceDescriptorTest, ShouldCompareDescriptors)
 {
-    auto factory = std::make_unique<sb::di::details::factories::ServiceFactory<TestClass1>>();
+    auto factory = std::make_unique<sb::di::details::ServiceFactory<TestClass1>>();
     const sb::di::ServiceDescriptor descriptor{typeid(TestClass1), typeid(TestClass1),
                                                sb::di::ServiceLifeTime::singleton(), std::move(factory), 2};
 
-    auto factory2 = std::make_unique<sb::di::details::factories::ServiceFactory<TestClass1>>();
+    auto factory2 = std::make_unique<sb::di::details::ServiceFactory<TestClass1>>();
     const sb::di::ServiceDescriptor descriptor2{typeid(TestClass1), typeid(TestClass1),
                                                 sb::di::ServiceLifeTime::singleton(), std::move(factory2), 2};
 

@@ -4,7 +4,7 @@
 
 #include "SevenBit/DI/Details/Core/ServiceInstanceProviderRoot.hpp"
 
-namespace sb::di::details::core
+namespace sb::di::details
 {
     INLINE ServiceInstanceProviderRoot::ServiceInstanceProviderRoot(ServiceProviderOptions options)
         : ServiceInstanceProvider(*this, options), _descriptorsMap(options.checkServiceGlobalUniqueness),
@@ -22,12 +22,12 @@ namespace sb::di::details::core
         }
     }
 
-    INLINE const containers::ServiceDescriptorsMap &ServiceInstanceProviderRoot::getDescriptorsMap() const
+    INLINE const ServiceDescriptorsMap &ServiceInstanceProviderRoot::getDescriptorsMap() const
     {
         return _descriptorsMap;
     }
 
-    INLINE containers::ServiceInstancesMap &ServiceInstanceProviderRoot::getSingletons() { return _singletons; }
+    INLINE ServiceInstancesMap &ServiceInstanceProviderRoot::getSingletons() { return _singletons; }
 
     INLINE ServiceInstanceCreator &ServiceInstanceProviderRoot::getRootInstanceCreator()
     {
@@ -44,4 +44,4 @@ namespace sb::di::details::core
             }
         }
     }
-} // namespace sb::di::details::core
+} // namespace sb::di::details

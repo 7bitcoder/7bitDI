@@ -4,7 +4,7 @@
 
 #include "SevenBit/DI/ServiceInstance.hpp"
 
-namespace sb::di::details::utils
+namespace sb::di::details
 {
     struct EXPORT Check
     {
@@ -12,7 +12,7 @@ namespace sb::di::details::utils
 
         static bool instanceValidity(const ServiceInstance &instance);
     };
-} // namespace sb::di::details::utils
+} // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
 #include "SevenBit/DI/Details/Utils/Impl/Check.hpp"

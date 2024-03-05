@@ -1,6 +1,6 @@
 ServiceDescriptorList
 ========================================
 
-.. doxygenclass:: sb::di::details::containers::ServiceDescriptorList
+.. doxygenclass:: sb::di::details::ServiceDescriptorList
    :members:
    :undoc-members:

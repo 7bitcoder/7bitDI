@@ -7,7 +7,7 @@
 #include "SevenBit/DI/Details/Utils/CheckBase.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 
-namespace sb::di::details::utils
+namespace sb::di::details
 {
     struct RequireBase
     {
@@ -67,4 +67,4 @@ namespace sb::di::details::utils
             }
         }
     };
-} // namespace sb::di::details::utils
+} // namespace sb::di::details

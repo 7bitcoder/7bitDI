@@ -6,7 +6,7 @@
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/ServiceInstance.hpp"
 
-namespace sb::di::details::utils
+namespace sb::di::details
 {
     struct EXPORT Require
     {
@@ -16,13 +16,13 @@ namespace sb::di::details::utils
         static void validInstance(const ServiceInstance *instance);
         static void validInstance(const ServiceInstance &instance);
 
-        static void transientDescriptors(const containers::ServiceDescriptorList &descriptors);
-        static void nonTransientDescriptors(const containers::ServiceDescriptorList &descriptors);
+        static void transientDescriptors(const ServiceDescriptorList &descriptors);
+        static void nonTransientDescriptors(const ServiceDescriptorList &descriptors);
 
         static void aliasDescriptor(const ServiceDescriptor &descriptor);
         static void nonAliasDescriptor(const ServiceDescriptor &descriptor);
     };
-} // namespace sb::di::details::utils
+} // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
 #include "SevenBit/DI/Details/Utils/Impl/Require.hpp"

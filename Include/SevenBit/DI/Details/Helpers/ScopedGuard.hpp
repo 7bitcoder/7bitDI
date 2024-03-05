@@ -6,7 +6,7 @@
 
 #include "SevenBit/DI/TypeId.hpp"
 
-namespace sb::di::details::helpers
+namespace sb::di::details
 {
     class EXPORT ScopedGuard
     {
@@ -19,7 +19,7 @@ namespace sb::di::details::helpers
         ~ScopedGuard();
     };
 
-} // namespace sb::di::details::helpers
+} // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
 #include "SevenBit/DI/Details/Helpers/Impl/ScopedGuard.hpp"

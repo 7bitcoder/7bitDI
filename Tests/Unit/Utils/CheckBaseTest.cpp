@@ -20,14 +20,14 @@ class CheckBaseTest : public testing::Test
 
 TEST_F(CheckBaseTest, ShouldCheckNotNull)
 {
-    EXPECT_FALSE(sb::di::details::utils::CheckBase::notNull<int>(nullptr));
-    EXPECT_FALSE(sb::di::details::utils::CheckBase::notNull(std::unique_ptr<int>()));
-    EXPECT_FALSE(sb::di::details::utils::CheckBase::notNull(std::shared_ptr<int>()));
+    EXPECT_FALSE(sb::di::details::CheckBase::notNull<int>(nullptr));
+    EXPECT_FALSE(sb::di::details::CheckBase::notNull(std::unique_ptr<int>()));
+    EXPECT_FALSE(sb::di::details::CheckBase::notNull(std::shared_ptr<int>()));
 
     int intTest = 123;
-    EXPECT_TRUE(sb::di::details::utils::CheckBase::notNull(&intTest));
-    EXPECT_TRUE(sb::di::details::utils::CheckBase::notNull(std::make_unique<int>(intTest)));
-    EXPECT_TRUE(sb::di::details::utils::CheckBase::notNull(std::make_shared<int>(intTest)));
+    EXPECT_TRUE(sb::di::details::CheckBase::notNull(&intTest));
+    EXPECT_TRUE(sb::di::details::CheckBase::notNull(std::make_unique<int>(intTest)));
+    EXPECT_TRUE(sb::di::details::CheckBase::notNull(std::make_shared<int>(intTest)));
 }
 
 TEST_F(CheckBaseTest, ShouldCheckEnum)
@@ -39,11 +39,11 @@ TEST_F(CheckBaseTest, ShouldCheckEnum)
         C,
         Count,
     };
-    EXPECT_FALSE(sb::di::details::utils::CheckBase::enumValidity(static_cast<TestEnum>(123)));
-    EXPECT_FALSE(sb::di::details::utils::CheckBase::enumValidity(static_cast<TestEnum>(-123)));
-    EXPECT_FALSE(sb::di::details::utils::CheckBase::enumValidity(static_cast<TestEnum>(-1)));
-    EXPECT_FALSE(sb::di::details::utils::CheckBase::enumValidity(TestEnum::Count));
-    EXPECT_TRUE(sb::di::details::utils::CheckBase::enumValidity(TestEnum::A));
-    EXPECT_TRUE(sb::di::details::utils::CheckBase::enumValidity(TestEnum::B));
-    EXPECT_TRUE(sb::di::details::utils::CheckBase::enumValidity(TestEnum::C));
+    EXPECT_FALSE(sb::di::details::CheckBase::enumValidity(static_cast<TestEnum>(123)));
+    EXPECT_FALSE(sb::di::details::CheckBase::enumValidity(static_cast<TestEnum>(-123)));
+    EXPECT_FALSE(sb::di::details::CheckBase::enumValidity(static_cast<TestEnum>(-1)));
+    EXPECT_FALSE(sb::di::details::CheckBase::enumValidity(TestEnum::Count));
+    EXPECT_TRUE(sb::di::details::CheckBase::enumValidity(TestEnum::A));
+    EXPECT_TRUE(sb::di::details::CheckBase::enumValidity(TestEnum::B));
+    EXPECT_TRUE(sb::di::details::CheckBase::enumValidity(TestEnum::C));
 }

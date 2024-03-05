@@ -9,20 +9,20 @@
 #include "SevenBit/DI/Details/Utils/NotSupportedType.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 
-namespace sb::di::details::helpers
+namespace sb::di::details
 {
 
     template <class T> struct ServiceParamProvider
     {
         static auto getParam(ServiceProvider &provider)
         {
-            if constexpr (utils::IsInPlaceObjectV<T>)
+            if constexpr (IsInPlaceObjectV<T>)
             {
                 return provider.createServiceInPlace<T>();
             }
             else
             {
-                static_assert(utils::notSupportedType<T>,
+                static_assert(notSupportedType<T>,
                               "Type is not supported as function argument parameter use objects, pointers, references, "
                               "std::unique_ptr<T>, std::vector containing pointers or std::unique_ptr<T>");
             }
@@ -81,4 +81,4 @@ namespace sb::di::details::helpers
     {
         static const std::vector<std::unique_ptr<T>> getParam(ServiceProvider &sp) { return sp.createServices<T>(); }
     };
-} // namespace sb::di::details::helpers
+} // namespace sb::di::details

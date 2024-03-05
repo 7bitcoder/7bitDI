@@ -22,7 +22,7 @@ class ServiceProviderTest : public testing::Test
 TEST_F(ServiceProviderTest, ShouldCreateServiceProvider)
 {
     sb::di::IServiceInstanceProvider::Ptr instanceProvider =
-        std::make_unique<sb::di::details::core::ServiceInstanceProviderRoot>();
+        std::make_unique<sb::di::details::ServiceInstanceProviderRoot>();
 
     const auto providerPtr = instanceProvider.get();
     sb::di::ServiceProvider provider{std::move(instanceProvider)};

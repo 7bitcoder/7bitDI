@@ -9,7 +9,7 @@
 #include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
-namespace sb::di::details::containers
+namespace sb::di::details
 {
     class EXPORT ServiceInstancesMap
     {
@@ -42,7 +42,7 @@ namespace sb::di::details::containers
         ~ServiceInstancesMap();
     };
 
-} // namespace sb::di::details::containers
+} // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
 #include "SevenBit/DI/Details/Containers/Impl/ServiceInstancesMap.hpp"

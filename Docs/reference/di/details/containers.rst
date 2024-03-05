@@ -1,4 +1,4 @@
-sb::di::details::containers
+sb::di::details
 ========================================
 
 .. toctree::

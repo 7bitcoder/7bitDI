@@ -1,6 +1,6 @@
 Check
 ========================================
 
-.. doxygenstruct:: sb::di::details::utils::Check
+.. doxygenstruct:: sb::di::details::Check
    :members:
    :undoc-members:
