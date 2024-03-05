@@ -1,6 +1,6 @@
-CheckBase
+RequireBase
 ========================================
 
-.. doxygenstruct:: sb::di::details::CheckBase
+.. doxygenstruct:: sb::di::details::ExtRequire
    :members:
    :undoc-members:

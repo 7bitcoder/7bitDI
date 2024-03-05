@@ -4,8 +4,8 @@
 
 #include "SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp"
 #include "SevenBit/DI/Details/Services/ExternalService.hpp"
-#include "SevenBit/DI/Details/Utils/Check.hpp"
-#include "SevenBit/DI/Details/Utils/Require.hpp"
+#include "SevenBit/DI/Details/Utils/ExtCheck.hpp"
+#include "SevenBit/DI/Details/Utils/ExtRequire.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceInstance.hpp"
 #include "SevenBit/DI/ServiceLifeTimes.hpp"
@@ -35,7 +35,7 @@ namespace sb::di::details
 
     INLINE const ServiceInstance &ServiceInstanceProvider::getInstance(const TypeId serviceTypeId)
     {
-        if (const auto instance = tryGetInstance(serviceTypeId); Check::instanceValidity(instance))
+        if (const auto instance = tryGetInstance(serviceTypeId); ExtCheck::instanceValidity(instance))
         {
             return *instance;
         }
@@ -72,7 +72,7 @@ namespace sb::di::details
 
     INLINE ServiceInstance ServiceInstanceProvider::createInstance(const TypeId serviceTypeId)
     {
-        if (auto instance = tryCreateInstance(serviceTypeId); Check::instanceValidity(instance))
+        if (auto instance = tryCreateInstance(serviceTypeId); ExtCheck::instanceValidity(instance))
         {
             return instance;
         }
@@ -95,7 +95,7 @@ namespace sb::di::details
 
     INLINE ServiceInstance ServiceInstanceProvider::createInstanceInPlace(const TypeId serviceTypeId)
     {
-        if (auto instance = tryCreateInstanceInPlace(serviceTypeId); Check::instanceValidity(instance))
+        if (auto instance = tryCreateInstanceInPlace(serviceTypeId); ExtCheck::instanceValidity(instance))
         {
             return instance;
         }
@@ -160,7 +160,7 @@ namespace sb::di::details
     {
         if (!descriptors.isAlias())
         {
-            Require::nonTransientDescriptors(descriptors);
+            ExtRequire::nonTransientDescriptors(descriptors);
             return makeResolver(descriptors).createOneInstanceInPlace();
         }
         const auto original = tryGetInstance(descriptors.last().getImplementationTypeId());
@@ -172,7 +172,7 @@ namespace sb::di::details
     {
         if (!descriptors.isAlias())
         {
-            Require::nonTransientDescriptors(descriptors);
+            ExtRequire::nonTransientDescriptors(descriptors);
             return makeResolver(descriptors).createAllInstancesInPlace();
         }
         const auto originals = tryGetInstances(descriptors.last().getImplementationTypeId());
@@ -184,7 +184,7 @@ namespace sb::di::details
     {
         if (!descriptors.isAlias())
         {
-            Require::nonTransientDescriptors(descriptors);
+            ExtRequire::nonTransientDescriptors(descriptors);
             return &makeResolver(descriptors).createRestInstancesInPlace(instances);
         }
         const auto originals = tryGetInstances(descriptors.last().getImplementationTypeId());
@@ -196,7 +196,7 @@ namespace sb::di::details
     {
         if (!descriptors.isAlias())
         {
-            Require::transientDescriptors(descriptors);
+            ExtRequire::transientDescriptors(descriptors);
             return makeResolver(descriptors).createInstance();
         }
         auto &descriptor = descriptors.last();
@@ -210,7 +210,7 @@ namespace sb::di::details
     {
         if (!descriptors.isAlias())
         {
-            Require::transientDescriptors(descriptors);
+            ExtRequire::transientDescriptors(descriptors);
             return std::move(makeResolver(descriptors).createAllInstances().getInnerList());
         }
         auto &descriptor = descriptors.last();

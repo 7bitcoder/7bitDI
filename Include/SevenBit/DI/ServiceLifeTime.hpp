@@ -2,7 +2,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Utils/RequireBase.hpp"
+#include "SevenBit/DI/Details/Utils/Require.hpp"
 
 namespace sb::di
 {
@@ -41,9 +41,7 @@ namespace sb::di
         /**
          * @brief Construct a new Service Life Time object with specified type
          */
-        constexpr explicit ServiceLifeTime(const Type type) : _type(details::RequireBase::validEnumAndGet(type))
-        {
-        }
+        constexpr explicit ServiceLifeTime(const Type type) : _type(details::Require::validEnumAndGet(type)) {}
 
         constexpr ServiceLifeTime(ServiceLifeTime &&) = default;
         constexpr ServiceLifeTime(const ServiceLifeTime &) = default;

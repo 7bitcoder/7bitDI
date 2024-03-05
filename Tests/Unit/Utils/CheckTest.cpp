@@ -4,7 +4,7 @@
 #include "SevenBit/DI/Details/Services/ExternalService.hpp"
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 #include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
-#include "SevenBit/DI/Details/Utils/Check.hpp"
+#include "SevenBit/DI/Details/Utils/ExtCheck.hpp"
 
 class CheckExtTest : public testing::Test
 {
@@ -25,16 +25,16 @@ class CheckExtTest : public testing::Test
 TEST_F(CheckExtTest, ShoulCheckInstanceValidity)
 {
     TestClass1 test;
-    EXPECT_FALSE(sb::di::details::Check::instanceValidity(nullptr));
-    EXPECT_FALSE(sb::di::details::Check::instanceValidity(sb::di::ServiceInstance{}));
-    EXPECT_FALSE(sb::di::details::Check::instanceValidity(
+    EXPECT_FALSE(sb::di::details::ExtCheck::instanceValidity(nullptr));
+    EXPECT_FALSE(sb::di::details::ExtCheck::instanceValidity(sb::di::ServiceInstance{}));
+    EXPECT_FALSE(sb::di::details::ExtCheck::instanceValidity(
         sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestClass1>>(nullptr)}));
-    EXPECT_TRUE(sb::di::details::Check::instanceValidity(
+    EXPECT_TRUE(sb::di::details::ExtCheck::instanceValidity(
         sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestClass1>>(&test)}));
-    EXPECT_FALSE(sb::di::details::Check::instanceValidity(
+    EXPECT_FALSE(sb::di::details::ExtCheck::instanceValidity(
         sb::di::ServiceInstance{std::make_unique<sb::di::details::UniquePtrService<TestClass1>>(nullptr)}));
-    EXPECT_TRUE(sb::di::details::Check::instanceValidity(sb::di::ServiceInstance{
+    EXPECT_TRUE(sb::di::details::ExtCheck::instanceValidity(sb::di::ServiceInstance{
         std::make_unique<sb::di::details::UniquePtrService<TestClass1>>(std::make_unique<TestClass1>())}));
-    EXPECT_TRUE(sb::di::details::Check::instanceValidity(
+    EXPECT_TRUE(sb::di::details::ExtCheck::instanceValidity(
         sb::di::ServiceInstance{std::make_unique<sb::di::details::InPlaceService<TestClass1>>()}));
 }

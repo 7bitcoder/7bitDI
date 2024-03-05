@@ -1,4 +1,4 @@
-sb::di::details
+sb::di::details - Services
 ========================================
 
 .. toctree::

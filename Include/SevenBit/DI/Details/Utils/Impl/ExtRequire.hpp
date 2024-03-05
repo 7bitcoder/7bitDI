@@ -2,30 +2,30 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Utils/ExtRequire.hpp"
 #include "SevenBit/DI/Details/Utils/Require.hpp"
-#include "SevenBit/DI/Details/Utils/RequireBase.hpp"
 
 namespace sb::di::details
 {
-    INLINE ServiceInstance *Require::validInstanceAndGet(ServiceInstance *instance)
+    INLINE ServiceInstance *ExtRequire::validInstanceAndGet(ServiceInstance *instance)
     {
         validInstance(instance);
         return instance;
     }
 
-    INLINE ServiceInstance &&Require::validInstanceAndGet(ServiceInstance &&instance)
+    INLINE ServiceInstance &&ExtRequire::validInstanceAndGet(ServiceInstance &&instance)
     {
         validInstance(instance);
         return std::move(instance);
     }
 
-    INLINE void Require::validInstance(const ServiceInstance *instance)
+    INLINE void ExtRequire::validInstance(const ServiceInstance *instance)
     {
-        RequireBase::notNull(instance);
+        Require::notNull(instance);
         validInstance(*instance);
     }
 
-    INLINE void Require::validInstance(const ServiceInstance &instance)
+    INLINE void ExtRequire::validInstance(const ServiceInstance &instance)
     {
         if (!instance.isValid())
         {
@@ -37,7 +37,7 @@ namespace sb::di::details
         }
     }
 
-    INLINE void Require::transientDescriptors(const ServiceDescriptorList &descriptors)
+    INLINE void ExtRequire::transientDescriptors(const ServiceDescriptorList &descriptors)
     {
         if (!descriptors.getLifeTime().isTransient())
         {
@@ -45,7 +45,7 @@ namespace sb::di::details
         }
     }
 
-    INLINE void Require::nonTransientDescriptors(const ServiceDescriptorList &descriptors)
+    INLINE void ExtRequire::nonTransientDescriptors(const ServiceDescriptorList &descriptors)
     {
         if (descriptors.getLifeTime().isTransient())
         {
@@ -53,7 +53,7 @@ namespace sb::di::details
         }
     }
 
-    INLINE void Require::aliasDescriptor(const ServiceDescriptor &descriptor)
+    INLINE void ExtRequire::aliasDescriptor(const ServiceDescriptor &descriptor)
     {
         if (!descriptor.isAlias())
         {
@@ -61,7 +61,7 @@ namespace sb::di::details
         }
     }
 
-    INLINE void Require::nonAliasDescriptor(const ServiceDescriptor &descriptor)
+    INLINE void ExtRequire::nonAliasDescriptor(const ServiceDescriptor &descriptor)
     {
         if (descriptor.isAlias())
         {

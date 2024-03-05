@@ -17,18 +17,14 @@ namespace sb::di::details
 
     INLINE ServiceInstance ServiceInstancesResolver::createInstance() const { return createInstance(false); }
 
-    INLINE ServiceInstanceList ServiceInstancesResolver::createOneInstance() const
-    {
-        return createOneInstance(false);
-    }
+    INLINE ServiceInstanceList ServiceInstancesResolver::createOneInstance() const { return createOneInstance(false); }
 
     INLINE ServiceInstanceList ServiceInstancesResolver::createAllInstances() const
     {
         return createAllInstances(false);
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesResolver::createRestInstances(
-        ServiceInstanceList &instances) const
+    INLINE ServiceInstanceList &ServiceInstancesResolver::createRestInstances(ServiceInstanceList &instances) const
     {
         return createRestInstances(instances, false);
     }
@@ -53,17 +49,16 @@ namespace sb::di::details
 
     INLINE ServiceInstance ServiceInstancesResolver::createAlias(const ServiceInstance &original) const
     {
-        return createAlias(&original);
+        return _creator.createInstanceAlias(_descriptors.last(), original);
     }
 
-    INLINE ServiceInstanceList ServiceInstancesResolver::createOneAlias(
-        const ServiceInstance &original) const
+    INLINE ServiceInstanceList ServiceInstancesResolver::createOneAlias(const ServiceInstance &original) const
     {
-        return ServiceInstanceList{createAlias(&original)};
+        return ServiceInstanceList{createAlias(original)};
     }
 
-    INLINE ServiceInstanceList ServiceInstancesResolver::createAllAliases(
-        const OneOrList<ServiceInstance> &originals) const
+    INLINE ServiceInstanceList
+    ServiceInstancesResolver::createAllAliases(const OneOrList<ServiceInstance> &originals) const
     {
         ServiceInstanceList instances{createAlias(originals.first())};
         if (const auto size = originals.size(); size > 1)
@@ -80,8 +75,8 @@ namespace sb::di::details
         return instances;
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesResolver::createRestAliases(
-        const OneOrList<ServiceInstance> &originals, ServiceInstanceList &instances) const
+    INLINE ServiceInstanceList &ServiceInstancesResolver::createRestAliases(const OneOrList<ServiceInstance> &originals,
+                                                                            ServiceInstanceList &instances) const
     {
         if (const auto size = originals.size(); size > 1)
         {
@@ -132,8 +127,8 @@ namespace sb::di::details
         return instances;
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesResolver::createRestInstances(
-        ServiceInstanceList &instances, const bool inPlaceRequest) const
+    INLINE ServiceInstanceList &ServiceInstancesResolver::createRestInstances(ServiceInstanceList &instances,
+                                                                              const bool inPlaceRequest) const
     {
         if (const auto size = _descriptors.size(); size > 1)
         {
@@ -151,10 +146,4 @@ namespace sb::di::details
         instances.seal();
         return instances;
     }
-
-    INLINE ServiceInstance ServiceInstancesResolver::createAlias(const ServiceInstance *original) const
-    {
-        return _creator.createInstanceAlias(_descriptors.last(), original);
-    }
-
 } // namespace sb::di::details

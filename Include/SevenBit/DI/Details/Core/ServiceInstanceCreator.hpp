@@ -12,14 +12,14 @@ namespace sb::di::details
     class EXPORT ServiceInstanceCreator
     {
         ServiceProvider *_serviceProvider = nullptr;
-        CircularDependencyGuard _guard;
+        CircularDependencyGuard _circularDependencyGuard;
 
       public:
         void setServiceProvider(ServiceProvider &serviceProvider);
 
         ServiceInstance createInstance(const ServiceDescriptor &descriptor, bool inPlaceRequest);
 
-        ServiceInstance createInstanceAlias(const ServiceDescriptor &descriptor, const ServiceInstance *instance);
+        ServiceInstance createInstanceAlias(const ServiceDescriptor &descriptor, const ServiceInstance &instance);
 
       private:
         ServiceInstance createInstance(IServiceInstance::Ptr &&implementation, ptrdiff_t castOffset);

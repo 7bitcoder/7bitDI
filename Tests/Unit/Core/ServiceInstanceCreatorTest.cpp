@@ -50,7 +50,7 @@ TEST_F(ServiceInstanceCreatorTest, ShouldCreateInstanceAlias)
     TestInheritClass5 test;
     const sb::di::ServiceInstance external{
         std::make_unique<sb::di::details::ExternalService<TestInheritClass5>>(&test)};
-    const auto instance = creator.createInstanceAlias(descriptor, &external);
+    const auto instance = creator.createInstanceAlias(descriptor, external);
 
     EXPECT_TRUE(instance.isValid());
     EXPECT_TRUE(instance.getAs<void>());
@@ -121,10 +121,9 @@ TEST_F(ServiceInstanceCreatorTest, ShouldFailCreateInstanceAliasForNullService)
     const auto descriptor = sb::di::ServiceDescriber::describeAlias<TestInheritClass3, TestInheritClass5>();
 
     TestInheritClass5 *test = nullptr;
-    const sb::di::ServiceInstance external{
-        std::make_unique<sb::di::details::ExternalService<TestInheritClass5>>(test)};
+    const sb::di::ServiceInstance external{std::make_unique<sb::di::details::ExternalService<TestInheritClass5>>(test)};
 
-    EXPECT_THROW(creator.createInstanceAlias(descriptor, &external), sb::di::InvalidServiceException);
+    EXPECT_THROW(creator.createInstanceAlias(descriptor, external), sb::di::InvalidServiceException);
 }
 
 TEST_F(ServiceInstanceCreatorTest, ShouldFailCreateInstanceAliasForWrongDescriptor)
@@ -134,8 +133,7 @@ TEST_F(ServiceInstanceCreatorTest, ShouldFailCreateInstanceAliasForWrongDescript
     const auto descriptor = sb::di::ServiceDescriber::describeSingleton<TestInheritClass3, TestInheritClass5>();
 
     TestInheritClass5 *test = nullptr;
-    const sb::di::ServiceInstance external{
-        std::make_unique<sb::di::details::ExternalService<TestInheritClass5>>(test)};
+    const sb::di::ServiceInstance external{std::make_unique<sb::di::details::ExternalService<TestInheritClass5>>(test)};
 
-    EXPECT_THROW(creator.createInstanceAlias(descriptor, &external), sb::di::InjectorException);
+    EXPECT_THROW(creator.createInstanceAlias(descriptor, external), sb::di::InjectorException);
 }

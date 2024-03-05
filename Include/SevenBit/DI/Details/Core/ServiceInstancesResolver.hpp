@@ -28,19 +28,15 @@ namespace sb::di::details
 
         [[nodiscard]] ServiceInstance createAlias(const ServiceInstance &original) const;
         [[nodiscard]] ServiceInstanceList createOneAlias(const ServiceInstance &original) const;
-        [[nodiscard]] ServiceInstanceList createAllAliases(
-            const OneOrList<ServiceInstance> &originals) const;
-        [[nodiscard]] ServiceInstanceList &createRestAliases(
-            const OneOrList<ServiceInstance> &originals, ServiceInstanceList &instances) const;
+        [[nodiscard]] ServiceInstanceList createAllAliases(const OneOrList<ServiceInstance> &originals) const;
+        [[nodiscard]] ServiceInstanceList &createRestAliases(const OneOrList<ServiceInstance> &originals,
+                                                             ServiceInstanceList &instances) const;
 
       private:
         [[nodiscard]] ServiceInstance createInstance(bool inPlaceRequest) const;
         [[nodiscard]] ServiceInstanceList createOneInstance(bool inPlaceRequest) const;
         [[nodiscard]] ServiceInstanceList createAllInstances(bool inPlaceRequest) const;
-        ServiceInstanceList &createRestInstances(ServiceInstanceList &instances,
-                                                             bool inPlaceRequest) const;
-
-        [[nodiscard]] ServiceInstance createAlias(const ServiceInstance *original) const;
+        ServiceInstanceList &createRestInstances(ServiceInstanceList &instances, bool inPlaceRequest) const;
     };
 } // namespace sb::di::details
 

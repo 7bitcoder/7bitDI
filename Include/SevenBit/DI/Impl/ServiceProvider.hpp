@@ -2,7 +2,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Utils/RequireBase.hpp"
+#include "SevenBit/DI/Details/Utils/Require.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 
 namespace sb::di
@@ -10,7 +10,7 @@ namespace sb::di
     INLINE ServiceProvider::ServiceProvider(IServiceInstanceProvider::Ptr instanceProvider)
         : _instanceProvider(std::move(instanceProvider))
     {
-        details::RequireBase::notNull(_instanceProvider);
+        details::Require::notNull(_instanceProvider);
         getInstanceProvider().init(*this);
     }
 

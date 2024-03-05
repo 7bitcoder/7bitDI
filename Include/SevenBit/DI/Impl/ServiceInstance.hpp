@@ -3,7 +3,7 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Utils/Cast.hpp"
-#include "SevenBit/DI/Details/Utils/RequireBase.hpp"
+#include "SevenBit/DI/Details/Utils/Require.hpp"
 #include "SevenBit/DI/ServiceInstance.hpp"
 
 namespace sb::di
@@ -19,12 +19,12 @@ namespace sb::di
 
     INLINE IServiceInstance &ServiceInstance::getImplementation()
     {
-        return *details::RequireBase::notNullAndGet(_implementation.get());
+        return *details::Require::notNullAndGet(_implementation.get());
     }
 
     INLINE const IServiceInstance &ServiceInstance::getImplementation() const
     {
-        return *details::RequireBase::notNullAndGet(_implementation.get());
+        return *details::Require::notNullAndGet(_implementation.get());
     }
 
     INLINE void ServiceInstance::addCastOffset(const ptrdiff_t castOffset) { _castOffset += castOffset; }

@@ -1,5 +1,5 @@
 
-#include "ConfigCheck.hpp"
+#include "ConfigExtCheck.hpp"
 
 #include "SevenBit/DI/Details/Containers/Impl/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Containers/Impl/ServiceDescriptorsMap.hpp"
@@ -11,8 +11,8 @@
 #include "SevenBit/DI/Details/Core/Impl/ServiceInstancesResolver.hpp"
 #include "SevenBit/DI/Details/Helpers/Impl/CircularDependencyGuard.hpp"
 #include "SevenBit/DI/Details/Helpers/Impl/ScopedGuard.hpp"
-#include "SevenBit/DI/Details/Utils/Impl/Check.hpp"
-#include "SevenBit/DI/Details/Utils/Impl/Require.hpp"
+#include "SevenBit/DI/Details/Utils/Impl/ExtCheck.hpp"
+#include "SevenBit/DI/Details/Utils/Impl/ExtRequire.hpp"
 #include "SevenBit/DI/Impl/Exceptions.hpp"
 #include "SevenBit/DI/Impl/ServiceCollection.hpp"
 #include "SevenBit/DI/Impl/ServiceDescriptor.hpp"

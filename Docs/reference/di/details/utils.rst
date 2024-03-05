@@ -1,4 +1,4 @@
-sb::di::details
+sb::di::details - Utils
 ========================================
 
 .. toctree::
@@ -8,7 +8,7 @@ sb::di::details
    utils/assert.rst
    utils/cast.rst
    utils/check.rst
-   utils/checkbase.rst
+   utils/extcheck.rst
    utils/container.rst
    utils/ctorparamsnumber.rst
    utils/iscopyctor.rst
@@ -16,4 +16,4 @@ sb::di::details
    utils/isuniqueptr.rst
    utils/removeuniqueptr.rst
    utils/require.rst
-   utils/requirebase.rst
+   utils/extrequire.rst
