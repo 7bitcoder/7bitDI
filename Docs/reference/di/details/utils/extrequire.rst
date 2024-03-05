@@ -1,4 +1,4 @@
-RequireBase
+ExtRequire
 ========================================
 
 .. doxygenstruct:: sb::di::details::ExtRequire

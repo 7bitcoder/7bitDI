@@ -1,4 +1,4 @@
-CheckBase
+ExtCheck
 ========================================
 
 .. doxygenstruct:: sb::di::details::ExtCheck
