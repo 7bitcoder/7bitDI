@@ -17,8 +17,8 @@ namespace sb::di::details
 {
     template <class FactoryFcn> class ServiceFcnFactory final : public IServiceFactory
     {
-        using ServiceFactoryInvoker = ServiceFactoryInvoker<FactoryFcn>;
-        using FactoryReturnType = typename ServiceFactoryInvoker::ReturnType;
+        using FactoryInvoker = ServiceFactoryInvoker<FactoryFcn>;
+        using FactoryReturnType = typename FactoryInvoker::ReturnType;
 
         mutable FactoryFcn _factoryFunction;
 
@@ -34,7 +34,7 @@ namespace sb::di::details
 
         IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
-            ServiceFactoryInvoker invoker{_factoryFunction, serviceProvider};
+            FactoryInvoker invoker{_factoryFunction, serviceProvider};
             if constexpr (IsUniquePtrV<FactoryReturnType>)
             {
                 return std::make_unique<UniquePtrService<ServiceType>>(invoker.invoke());
