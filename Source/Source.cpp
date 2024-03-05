@@ -1,5 +1,5 @@
 
-#include "ConfigExtCheck.hpp"
+#include "ConfigCheck.hpp"
 
 #include "SevenBit/DI/Details/Containers/Impl/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Containers/Impl/ServiceDescriptorsMap.hpp"
