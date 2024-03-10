@@ -26,14 +26,14 @@ include_directories(${_7BIT_DI_INCLUDE_DIR})
 
 add_subdirectory(Source)
 
-if (_7BIT_DI_BUILD_DOCS)
-    add_subdirectory(Docs)
-endif ()
-
 if (_7BIT_DI_BUILD_UNIT_TESTS OR _7BIT_DI_BUILD_INTEGRATION_TESTS OR _7BIT_DI_BUILD_E2E_TESTS)
     enable_testing()
 
     add_subdirectory(Tests)
+endif ()
+
+if (_7BIT_DI_BUILD_DOCS)
+    add_subdirectory(Docs)
 endif ()
 
 if (_7BIT_DI_BUILD_EXAMPLES)

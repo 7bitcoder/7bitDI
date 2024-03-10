@@ -44,12 +44,13 @@ int main()
     options.prebuildSingletons = true;
     options.checkServiceGlobalUniqueness = false;
 
-    ServiceProvider provider =
-        ServiceCollection{}
-            .addSingleton<ServiceA>()
-            .addTransient<ServiceB>() // can be added one more time due to checkServiceGlobalUniqueness = false
-            .addScoped<IServiceExecutor, ServiceExecutor>()
-            .buildServiceProvider(options);
+    ServiceProvider provider = ServiceCollection{}
+                                   .addSingleton<ServiceA>()
+                                   .addTransient<ServiceB>()
+                                   .addScoped<IServiceExecutor, ServiceExecutor>()
+                                   .addScoped<ServiceExecutor>() // can be added one more time as separate service due
+                                                                 // to checkServiceGlobalUniqueness = false
+                                   .buildServiceProvider(options);
 
     const auto &executor = provider.getService<IServiceExecutor>();
 
