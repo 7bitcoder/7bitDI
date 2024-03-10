@@ -1,6 +1,6 @@
 {
   "Cli": "",
-  "ConfiguredServiceProvider": "^actionA, actionB executed.",
+  "ConfiguredServiceProvider": "^action, action executed.",
   "CoreClasses": "",
   "ExternalSingleton": "^Hello from service!",
   "FactoryFunctions": "^Hello from service!",

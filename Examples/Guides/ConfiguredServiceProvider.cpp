@@ -1,39 +1,35 @@
 #include <SevenBit/DI.hpp>
+#include <cassert>
 #include <iostream>
 
 using namespace sb::di;
 
-struct ServiceA
+struct IService
 {
-    std::string actionA() { return "actionA"; }
+    virtual std::string action() = 0;
+
+    virtual ~IService() = default;
 };
 
-struct ServiceB
+struct Service final : IService
 {
-    std::string actionB() { return "actionB"; }
+    std::string action() override { return "action"; }
 };
 
-struct IServiceExecutor
+class ServiceExecutor
 {
-    [[nodiscard]] virtual std::string execute() const = 0;
-
-    virtual ~IServiceExecutor() = default;
-};
-
-class ServiceExecutor final : public IServiceExecutor
-{
-    ServiceA &_serviceA;
-    std::unique_ptr<ServiceB> _serviceB;
+    IService &_service;
+    Service &_implService;
 
   public:
-    ServiceExecutor(ServiceA &serviceA, std::unique_ptr<ServiceB> serviceB)
-        : _serviceA(serviceA), _serviceB(std::move(serviceB))
+    explicit ServiceExecutor(IService &service, Service &implService) : _service(service), _implService(implService)
     {
+        assert(&service != &implService);
     }
 
-    [[nodiscard]] std::string execute() const override
+    [[nodiscard]] std::string execute() const
     {
-        return _serviceA.actionA() + ", " + _serviceB->actionB() + " executed.";
+        return _service.action() + ", " + _implService.action() + " executed.";
     }
 };
 
@@ -45,15 +41,13 @@ int main()
     options.checkServiceGlobalUniqueness = false;
 
     ServiceProvider provider = ServiceCollection{}
-                                   .addSingleton<ServiceA>()
-                                   .addTransient<ServiceB>()
-                                   .addScoped<IServiceExecutor, ServiceExecutor>()
-                                   .addScoped<ServiceExecutor>() // can be added one more time as separate service due
-                                                                 // to checkServiceGlobalUniqueness = false
+                                   .addSingleton<IService, Service>()
+                                   .addSingleton<Service>() // can be added one more time as separate service
+                                                            // due to checkServiceGlobalUniqueness = false
+                                   .addScoped<ServiceExecutor>()
                                    .buildServiceProvider(options);
 
-    const auto &executor = provider.getService<IServiceExecutor>();
-
+    const auto &executor = provider.getService<ServiceExecutor>();
     std::cout << executor.execute();
     return 0;
 }
