@@ -1,6 +1,6 @@
 Injected
 ========================================
 
-.. doxygenclass:: sb::di::Injected
+.. doxygenstruct:: sb::di::Injected
    :members:
    :undoc-members:

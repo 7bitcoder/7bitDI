@@ -3,18 +3,14 @@
 
 using namespace sb::di;
 
-struct IServiceA
+struct ServiceA
 {
-    virtual std::string actionA() = 0;
-
-    virtual ~IServiceA() = default;
+    std::string actionA() { return "actionA"; }
 };
 
-struct IServiceB
+struct ServiceB
 {
-    virtual std::string actionB() = 0;
-
-    virtual ~IServiceB() = default;
+    std::string actionB() { return "actionB"; }
 };
 
 struct IServiceExecutor
@@ -24,23 +20,13 @@ struct IServiceExecutor
     virtual ~IServiceExecutor() = default;
 };
 
-struct ServiceA final : IServiceA
-{
-    std::string actionA() override { return "actionA"; }
-};
-
-struct ServiceB final : IServiceB
-{
-    std::string actionB() override { return "actionB"; }
-};
-
 class ServiceExecutor final : public IServiceExecutor
 {
-    IServiceA &_serviceA;
+    ServiceA &_serviceA;
     std::unique_ptr<ServiceB> _serviceB;
 
   public:
-    ServiceExecutor(IServiceA &serviceA, std::unique_ptr<ServiceB> serviceB)
+    ServiceExecutor(ServiceA &serviceA, std::unique_ptr<ServiceB> serviceB)
         : _serviceA(serviceA), _serviceB(std::move(serviceB))
     {
     }
@@ -60,9 +46,7 @@ int main()
 
     ServiceProvider provider =
         ServiceCollection{}
-            .addSingleton<IServiceA, ServiceA>()
-            .addTransient<IServiceB, ServiceB>()
-            .addSingleton<ServiceA>() // can be added one more time due to checkServiceGlobalUniqueness = false
+            .addSingleton<ServiceA>()
             .addTransient<ServiceB>() // can be added one more time due to checkServiceGlobalUniqueness = false
             .addScoped<IServiceExecutor, ServiceExecutor>()
             .buildServiceProvider(options);

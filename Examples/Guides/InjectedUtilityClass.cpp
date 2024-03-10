@@ -3,18 +3,14 @@
 
 using namespace sb::di;
 
-struct IServiceA
+struct ServiceA
 {
-    virtual std::string actionA() = 0;
-
-    virtual ~IServiceA() = default;
+    std::string actionA() { return "actionA"; }
 };
 
-struct IServiceB
+struct ServiceB
 {
-    virtual std::string actionB() = 0;
-
-    virtual ~IServiceB() = default;
+    std::string actionB() { return "actionB"; }
 };
 
 struct IServiceExecutor
@@ -24,25 +20,15 @@ struct IServiceExecutor
     virtual ~IServiceExecutor() = default;
 };
 
-struct ServiceA final : IServiceA
-{
-    std::string actionA() override { return "actionA"; }
-};
-
-struct ServiceB final : IServiceB
-{
-    std::string actionB() override { return "actionB"; }
-};
-
 class ServiceExecutor final : public Injected<IServiceExecutor>
 {
-    IServiceA &_serviceA = inject<IServiceA>();
-    IServiceA *_optionalServiceA = tryInject<IServiceA>();
-    std::vector<IServiceA *> _allServiceA = injectAll<IServiceA>();
+    ServiceA &_serviceA = inject<ServiceA>();
+    ServiceA *_optionalServiceA = tryInject<ServiceA>();
+    std::vector<ServiceA *> _allServiceA = injectAll<ServiceA>();
 
-    std::unique_ptr<IServiceB> _serviceB = make<IServiceB>();
-    std::unique_ptr<IServiceB> _optionalServiceB = tryMake<IServiceB>();
-    std::vector<std::unique_ptr<IServiceB>> _allServiceB = makeAll<IServiceB>();
+    std::unique_ptr<ServiceB> _serviceB = make<ServiceB>();
+    std::unique_ptr<ServiceB> _optionalServiceB = tryMake<ServiceB>();
+    std::vector<std::unique_ptr<ServiceB>> _allServiceB = makeAll<ServiceB>();
 
   public:
     using Injected::Injected;
@@ -56,8 +42,8 @@ class ServiceExecutor final : public Injected<IServiceExecutor>
 int main()
 {
     ServiceProvider provider = ServiceCollection{}
-                                   .addSingleton<IServiceA, ServiceA>()
-                                   .addTransient<IServiceB, ServiceB>()
+                                   .addSingleton<ServiceA>()
+                                   .addTransient<ServiceB>()
                                    .addScoped<IServiceExecutor, ServiceExecutor>()
                                    .buildServiceProvider();
 
