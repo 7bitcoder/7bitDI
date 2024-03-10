@@ -21,9 +21,9 @@ class ServiceLifeTime : public testing::Test
 TEST_F(ServiceLifeTime, ShouldConstructProperLifetime)
 {
     auto act = [] {
-        sb::di::ServiceLifeTime sin{sb::di::ServiceLifeTime::Singleton};
-        sb::di::ServiceLifeTime scope{sb::di::ServiceLifeTime::Scoped};
-        sb::di::ServiceLifeTime transient{sb::di::ServiceLifeTime::Transient};
+        sb::di::ServiceLifeTime sin{sb::di::ServiceLifeTime::Type::Singleton};
+        sb::di::ServiceLifeTime scope{sb::di::ServiceLifeTime::Type::Scoped};
+        sb::di::ServiceLifeTime transient{sb::di::ServiceLifeTime::Type::Transient};
     };
 
     EXPECT_NO_THROW(act());
@@ -31,7 +31,7 @@ TEST_F(ServiceLifeTime, ShouldConstructProperLifetime)
 
 TEST_F(ServiceLifeTime, ShouldFailConstructLifetime)
 {
-    EXPECT_THROW(sb::di::ServiceLifeTime{sb::di::ServiceLifeTime::Count}, sb::di::InjectorException);
+    EXPECT_THROW(sb::di::ServiceLifeTime{sb::di::ServiceLifeTime::Type::Count}, sb::di::InjectorException);
     EXPECT_THROW(sb::di::ServiceLifeTime{static_cast<sb::di::ServiceLifeTime::Type>(-123)}, sb::di::InjectorException);
     EXPECT_THROW(sb::di::ServiceLifeTime{static_cast<sb::di::ServiceLifeTime::Type>(123)}, sb::di::InjectorException);
     EXPECT_THROW(sb::di::ServiceLifeTime{static_cast<sb::di::ServiceLifeTime::Type>(-1)}, sb::di::InjectorException);
@@ -64,9 +64,9 @@ TEST_F(ServiceLifeTime, ShouldCheckLifetime)
     constexpr auto lifeTime = sb::di::ServiceLifeTime::singleton();
 
     EXPECT_TRUE(lifeTime.isSingleton());
-    EXPECT_TRUE(lifeTime.is(sb::di::ServiceLifeTime::Singleton));
-    EXPECT_FALSE(lifeTime.is(sb::di::ServiceLifeTime::Scoped));
-    EXPECT_FALSE(lifeTime.is(sb::di::ServiceLifeTime::Transient));
+    EXPECT_TRUE(lifeTime.is(sb::di::ServiceLifeTime::Type::Singleton));
+    EXPECT_FALSE(lifeTime.is(sb::di::ServiceLifeTime::Type::Scoped));
+    EXPECT_FALSE(lifeTime.is(sb::di::ServiceLifeTime::Type::Transient));
     EXPECT_FALSE(lifeTime.is(static_cast<sb::di::ServiceLifeTime::Type>(12)));
     EXPECT_FALSE(lifeTime.isScoped());
     EXPECT_FALSE(lifeTime.isTransient());

@@ -62,8 +62,10 @@ namespace sb::di::details
         {
             if (!Check::enumValidity(value))
             {
-                throw InjectorException{"enum value: " + std::to_string(value) + " is invalid, shoud be in range [0" +
-                                        std::to_string(TEnum::Count) + ")"};
+                auto index = static_cast<std::underlying_type_t<TEnum>>(value);
+                auto count = static_cast<std::underlying_type_t<TEnum>>(TEnum::Count);
+                throw InjectorException{"enum value: " + std::to_string(index) + " is invalid, shoud be in range [0" +
+                                        std::to_string(count) + ")"};
             }
         }
     };

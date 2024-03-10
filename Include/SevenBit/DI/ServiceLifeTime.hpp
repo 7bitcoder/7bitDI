@@ -12,7 +12,7 @@ namespace sb::di
         /**
          * @brief 3 types of available service lifetimes
          */
-        enum Type
+        enum class Type
         {
             Singleton,
             Scoped,
@@ -28,15 +28,15 @@ namespace sb::di
         /**
          * @brief creates singleton service lifetime
          */
-        constexpr static ServiceLifeTime singleton() { return ServiceLifeTime{Singleton}; }
+        constexpr static ServiceLifeTime singleton() { return ServiceLifeTime{Type::Singleton}; }
         /**
          * @brief creates scoped service lifetime
          */
-        constexpr static ServiceLifeTime scoped() { return ServiceLifeTime{Scoped}; }
+        constexpr static ServiceLifeTime scoped() { return ServiceLifeTime{Type::Scoped}; }
         /**
          * @brief creates transient service lifetime
          */
-        constexpr static ServiceLifeTime transient() { return ServiceLifeTime{Transient}; }
+        constexpr static ServiceLifeTime transient() { return ServiceLifeTime{Type::Transient}; }
 
         /**
          * @brief Construct a new Service Life Time object with specified type
@@ -56,15 +56,15 @@ namespace sb::di
         /**
          * @brief checks if lifetime is singleton
          */
-        [[nodiscard]] constexpr bool isSingleton() const { return is(Singleton); }
+        [[nodiscard]] constexpr bool isSingleton() const { return is(Type::Singleton); }
         /**
          * @brief checks if lifetime is scoped
          */
-        [[nodiscard]] constexpr bool isScoped() const { return is(Scoped); }
+        [[nodiscard]] constexpr bool isScoped() const { return is(Type::Scoped); }
         /**
          * @brief checks if lifetime is transient
          */
-        [[nodiscard]] constexpr bool isTransient() const { return is(Transient); }
+        [[nodiscard]] constexpr bool isTransient() const { return is(Type::Transient); }
 
         constexpr bool operator!=(const ServiceLifeTime &lifeTime) const { return _type != lifeTime._type; }
         constexpr bool operator==(const ServiceLifeTime &lifeTime) const { return _type == lifeTime._type; }

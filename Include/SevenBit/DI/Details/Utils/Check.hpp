@@ -14,7 +14,9 @@ namespace sb::di::details
 
         template <class TEnum> constexpr static bool enumValidity(TEnum value)
         {
-            return std::is_enum_v<TEnum> && value >= 0 && value < TEnum::Count;
+            auto index = static_cast<std::underlying_type_t<TEnum>>(value);
+            auto count = static_cast<std::underlying_type_t<TEnum>>(TEnum::Count);
+            return std::is_enum_v<TEnum> && index >= 0 && index < count;
         }
     };
 } // namespace sb::di::details

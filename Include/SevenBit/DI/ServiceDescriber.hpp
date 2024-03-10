@@ -36,7 +36,7 @@ namespace sb::di
          */
         template <class TService, class TImplementation = TService> static ServiceDescriptor describeSingleton()
         {
-            return describe<TService, TImplementation>(ServiceLifeTimes::Singleton);
+            return describe<TService, TImplementation>(ServiceLifeTime::singleton());
         }
 
         /**
@@ -58,7 +58,7 @@ namespace sb::di
          */
         template <class TService, class TImplementation = TService> static ServiceDescriptor describeScoped()
         {
-            return describe<TService, TImplementation>(ServiceLifeTimes::Scoped);
+            return describe<TService, TImplementation>(ServiceLifeTime::scoped());
         }
 
         /**
@@ -80,7 +80,7 @@ namespace sb::di
          */
         template <class TService, class TImplementation = TService> static ServiceDescriptor describeTransient()
         {
-            return describe<TService, TImplementation>(ServiceLifeTimes::Transient);
+            return describe<TService, TImplementation>(ServiceLifeTime::transient());
         }
 
         /**
@@ -97,9 +97,9 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceDescriptor descriptor1 = ServiceDescriber::describe<TestClass>(ServiceLifeTimes::Scoped);
+         * ServiceDescriptor descriptor1 = ServiceDescriber::describe<TestClass>(ServiceLifeTime::scoped());
          * ServiceDescriptor descriptor2 =
-         *          ServiceDescriber::describe<BaseClass, ImplementationClass>(ServiceLifeTimes::Transient);
+         *          ServiceDescriber::describe<BaseClass, ImplementationClass>(ServiceLifeTime::transient());
          * @endcode
          */
         template <class TService, class TImplementation = TService>
@@ -164,7 +164,7 @@ namespace sb::di
             details::Assert::inheritance<TService, TImplementation>();
 
             auto factory = std::make_unique<details::ExternalServiceFactory<TImplementation>>(service);
-            return {typeid(TService), typeid(TImplementation), ServiceLifeTimes::Singleton, std::move(factory),
+            return {typeid(TService), typeid(TImplementation), ServiceLifeTime::singleton(), std::move(factory),
                     details::Cast::getCastOffset<TService, TImplementation>()};
         }
 
@@ -187,7 +187,7 @@ namespace sb::di
          */
         template <class FactoryFcn> static ServiceDescriptor describeSingletonFrom(FactoryFcn &&factory)
         {
-            return describeFrom<void, FactoryFcn>(ServiceLifeTimes::Singleton, std::forward<FactoryFcn>(factory));
+            return describeFrom<void, FactoryFcn>(ServiceLifeTime::singleton(), std::forward<FactoryFcn>(factory));
         }
 
         /**
@@ -209,7 +209,7 @@ namespace sb::di
          */
         template <class FactoryFcn> static ServiceDescriptor describeScopedFrom(FactoryFcn &&factory)
         {
-            return describeFrom<void, FactoryFcn>(ServiceLifeTimes::Scoped, std::forward<FactoryFcn>(factory));
+            return describeFrom<void, FactoryFcn>(ServiceLifeTime::scoped(), std::forward<FactoryFcn>(factory));
         }
 
         /**
@@ -231,7 +231,7 @@ namespace sb::di
          */
         template <class FactoryFcn> static ServiceDescriptor describeTransientFrom(FactoryFcn &&factory)
         {
-            return describeFrom<void, FactoryFcn>(ServiceLifeTimes::Transient, std::forward<FactoryFcn>(factory));
+            return describeFrom<void, FactoryFcn>(ServiceLifeTime::transient(), std::forward<FactoryFcn>(factory));
         }
 
         /**
@@ -247,7 +247,7 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceDescriptor descriptor = ServiceDescriber::describeFrom(ServiceLifeTimes::Scoped,
+         * ServiceDescriptor descriptor = ServiceDescriber::describeFrom(ServiceLifeTime::scoped(),
          *       []() { return std::make_unique<TestClass>(); });
          * @endcode
          */
@@ -277,7 +277,7 @@ namespace sb::di
          */
         template <class TService, class FactoryFcn> static ServiceDescriptor describeSingletonFrom(FactoryFcn &&factory)
         {
-            return describeFrom<TService, FactoryFcn>(ServiceLifeTimes::Singleton, std::forward<FactoryFcn>(factory));
+            return describeFrom<TService, FactoryFcn>(ServiceLifeTime::singleton(), std::forward<FactoryFcn>(factory));
         }
 
         /**
@@ -300,7 +300,7 @@ namespace sb::di
          */
         template <class TService, class FactoryFcn> static ServiceDescriptor describeScopedFrom(FactoryFcn &&factory)
         {
-            return describeFrom<TService, FactoryFcn>(ServiceLifeTimes::Scoped, std::forward<FactoryFcn>(factory));
+            return describeFrom<TService, FactoryFcn>(ServiceLifeTime::scoped(), std::forward<FactoryFcn>(factory));
         }
 
         /**
@@ -323,7 +323,7 @@ namespace sb::di
          */
         template <class TService, class FactoryFcn> static ServiceDescriptor describeTransientFrom(FactoryFcn &&factory)
         {
-            return describeFrom<TService, FactoryFcn>(ServiceLifeTimes::Transient, std::forward<FactoryFcn>(factory));
+            return describeFrom<TService, FactoryFcn>(ServiceLifeTime::transient(), std::forward<FactoryFcn>(factory));
         }
 
         /**
@@ -340,7 +340,7 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceDescriptor descriptor = ServiceDescriber::describeFrom<BaseClass>(ServiceLifeTimes::Scoped,
+         * ServiceDescriptor descriptor = ServiceDescriber::describeFrom<BaseClass>(ServiceLifeTime::scoped(),
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
@@ -377,7 +377,7 @@ namespace sb::di
             details::Assert::aliasNotSame<TAlias, TService>();
             details::Assert::aliasInheritance<TAlias, TService>();
 
-            return {typeid(TAlias), typeid(TService), ServiceLifeTimes::Scoped, nullptr,
+            return {typeid(TAlias), typeid(TService), ServiceLifeTime::scoped(), nullptr,
                     details::Cast::getCastOffset<TAlias, TService>()};
         }
     };
