@@ -37,10 +37,10 @@ struct ServiceB final : IServiceB
 class ServiceExecutor final : public IServiceExecutor
 {
     IServiceA &_serviceA;
-    std::unique_ptr<IServiceB> _serviceB;
+    std::unique_ptr<ServiceB> _serviceB;
 
   public:
-    ServiceExecutor(IServiceA &serviceA, std::unique_ptr<IServiceB> serviceB)
+    ServiceExecutor(IServiceA &serviceA, std::unique_ptr<ServiceB> serviceB)
         : _serviceA(serviceA), _serviceB(std::move(serviceB))
     {
     }
@@ -53,11 +53,19 @@ class ServiceExecutor final : public IServiceExecutor
 
 int main()
 {
-    ServiceProvider provider = ServiceCollection{}
-                                   .addSingleton<IServiceA, ServiceA>()
-                                   .addTransient<IServiceB, ServiceB>()
-                                   .addScoped<IServiceExecutor, ServiceExecutor>()
-                                   .buildServiceProvider();
+    ServiceProviderOptions options;
+    options.strongDestructionOrder = true;
+    options.prebuildSingletons = true;
+    options.checkServiceGlobalUniqueness = false;
+
+    ServiceProvider provider =
+        ServiceCollection{}
+            .addSingleton<IServiceA, ServiceA>()
+            .addTransient<IServiceB, ServiceB>()
+            .addSingleton<ServiceA>() // can be added one more time due to checkServiceGlobalUniqueness = false
+            .addTransient<ServiceB>() // can be added one more time due to checkServiceGlobalUniqueness = false
+            .addScoped<IServiceExecutor, ServiceExecutor>()
+            .buildServiceProvider(options);
 
     const auto &executor = provider.getService<IServiceExecutor>();
 

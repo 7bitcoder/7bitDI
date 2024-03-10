@@ -34,16 +34,18 @@ struct ServiceB final : IServiceB
     std::string actionB() override { return "actionB"; }
 };
 
-class ServiceExecutor final : public IServiceExecutor
+class ServiceExecutor final : public Injected<IServiceExecutor>
 {
-    IServiceA &_serviceA;
-    std::unique_ptr<IServiceB> _serviceB;
+    IServiceA &_serviceA = inject<IServiceA>();
+    IServiceA *_optionalServiceA = tryInject<IServiceA>();
+    std::vector<IServiceA *> _allServiceA = injectAll<IServiceA>();
+
+    std::unique_ptr<IServiceB> _serviceB = make<IServiceB>();
+    std::unique_ptr<IServiceB> _optionalServiceB = tryMake<IServiceB>();
+    std::vector<std::unique_ptr<IServiceB>> _allServiceB = makeAll<IServiceB>();
 
   public:
-    ServiceExecutor(IServiceA &serviceA, std::unique_ptr<IServiceB> serviceB)
-        : _serviceA(serviceA), _serviceB(std::move(serviceB))
-    {
-    }
+    using Injected::Injected;
 
     [[nodiscard]] std::string execute() const override
     {

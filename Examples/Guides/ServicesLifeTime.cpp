@@ -1,6 +1,5 @@
 #include <SevenBit/DI.hpp>
 #include <iostream>
-#include <memory>
 
 using namespace sb::di;
 

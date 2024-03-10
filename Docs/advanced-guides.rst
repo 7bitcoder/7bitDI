@@ -9,3 +9,4 @@ Advanced Guides
    advanced-guides/using-aliases
    advanced-guides/external-singleton
    advanced-guides/building-library
+   advanced-guides/configuring-service-provider
