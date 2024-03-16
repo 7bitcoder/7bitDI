@@ -12,7 +12,7 @@ add_executable(BigLoadTest BigLoadTest.cpp)
 target_link_libraries(BigLoadTest PUBLIC 7bitDI)
 
 if (MSVC)
-    target_compile_options(BigLoadTest /bigobj)
+    target_compile_options(BigLoadTest PRIVATE /bigobj)
 endif ()
 
 add_test(NAME BigLoadTest COMMAND BigLoadTest)
