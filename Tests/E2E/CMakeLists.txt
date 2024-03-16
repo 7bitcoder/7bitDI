@@ -7,7 +7,12 @@ if (_7BIT_DI_BUILD_EXAMPLES)
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Examples)
 endif ()
 
+
 add_executable(BigLoadTest BigLoadTest.cpp)
 target_link_libraries(BigLoadTest PUBLIC 7bitDI)
+
+if (MSVC)
+    target_compile_options(BigLoadTest /bigobj)
+endif ()
 
 add_test(NAME BigLoadTest COMMAND BigLoadTest)
