@@ -6,3 +6,8 @@ if (_7BIT_DI_BUILD_EXAMPLES)
             test_examples.py ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} expected_test_data.json
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Examples)
 endif ()
+
+add_executable(BigLoadTest BigLoadTest.cpp)
+target_link_libraries(BigLoadTest PUBLIC 7bitDI)
+
+add_test(NAME BigLoadTest COMMAND BigLoadTest)

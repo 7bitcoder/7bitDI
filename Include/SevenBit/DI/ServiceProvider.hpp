@@ -143,7 +143,7 @@ namespace sb::di
         {
             if (auto instances = getInstanceProvider().tryGetInstances(typeid(TService)))
             {
-                return instances->map([&](const ServiceInstance &instance) {
+                return instances->map([](const ServiceInstance &instance) {
                     details::ExtRequire::validInstance(instance);
                     return instance.getAs<TService>();
                 });

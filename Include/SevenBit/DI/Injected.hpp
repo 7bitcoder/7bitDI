@@ -27,11 +27,11 @@ namespace sb::di
 
         template <class TService> std::unique_ptr<TService> make() { return provider.createService<TService>(); }
 
+        template <class TService> TService makeInPlace() { return provider.createServiceInPlace<TService>(); }
+
         template <class TService> std::vector<std::unique_ptr<TService>> makeAll()
         {
             return provider.createServices<TService>();
         }
-
-        template <class TService> TService makeInPlace() { return provider.createServiceInPlace<TService>(); }
     };
 } // namespace sb::di
