@@ -10,12 +10,14 @@ template <int ID> class Legion
     Legion() = default;
 };
 
-template <int ID, int Size> void addLegions(sb::di::ServiceCollection &services)
+template <int ID, int Size> void addLegionsRec(sb::di::ServiceCollection &services)
 {
     services.addSingleton<Legion<ID>>();
-    if (Size / 2)
+    if (constexpr int Reduced = Size / 2)
     {
-        addLegions<ID + Size / 2, Size / 2>(services);
-        addLegions<ID - Size / 2, Size / 2>(services);
+        addLegionsRec<ID + Reduced, Reduced>(services);
+        addLegionsRec<ID - Reduced, Reduced>(services);
     }
 }
+
+template <int Number> void addLegions(sb::di::ServiceCollection &services) { addLegionsRec<Number, Number>(services); }
