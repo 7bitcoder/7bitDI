@@ -27,7 +27,9 @@ namespace sb::di
         using Ptr = std::unique_ptr<ServiceCollection>;
 
         ServiceCollection() = default;
+
         ServiceCollection(std::initializer_list<ServiceDescriptor> list);
+
         template <class InputIt> ServiceCollection(InputIt first, InputIt last) : _serviceDescriptors(first, last) {}
 
         ServiceCollection(const ServiceCollection &) = default;
@@ -69,8 +71,17 @@ namespace sb::di
         [[nodiscard]] ConstReverseIterator crBegin() const { return _serviceDescriptors.crbegin(); }
         [[nodiscard]] ConstReverseIterator crEnd() const { return _serviceDescriptors.crend(); }
 
-        [[nodiscard]] ConstReverseIterator rbegin() const { return crBegin(); }
-        [[nodiscard]] ConstReverseIterator rend() const { return crEnd(); }
+        [[nodiscard]] ConstReverseIterator rBegin() const { return crBegin(); }
+        [[nodiscard]] ConstReverseIterator rEnd() const { return crEnd(); }
+
+        /**
+         * @brief Returns inner vector container
+         */
+        std::vector<ServiceDescriptor> &getInnerVector();
+        /**
+         * @brief Returns inner vector container
+         */
+        [[nodiscard]] const std::vector<ServiceDescriptor> &getInnerVector() const;
 
         /**
          * @brief Returns service descriptor at giver position
@@ -123,6 +134,11 @@ namespace sb::di
          * @throws std::out_of_range if index >= size()
          */
         const ServiceDescriptor &operator[](size_t index) const;
+
+        /**
+         * @brief Returns the maximum possible number of stored descriptors
+         */
+        [[nodiscard]] size_t maxSize() const;
 
         /**
          * @brief Returns number of stored descriptors
@@ -647,6 +663,10 @@ namespace sb::di
             return add(ServiceDescriber::describeAlias<TAlias, TService>());
         }
     };
+
+    bool operator==(const ServiceCollection &lhs, const ServiceCollection &rhs);
+    bool operator!=(const ServiceCollection &lhs, const ServiceCollection &rhs);
+
 } // namespace sb::di
 
 #ifdef _7BIT_DI_ADD_IMPL

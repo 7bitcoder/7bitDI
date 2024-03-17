@@ -9,8 +9,8 @@
 
 namespace sb::di
 {
-    INLINE ServiceCollection::ServiceCollection(const std::initializer_list<ServiceDescriptor> list)
-        : _serviceDescriptors(list)
+    INLINE ServiceCollection::ServiceCollection(std::initializer_list<ServiceDescriptor> list)
+        : _serviceDescriptors(std::move(list))
     {
     }
 
@@ -23,6 +23,12 @@ namespace sb::di
     {
         auto instanceProvider = std::make_unique<details::ServiceInstanceProviderRoot>(begin(), end(), options);
         return std::make_unique<ServiceProvider>(std::move(instanceProvider));
+    }
+
+    INLINE std::vector<ServiceDescriptor> &ServiceCollection::getInnerVector() { return _serviceDescriptors; }
+    INLINE const std::vector<ServiceDescriptor> &ServiceCollection::getInnerVector() const
+    {
+        return _serviceDescriptors;
     }
 
     INLINE ServiceDescriptor &ServiceCollection::at(const size_t index) { return _serviceDescriptors.at(index); }
@@ -39,6 +45,8 @@ namespace sb::di
 
     INLINE ServiceDescriptor &ServiceCollection::operator[](const size_t index) { return at(index); }
     INLINE const ServiceDescriptor &ServiceCollection::operator[](const size_t index) const { return at(index); }
+
+    INLINE size_t ServiceCollection::maxSize() const { return _serviceDescriptors.max_size(); }
 
     INLINE size_t ServiceCollection::size() const { return _serviceDescriptors.size(); }
     INLINE size_t ServiceCollection::count() const { return size(); }
@@ -120,4 +128,12 @@ namespace sb::di
 
     INLINE void ServiceCollection::pop() { _serviceDescriptors.pop_back(); }
 
+    INLINE bool operator==(const ServiceCollection &lhs, const ServiceCollection &rhs)
+    {
+        return lhs.getInnerVector() == rhs.getInnerVector();
+    }
+    INLINE bool operator!=(const ServiceCollection &lhs, const ServiceCollection &rhs)
+    {
+        return lhs.getInnerVector() != rhs.getInnerVector();
+    }
 } // namespace sb::di
