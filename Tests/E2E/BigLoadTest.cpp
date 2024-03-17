@@ -3,7 +3,7 @@
 int main()
 {
     sb::di::ServiceCollection services;
-    addLegions<2000>(services);
+    addLegions<1000>(services);
 
     sb::di::ServiceProviderOptions options;
     options.prebuildSingletons = true;
