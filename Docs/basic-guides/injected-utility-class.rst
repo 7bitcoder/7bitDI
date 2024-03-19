@@ -1,7 +1,9 @@
 Injected Utility Class
 ========================================
 
-Library Provides simple template Injected utility class:
+Library Provides simple template Injected_ utility class:
+
+.. _Injected: ../reference/di/injected.html
 
 .. literalinclude:: ../../Include/SevenBit/DI/Injected.hpp
    :caption: Include/SevenBit/DI/Injected.hpp
