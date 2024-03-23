@@ -7,7 +7,7 @@
 
 namespace sb::di::details
 {
-    INLINE ServiceInstanceList::ServiceInstanceList(const size_t size) : _oneOrList(size) {}
+    INLINE ServiceInstanceList::ServiceInstanceList(const std::size_t size) : _oneOrList(size) {}
 
     INLINE ServiceInstanceList::ServiceInstanceList(ServiceInstance instance)
         : _oneOrList(ExtRequire::validInstanceAndGet(std::move(instance)))
@@ -28,11 +28,11 @@ namespace sb::di::details
     INLINE ServiceInstance &ServiceInstanceList::last() { return _oneOrList.last(); }
     INLINE const ServiceInstance &ServiceInstanceList::last() const { return _oneOrList.last(); }
 
-    INLINE size_t ServiceInstanceList::size() const { return _oneOrList.size(); }
+    INLINE std::size_t ServiceInstanceList::size() const { return _oneOrList.size(); }
 
     INLINE bool ServiceInstanceList::empty() const { return _oneOrList.empty(); }
 
-    INLINE void ServiceInstanceList::reserve(const size_t newCapacity) { return _oneOrList.reserve(newCapacity); }
+    INLINE void ServiceInstanceList::reserve(const std::size_t newCapacity) { return _oneOrList.reserve(newCapacity); }
 
     INLINE void ServiceInstanceList::shrink() { return _oneOrList.shrink(); }
 

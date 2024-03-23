@@ -36,11 +36,13 @@ namespace sb::di::details
 
         [[nodiscard]] bool empty() const;
 
-        [[nodiscard]] size_t size() const;
+        [[nodiscard]] std::size_t size() const;
 
         [[nodiscard]] ServiceLifeTime getLifeTime() const;
 
         [[nodiscard]] TypeId getServiceTypeId() const;
+
+        [[nodiscard]] const std::string *getServiceKey() const;
 
         [[nodiscard]] bool isAlias() const;
 
@@ -48,6 +50,7 @@ namespace sb::di::details
 
       private:
         void checkBaseType(const ServiceDescriptor &descriptor) const;
+        void checkKey(const ServiceDescriptor &descriptor) const;
         void checkAlias(const ServiceDescriptor &descriptor) const;
         void checkLifeTime(const ServiceDescriptor &descriptor) const;
     };

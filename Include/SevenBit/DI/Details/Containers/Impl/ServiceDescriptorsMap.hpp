@@ -9,7 +9,8 @@ namespace sb::di::details
 {
     INLINE ServiceDescriptorsMap::ServiceDescriptorsMap(const bool checkDescriptorUniqueness)
     {
-        _registeredServicesCheck = checkDescriptorUniqueness ? std::make_unique<std::unordered_set<TypeId>>() : nullptr;
+        _registeredServicesCheck =
+            checkDescriptorUniqueness ? std::make_unique<std::unordered_set<ServiceId>>() : nullptr;
     }
 
     INLINE void ServiceDescriptorsMap::add(ServiceDescriptor descriptor)
@@ -20,9 +21,9 @@ namespace sb::di::details
 
     INLINE void ServiceDescriptorsMap::seal() { _registeredServicesCheck.reset(); }
 
-    INLINE const ServiceDescriptorList *ServiceDescriptorsMap::findDescriptors(const TypeId typeId) const
+    INLINE const ServiceDescriptorList *ServiceDescriptorsMap::findDescriptors(const ServiceId &serviceId) const
     {
-        if (const auto it = _serviceCreatorsMap.find(typeId); it != _serviceCreatorsMap.end())
+        if (const auto it = _serviceCreatorsMap.find(serviceId); it != _serviceCreatorsMap.end())
         {
             return &it->second;
         }
@@ -31,25 +32,25 @@ namespace sb::di::details
 
     INLINE void ServiceDescriptorsMap::addDescriptorWithCheck(ServiceDescriptor &&descriptor)
     {
-        const auto implementationTypeId = descriptor.getImplementationTypeId();
-        if (_registeredServicesCheck->count(implementationTypeId))
+        ServiceId id{descriptor.getImplementationTypeId(), descriptor.getServiceKey()};
+        if (_registeredServicesCheck->count(id))
         {
-            throw ServiceAlreadyRegisteredException{implementationTypeId};
+            throw ServiceAlreadyRegisteredException{descriptor.getImplementationTypeId()};
         }
         addDescriptor(std::move(descriptor));
-        _registeredServicesCheck->insert(implementationTypeId);
+        _registeredServicesCheck->insert(std::move(id));
     }
 
     INLINE void ServiceDescriptorsMap::addDescriptor(ServiceDescriptor &&descriptor)
     {
-        auto serviceTypeId = descriptor.getServiceTypeId();
-        if (const auto it = _serviceCreatorsMap.find(serviceTypeId); it != _serviceCreatorsMap.end())
+        ServiceId id{descriptor.getServiceTypeId(), descriptor.getServiceKey()};
+        if (const auto it = _serviceCreatorsMap.find(id); it != _serviceCreatorsMap.end())
         {
             it->second.add(std::move(descriptor));
         }
         else
         {
-            _serviceCreatorsMap.emplace(serviceTypeId, std::move(descriptor));
+            _serviceCreatorsMap.emplace(std::move(id), std::move(descriptor));
         }
     }
 

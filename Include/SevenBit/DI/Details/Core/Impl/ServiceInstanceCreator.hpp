@@ -21,7 +21,7 @@ namespace sb::di::details
     {
         ExtRequire::nonAliasDescriptor(descriptor);
         auto &provider = *Require::notNullAndGet(_serviceProvider);
-        auto &factory = descriptor.getImplementationFactory();
+        const auto &factory = *Require::notNullAndGet(descriptor.getImplementationFactory());
         auto _ = _circularDependencyGuard(descriptor.getImplementationTypeId());
 
         auto implementation = factory.createInstance(provider, inPlaceRequest);

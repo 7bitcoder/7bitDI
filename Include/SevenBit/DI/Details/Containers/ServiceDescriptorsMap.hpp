@@ -7,6 +7,7 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
+#include "SevenBit/DI/Details/Containers/ServiceId.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
@@ -14,8 +15,8 @@ namespace sb::di::details
 {
     class EXPORT ServiceDescriptorsMap
     {
-        std::unordered_map<TypeId, ServiceDescriptorList> _serviceCreatorsMap;
-        std::unique_ptr<std::unordered_set<TypeId>> _registeredServicesCheck;
+        std::unordered_map<ServiceId, ServiceDescriptorList> _serviceCreatorsMap;
+        std::unique_ptr<std::unordered_set<ServiceId>> _registeredServicesCheck;
 
       public:
         using Ptr = std::unique_ptr<ServiceDescriptorsMap>;
@@ -44,7 +45,7 @@ namespace sb::di::details
 
         void seal();
 
-        [[nodiscard]] const ServiceDescriptorList *findDescriptors(TypeId typeId) const;
+        [[nodiscard]] const ServiceDescriptorList *findDescriptors(const ServiceId &serviceId) const;
 
       private:
         void addDescriptorWithCheck(ServiceDescriptor &&descriptor);

@@ -14,7 +14,7 @@ namespace sb::di::details
 
       public:
         explicit ServiceInstanceList(ServiceInstance instance);
-        explicit ServiceInstanceList(size_t size);
+        explicit ServiceInstanceList(std::size_t size);
 
         ServiceInstanceList(const ServiceInstanceList &) = delete;
         ServiceInstanceList(ServiceInstanceList &&) = default;
@@ -36,11 +36,11 @@ namespace sb::di::details
         ServiceInstance &last();
         [[nodiscard]] const ServiceInstance &last() const;
 
-        [[nodiscard]] size_t size() const;
+        [[nodiscard]] std::size_t size() const;
 
         [[nodiscard]] bool empty() const;
 
-        void reserve(size_t newCapacity);
+        void reserve(std::size_t newCapacity);
 
         void shrink();
 

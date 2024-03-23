@@ -4,6 +4,7 @@ FetchContent_Declare(
         GIT_REPOSITORY https://github.com/google/benchmark.git
         GIT_TAG v1.8.3
 )
+set(BENCHMARK_ENABLE_GTEST_TESTS OFF)
 FetchContent_MakeAvailable(benchmark)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS *.cpp)

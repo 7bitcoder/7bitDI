@@ -34,9 +34,10 @@ namespace sb::di
          * ServiceDescriptor descriptor2 = ServiceDescriber::describeSingleton<BaseClass, ImplementationClass>();
          * @endcode
          */
-        template <class TService, class TImplementation = TService> static ServiceDescriptor describeSingleton()
+        template <class TService, class TImplementation = TService>
+        static ServiceDescriptor describeSingleton(std::unique_ptr<std::string> serviceKey = nullptr)
         {
-            return describe<TService, TImplementation>(ServiceLifeTime::singleton());
+            return describe<TService, TImplementation>(ServiceLifeTime::singleton(), std::move(serviceKey));
         }
 
         /**
@@ -56,9 +57,10 @@ namespace sb::di
          * ServiceDescriptor descriptor2 = ServiceDescriber::describeScoped<BaseClass, ImplementationClass>();
          * @endcode
          */
-        template <class TService, class TImplementation = TService> static ServiceDescriptor describeScoped()
+        template <class TService, class TImplementation = TService>
+        static ServiceDescriptor describeScoped(std::unique_ptr<std::string> serviceKey = nullptr)
         {
-            return describe<TService, TImplementation>(ServiceLifeTime::scoped());
+            return describe<TService, TImplementation>(ServiceLifeTime::scoped(), std::move(serviceKey));
         }
 
         /**
@@ -78,9 +80,10 @@ namespace sb::di
          * ServiceDescriptor descriptor2 = ServiceDescriber::describeTransient<BaseClass, ImplementationClass>();
          * @endcode
          */
-        template <class TService, class TImplementation = TService> static ServiceDescriptor describeTransient()
+        template <class TService, class TImplementation = TService>
+        static ServiceDescriptor describeTransient(std::unique_ptr<std::string> serviceKey = nullptr)
         {
-            return describe<TService, TImplementation>(ServiceLifeTime::transient());
+            return describe<TService, TImplementation>(ServiceLifeTime::transient(), std::move(serviceKey));
         }
 
         /**
@@ -103,12 +106,17 @@ namespace sb::di
          * @endcode
          */
         template <class TService, class TImplementation = TService>
-        static ServiceDescriptor describe(const ServiceLifeTime lifetime)
+        static ServiceDescriptor describe(const ServiceLifeTime lifetime,
+                                          std::unique_ptr<std::string> serviceKey = nullptr)
         {
             details::Assert::inheritance<TService, TImplementation>();
 
-            auto factory = std::make_unique<details::ServiceFactory<TImplementation>>();
-            return {typeid(TService), typeid(TImplementation), lifetime, std::move(factory),
+            return {typeid(TService),
+                    typeid(TImplementation),
+                    std::move(serviceKey),
+                    nullptr,
+                    lifetime,
+                    std::make_unique<details::ServiceFactory<TImplementation>>(),
                     details::Cast::getCastOffset<TService, TImplementation>()};
         }
 
@@ -133,9 +141,10 @@ namespace sb::di
          * @endcode
          */
         template <class TService, class TImplementation = TService>
-        static ServiceDescriptor describeSingleton(TImplementation &service)
+        static ServiceDescriptor describeSingleton(TImplementation &service,
+                                                   std::unique_ptr<std::string> serviceKey = nullptr)
         {
-            return describeSingleton<TService, TImplementation>(&service);
+            return describeSingleton<TService, TImplementation>(&service, std::move(serviceKey));
         }
 
         /**
@@ -159,12 +168,17 @@ namespace sb::di
          * @endcode
          */
         template <class TService, class TImplementation = TService>
-        static ServiceDescriptor describeSingleton(TImplementation *service)
+        static ServiceDescriptor describeSingleton(TImplementation *service,
+                                                   std::unique_ptr<std::string> serviceKey = nullptr)
         {
             details::Assert::inheritance<TService, TImplementation>();
 
-            auto factory = std::make_unique<details::ExternalServiceFactory<TImplementation>>(service);
-            return {typeid(TService), typeid(TImplementation), ServiceLifeTime::singleton(), std::move(factory),
+            return {typeid(TService),
+                    typeid(TImplementation),
+                    std::move(serviceKey),
+                    nullptr,
+                    ServiceLifeTime::singleton(),
+                    std::make_unique<details::ExternalServiceFactory<TImplementation>>(service),
                     details::Cast::getCastOffset<TService, TImplementation>()};
         }
 
@@ -185,9 +199,12 @@ namespace sb::di
          *       [](const ServiceDescriptor &) { return std::make_unique<TestClass>(); });
          * @endcode
          */
-        template <class FactoryFcn> static ServiceDescriptor describeSingletonFrom(FactoryFcn &&factory)
+        template <class FactoryFcn>
+        static ServiceDescriptor describeSingletonFrom(FactoryFcn &&factory,
+                                                       std::unique_ptr<std::string> serviceKey = nullptr)
         {
-            return describeFrom<void, FactoryFcn>(ServiceLifeTime::singleton(), std::forward<FactoryFcn>(factory));
+            return describeFrom<void, FactoryFcn>(ServiceLifeTime::singleton(), std::forward<FactoryFcn>(factory),
+                                                  std::move(serviceKey));
         }
 
         /**
@@ -207,9 +224,12 @@ namespace sb::di
          *       [](const ServiceDescriptor &) { return std::make_unique<TestClass>(); });
          * @endcode
          */
-        template <class FactoryFcn> static ServiceDescriptor describeScopedFrom(FactoryFcn &&factory)
+        template <class FactoryFcn>
+        static ServiceDescriptor describeScopedFrom(FactoryFcn &&factory,
+                                                    std::unique_ptr<std::string> serviceKey = nullptr)
         {
-            return describeFrom<void, FactoryFcn>(ServiceLifeTime::scoped(), std::forward<FactoryFcn>(factory));
+            return describeFrom<void, FactoryFcn>(ServiceLifeTime::scoped(), std::forward<FactoryFcn>(factory),
+                                                  std::move(serviceKey));
         }
 
         /**
@@ -229,9 +249,12 @@ namespace sb::di
          *       [](const ServiceDescriptor &) { return std::make_unique<TestClass>(); });
          * @endcode
          */
-        template <class FactoryFcn> static ServiceDescriptor describeTransientFrom(FactoryFcn &&factory)
+        template <class FactoryFcn>
+        static ServiceDescriptor describeTransientFrom(FactoryFcn &&factory,
+                                                       std::unique_ptr<std::string> serviceKey = nullptr)
         {
-            return describeFrom<void, FactoryFcn>(ServiceLifeTime::transient(), std::forward<FactoryFcn>(factory));
+            return describeFrom<void, FactoryFcn>(ServiceLifeTime::transient(), std::forward<FactoryFcn>(factory),
+                                                  std::move(serviceKey));
         }
 
         /**
@@ -252,9 +275,11 @@ namespace sb::di
          * @endcode
          */
         template <class FactoryFcn>
-        static ServiceDescriptor describeFrom(const ServiceLifeTime lifetime, FactoryFcn &&factoryFcn)
+        static ServiceDescriptor describeFrom(const ServiceLifeTime lifetime, FactoryFcn &&factoryFcn,
+                                              std::unique_ptr<std::string> serviceKey = nullptr)
         {
-            return describeFrom<void, FactoryFcn>(lifetime, std::forward<FactoryFcn>(factoryFcn));
+            return describeFrom<void, FactoryFcn>(lifetime, std::forward<FactoryFcn>(factoryFcn),
+                                                  std::move(serviceKey));
         }
 
         /**
@@ -275,9 +300,12 @@ namespace sb::di
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
-        template <class TService, class FactoryFcn> static ServiceDescriptor describeSingletonFrom(FactoryFcn &&factory)
+        template <class TService, class FactoryFcn>
+        static ServiceDescriptor describeSingletonFrom(FactoryFcn &&factory,
+                                                       std::unique_ptr<std::string> serviceKey = nullptr)
         {
-            return describeFrom<TService, FactoryFcn>(ServiceLifeTime::singleton(), std::forward<FactoryFcn>(factory));
+            return describeFrom<TService, FactoryFcn>(ServiceLifeTime::singleton(), std::forward<FactoryFcn>(factory),
+                                                      std::move(serviceKey));
         }
 
         /**
@@ -298,9 +326,12 @@ namespace sb::di
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
-        template <class TService, class FactoryFcn> static ServiceDescriptor describeScopedFrom(FactoryFcn &&factory)
+        template <class TService, class FactoryFcn>
+        static ServiceDescriptor describeScopedFrom(FactoryFcn &&factory,
+                                                    std::unique_ptr<std::string> serviceKey = nullptr)
         {
-            return describeFrom<TService, FactoryFcn>(ServiceLifeTime::scoped(), std::forward<FactoryFcn>(factory));
+            return describeFrom<TService, FactoryFcn>(ServiceLifeTime::scoped(), std::forward<FactoryFcn>(factory),
+                                                      std::move(serviceKey));
         }
 
         /**
@@ -321,9 +352,12 @@ namespace sb::di
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
-        template <class TService, class FactoryFcn> static ServiceDescriptor describeTransientFrom(FactoryFcn &&factory)
+        template <class TService, class FactoryFcn>
+        static ServiceDescriptor describeTransientFrom(FactoryFcn &&factory,
+                                                       std::unique_ptr<std::string> serviceKey = nullptr)
         {
-            return describeFrom<TService, FactoryFcn>(ServiceLifeTime::transient(), std::forward<FactoryFcn>(factory));
+            return describeFrom<TService, FactoryFcn>(ServiceLifeTime::transient(), std::forward<FactoryFcn>(factory),
+                                                      std::move(serviceKey));
         }
 
         /**
@@ -345,16 +379,21 @@ namespace sb::di
          * @endcode
          */
         template <class TService, class FactoryFcn>
-        static ServiceDescriptor describeFrom(const ServiceLifeTime lifetime, FactoryFcn &&factoryFcn)
+        static ServiceDescriptor describeFrom(const ServiceLifeTime lifetime, FactoryFcn &&factoryFcn,
+                                              std::unique_ptr<std::string> serviceKey = nullptr)
         {
             using Factory = details::ServiceFcnFactory<FactoryFcn>;
             using TImplementation = typename Factory::ServiceType;
-            using TRealService = std::conditional_t<std::is_void_v<TService>, TImplementation, TService>;
-            details::Assert::factoryInheritance<TRealService, TImplementation>();
+            using TFinalService = std::conditional_t<std::is_void_v<TService>, TImplementation, TService>;
+            details::Assert::factoryInheritance<TFinalService, TImplementation>();
 
-            auto factory = std::make_unique<Factory>(std::forward<FactoryFcn>(factoryFcn));
-            return {typeid(TRealService), typeid(TImplementation), lifetime, std::move(factory),
-                    details::Cast::getCastOffset<TRealService, TImplementation>()};
+            return {typeid(TFinalService),
+                    typeid(TImplementation),
+                    std::move(serviceKey),
+                    nullptr,
+                    lifetime,
+                    std::make_unique<Factory>(std::forward<FactoryFcn>(factoryFcn)),
+                    details::Cast::getCastOffset<TFinalService, TImplementation>()};
         }
 
         /**
@@ -372,12 +411,19 @@ namespace sb::di
          * ServiceDescriptor descriptor = ServiceDescriber::describeAlias<AliasClass, ServiceClass>();
          * @endcode
          */
-        template <class TAlias, class TService> static ServiceDescriptor describeAlias()
+        template <class TAlias, class TService>
+        static ServiceDescriptor describeAlias(std::unique_ptr<std::string> serviceAliasKey = nullptr,
+                                               std::unique_ptr<std::string> serviceKey = nullptr)
         {
             details::Assert::aliasNotSame<TAlias, TService>();
             details::Assert::aliasInheritance<TAlias, TService>();
 
-            return {typeid(TAlias), typeid(TService), ServiceLifeTime::scoped(), nullptr,
+            return {typeid(TAlias),
+                    typeid(TService),
+                    std::move(serviceAliasKey),
+                    std::move(serviceKey),
+                    ServiceLifeTime::scoped(),
+                    nullptr,
                     details::Cast::getCastOffset<TAlias, TService>()};
         }
     };

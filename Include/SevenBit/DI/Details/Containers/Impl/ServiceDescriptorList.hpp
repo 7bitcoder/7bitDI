@@ -18,6 +18,7 @@ namespace sb::di::details
         if (!empty())
         {
             checkBaseType(descriptor);
+            checkKey(descriptor);
             checkAlias(descriptor);
             checkLifeTime(descriptor);
         }
@@ -33,17 +34,27 @@ namespace sb::di::details
 
     INLINE bool ServiceDescriptorList::empty() const { return _oneOrList.empty(); }
 
-    INLINE size_t ServiceDescriptorList::size() const { return _oneOrList.size(); }
+    INLINE std::size_t ServiceDescriptorList::size() const { return _oneOrList.size(); }
 
     INLINE ServiceLifeTime ServiceDescriptorList::getLifeTime() const { return first().getLifeTime(); }
 
     INLINE TypeId ServiceDescriptorList::getServiceTypeId() const { return first().getServiceTypeId(); }
+
+    INLINE const std::string *ServiceDescriptorList::getServiceKey() const { return first().getServiceKey(); }
 
     INLINE bool ServiceDescriptorList::isAlias() const { return first().isAlias(); }
 
     INLINE void ServiceDescriptorList::checkBaseType(const ServiceDescriptor &descriptor) const
     {
         if (descriptor.getServiceTypeId() != getServiceTypeId())
+        {
+            throw ServiceBaseTypeMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
+        }
+    }
+
+    INLINE void ServiceDescriptorList::checkKey(const ServiceDescriptor &descriptor) const
+    {
+        if (descriptor.getServiceKey() != getServiceKey())
         {
             throw ServiceBaseTypeMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
         }

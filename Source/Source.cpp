@@ -15,6 +15,3 @@
 #include "SevenBit/DI/Details/Utils/Impl/ExtRequire.hpp"
 #include "SevenBit/DI/Impl/Exceptions.hpp"
 #include "SevenBit/DI/Impl/ServiceCollection.hpp"
-#include "SevenBit/DI/Impl/ServiceDescriptor.hpp"
-#include "SevenBit/DI/Impl/ServiceInstance.hpp"
-#include "SevenBit/DI/Impl/ServiceProvider.hpp"

@@ -4,11 +4,12 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Utils/Cast.hpp"
 #include "SevenBit/DI/IServiceInstance.hpp"
 
 namespace sb::di
 {
-    class EXPORT ServiceInstance
+    class ServiceInstance
     {
         IServiceInstance::Ptr _implementation;
         ptrdiff_t _castOffset = 0;
@@ -24,7 +25,10 @@ namespace sb::di
         /**
          * @brief Created service instance with specified implementation and cast offset
          */
-        explicit ServiceInstance(IServiceInstance::Ptr implementation, ptrdiff_t castOffset = 0);
+        explicit ServiceInstance(IServiceInstance::Ptr implementation, const ptrdiff_t castOffset = 0)
+            : _implementation(std::move(implementation)), _castOffset(castOffset)
+        {
+        }
 
         ServiceInstance(const ServiceInstance &other) = delete;
         ServiceInstance(ServiceInstance &&other) = default;
@@ -35,52 +39,52 @@ namespace sb::di
         /**
          * @brief Try get service instance implementation
          */
-        IServiceInstance *tryGetImplementation();
+        IServiceInstance *tryGetImplementation() { return _implementation.get(); }
 
         /**
          * @brief Try get service instance implementation
          */
-        [[nodiscard]] const IServiceInstance *tryGetImplementation() const;
+        [[nodiscard]] const IServiceInstance *tryGetImplementation() const { return _implementation.get(); }
 
         /**
          * @brief Get service instance implementation
          * @details If service instance implementation is nullptr, method throws exception
          * @throws sb::di::NullPointerException
          */
-        IServiceInstance &getImplementation();
+        IServiceInstance &getImplementation() { return *_implementation; }
 
         /**
          * @brief Get service instance implementation
          * @details If service instance implementation is nullptr, method throws exception
          * @throws sb::di::NullPointerException
          */
-        [[nodiscard]] const IServiceInstance &getImplementation() const;
+        [[nodiscard]] const IServiceInstance &getImplementation() const { return *_implementation; }
 
         /**
          * @details cast offset is added to service pointer when get/release methods are used
          */
-        void addCastOffset(ptrdiff_t castOffset);
+        void addCastOffset(const ptrdiff_t castOffset) { _castOffset += castOffset; }
 
         /**
          * @details cast offset is added to service pointer when get/release methods are used
          */
-        void setCastOffset(ptrdiff_t castOffset);
+        void setCastOffset(const ptrdiff_t castOffset) { _castOffset = castOffset; }
 
         /**
          * @details cast offset is added to service pointer when get/release methods are used
          */
-        [[nodiscard]] ptrdiff_t getCastOffset() const;
+        [[nodiscard]] ptrdiff_t getCastOffset() const { return _castOffset; }
 
         /**
          * @brief Checks if service instance is valid (implementation is not nullptr and implementation is valid)
          * @details If service instance is invalid, get and move methods might lead to undefined behaviour
          */
-        [[nodiscard]] bool isValid() const;
+        [[nodiscard]] bool isValid() const { return _implementation && _implementation->isValid(); }
 
         /**
          * @brief Wrapper around isValid method
          */
-        explicit operator bool() const;
+        explicit operator bool() const { return isValid(); }
 
         /**
          * @brief Returns service pointer as T *
@@ -149,13 +153,13 @@ namespace sb::di
          * @brief Clears service instance (implemnentation is reset)
          * @details after clearing instance becomes invalid
          */
-        void clear();
+        void clear()
+        {
+            _implementation.reset();
+            _castOffset = 0;
+        }
 
       private:
-        void *applyOffset(void *ptr) const;
+        void *applyOffset(void *ptr) const { return details::Cast::applyCastOffset(ptr, _castOffset); }
     };
 } // namespace sb::di
-
-#ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Impl/ServiceInstance.hpp"
-#endif

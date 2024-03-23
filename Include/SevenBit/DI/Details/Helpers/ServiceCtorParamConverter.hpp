@@ -12,7 +12,7 @@ namespace sb::di::details
         ServiceProvider &_provider;
 
       public:
-        explicit ServiceCtorParamConverter(ServiceProvider &provider, size_t argPos) : _provider(provider) {}
+        explicit ServiceCtorParamConverter(ServiceProvider &provider, std::size_t argPos) : _provider(provider) {}
 
         template <class U, class = std::enable_if_t<!IsCopyCtorV<T, U>>> operator U()
         {

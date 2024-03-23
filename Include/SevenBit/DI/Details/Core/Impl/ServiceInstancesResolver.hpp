@@ -64,7 +64,7 @@ namespace sb::di::details
         if (const auto size = originals.size(); size > 1)
         {
             instances.reserve(size);
-            originals.forEach([&](const ServiceInstance &instance, const size_t index) {
+            originals.forEach([&](const ServiceInstance &instance, const std::size_t index) {
                 if (index) // skip first
                 {
                     instances.add(createAlias(instance));
@@ -82,7 +82,7 @@ namespace sb::di::details
         {
             instances.reserve(size);
             auto first = createAlias(originals.first());
-            originals.forEach([&](const ServiceInstance &instance, const size_t index) {
+            originals.forEach([&](const ServiceInstance &instance, const std::size_t index) {
                 if (index && index < size - 1) // skip first and last
                 {
                     instances.add(createAlias(instance));
@@ -116,7 +116,7 @@ namespace sb::di::details
         if (const auto size = _descriptors.size(); size > 1)
         {
             instances.reserve(size);
-            _descriptors.getInnerList().forEach([&](const ServiceDescriptor &descriptor, const size_t index) {
+            _descriptors.getInnerList().forEach([&](const ServiceDescriptor &descriptor, const std::size_t index) {
                 if (index) // skip first
                 {
                     instances.add(_creator.createInstance(descriptor, inPlaceRequest));
@@ -134,7 +134,7 @@ namespace sb::di::details
         {
             instances.reserve(size);
             auto first = _creator.createInstance(_descriptors.first(), inPlaceRequest);
-            _descriptors.getInnerList().forEach([&](const ServiceDescriptor &descriptor, const size_t index) {
+            _descriptors.getInnerList().forEach([&](const ServiceDescriptor &descriptor, const std::size_t index) {
                 if (index && index < size - 1) // skip first and last
                 {
                     instances.add(_creator.createInstance(descriptor, inPlaceRequest));

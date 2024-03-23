@@ -6,6 +6,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Containers/ServiceId.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
@@ -13,8 +14,8 @@ namespace sb::di::details
 {
     class EXPORT ServiceInstancesMap
     {
-        std::unordered_map<TypeId, ServiceInstanceList> _serviceListMap;
-        std::vector<TypeId> _constructionOrder;
+        std::unordered_map<ServiceId, ServiceInstanceList> _serviceListMap;
+        std::vector<ServiceId> _constructionOrder;
         const bool _strongDestructionOrder = false;
 
       public:
@@ -27,13 +28,13 @@ namespace sb::di::details
 
         ServiceInstancesMap &operator=(const ServiceInstancesMap &) = delete;
 
-        ServiceInstanceList &insert(TypeId serviceTypeId, ServiceInstance instance);
+        ServiceInstanceList &insert(ServiceId &&serviceId, ServiceInstance &&instance);
 
-        ServiceInstanceList &insert(TypeId serviceTypeId, ServiceInstanceList instances);
+        ServiceInstanceList &insert(ServiceId &&serviceId, ServiceInstanceList &&instances);
 
-        [[nodiscard]] bool contains(TypeId serviceTypeId) const;
+        [[nodiscard]] bool contains(const ServiceId &serviceId) const;
 
-        ServiceInstanceList *findInstances(TypeId serviceTypeId);
+        ServiceInstanceList *findInstances(const ServiceId &serviceId);
 
         [[nodiscard]] bool empty() const;
 
