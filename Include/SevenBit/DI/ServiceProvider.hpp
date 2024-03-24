@@ -8,6 +8,7 @@
 
 #include "SevenBit/DI/Details/Utils/ExtCheck.hpp"
 #include "SevenBit/DI/Details/Utils/ExtRequire.hpp"
+#include "SevenBit/DI/Details/Utils/Require.hpp"
 #include "SevenBit/DI/IServiceInstanceProvider.hpp"
 
 namespace sb::di

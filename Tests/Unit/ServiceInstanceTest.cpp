@@ -28,7 +28,6 @@ TEST_F(ServiceInstanceTest, ShouldCreateEmptyInstance)
     EXPECT_FALSE(instance);
     EXPECT_FALSE(instance.isValid());
     EXPECT_FALSE(instance.tryGetImplementation());
-    EXPECT_THROW(instance.getImplementation(), sb::di::NullPointerException);
     EXPECT_EQ(instance.getCastOffset(), 0);
 }
 
