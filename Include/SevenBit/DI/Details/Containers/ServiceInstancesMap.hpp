@@ -14,7 +14,7 @@ namespace sb::di::details
 {
     class EXPORT ServiceInstancesMap
     {
-        std::unordered_map<ServiceId, ServiceInstanceList> _serviceListMap;
+        std::unordered_map<ServiceId, ServiceInstanceList> _instancesMap;
         std::vector<ServiceId> _constructionOrder;
         const bool _strongDestructionOrder = false;
 
@@ -28,13 +28,13 @@ namespace sb::di::details
 
         ServiceInstancesMap &operator=(const ServiceInstancesMap &) = delete;
 
-        ServiceInstanceList &insert(ServiceId &&serviceId, ServiceInstance &&instance);
+        ServiceInstanceList &insert(ServiceId &&id, ServiceInstance &&instance);
 
-        ServiceInstanceList &insert(ServiceId &&serviceId, ServiceInstanceList &&instances);
+        ServiceInstanceList &insert(ServiceId &&id, ServiceInstanceList &&instances);
 
-        [[nodiscard]] bool contains(const ServiceId &serviceId) const;
+        [[nodiscard]] bool contains(const ServiceId &id) const;
 
-        ServiceInstanceList *findInstances(const ServiceId &serviceId);
+        ServiceInstanceList *findInstances(const ServiceId &id);
 
         [[nodiscard]] bool empty() const;
 

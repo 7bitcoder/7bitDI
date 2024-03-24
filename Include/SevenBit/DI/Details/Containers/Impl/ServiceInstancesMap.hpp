@@ -11,14 +11,14 @@ namespace sb::di::details
     {
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesMap::insert(ServiceId &&serviceId, ServiceInstance &&instance)
+    INLINE ServiceInstanceList &ServiceInstancesMap::insert(ServiceId &&id, ServiceInstance &&instance)
     {
-        return insert(std::move(serviceId), ServiceInstanceList{std::move(instance)});
+        return insert(std::move(id), ServiceInstanceList{std::move(instance)});
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesMap::insert(ServiceId &&serviceId, ServiceInstanceList &&instances)
+    INLINE ServiceInstanceList &ServiceInstancesMap::insert(ServiceId &&id, ServiceInstanceList &&instances)
     {
-        auto [it, inserted] = _serviceListMap.emplace(std::move(serviceId), std::move(instances));
+        auto [it, inserted] = _instancesMap.emplace(std::move(id), std::move(instances));
         if (inserted && _strongDestructionOrder)
         {
             _constructionOrder.push_back(it->first);
@@ -26,18 +26,18 @@ namespace sb::di::details
         return it->second;
     }
 
-    INLINE bool ServiceInstancesMap::contains(const ServiceId &serviceId) const
+    INLINE bool ServiceInstancesMap::contains(const ServiceId &id) const
     {
-        return _serviceListMap.count(serviceId);
+        return _instancesMap.count(id);
     }
 
-    INLINE ServiceInstanceList *ServiceInstancesMap::findInstances(const ServiceId &serviceId)
+    INLINE ServiceInstanceList *ServiceInstancesMap::findInstances(const ServiceId &id)
     {
-        const auto it = _serviceListMap.find(serviceId);
-        return it != _serviceListMap.end() ? &it->second : nullptr;
+        const auto it = _instancesMap.find(id);
+        return it != _instancesMap.end() ? &it->second : nullptr;
     }
 
-    INLINE bool ServiceInstancesMap::empty() const { return _serviceListMap.empty(); }
+    INLINE bool ServiceInstancesMap::empty() const { return _instancesMap.empty(); }
 
     INLINE void ServiceInstancesMap::clear()
     {
@@ -52,7 +52,7 @@ namespace sb::di::details
             }
         }
         _constructionOrder.clear();
-        _serviceListMap.clear();
+        _instancesMap.clear();
     }
 
     INLINE ServiceInstancesMap::~ServiceInstancesMap() { clear(); }

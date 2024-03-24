@@ -19,27 +19,30 @@ class ServiceExecutor final : public IServiceExecutor
 {
     Service &_serviceA;
     Service &_serviceB;
+    Service &_serviceC;
 
   public:
-    explicit ServiceExecutor(ServiceProvider &provider)
-        : _serviceA(provider.getKeyedService<Service>("serviceA")),
-          _serviceB(provider.getKeyedService<Service>("serviceB"))
+    explicit ServiceExecutor(Service &serviceA, ServiceProvider &provider)
+        : _serviceA(serviceA), _serviceB(provider.getKeyedService<Service>("serviceB")),
+          _serviceC(provider.getKeyedService<Service>("serviceC"))
     {
         assert(&_serviceA != &_serviceB);
-        assert(!provider.tryGetService<Service>());
+        assert(&_serviceB != &_serviceC);
+        assert(&_serviceA != &_serviceC);
     }
 
     [[nodiscard]] std::string execute() const override
     {
-        return _serviceA.action() + ", " + _serviceB.action() + " executed.";
+        return _serviceA.action() + ", " + _serviceB.action() + ", " + _serviceC.action() + " executed.";
     }
 };
 
 int main()
 {
     ServiceProvider provider = ServiceCollection{}
-                                   .addKeyedSingleton<Service>("serviceA")
+                                   .addSingleton<Service>()
                                    .addKeyedSingleton<Service>("serviceB")
+                                   .addKeyedSingleton<Service>("serviceC")
                                    .addScoped<IServiceExecutor, ServiceExecutor>()
                                    .buildServiceProvider();
 
