@@ -38,6 +38,17 @@ TEST_F(ServiceCollectionTest, ShouldAddServices)
         services.addTransient<TestInheritClass1, TestInheritClass5>();
 
         services.addAlias<TestInheritClass1, TestInheritClass5>();
+
+        services.addKeyedSingleton<TestClass1>("TestClass1");
+        services.addKeyedSingleton<TestInheritClass1, TestInheritClass5>("TestInheritClass1");
+
+        services.addKeyedScoped<TestClass1>("TestClass1");
+        services.addKeyedScoped<TestInheritClass1, TestInheritClass5>("TestInheritClass1");
+
+        services.addKeyedTransient<TestClass1>("TestClass1");
+        services.addKeyedTransient<TestInheritClass1, TestInheritClass5>("TestInheritClass1");
+
+        services.addKeyedAlias<TestInheritClass1, TestInheritClass5>("TestInheritClass1", "TestInheritClass5");
     };
     EXPECT_NO_THROW(act());
 }
@@ -247,6 +258,27 @@ TEST_F(ServiceCollectionTest, ShouldCheckWithContains)
     EXPECT_FALSE(services.contains<TestInheritClass5>());
 }
 
+TEST_F(ServiceCollectionTest, ShouldCheckWithContainsKeyed)
+{
+    sb::di::ServiceCollection services;
+
+    services.addKeyedSingleton<TestClass1>("TestClass1");
+    services.addKeyedSingleton<TestInheritClass1, TestInheritClass5>("TestInheritClass1");
+
+    services.addKeyedScoped<TestClass1>("TestClass1");
+    services.addKeyedScoped<TestInheritClass1, TestInheritClass5>("TestInheritClass1");
+
+    services.addKeyedTransient<TestClass1>("TestClass1");
+    services.addKeyedTransient<TestInheritClass1, TestInheritClass5>("TestInheritClass1");
+
+    services.addKeyedAlias<TestInheritClass1, TestInheritClass5>("TestInheritClass1", "TestInheritClass5");
+
+    EXPECT_TRUE(services.contains<TestClass1>());
+    EXPECT_TRUE(services.containsKeyed<TestClass1>("TestClass1"));
+    EXPECT_FALSE(services.contains<TestInheritClass5>());
+    EXPECT_FALSE(services.containsKeyed<TestClass1>("TestInheritClass5"));
+}
+
 TEST_F(ServiceCollectionTest, ShouldCheckWithContainsExact)
 {
     sb::di::ServiceCollection services;
@@ -263,6 +295,28 @@ TEST_F(ServiceCollectionTest, ShouldCheckWithContainsExact)
     EXPECT_TRUE((services.containsExact<TestClass1, TestClass1>()));
     EXPECT_TRUE((services.containsExact<TestInheritClass1, TestInheritClass5>()));
     EXPECT_FALSE((services.containsExact<TestInheritClass2, TestInheritClass5>()));
+}
+
+TEST_F(ServiceCollectionTest, ShouldCheckWithContainsKeyedExact)
+{
+    sb::di::ServiceCollection services;
+
+    services.addKeyedSingleton<TestClass1>("TestClass1");
+    services.addKeyedSingleton<TestInheritClass1, TestInheritClass5>("TestInheritClass1");
+
+    services.addKeyedScoped<TestClass1>("TestClass1");
+    services.addKeyedScoped<TestInheritClass1, TestInheritClass5>("TestInheritClass1");
+
+    services.addKeyedTransient<TestClass1>("TestClass1");
+    services.addKeyedTransient<TestInheritClass1, TestInheritClass5>("TestInheritClass1");
+
+    services.addKeyedAlias<TestInheritClass1, TestInheritClass5>("TestInheritClass1", "TestInheritClass5");
+
+    EXPECT_TRUE(services.containsExact<TestClass1>());
+    EXPECT_TRUE((services.containsKeyedExact<TestInheritClass1, TestInheritClass5>("TestInheritClass1")));
+    EXPECT_FALSE((services.containsKeyedExact<TestInheritClass1, TestInheritClass5>("TestInheritClass2")));
+    EXPECT_FALSE(services.containsExact<TestInheritClass5>());
+    EXPECT_FALSE(services.containsKeyedExact<TestClass1>("TestInheritClass5"));
 }
 
 TEST_F(ServiceCollectionTest, ShouldInsert)
@@ -377,6 +431,25 @@ TEST_F(ServiceCollectionTest, ShouldRemoveAll)
     EXPECT_EQ(services.size(), 3);
 }
 
+TEST_F(ServiceCollectionTest, ShouldRemoveAllKeyed)
+{
+    sb::di::ServiceCollection services;
+
+    services.addKeyedSingleton<TestClass1>("TestClass1");
+    services.addKeyedSingleton<TestInheritClass1, TestInheritClass5>("TestInheritClass1");
+
+    services.addKeyedScoped<TestClass1>("TestClass1");
+    services.addKeyedScoped<TestInheritClass1, TestInheritClass5>("TestInheritClass1");
+
+    services.addKeyedTransient<TestClass1>("TestClass1");
+    services.addKeyedTransient<TestInheritClass1, TestInheritClass5>("TestInheritClass1");
+
+    services.addKeyedAlias<TestInheritClass1, TestInheritClass5>("TestInheritClass1", "TestInheritClass5");
+
+    EXPECT_EQ(services.removeAllKeyed<TestInheritClass1>("TestInheritClass1"), 4);
+    EXPECT_EQ(services.size(), 3);
+}
+
 TEST_F(ServiceCollectionTest, ShouldRemoveSpecific)
 {
     sb::di::ServiceCollection services;
@@ -391,6 +464,25 @@ TEST_F(ServiceCollectionTest, ShouldRemoveSpecific)
     services.addTransient<TestInheritClass1, TestInheritClass5>();
 
     EXPECT_EQ((services.remove<TestInheritClass1, TestInheritClass5>()), 3);
+    EXPECT_EQ(services.size(), 3);
+}
+
+TEST_F(ServiceCollectionTest, ShouldRemoveKeyedSpecific)
+{
+    sb::di::ServiceCollection services;
+
+    services.addKeyedSingleton<TestClass1>("TestClass1");
+    services.addKeyedSingleton<TestInheritClass1, TestInheritClass5>("TestInheritClass1");
+
+    services.addKeyedScoped<TestClass1>("TestClass1");
+    services.addKeyedScoped<TestInheritClass1, TestInheritClass5>("TestInheritClass1");
+
+    services.addKeyedTransient<TestClass1>("TestClass1");
+    services.addKeyedTransient<TestInheritClass1, TestInheritClass5>("TestInheritClass1");
+
+    services.addKeyedAlias<TestInheritClass1, TestInheritClass5>("TestInheritClass1", "TestInheritClass5");
+
+    EXPECT_EQ((services.removeKeyed<TestInheritClass1, TestInheritClass5>("TestInheritClass1")), 4);
     EXPECT_EQ(services.size(), 3);
 }
 
@@ -473,12 +565,13 @@ TEST_F(ServiceCollectionTest, ShouldAddInheritedAliasServices)
 {
     sb::di::ServiceCollection services;
 
-    services.addAlias<TestInheritClass1, TestInheritClass5>();
-    services.addAlias<TestInheritClass1, TestInheritClass4>();
+    services.addAlias<TestInheritClass1, TestInheritClass2>();
     services.addAlias<TestInheritClass1, TestInheritClass3>();
+    services.addAlias<TestInheritClass1, TestInheritClass4>();
+    services.addAlias<TestInheritClass1, TestInheritClass5>("TestInheritClass5");
 
     EXPECT_TRUE(services.contains<TestInheritClass1>());
-    EXPECT_EQ(services.size(), 3);
+    EXPECT_EQ(services.size(), 4);
 }
 
 TEST_F(ServiceCollectionTest, ShouldAddExternalSingleton)
@@ -577,5 +670,199 @@ TEST_F(ServiceCollectionTest, ShouldAddInheritedServicesWithFactory)
     services.addTransient<TestInheritClass1>([] { return std::make_unique<TestInheritClass3>(); });
 
     EXPECT_TRUE(services.contains<TestInheritClass1>());
+    EXPECT_EQ(services.size(), 3);
+}
+
+TEST_F(ServiceCollectionTest, ShouldAddKeyedLifeTimeServices)
+{
+    sb::di::ServiceCollection services;
+
+    services.addKeyed<TestInheritClass5>(sb::di::ServiceLifeTime::scoped(), "TestInheritClass5");
+    services.addKeyed<TestInheritClass4>(sb::di::ServiceLifeTime::singleton(), "TestInheritClass4");
+    services.addKeyed<TestInheritClass3>(sb::di::ServiceLifeTime::transient(), "TestInheritClass3");
+
+    EXPECT_TRUE(services.contains<TestInheritClass5>());
+    EXPECT_TRUE(services.contains<TestInheritClass4>());
+    EXPECT_TRUE(services.contains<TestInheritClass3>());
+    EXPECT_TRUE(services.containsKeyed<TestInheritClass5>("TestInheritClass5"));
+    EXPECT_TRUE(services.containsKeyed<TestInheritClass4>("TestInheritClass4"));
+    EXPECT_TRUE(services.containsKeyed<TestInheritClass3>("TestInheritClass3"));
+    EXPECT_EQ(services.size(), 3);
+}
+
+TEST_F(ServiceCollectionTest, ShouldAddKeyedLifeTimeInheritedServices)
+{
+    sb::di::ServiceCollection services;
+
+    services.addKeyed<TestInheritClass1, TestInheritClass5>(sb::di::ServiceLifeTime::scoped(), "TestInheritClass1");
+    services.addKeyed<TestInheritClass1, TestInheritClass4>(sb::di::ServiceLifeTime::singleton(), "TestInheritClass1");
+    services.addKeyed<TestInheritClass1, TestInheritClass3>(sb::di::ServiceLifeTime::transient(), "TestInheritClass1");
+
+    EXPECT_TRUE(services.contains<TestInheritClass1>());
+    EXPECT_TRUE(services.containsKeyed<TestInheritClass1>("TestInheritClass1"));
+    EXPECT_EQ(services.size(), 3);
+}
+
+TEST_F(ServiceCollectionTest, ShouldAddKeyedBasicServices)
+{
+    sb::di::ServiceCollection services;
+
+    services.addKeyedSingleton<TestInheritClass5>("TestInheritClass5");
+    services.addKeyedScoped<TestInheritClass4>("TestInheritClass4");
+    services.addKeyedTransient<TestInheritClass3>("TestInheritClass3");
+    services.addKeyedAlias<TestInheritClass1, TestInheritClass3>("TestInheritClass1", "TestInheritClass3");
+
+    EXPECT_TRUE(services.contains<TestInheritClass1>());
+    EXPECT_TRUE(services.contains<TestInheritClass5>());
+    EXPECT_TRUE(services.contains<TestInheritClass4>());
+    EXPECT_TRUE(services.contains<TestInheritClass3>());
+    EXPECT_EQ(services.size(), 4);
+}
+
+TEST_F(ServiceCollectionTest, ShouldAddKeyedInheritedServices)
+{
+    sb::di::ServiceCollection services;
+
+    services.addKeyedSingleton<TestInheritClass1, TestInheritClass5>("TestInheritClass1");
+    services.addKeyedScoped<TestInheritClass1, TestInheritClass4>("TestInheritClass1");
+    services.addKeyedTransient<TestInheritClass1, TestInheritClass3>("TestInheritClass1");
+
+    EXPECT_TRUE(services.contains<TestInheritClass1>());
+    EXPECT_TRUE(services.containsKeyed<TestInheritClass1>("TestInheritClass1"));
+    EXPECT_EQ(services.size(), 3);
+}
+
+TEST_F(ServiceCollectionTest, ShouldAddKeyedInheritedAliasServices)
+{
+    sb::di::ServiceCollection services;
+
+    services.addKeyedAlias<TestInheritClass1, TestInheritClass5>("TestInheritClass1");
+    services.addKeyedAlias<TestInheritClass1, TestInheritClass4>("TestInheritClass1");
+    services.addKeyedAlias<TestInheritClass1, TestInheritClass3>("TestInheritClass1");
+
+    EXPECT_TRUE(services.contains<TestInheritClass1>());
+    EXPECT_TRUE(services.containsKeyed<TestInheritClass1>("TestInheritClass1"));
+    EXPECT_EQ(services.size(), 3);
+}
+
+TEST_F(ServiceCollectionTest, ShouldAddKeyedExternalSingleton)
+{
+    sb::di::ServiceCollection services;
+
+    TestInheritClass5 test;
+    services.addKeyedSingleton(&test, "TestInheritClass5");
+
+    EXPECT_TRUE(services.contains<TestInheritClass5>());
+    EXPECT_TRUE(services.containsKeyed<TestInheritClass5>("TestInheritClass5"));
+    EXPECT_EQ(services.size(), 1);
+}
+
+TEST_F(ServiceCollectionTest, ShouldAddKeyedExternalInheritedSingleton)
+{
+    sb::di::ServiceCollection services;
+
+    TestInheritClass5 test;
+    services.addKeyedSingleton<TestInheritClass1>(&test, "TestInheritClass5");
+
+    EXPECT_TRUE(services.contains<TestInheritClass1>());
+    EXPECT_TRUE(services.containsKeyed<TestInheritClass1>("TestInheritClass5"));
+    EXPECT_EQ(services.size(), 1);
+}
+
+TEST_F(ServiceCollectionTest, ShouldAddKeyedLifeTimeServicesWithFactory)
+{
+    sb::di::ServiceCollection services;
+
+    services.addKeyed(sb::di::ServiceLifeTime::scoped(), "TestInheritClass5",
+                      [] { return std::make_unique<TestInheritClass5>(); });
+    services.addKeyed(sb::di::ServiceLifeTime::singleton(), "TestInheritClass4",
+                      [] { return std::make_unique<TestInheritClass4>(); });
+    services.addKeyed(sb::di::ServiceLifeTime::transient(), "TestInheritClass3",
+                      [] { return std::make_unique<TestInheritClass3>(); });
+
+    EXPECT_TRUE(services.contains<TestInheritClass5>());
+    EXPECT_TRUE(services.contains<TestInheritClass4>());
+    EXPECT_TRUE(services.contains<TestInheritClass3>());
+    EXPECT_TRUE(services.containsKeyed<TestInheritClass5>("TestInheritClass5"));
+    EXPECT_TRUE(services.containsKeyed<TestInheritClass4>("TestInheritClass4"));
+    EXPECT_TRUE(services.containsKeyed<TestInheritClass3>("TestInheritClass3"));
+    EXPECT_EQ(services.size(), 3);
+}
+
+TEST_F(ServiceCollectionTest, ShouldAddKeyedLifeTimeInheritedServicesWithFactory)
+{
+    sb::di::ServiceCollection services;
+
+    services.addKeyed<TestInheritClass1>(sb::di::ServiceLifeTime::scoped(), "TestInheritClass1",
+                                         [] { return std::make_unique<TestInheritClass5>(); });
+    services.addKeyed<TestInheritClass1>(sb::di::ServiceLifeTime::singleton(), "TestInheritClass1",
+                                         [] { return std::make_unique<TestInheritClass4>(); });
+    services.addKeyed<TestInheritClass1>(sb::di::ServiceLifeTime::transient(), "TestInheritClass1",
+                                         [] { return std::make_unique<TestInheritClass3>(); });
+
+    EXPECT_TRUE(services.contains<TestInheritClass1>());
+    EXPECT_TRUE(services.containsKeyed<TestInheritClass1>("TestInheritClass1"));
+    EXPECT_EQ(services.size(), 3);
+}
+
+TEST_F(ServiceCollectionTest, ShouldAddKeyedBasicServicesWithFactory)
+{
+    sb::di::ServiceCollection services;
+
+    services.addKeyedSingleton("TestInheritClass5", [] { return std::make_unique<TestInheritClass5>(); });
+    services.addKeyedScoped("TestInheritClass4", [] { return std::make_unique<TestInheritClass4>(); });
+    services.addKeyedTransient("TestInheritClass3", [] { return std::make_unique<TestInheritClass3>(); });
+
+    EXPECT_TRUE(services.contains<TestInheritClass5>());
+    EXPECT_TRUE(services.contains<TestInheritClass4>());
+    EXPECT_TRUE(services.contains<TestInheritClass3>());
+    EXPECT_TRUE(services.containsKeyed<TestInheritClass5>("TestInheritClass5"));
+    EXPECT_TRUE(services.containsKeyed<TestInheritClass4>("TestInheritClass4"));
+    EXPECT_TRUE(services.containsKeyed<TestInheritClass3>("TestInheritClass3"));
+    EXPECT_EQ(services.size(), 3);
+}
+
+TEST_F(ServiceCollectionTest, ShouldAddKeyedServicesWithComplexFactory)
+{
+    sb::di::ServiceCollection services;
+
+    services.addKeyedSingleton<ITestComplexClass1>("ITestComplexClass1",
+                                                   [] { return std::make_unique<TestComplexClass1>(); });
+    services.addKeyedSingleton<ITestComplexClass2>(
+        "ITestComplexClass2", [](ITestComplexClass1 &other1) { return std::make_unique<TestComplexClass2>(&other1); });
+    services.addKeyedScoped<ITestComplexClass3>("ITestComplexClass3",
+                                                [](ITestComplexClass1 &other1, ITestComplexClass2 *other2) {
+                                                    return std::make_unique<TestComplexClass3>(&other1, other2);
+                                                });
+    services.addKeyedScoped<ITestComplexClass4>(
+        "ITestComplexClass4",
+        [](ITestComplexClass1 &other1, ITestComplexClass2 *other2, std::unique_ptr<ITestComplexClass3> other3) {
+            return std::make_unique<TestComplexClass4>(&other1, other2, std::move(other3));
+        });
+
+    EXPECT_TRUE(services.contains<ITestComplexClass1>());
+    EXPECT_TRUE(services.contains<ITestComplexClass2>());
+    EXPECT_TRUE(services.contains<ITestComplexClass3>());
+    EXPECT_TRUE(services.contains<ITestComplexClass4>());
+    EXPECT_TRUE(services.containsKeyed<ITestComplexClass1>("ITestComplexClass1"));
+    EXPECT_TRUE(services.containsKeyed<ITestComplexClass2>("ITestComplexClass2"));
+    EXPECT_TRUE(services.containsKeyed<ITestComplexClass3>("ITestComplexClass3"));
+    EXPECT_TRUE(services.containsKeyed<ITestComplexClass4>("ITestComplexClass4"));
+    EXPECT_EQ(services.size(), 4);
+}
+
+TEST_F(ServiceCollectionTest, ShouldAddKeyedInheritedServicesWithFactory)
+{
+    sb::di::ServiceCollection services;
+
+    services.addKeyedSingleton<TestInheritClass1>("TestInheritClass1",
+                                                  [] { return std::make_unique<TestInheritClass5>(); });
+    services.addKeyedScoped<TestInheritClass1>("TestInheritClass1",
+                                               [] { return std::make_unique<TestInheritClass4>(); });
+    services.addKeyedTransient<TestInheritClass1>("TestInheritClass1",
+                                                  [] { return std::make_unique<TestInheritClass3>(); });
+
+    EXPECT_TRUE(services.contains<TestInheritClass1>());
+    EXPECT_TRUE(services.containsKeyed<TestInheritClass1>("TestInheritClass1"));
     EXPECT_EQ(services.size(), 3);
 }

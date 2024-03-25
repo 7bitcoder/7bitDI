@@ -46,23 +46,24 @@ namespace sb::di::details
 
     INLINE void ServiceDescriptorList::checkBaseType(const ServiceDescriptor &descriptor) const
     {
-        if (descriptor.getServiceTypeId() != getServiceTypeId())
+        if (getServiceTypeId() != descriptor.getServiceTypeId())
         {
-            throw ServiceBaseTypeMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
+            throw InjectorException{"Service base type does not match"};
         }
     }
 
     INLINE void ServiceDescriptorList::checkKey(const ServiceDescriptor &descriptor) const
     {
-        if (descriptor.getServiceKey() != getServiceKey())
+        if (getServiceKey() != descriptor.getServiceKey() ||
+            (getServiceKey() && *getServiceKey() != *descriptor.getServiceKey()))
         {
-            throw ServiceBaseTypeMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
+            throw InjectorException{"Service key does not match"};
         }
     }
 
     INLINE void ServiceDescriptorList::checkAlias(const ServiceDescriptor &descriptor) const
     {
-        if (descriptor.isAlias() != isAlias())
+        if (isAlias() != descriptor.isAlias())
         {
             throw ServiceAliasMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId(), isAlias()};
         }
@@ -70,7 +71,7 @@ namespace sb::di::details
 
     INLINE void ServiceDescriptorList::checkLifeTime(const ServiceDescriptor &descriptor) const
     {
-        if (!isAlias() && !descriptor.isAlias() && descriptor.getLifeTime() != getLifeTime())
+        if (!isAlias() && !descriptor.isAlias() && getLifeTime() != descriptor.getLifeTime())
         {
             throw ServiceLifeTimeMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
         }

@@ -9,11 +9,6 @@
 
 namespace sb::di
 {
-    INLINE ServiceCollection::ServiceCollection(std::initializer_list<ServiceDescriptor> list)
-        : _serviceDescriptors(std::move(list))
-    {
-    }
-
     INLINE ServiceProvider ServiceCollection::buildServiceProvider(ServiceProviderOptions options)
     {
         return ServiceProvider{std::make_unique<details::ServiceInstanceProviderRoot>(begin(), end(), options)};
@@ -61,16 +56,35 @@ namespace sb::di
 
     INLINE void ServiceCollection::clear() { _serviceDescriptors.clear(); }
 
-    INLINE bool ServiceCollection::contains(TypeId serviceTypeId) const
+    INLINE bool ServiceCollection::contains(const TypeId serviceTypeId) const
     {
-        return containsIf([&](auto &descriptor) { return descriptor.getServiceTypeId() == serviceTypeId; });
+        return containsIf(
+            [&](const ServiceDescriptor &descriptor) { return descriptor.getServiceTypeId() == serviceTypeId; });
     }
 
-    INLINE bool ServiceCollection::containsExact(TypeId serviceTypeId, TypeId implementationTypeId) const
+    INLINE bool ServiceCollection::containsKeyed(const TypeId serviceTypeId, const std::string_view serviceKey) const
     {
-        return containsIf([&](auto &descriptor) {
+        return containsIf([&](const ServiceDescriptor &descriptor) {
+            return descriptor.getServiceTypeId() == serviceTypeId && descriptor.getServiceKey() &&
+                   *descriptor.getServiceKey() == serviceKey;
+        });
+    }
+
+    INLINE bool ServiceCollection::containsExact(const TypeId serviceTypeId, const TypeId implementationTypeId) const
+    {
+        return containsIf([&](const ServiceDescriptor &descriptor) {
             return descriptor.getImplementationTypeId() == implementationTypeId &&
                    descriptor.getServiceTypeId() == serviceTypeId;
+        });
+    }
+
+    INLINE bool ServiceCollection::containsKeyedExact(const TypeId serviceTypeId, const TypeId implementationTypeId,
+                                                      const std::string_view serviceKey) const
+    {
+        return containsIf([&](const ServiceDescriptor &descriptor) {
+            return descriptor.getImplementationTypeId() == implementationTypeId &&
+                   descriptor.getServiceTypeId() == serviceTypeId && descriptor.getServiceKey() &&
+                   *descriptor.getServiceKey() == serviceKey;
         });
     }
 
@@ -113,16 +127,35 @@ namespace sb::di
         return _serviceDescriptors.erase(std::move(begin), std::move(end));
     }
 
-    INLINE std::size_t ServiceCollection::removeAll(TypeId serviceTypeId)
+    INLINE std::size_t ServiceCollection::removeAll(const TypeId serviceTypeId)
     {
-        return removeIf([&](auto &descriptor) { return descriptor.getServiceTypeId() == serviceTypeId; });
+        return removeIf(
+            [&](const ServiceDescriptor &descriptor) { return descriptor.getServiceTypeId() == serviceTypeId; });
     }
 
-    INLINE std::size_t ServiceCollection::remove(TypeId serviceTypeId, TypeId implementationTypeId)
+    INLINE std::size_t ServiceCollection::removeAllKeyed(const TypeId serviceTypeId, const std::string_view serviceKey)
     {
-        return removeIf([&](auto &descriptor) {
+        return removeIf([&](const ServiceDescriptor &descriptor) {
+            return descriptor.getServiceTypeId() == serviceTypeId && descriptor.getServiceKey() &&
+                   *descriptor.getServiceKey() == serviceKey;
+        });
+    }
+
+    INLINE std::size_t ServiceCollection::remove(const TypeId serviceTypeId, const TypeId implementationTypeId)
+    {
+        return removeIf([&](const ServiceDescriptor &descriptor) {
             return descriptor.getImplementationTypeId() == implementationTypeId &&
                    descriptor.getServiceTypeId() == serviceTypeId;
+        });
+    }
+
+    INLINE std::size_t ServiceCollection::removeKeyed(const TypeId serviceTypeId, const TypeId implementationTypeId,
+                                                      const std::string_view serviceKey)
+    {
+        return removeIf([&](const ServiceDescriptor &descriptor) {
+            return descriptor.getImplementationTypeId() == implementationTypeId &&
+                   descriptor.getServiceTypeId() == serviceTypeId && descriptor.getServiceKey() &&
+                   *descriptor.getServiceKey() == serviceKey;
         });
     }
 
@@ -130,10 +163,10 @@ namespace sb::di
 
     INLINE bool operator==(const ServiceCollection &lhs, const ServiceCollection &rhs)
     {
-        return lhs.getInnerVector() == rhs.getInnerVector();
+        return lhs._serviceDescriptors == rhs._serviceDescriptors;
     }
     INLINE bool operator!=(const ServiceCollection &lhs, const ServiceCollection &rhs)
     {
-        return lhs.getInnerVector() != rhs.getInnerVector();
+        return lhs._serviceDescriptors != rhs._serviceDescriptors;
     }
 } // namespace sb::di

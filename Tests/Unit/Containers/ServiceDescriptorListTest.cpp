@@ -92,7 +92,7 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorBaseTypeMismatch
 
     auto act = [&] { list.add(sb::di::ServiceDescriber::describeScoped<TestInheritClass2, TestInheritClass5>()); };
 
-    EXPECT_THROW(act(), sb::di::ServiceBaseTypeMismatchException);
+    EXPECT_THROW(act(), sb::di::InjectorException);
 }
 
 TEST_F(ServiceDescriptorListTest, ShouldReturnProperSize)

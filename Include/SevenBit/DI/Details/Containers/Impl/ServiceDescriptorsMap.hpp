@@ -31,13 +31,13 @@ namespace sb::di::details
 
     INLINE void ServiceDescriptorsMap::addDescriptorWithCheck(ServiceDescriptor &&descriptor)
     {
-        ServiceId id{descriptor.getImplementationTypeId(), descriptor.getServiceKey()};
+        const ServiceId id{descriptor.getImplementationTypeId(), descriptor.getServiceKey()};
         if (_registeredServices->count(id))
         {
             throw ServiceAlreadyRegisteredException{descriptor.getImplementationTypeId()};
         }
         addDescriptor(std::move(descriptor));
-        _registeredServices->insert(std::move(id));
+        _registeredServices->insert(id);
     }
 
     INLINE void ServiceDescriptorsMap::addDescriptor(ServiceDescriptor &&descriptor)
@@ -49,7 +49,7 @@ namespace sb::di::details
         }
         else
         {
-            _descriptorsMap.emplace(std::move(id), std::move(descriptor));
+            _descriptorsMap.emplace(id, std::move(descriptor));
         }
     }
 

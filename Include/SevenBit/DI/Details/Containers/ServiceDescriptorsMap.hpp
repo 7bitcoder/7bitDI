@@ -7,7 +7,7 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
-#include "SevenBit/DI/Details/Containers/ServiceId.hpp"
+#include "SevenBit/DI/Details/Models/ServiceId.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 

@@ -14,7 +14,7 @@ namespace sb::di::details
     class EXPORT ServiceId
     {
         TypeId _typeId;
-        std::optional<std::string_view> _key;
+        std::optional<std::string_view> _key{};
 
       public:
         explicit ServiceId(const TypeId typeId) : _typeId(typeId) {}
@@ -29,9 +29,9 @@ namespace sb::di::details
         ServiceId &operator=(const ServiceId &) = default;
         ServiceId &operator=(ServiceId &&) noexcept = default;
 
-        const TypeId &getTypeId() const { return _typeId; }
+        [[nodiscard]] const TypeId &getTypeId() const { return _typeId; }
 
-        const std::optional<std::string_view> &getKey() const { return _key; }
+        [[nodiscard]] const std::optional<std::string_view> &getKey() const { return _key; }
     };
 
     inline bool operator==(const ServiceId &l, const ServiceId &r)

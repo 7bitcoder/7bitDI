@@ -31,9 +31,9 @@ namespace sb::di::details
         return std::make_unique<ServiceInstanceProvider>(_root, _options);
     }
 
-    INLINE const ServiceInstance &ServiceInstanceProvider::getInstance(ServiceId &&id)
+    INLINE const ServiceInstance &ServiceInstanceProvider::getInstance(const ServiceId &id)
     {
-        if (const auto instance = tryGetInstance(std::move(id)); ExtCheck::instanceValidity(instance))
+        if (const auto instance = tryGetInstance(id); ExtCheck::instanceValidity(instance))
         {
             return *instance;
         }
@@ -41,27 +41,27 @@ namespace sb::di::details
                                        "Service was not registered or was registered as transient instance"};
     }
 
-    INLINE const ServiceInstance *ServiceInstanceProvider::tryGetInstance(ServiceId &&id)
+    INLINE const ServiceInstance *ServiceInstanceProvider::tryGetInstance(const ServiceId &id)
     {
         auto instances = findRegisteredInstances(id);
         if (!instances)
         {
             if (const auto descriptors = findDescriptors(id, false))
             {
-                instances = tryRegisterAndGet(std::move(id), *descriptors, tryCreateNonTransient(*descriptors));
+                instances = tryRegisterAndGet(id, *descriptors, tryCreateNonTransient(*descriptors));
             }
         }
         return instances ? &instances->last() : nullptr;
     }
 
-    INLINE const OneOrList<ServiceInstance> *ServiceInstanceProvider::tryGetInstances(ServiceId &&id)
+    INLINE const OneOrList<ServiceInstance> *ServiceInstanceProvider::tryGetInstances(const ServiceId &id)
     {
         auto instances = findRegisteredInstances(id);
         if (!instances)
         {
             if (const auto descriptors = findDescriptors(id, false))
             {
-                instances = tryRegisterAndGet(std::move(id), *descriptors, tryCreateAllNonTransient(*descriptors));
+                instances = tryRegisterAndGet(id, *descriptors, tryCreateAllNonTransient(*descriptors));
             }
         }
         else if (!instances->isSealed())
@@ -74,9 +74,9 @@ namespace sb::di::details
         return instances ? &instances->getInnerList() : nullptr;
     }
 
-    INLINE ServiceInstance ServiceInstanceProvider::createInstance(ServiceId &&id)
+    INLINE ServiceInstance ServiceInstanceProvider::createInstance(const ServiceId &id)
     {
-        if (auto instance = tryCreateInstance(std::move(id)); ExtCheck::instanceValidity(instance))
+        if (auto instance = tryCreateInstance(id); ExtCheck::instanceValidity(instance))
         {
             return instance;
         }
@@ -84,21 +84,21 @@ namespace sb::di::details
                                        "Service was not registered or was registered as singleton/scoped instance"};
     }
 
-    INLINE ServiceInstance ServiceInstanceProvider::tryCreateInstance(ServiceId &&id)
+    INLINE ServiceInstance ServiceInstanceProvider::tryCreateInstance(const ServiceId &id)
     {
         const auto descriptors = findDescriptors(id, true);
         return descriptors ? tryCreateTransient(*descriptors) : ServiceInstance{};
     }
 
-    INLINE std::optional<OneOrList<ServiceInstance>> ServiceInstanceProvider::tryCreateInstances(ServiceId &&id)
+    INLINE std::optional<OneOrList<ServiceInstance>> ServiceInstanceProvider::tryCreateInstances(const ServiceId &id)
     {
         const auto descriptors = findDescriptors(id, true);
         return descriptors ? tryCreateAllTransient(*descriptors) : std::nullopt;
     }
 
-    INLINE ServiceInstance ServiceInstanceProvider::createInstanceInPlace(ServiceId &&id)
+    INLINE ServiceInstance ServiceInstanceProvider::createInstanceInPlace(const ServiceId &id)
     {
-        if (auto instance = tryCreateInstanceInPlace(std::move(id)); ExtCheck::instanceValidity(instance))
+        if (auto instance = tryCreateInstanceInPlace(id); ExtCheck::instanceValidity(instance))
         {
             return instance;
         }
@@ -107,7 +107,7 @@ namespace sb::di::details
                                        "registered as singleton/scoped instance"};
     }
 
-    INLINE ServiceInstance ServiceInstanceProvider::tryCreateInstanceInPlace(ServiceId &&id)
+    INLINE ServiceInstance ServiceInstanceProvider::tryCreateInstanceInPlace(const ServiceId &id)
     {
         if (const auto descriptors = findDescriptors(id, true);
             descriptors && !descriptors->isAlias() && descriptors->last().getImplementationTypeId() == id.getTypeId())
@@ -141,7 +141,7 @@ namespace sb::di::details
     }
 
     INLINE ServiceInstanceList *ServiceInstanceProvider::tryRegisterAndGet(
-        ServiceId &&id, const ServiceDescriptorList &descriptors, std::optional<ServiceInstanceList> &&instances)
+        const ServiceId &id, const ServiceDescriptorList &descriptors, std::optional<ServiceInstanceList> &&instances)
     {
         if (instances)
         {
@@ -153,7 +153,7 @@ namespace sb::di::details
                 lifeTime = _scoped.contains(originalId) ? ServiceLifeTimes::Scoped : ServiceLifeTimes::Singleton;
             }
             auto &instancesMap = lifeTime.isSingleton() ? _root.getSingletons() : _scoped;
-            return &instancesMap.insert(std::move(id), std::move(*instances));
+            return &instancesMap.insert(id, std::move(*instances));
         }
         return nullptr;
     }

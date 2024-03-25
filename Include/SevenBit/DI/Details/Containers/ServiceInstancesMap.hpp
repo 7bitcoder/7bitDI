@@ -6,8 +6,8 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Containers/ServiceId.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
+#include "SevenBit/DI/Details/Models/ServiceId.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di::details
@@ -28,9 +28,9 @@ namespace sb::di::details
 
         ServiceInstancesMap &operator=(const ServiceInstancesMap &) = delete;
 
-        ServiceInstanceList &insert(ServiceId &&id, ServiceInstance &&instance);
+        ServiceInstanceList &insert(const ServiceId &id, ServiceInstance &&instance);
 
-        ServiceInstanceList &insert(ServiceId &&id, ServiceInstanceList &&instances);
+        ServiceInstanceList &insert(const ServiceId &id, ServiceInstanceList &&instances);
 
         [[nodiscard]] bool contains(const ServiceId &id) const;
 

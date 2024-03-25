@@ -47,11 +47,11 @@ namespace sb::di
         {
         }
 
-        ServiceDescriptor(const ServiceDescriptor &other) = default;
-        ServiceDescriptor(ServiceDescriptor &&other) = default;
+        ServiceDescriptor(const ServiceDescriptor &) = default;
+        ServiceDescriptor(ServiceDescriptor &&) = default;
 
-        ServiceDescriptor &operator=(const ServiceDescriptor &other) = default;
-        ServiceDescriptor &operator=(ServiceDescriptor &&other) = default;
+        ServiceDescriptor &operator=(const ServiceDescriptor &) = default;
+        ServiceDescriptor &operator=(ServiceDescriptor &&) = default;
 
         /**
          * @brief Get the service TypeId

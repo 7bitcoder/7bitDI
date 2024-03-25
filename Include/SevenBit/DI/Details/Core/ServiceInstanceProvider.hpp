@@ -114,16 +114,16 @@ namespace sb::di::details
         }
 
       protected:
-        const ServiceInstance &getInstance(ServiceId &&id);
-        const ServiceInstance *tryGetInstance(ServiceId &&id);
-        const OneOrList<ServiceInstance> *tryGetInstances(ServiceId &&id);
+        const ServiceInstance &getInstance(const ServiceId &id);
+        const ServiceInstance *tryGetInstance(const ServiceId &id);
+        const OneOrList<ServiceInstance> *tryGetInstances(const ServiceId &id);
 
-        ServiceInstance createInstance(ServiceId &&id);
-        ServiceInstance tryCreateInstance(ServiceId &&id);
-        std::optional<OneOrList<ServiceInstance>> tryCreateInstances(ServiceId &&id);
+        ServiceInstance createInstance(const ServiceId &id);
+        ServiceInstance tryCreateInstance(const ServiceId &id);
+        std::optional<OneOrList<ServiceInstance>> tryCreateInstances(const ServiceId &id);
 
-        ServiceInstance createInstanceInPlace(ServiceId &&id);
-        ServiceInstance tryCreateInstanceInPlace(ServiceId &&id);
+        ServiceInstance createInstanceInPlace(const ServiceId &id);
+        ServiceInstance tryCreateInstanceInPlace(const ServiceId &id);
 
         void clear() { _scoped.clear(); }
 
@@ -131,7 +131,7 @@ namespace sb::di::details
 
         [[nodiscard]] const ServiceDescriptorList *findDescriptors(const ServiceId &id, bool transient) const;
 
-        ServiceInstanceList *tryRegisterAndGet(ServiceId &&id, const ServiceDescriptorList &descriptors,
+        ServiceInstanceList *tryRegisterAndGet(const ServiceId &id, const ServiceDescriptorList &descriptors,
                                                std::optional<ServiceInstanceList> &&instances);
 
         std::optional<ServiceInstanceList> tryCreateNonTransient(const ServiceDescriptorList &descriptors);

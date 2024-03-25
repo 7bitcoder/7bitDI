@@ -11,14 +11,14 @@ namespace sb::di::details
     {
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesMap::insert(ServiceId &&id, ServiceInstance &&instance)
+    INLINE ServiceInstanceList &ServiceInstancesMap::insert(const ServiceId &id, ServiceInstance &&instance)
     {
-        return insert(std::move(id), ServiceInstanceList{std::move(instance)});
+        return insert(id, ServiceInstanceList{std::move(instance)});
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesMap::insert(ServiceId &&id, ServiceInstanceList &&instances)
+    INLINE ServiceInstanceList &ServiceInstancesMap::insert(const ServiceId &id, ServiceInstanceList &&instances)
     {
-        auto [it, inserted] = _instancesMap.emplace(std::move(id), std::move(instances));
+        auto [it, inserted] = _instancesMap.emplace(id, std::move(instances));
         if (inserted && _strongDestructionOrder)
         {
             _constructionOrder.push_back(it->first);
@@ -26,10 +26,7 @@ namespace sb::di::details
         return it->second;
     }
 
-    INLINE bool ServiceInstancesMap::contains(const ServiceId &id) const
-    {
-        return _instancesMap.count(id);
-    }
+    INLINE bool ServiceInstancesMap::contains(const ServiceId &id) const { return _instancesMap.count(id); }
 
     INLINE ServiceInstanceList *ServiceInstancesMap::findInstances(const ServiceId &id)
     {
