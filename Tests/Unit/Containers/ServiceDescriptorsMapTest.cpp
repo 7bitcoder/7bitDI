@@ -26,9 +26,16 @@ TEST_F(ServiceDescriptorsMapTest, ShouldAddDescriptors)
         std::vector<sb::di::ServiceDescriptor> _descriptors;
         sb::di::details::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end()};
 
+        // todo keep descriptors in stack
         map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass3>());
         map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
         map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
+        map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass3>(
+            std::make_unique<std::string>("key")));
+        map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>(
+            std::make_unique<std::string>("key")));
+        map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>(
+            std::make_unique<std::string>("key")));
     };
 
     EXPECT_NO_THROW(act());
@@ -47,12 +54,34 @@ TEST_F(ServiceDescriptorsMapTest, ShouldCheckUniqeness)
     EXPECT_THROW(act(), sb::di::ServiceAlreadyRegisteredException);
 }
 
+TEST_F(ServiceDescriptorsMapTest, ShouldCheckUniqenessForKeyed)
+{
+    std::vector<sb::di::ServiceDescriptor> _descriptors;
+    sb::di::details::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end(), true};
+
+    map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass3>(
+        std::make_unique<std::string>("key1")));
+    map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass2, TestInheritClass3>(
+        std::make_unique<std::string>("key3")));
+    map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>(
+        std::make_unique<std::string>("key2")));
+
+    auto act = [&] {
+        map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>(
+            std::make_unique<std::string>("key1")));
+    };
+
+    EXPECT_THROW(act(), sb::di::ServiceAlreadyRegisteredException);
+}
+
 TEST_F(ServiceDescriptorsMapTest, ShouldCheckUniqenessForAlias)
 {
     std::vector<sb::di::ServiceDescriptor> _descriptors;
     sb::di::details::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end(), true};
 
     map.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass2, TestInheritClass3>());
+    map.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass2, TestInheritClass3>(
+        std::make_unique<std::string>("key")));
     map.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass4>());
 
     auto act = [&] { map.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass3>()); };

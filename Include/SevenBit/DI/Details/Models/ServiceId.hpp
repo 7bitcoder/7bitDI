@@ -32,14 +32,15 @@ namespace sb::di::details
         [[nodiscard]] const TypeId &getTypeId() const { return _typeId; }
 
         [[nodiscard]] const std::optional<std::string_view> &getKey() const { return _key; }
+
+        friend bool operator==(const ServiceId &l, const ServiceId &r)
+        {
+            return l.getTypeId() == r.getTypeId() && l.getKey() == r.getKey();
+        }
+
+        friend bool operator!=(const ServiceId &l, const ServiceId &r) { return !(l == r); }
     };
 
-    inline bool operator==(const ServiceId &l, const ServiceId &r)
-    {
-        return l.getTypeId() == r.getTypeId() && l.getKey() == r.getKey();
-    }
-
-    inline bool operator!=(const ServiceId &l, const ServiceId &r) { return !(l == r); }
 } // namespace sb::di::details
 
 template <> struct std::hash<sb::di::details::ServiceId>

@@ -95,6 +95,31 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorBaseTypeMismatch
     EXPECT_THROW(act(), sb::di::InjectorException);
 }
 
+TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorKeyMismatch)
+{
+    sb::di::details::ServiceDescriptorList list(
+        sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>(
+            std::make_unique<std::string>("key")));
+
+    auto act = [&] { list.add(sb::di::ServiceDescriber::describeScoped<TestInheritClass2, TestInheritClass5>()); };
+
+    EXPECT_THROW(act(), sb::di::InjectorException);
+}
+
+TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorWrongKeyMismatch)
+{
+    sb::di::details::ServiceDescriptorList list(
+        sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>(
+            std::make_unique<std::string>("key")));
+
+    auto act = [&] {
+        list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>(
+            std::make_unique<std::string>("wrongKey")));
+    };
+
+    EXPECT_THROW(act(), sb::di::InjectorException);
+}
+
 TEST_F(ServiceDescriptorListTest, ShouldReturnProperSize)
 {
     sb::di::details::ServiceDescriptorList list(
@@ -110,7 +135,9 @@ TEST_F(ServiceDescriptorListTest, ShouldReturnProperSize)
 
 TEST_F(ServiceDescriptorListTest, ShouldReturnEmpty)
 {
+
     sb::di::details::ServiceDescriptorList list(
+
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>());
 
     EXPECT_FALSE(list.empty());
@@ -141,6 +168,16 @@ TEST_F(ServiceDescriptorListTest, ShouldGetServiceTypeId)
     list.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
 
     EXPECT_EQ(list.getServiceTypeId(), typeid(TestInheritClass1));
+}
+
+TEST_F(ServiceDescriptorListTest, ShouldGetServiceKey)
+{
+    const sb::di::details::ServiceDescriptorList list(
+        sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>(
+            std::make_unique<std::string>("key")));
+
+    EXPECT_TRUE(list.getServiceKey());
+    EXPECT_EQ(*list.getServiceKey(), "key");
 }
 
 TEST_F(ServiceDescriptorListTest, ShouldGetFirst)

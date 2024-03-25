@@ -14,8 +14,14 @@ namespace sb::di::details
 
     INLINE void ServiceDescriptorsMap::add(ServiceDescriptor descriptor)
     {
-        return _registeredServices && !descriptor.isAlias() ? addDescriptorWithCheck(std::move(descriptor))
-                                                            : addDescriptor(std::move(descriptor));
+        if (_registeredServices && !descriptor.isAlias())
+        {
+            addDescriptorWithCheck(std::move(descriptor));
+        }
+        else
+        {
+            addDescriptor(std::move(descriptor));
+        }
     }
 
     INLINE void ServiceDescriptorsMap::seal() { _registeredServices.reset(); }
