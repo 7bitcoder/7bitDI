@@ -15,6 +15,7 @@ struct IServiceExecutor
 
     virtual ~IServiceExecutor() = default;
 };
+
 class ServiceExecutor final : public IServiceExecutor
 {
     Service &_serviceA;
@@ -22,8 +23,8 @@ class ServiceExecutor final : public IServiceExecutor
     Service &_serviceC;
 
   public:
-    explicit ServiceExecutor(Service &serviceA, ServiceProvider &provider)
-        : _serviceA(serviceA), _serviceB(provider.getKeyedService<Service>("serviceB")),
+    explicit ServiceExecutor(ServiceProvider &provider)
+        : _serviceA(provider.getService<Service>()), _serviceB(provider.getKeyedService<Service>("serviceB")),
           _serviceC(provider.getKeyedService<Service>("serviceC"))
     {
         assert(&_serviceA != &_serviceB);

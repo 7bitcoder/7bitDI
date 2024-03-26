@@ -47,29 +47,29 @@ TEST_F(ExtRequireTest, ShoulRequireValidInstance)
 
 TEST_F(ExtRequireTest, ShoulRequireTransientDescriptors)
 {
-    EXPECT_THROW(sb::di::details::ExtRequire::transientDescriptors(
-                     sb::di::details::ServiceDescriptorList{sb::di::ServiceDescriber::describeSingleton<TestClass1>()}),
-                 sb::di::InjectorException);
+    EXPECT_THROW(
+        sb::di::details::ExtRequire::transientDescriptor(sb::di::ServiceDescriber::describeSingleton<TestClass1>()),
+        sb::di::InjectorException);
 
-    EXPECT_THROW(sb::di::details::ExtRequire::transientDescriptors(
-                     sb::di::details::ServiceDescriptorList{sb::di::ServiceDescriber::describeScoped<TestClass1>()}),
-                 sb::di::InjectorException);
+    EXPECT_THROW(
+        sb::di::details::ExtRequire::transientDescriptor(sb::di::ServiceDescriber::describeScoped<TestClass1>()),
+        sb::di::InjectorException);
 
-    EXPECT_NO_THROW(sb::di::details::ExtRequire::transientDescriptors(
-        sb::di::details::ServiceDescriptorList{sb::di::ServiceDescriber::describeTransient<TestClass1>()}));
+    EXPECT_NO_THROW(
+        sb::di::details::ExtRequire::transientDescriptor(sb::di::ServiceDescriber::describeTransient<TestClass1>()));
 }
 
 TEST_F(ExtRequireTest, ShoulRequireNonTransientDescriptors)
 {
-    EXPECT_NO_THROW(sb::di::details::ExtRequire::nonTransientDescriptors(
-        sb::di::details::ServiceDescriptorList{sb::di::ServiceDescriber::describeSingleton<TestClass1>()}));
+    EXPECT_NO_THROW(
+        sb::di::details::ExtRequire::nonTransientDescriptor(sb::di::ServiceDescriber::describeSingleton<TestClass1>()));
 
-    EXPECT_NO_THROW(sb::di::details::ExtRequire::nonTransientDescriptors(
-        sb::di::details::ServiceDescriptorList{sb::di::ServiceDescriber::describeScoped<TestClass1>()}));
+    EXPECT_NO_THROW(
+        sb::di::details::ExtRequire::nonTransientDescriptor(sb::di::ServiceDescriber::describeScoped<TestClass1>()));
 
-    EXPECT_THROW(sb::di::details::ExtRequire::nonTransientDescriptors(
-                     sb::di::details::ServiceDescriptorList{sb::di::ServiceDescriber::describeTransient<TestClass1>()}),
-                 sb::di::InjectorException);
+    EXPECT_THROW(
+        sb::di::details::ExtRequire::nonTransientDescriptor(sb::di::ServiceDescriber::describeTransient<TestClass1>()),
+        sb::di::InjectorException);
 }
 
 TEST_F(ExtRequireTest, ShoulRequireAliasDescriptor)

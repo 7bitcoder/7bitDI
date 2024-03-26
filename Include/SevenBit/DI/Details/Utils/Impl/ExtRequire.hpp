@@ -37,17 +37,17 @@ namespace sb::di::details
         }
     }
 
-    INLINE void ExtRequire::transientDescriptors(const ServiceDescriptorList &descriptors)
+    INLINE void ExtRequire::transientDescriptor(const ServiceDescriptor &descriptor)
     {
-        if (!descriptors.getLifeTime().isTransient())
+        if (!descriptor.getLifeTime().isTransient())
         {
-            throw InjectorException{"Expected transient descriptors"};
+            throw InjectorException{"Expected transient descriptor"};
         }
     }
 
-    INLINE void ExtRequire::nonTransientDescriptors(const ServiceDescriptorList &descriptors)
+    INLINE void ExtRequire::nonTransientDescriptor(const ServiceDescriptor &descriptor)
     {
-        if (descriptors.getLifeTime().isTransient())
+        if (descriptor.getLifeTime().isTransient())
         {
             throw InjectorException{"Expected non transient descriptors"};
         }

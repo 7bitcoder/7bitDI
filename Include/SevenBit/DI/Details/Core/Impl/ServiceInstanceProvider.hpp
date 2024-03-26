@@ -163,7 +163,7 @@ namespace sb::di::details
     {
         if (!descriptors.isAlias())
         {
-            ExtRequire::nonTransientDescriptors(descriptors);
+            ExtRequire::nonTransientDescriptor(descriptors.first());
             return makeResolver(descriptors).createOneInstanceInPlace();
         }
         auto &last = descriptors.last();
@@ -176,7 +176,7 @@ namespace sb::di::details
     {
         if (!descriptors.isAlias())
         {
-            ExtRequire::nonTransientDescriptors(descriptors);
+            ExtRequire::nonTransientDescriptor(descriptors.first());
             return makeResolver(descriptors).createAllInstancesInPlace();
         }
         auto &last = descriptors.last();
@@ -189,7 +189,7 @@ namespace sb::di::details
     {
         if (!descriptors.isAlias())
         {
-            ExtRequire::nonTransientDescriptors(descriptors);
+            ExtRequire::nonTransientDescriptor(descriptors.first());
             return &makeResolver(descriptors).createRestInstancesInPlace(instances);
         }
         auto &last = descriptors.last();
@@ -201,7 +201,7 @@ namespace sb::di::details
     {
         if (!descriptors.isAlias())
         {
-            ExtRequire::transientDescriptors(descriptors);
+            ExtRequire::transientDescriptor(descriptors.first());
             return makeResolver(descriptors).createInstance();
         }
         auto &last = descriptors.last();
@@ -215,7 +215,7 @@ namespace sb::di::details
     {
         if (!descriptors.isAlias())
         {
-            ExtRequire::transientDescriptors(descriptors);
+            ExtRequire::transientDescriptor(descriptors.first());
             return std::move(makeResolver(descriptors).createAllInstances().getInnerList());
         }
         auto &last = descriptors.last();
