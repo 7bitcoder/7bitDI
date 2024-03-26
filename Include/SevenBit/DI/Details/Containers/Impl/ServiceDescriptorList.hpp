@@ -54,7 +54,7 @@ namespace sb::di::details
 
     INLINE void ServiceDescriptorList::checkKey(const ServiceDescriptor &descriptor) const
     {
-        if (getServiceKey() != descriptor.getServiceKey() ||
+        if (static_cast<bool>(getServiceKey()) != static_cast<bool>(descriptor.getServiceKey()) ||
             (getServiceKey() && *getServiceKey() != *descriptor.getServiceKey()))
         {
             throw InjectorException{"Service key does not match"};
