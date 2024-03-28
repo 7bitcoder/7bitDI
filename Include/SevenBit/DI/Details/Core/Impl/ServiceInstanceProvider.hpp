@@ -4,8 +4,7 @@
 
 #include "SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp"
 #include "SevenBit/DI/Details/Services/ExternalService.hpp"
-#include "SevenBit/DI/Details/Utils/ExtCheck.hpp"
-#include "SevenBit/DI/Details/Utils/ExtRequire.hpp"
+#include "SevenBit/DI/Details/Utils/RequireDescriptor.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceInstance.hpp"
 #include "SevenBit/DI/ServiceLifeTimes.hpp"
@@ -33,7 +32,7 @@ namespace sb::di::details
 
     INLINE const ServiceInstance &ServiceInstanceProvider::getInstance(const ServiceId &id)
     {
-        if (const auto instance = tryGetInstance(id); ExtCheck::instanceValidity(instance))
+        if (const auto instance = tryGetInstance(id); instance && *instance)
         {
             return *instance;
         }
@@ -76,7 +75,7 @@ namespace sb::di::details
 
     INLINE ServiceInstance ServiceInstanceProvider::createInstance(const ServiceId &id)
     {
-        if (auto instance = tryCreateInstance(id); ExtCheck::instanceValidity(instance))
+        if (auto instance = tryCreateInstance(id))
         {
             return instance;
         }
@@ -98,7 +97,7 @@ namespace sb::di::details
 
     INLINE ServiceInstance ServiceInstanceProvider::createInstanceInPlace(const ServiceId &id)
     {
-        if (auto instance = tryCreateInstanceInPlace(id); ExtCheck::instanceValidity(instance))
+        if (auto instance = tryCreateInstanceInPlace(id))
         {
             return instance;
         }
@@ -163,7 +162,7 @@ namespace sb::di::details
     {
         if (!descriptors.isAlias())
         {
-            ExtRequire::nonTransientDescriptor(descriptors.first());
+            RequireDescriptor::nonTransient(descriptors.first());
             return makeResolver(descriptors).createOneInstanceInPlace();
         }
         auto &last = descriptors.last();
@@ -176,7 +175,7 @@ namespace sb::di::details
     {
         if (!descriptors.isAlias())
         {
-            ExtRequire::nonTransientDescriptor(descriptors.first());
+            RequireDescriptor::nonTransient(descriptors.first());
             return makeResolver(descriptors).createAllInstancesInPlace();
         }
         auto &last = descriptors.last();
@@ -189,7 +188,7 @@ namespace sb::di::details
     {
         if (!descriptors.isAlias())
         {
-            ExtRequire::nonTransientDescriptor(descriptors.first());
+            RequireDescriptor::nonTransient(descriptors.first());
             return &makeResolver(descriptors).createRestInstancesInPlace(instances);
         }
         auto &last = descriptors.last();
@@ -201,7 +200,7 @@ namespace sb::di::details
     {
         if (!descriptors.isAlias())
         {
-            ExtRequire::transientDescriptor(descriptors.first());
+            RequireDescriptor::transient(descriptors.first());
             return makeResolver(descriptors).createInstance();
         }
         auto &last = descriptors.last();
@@ -215,7 +214,7 @@ namespace sb::di::details
     {
         if (!descriptors.isAlias())
         {
-            ExtRequire::transientDescriptor(descriptors.first());
+            RequireDescriptor::transient(descriptors.first());
             return std::move(makeResolver(descriptors).createAllInstances().getInnerList());
         }
         auto &last = descriptors.last();

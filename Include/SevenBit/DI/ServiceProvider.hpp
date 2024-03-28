@@ -6,9 +6,8 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Utils/ExtCheck.hpp"
-#include "SevenBit/DI/Details/Utils/ExtRequire.hpp"
 #include "SevenBit/DI/Details/Utils/Require.hpp"
+#include "SevenBit/DI/Details/Utils/RequireInstance.hpp"
 #include "SevenBit/DI/IServiceInstanceProvider.hpp"
 
 namespace sb::di
@@ -97,10 +96,10 @@ namespace sb::di
          */
         template <class TService> TService *tryGetService()
         {
-            if (const auto instance = getInstanceProvider().tryGetInstance(typeid(TService));
-                details::ExtCheck::instanceValidity(instance))
+            if (const auto instancePtr = getInstanceProvider().tryGetInstance(typeid(TService));
+                instancePtr && *instancePtr)
             {
-                return instance->getAs<TService>();
+                return instancePtr->getAs<TService>();
             }
             return nullptr;
         }
@@ -118,10 +117,10 @@ namespace sb::di
          */
         template <class TService> TService *tryGetKeyedService(const std::string_view serviceKey)
         {
-            if (const auto instance = getInstanceProvider().tryGetKeyedInstance(typeid(TService), serviceKey);
-                details::ExtCheck::instanceValidity(instance))
+            if (const auto instancePtr = getInstanceProvider().tryGetKeyedInstance(typeid(TService), serviceKey);
+                instancePtr && *instancePtr)
             {
-                return instance->getAs<TService>();
+                return instancePtr->getAs<TService>();
             }
             return nullptr;
         }
@@ -141,7 +140,7 @@ namespace sb::di
         template <class TService> TService &getService()
         {
             auto &instance = getInstanceProvider().getInstance(typeid(TService));
-            details::ExtRequire::validInstance(instance);
+            details::RequireInstance::valid(instance);
             return *instance.getAs<TService>();
         }
 
@@ -160,7 +159,7 @@ namespace sb::di
         template <class TService> TService &getKeyedService(const std::string_view serviceKey)
         {
             auto &instance = getInstanceProvider().getKeyedInstance(typeid(TService), serviceKey);
-            details::ExtRequire::validInstance(instance);
+            details::RequireInstance::valid(instance);
             return *instance.getAs<TService>();
         }
 
@@ -180,10 +179,10 @@ namespace sb::di
          */
         template <class TService> std::vector<TService *> getServices()
         {
-            if (auto instances = getInstanceProvider().tryGetInstances(typeid(TService)))
+            if (auto instancesPtr = getInstanceProvider().tryGetInstances(typeid(TService)))
             {
-                return instances->map([](const ServiceInstance &instance) {
-                    details::ExtRequire::validInstance(instance);
+                return instancesPtr->map([](const ServiceInstance &instance) {
+                    details::RequireInstance::valid(instance);
                     return instance.getAs<TService>();
                 });
             }
@@ -206,10 +205,10 @@ namespace sb::di
          */
         template <class TService> std::vector<TService *> getKeyedServices(const std::string_view serviceKey)
         {
-            if (auto instances = getInstanceProvider().tryGetKeyedInstances(typeid(TService), serviceKey))
+            if (auto instancesPtr = getInstanceProvider().tryGetKeyedInstances(typeid(TService), serviceKey))
             {
-                return instances->map([](const ServiceInstance &instance) {
-                    details::ExtRequire::validInstance(instance);
+                return instancesPtr->map([](const ServiceInstance &instance) {
+                    details::RequireInstance::valid(instance);
                     return instance.getAs<TService>();
                 });
             }
@@ -229,8 +228,7 @@ namespace sb::di
          */
         template <class TService> std::unique_ptr<TService> tryCreateService()
         {
-            if (auto instance = getInstanceProvider().tryCreateInstance(typeid(TService));
-                details::ExtCheck::instanceValidity(&instance))
+            if (auto instance = getInstanceProvider().tryCreateInstance(typeid(TService)))
             {
                 return instance.moveOutAsUniquePtr<TService>();
             }
@@ -250,8 +248,7 @@ namespace sb::di
          */
         template <class TService> std::unique_ptr<TService> tryCreateKeyedService(const std::string_view serviceKey)
         {
-            if (auto instance = getInstanceProvider().tryCreateKeyedInstance(typeid(TService), serviceKey);
-                details::ExtCheck::instanceValidity(&instance))
+            if (auto instance = getInstanceProvider().tryCreateKeyedInstance(typeid(TService), serviceKey))
             {
                 return instance.moveOutAsUniquePtr<TService>();
             }
@@ -273,7 +270,7 @@ namespace sb::di
         template <class TService> std::unique_ptr<TService> createService()
         {
             auto instance = getInstanceProvider().createInstance(typeid(TService));
-            details::ExtRequire::validInstance(instance);
+            details::RequireInstance::valid(instance);
             return instance.moveOutAsUniquePtr<TService>();
         }
 
@@ -292,7 +289,7 @@ namespace sb::di
         template <class TService> std::unique_ptr<TService> createKeyedService(const std::string_view serviceKey)
         {
             auto instance = getInstanceProvider().createKeyedInstance(typeid(TService), serviceKey);
-            details::ExtRequire::validInstance(instance);
+            details::RequireInstance::valid(instance);
             return instance.moveOutAsUniquePtr<TService>();
         }
 
@@ -311,7 +308,7 @@ namespace sb::di
         template <class TService> TService createServiceInPlace()
         {
             auto instance = getInstanceProvider().createInstanceInPlace(typeid(TService));
-            details::ExtRequire::validInstance(instance);
+            details::RequireInstance::valid(instance);
             if constexpr (std::is_move_constructible_v<TService>)
             {
                 return instance.moveOutAs<TService>();
@@ -337,7 +334,7 @@ namespace sb::di
         template <class TService> TService createKeyedServiceInPlace(const std::string_view serviceKey)
         {
             auto instance = getInstanceProvider().createKeyedInstanceInPlace(typeid(TService), serviceKey);
-            details::ExtRequire::validInstance(instance);
+            details::RequireInstance::valid(instance);
             if constexpr (std::is_move_constructible_v<TService>)
             {
                 return instance.moveOutAs<TService>();
@@ -364,10 +361,10 @@ namespace sb::di
          */
         template <class TService> std::vector<std::unique_ptr<TService>> createServices()
         {
-            if (auto instances = getInstanceProvider().tryCreateInstances(typeid(TService)))
+            if (auto optInstances = getInstanceProvider().tryCreateInstances(typeid(TService)))
             {
-                return instances->map([&](ServiceInstance &instance) {
-                    details::ExtRequire::validInstance(instance);
+                return optInstances->map([&](ServiceInstance &instance) {
+                    details::RequireInstance::valid(instance);
                     return instance.moveOutAsUniquePtr<TService>();
                 });
             }
@@ -391,10 +388,10 @@ namespace sb::di
         template <class TService>
         std::vector<std::unique_ptr<TService>> createKeyedServices(const std::string_view serviceKey)
         {
-            if (auto instances = getInstanceProvider().tryCreateKeyedInstances(typeid(TService), serviceKey))
+            if (auto optInstances = getInstanceProvider().tryCreateKeyedInstances(typeid(TService), serviceKey))
             {
-                return instances->map([&](ServiceInstance &instance) {
-                    details::ExtRequire::validInstance(instance);
+                return optInstances->map([&](ServiceInstance &instance) {
+                    details::RequireInstance::valid(instance);
                     return instance.moveOutAsUniquePtr<TService>();
                 });
             }

@@ -425,15 +425,11 @@ namespace sb::di
 
         /**
          * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - given lifetime,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - typeid(TImplementation),
-         * factory - default factory using TImplementation constructor
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
          * @see Constructor requirements
+         * @param lifeTime service life time Singleton Scoped or Transient
          *
          * Example:
          * @code{.cpp}
@@ -448,18 +444,13 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - given lifetime,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - typeid(TImplementation),
-         * factory - default factory using TImplementation constructor
+         * @brief Adds keyed service descriptor
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
-         * @param lifeTime service life time Singleton Scoped or Transient
-         * @param serviceKey service key can be empty to retreive default service
          * @see Constructor requirements
+         * @param lifeTime service life time Singleton Scoped or Transient
+         * @param serviceKey service key can be empty to describe default service
          *
          * Example:
          * @code{.cpp}
@@ -475,12 +466,7 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - singleton,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - typeid(TImplementation),
-         * factory - default factory using TImplementation constructor
+         * @brief Adds singleton service descriptor
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
@@ -498,17 +484,12 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - singleton,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - typeid(TImplementation),
-         * factory - default factory using TImplementation constructor
+         * @brief Adds keyed singleton service descriptor
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
-         * @param serviceKey service key can be empty to retreive default service
          * @see Constructor requirements
+         * @param serviceKey service key can be empty to describe default service
          *
          * Example:
          * @code{.cpp}
@@ -524,12 +505,7 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - scoped,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - typeid(TImplementation),
-         * factory - default factory using TImplementation constructor
+         * @brief Adds scoped service descriptor
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
@@ -547,17 +523,12 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - scoped,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - typeid(TImplementation),
-         * factory - default factory using TImplementation constructor
+         * @brief Adds keyed scoped service descriptor
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
-         * @param serviceKey service key can be empty to retreive default service
          * @see Constructor requirements
+         * @param serviceKey service key can be empty to describe default service
          *
          * Example:
          * @code{.cpp}
@@ -573,12 +544,7 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - transient,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - typeid(TImplementation),
-         * factory - default factory using TImplementation constructor
+         * @brief Adds transient service descriptor
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
@@ -596,22 +562,17 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - transient,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - typeid(TImplementation),
-         * factory - default factory using TImplementation constructor
+         * @brief Adds keyed transient service descriptor
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
-         * @param serviceKey service key can be empty to retreive default service
          * @see Constructor requirements
+         * @param serviceKey service key can be empty to describe default service
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addTransient<TestClass>();
-         * ServiceCollection{}.addTransient<BaseClass, ImplementationClass>();
+         * ServiceCollection{}.addTransient<TestClass>("key");
+         * ServiceCollection{}.addTransient<BaseClass, ImplementationClass>("key");
          * @endcode
          */
         template <class TService, class TImplementation = TService>
@@ -622,13 +583,9 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - singleton,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - typeid(TService),
-         * factory - factory with external service pointer
+         * @brief Adds singleton service descriptor
          * @tparam TService service type
+         * @param service external service pointer
          *
          * Example:
          * @code{.cpp}
@@ -642,39 +599,29 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - singleton,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - typeid(TService),
-         * factory - factory with external service pointer
+         * @brief Adds keyed singleton service descriptor
          * @tparam TService service type
+         * @param serviceKey service key can be empty to describe default service
          * @param service external service pointer
-         * @param serviceKey service key can be empty to retreive default service
          *
          * Example:
          * @code{.cpp}
          * TestClass test;
-         * ServiceCollection{}.addSingleton(&test);
+         * ServiceCollection{}.addSingleton("key", &test);
          * @endcode
          */
-        template <class TService> ServiceCollection &addKeyedSingleton(TService *service, std::string serviceKey)
+        template <class TService> ServiceCollection &addKeyedSingleton(std::string serviceKey, TService *service)
         {
             return add(ServiceDescriber::describeSingleton<TService, TService>(
                 service, std::make_unique<std::string>(std::move(serviceKey))));
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - singleton,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - typeid(TImplementation),
-         * factory - factory with external service pointer
+         * @brief Adds singleton service descriptor
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService
-         * @param service external service pointer
          * @see Constructor requirements
+         * @param service external service pointer
          *
          * Example:
          * @code{.cpp}
@@ -688,26 +635,21 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - singleton,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - typeid(TImplementation),
-         * factory - factory with external service pointer
+         * @brief Adds keyed singleton service descriptor
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService
-         * @param service external service pointer
-         * @param serviceKey service key can be empty to retreive default service
          * @see Constructor requirements
+         * @param serviceKey service key can be empty to describe default service
+         * @param service external service pointer
          *
          * Example:
          * @code{.cpp}
          * ImplementationClass implementation;
-         * ServiceCollection{}.addSingleton<BaseClass>(&implementation);
+         * ServiceCollection{}.addSingleton<BaseClass>("key", &implementation);
          * @endcode
          */
         template <class TService, class TImplementation>
-        ServiceCollection &addKeyedSingleton(TImplementation *service, std::string serviceKey)
+        ServiceCollection &addKeyedSingleton(std::string serviceKey, TImplementation *service)
         {
             return add(ServiceDescriber::describeSingleton<TService, TImplementation>(
                 service, std::make_unique<std::string>(std::move(serviceKey))));
@@ -715,17 +657,12 @@ namespace sb::di
 
         /**
          * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - singleton,
-         * serviceTypeId - given service lifetime,
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * @tparam FactoryFcn factory functor type
          * @param lifeTime service life time Singleton Scoped or Transient
-         * @param factory service factory functor
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
          *
          * Example:
          * @code{.cpp}
@@ -740,20 +677,18 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - singleton,
-         * serviceTypeId - given service lifetime,
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
+         * @brief Adds keyed service descriptor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * @tparam FactoryFcn factory functor type
+         * @param lifeTime service life time Singleton Scoped or Transient
+         * @param serviceKey service key can be empty to describe default service
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.add<BaseClass>(ServiceLifeTimes::Scoped,
+         * ServiceCollection{}.add<BaseClass>(ServiceLifeTimes::Scoped, "key",
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
@@ -765,16 +700,12 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - singleton,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
+         * @brief Adds singleton service descriptor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * @tparam FactoryFcn factory functor type
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
          *
          * Example:
          * @code{.cpp}
@@ -787,20 +718,17 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - singleton,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
+         * @brief Adds keyed singleton service descriptor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * @tparam FactoryFcn factory functor type
+         * @param serviceKey service key can be empty to describe default service
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addSingleton<BaseClass>([]() { return std::make_unique<ImplementationClass>(); });
+         * ServiceCollection{}.addSingleton<BaseClass>("key", []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
         template <class TService, class FactoryFcn>
@@ -811,16 +739,12 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - scoped,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
+         * @brief Adds scoped service descriptor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * @tparam FactoryFcn factory functor type
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
          *
          * Example:
          * @code{.cpp}
@@ -833,20 +757,17 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - scoped,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
+         * @brief Adds keyed scoped service descriptor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * @tparam FactoryFcn factory functor type
+         * @param serviceKey service key can be empty to describe default service
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addScoped<BaseClass>([]() { return std::make_unique<ImplementationClass>(); });
+         * ServiceCollection{}.addScoped<BaseClass>("key", []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
         template <class TService, class FactoryFcn>
@@ -857,16 +778,12 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - transient,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
+         * @brief Adds transient service descriptor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * @tparam FactoryFcn factory functor type
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
          *
          * Example:
          * @code{.cpp}
@@ -879,20 +796,17 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - transient,
-         * serviceTypeId - typeid(TService),
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
+         * @brief Adds keyed transient service descriptor
          * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * @tparam FactoryFcn factory functor type
+         * @param serviceKey service key can be empty to describe default service
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addTransient<BaseClass>([]() { return std::make_unique<ImplementationClass>(); });
+         * ServiceCollection{}.addTransient<BaseClass>("key", []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
         template <class TService, class FactoryFcn>
@@ -904,14 +818,11 @@ namespace sb::di
 
         /**
          * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - given service lifetime,
-         * serviceTypeId - extracted from factory return type,
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * @tparam FactoryFcn factory functor type
+         * @param lifeTime service life time Singleton Scoped or Transient
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
          *
          * Example:
          * @code{.cpp}
@@ -924,19 +835,17 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - given service lifetime,
-         * serviceTypeId - extracted from factory return type,
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * @brief Adds keyed service descriptor
+         * @tparam FactoryFcn factory functor type
+         * @param lifeTime service life time Singleton Scoped or Transient
+         * @param serviceKey service key can be empty to describe default service
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.add(ServiceLifeTimes::Transient, []() { return std::make_unique<TestClass>(); });
+         * ServiceCollection{}.add(ServiceLifeTimes::Transient, "key", []() { return std::make_unique<TestClass>(); });
          * @endcode
          */
         template <class FactoryFcn>
@@ -947,15 +856,11 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - singleton,
-         * serviceTypeId - extracted from factory return type,
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * @brief Adds singleton service descriptor
+         * @tparam FactoryFcn factory functor type
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
          *
          * Example:
          * @code{.cpp}
@@ -968,19 +873,16 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - singleton,
-         * serviceTypeId - extracted from factory return type,
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * @brief Adds keyed singleton service descriptor
+         * @tparam FactoryFcn factory functor type
+         * @param serviceKey service key can be empty to describe default service
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addSingleton([]() { return std::make_unique<TestClass>(); });
+         * ServiceCollection{}.addSingleton("key", []() { return std::make_unique<TestClass>(); });
          * @endcode
          */
         template <class FactoryFcn> ServiceCollection &addKeyedSingleton(std::string serviceKey, FactoryFcn factory)
@@ -990,15 +892,11 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - scoped,
-         * serviceTypeId - extracted from factory return type,
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * @brief Adds scoped service descriptor
+         * @tparam FactoryFcn factory functor type
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
          *
          * Example:
          * @code{.cpp}
@@ -1011,19 +909,16 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - scoped,
-         * serviceTypeId - extracted from factory return type,
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * @brief Adds keyed scoped service descriptor
+         * @tparam FactoryFcn factory functor type
+         * @param serviceKey service key can be empty to describe default service
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addScoped([]() { return std::make_unique<TestClass>(); });
+         * ServiceCollection{}.addScoped("key", []() { return std::make_unique<TestClass>(); });
          * @endcode
          */
         template <class FactoryFcn> ServiceCollection &addKeyedScoped(std::string serviceKey, FactoryFcn factory)
@@ -1033,15 +928,11 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - transient,
-         * serviceTypeId - extracted from factory return type,
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * @brief Adds transient service descriptor
+         * @tparam FactoryFcn factory functor type
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
          *
          * Example:
          * @code{.cpp}
@@ -1054,19 +945,16 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - transient,
-         * serviceTypeId - extracted from factory return type,
-         * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * @brief Adds keyed transient service descriptor
+         * @tparam FactoryFcn factory functor type
+         * @param serviceKey service key can be empty to describe default service
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addTransient([]() { return std::make_unique<TestClass>(); });
+         * ServiceCollection{}.addTransient("key", []() { return std::make_unique<TestClass>(); });
          * @endcode
          */
         template <class FactoryFcn> ServiceCollection &addKeyedTransient(std::string serviceKey, FactoryFcn factory)
@@ -1076,14 +964,9 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - scoped,
-         * serviceTypeId - typeid(TAlias),
-         * implementationTypeId - typeid(TService),
-         * factory - nullptr
+         * @brief Adds alias service descriptor
          * @tparam TAlias base service type - alias type
-         * @tparam TService service type must inherit from TService
+         * @tparam TService service type must inherit from TAlias
          *
          * Example:
          * @code{.cpp}
@@ -1096,18 +979,14 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - scoped,
-         * serviceTypeId - typeid(TAlias),
-         * implementationTypeId - typeid(TService),
-         * factory - nullptr
+         * @brief Adds alias service descriptor
          * @tparam TAlias base service type - alias type
-         * @tparam TService service type must inherit from TService
+         * @tparam TService service type must inherit from TAlias
+         * @param serviceKey service key can be empty for default service
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addAlias<AliasClass, ServiceClass>();
+         * ServiceCollection{}.addAlias<AliasClass, ServiceClass>("key");
          * @endcode
          */
         template <class TAlias, class TService> ServiceCollection &addAlias(std::string serviceKey)
@@ -1117,18 +996,15 @@ namespace sb::di
         }
 
         /**
-         * @brief Adds service descriptor
-         * @details Adds service descriptor with:
-         * lifetime - scoped,
-         * serviceTypeId - typeid(TAlias),
-         * implementationTypeId - typeid(TService),
-         * factory - nullptr
+         * @brief Adds keyed alias service descriptor
          * @tparam TAlias base service type - alias type
-         * @tparam TService service type must inherit from TService
+         * @tparam TService service type must inherit from TAlias
+         * @param serviceAliasKey alias service key can be empty to describe default alias service
+         * @param serviceKey service key can be empty for default service
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addAlias<AliasClass, ServiceClass>();
+         * ServiceCollection{}.addAlias<AliasClass, ServiceClass>("aliasKey", "key");
          * @endcode
          */
         template <class TAlias, class TService>
@@ -1139,6 +1015,17 @@ namespace sb::di
                 std::make_unique<std::string>(std::move(serviceKey))));
         }
 
+        /**
+         * @brief Adds keyed alias service descriptor
+         * @tparam TAlias base service type - alias type
+         * @tparam TService service type must inherit from TAlias
+         * @param serviceAliasKey alias service key can be empty to describe default alias service
+         *
+         * Example:
+         * @code{.cpp}
+         * ServiceCollection{}.addAlias<AliasClass, ServiceClass>("aliasKey");
+         * @endcode
+         */
         template <class TAlias, class TService> ServiceCollection &addKeyedAlias(std::string serviceAliasKey)
         {
             return add(ServiceDescriber::describeAlias<TAlias, TService>(

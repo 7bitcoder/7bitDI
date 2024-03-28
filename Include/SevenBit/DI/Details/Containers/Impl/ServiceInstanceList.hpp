@@ -3,20 +3,20 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
-#include "SevenBit/DI/Details/Utils/ExtRequire.hpp"
+#include "SevenBit/DI/Details/Utils/RequireInstance.hpp"
 
 namespace sb::di::details
 {
     INLINE ServiceInstanceList::ServiceInstanceList(const std::size_t size) : _oneOrList(size) {}
 
     INLINE ServiceInstanceList::ServiceInstanceList(ServiceInstance instance)
-        : _oneOrList(ExtRequire::validInstanceAndGet(std::move(instance)))
+        : _oneOrList(RequireInstance::validAndGet(std::move(instance)))
     {
     }
 
     INLINE void ServiceInstanceList::add(ServiceInstance &&instance)
     {
-        _oneOrList.add(ExtRequire::validInstanceAndGet(std::move(instance)));
+        _oneOrList.add(RequireInstance::validAndGet(std::move(instance)));
     }
 
     INLINE OneOrList<ServiceInstance> &ServiceInstanceList::getInnerList() { return _oneOrList; }

@@ -23,10 +23,14 @@ namespace sb::di
          * lifetime - singleton,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
-         * factory - default factory using TImplementation constructor
+         * serviceKey - service key passed,
+         * implementationKey - nullptr,
+         * factory - default factory using TImplementation constructor,
+         * castOffset - cast offset between TImplementation and TService in bytes,
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService and must have one constructor
          * @see Constructor requirements
+         * @param serviceKey service key can be empty or nullptr to describe default service
          *
          * Example:
          * @code{.cpp}
@@ -46,10 +50,14 @@ namespace sb::di
          * lifetime - scoped,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
-         * factory - default factory using TImplementation constructor
+         * serviceKey - service key passed,
+         * implementationKey - nullptr,
+         * factory - default factory using TImplementation constructor,
+         * castOffset - cast offset between TImplementation and TService in bytes,
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService and must have one constructor
          * @see Constructor requirements
+         * @param serviceKey service key can be empty or nullptr to describe default service
          *
          * Example:
          * @code{.cpp}
@@ -69,10 +77,14 @@ namespace sb::di
          * lifetime - transient,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
-         * factory - default factory using TImplementation constructor
+         * serviceKey - service key passed,
+         * implementationKey - nullptr,
+         * factory - default factory using TImplementation constructor,
+         * castOffset - cast offset between TImplementation and TService in bytes,
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService and must have one constructor
          * @see Constructor requirements
+         * @param serviceKey service key can be empty or nullptr to describe default service
          *
          * Example:
          * @code{.cpp}
@@ -92,11 +104,16 @@ namespace sb::di
          * lifetime - given lifetime,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
-         * factory - default factory using TImplementation constructor
+         * serviceKey - service key passed,
+         * implementationKey - nullptr,
+         * factory - default factory using TImplementation constructor,
+         * castOffset - cast offset between TImplementation and TService in bytes,
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
          * @see Constructor requirements
+         * @param lifeTime service life time Singleton Scoped or Transient
+         * @param serviceKey service key can be empty or nullptr to describe default service
          *
          * Example:
          * @code{.cpp}
@@ -106,7 +123,7 @@ namespace sb::di
          * @endcode
          */
         template <class TService, class TImplementation = TService>
-        static ServiceDescriptor describe(const ServiceLifeTime lifetime,
+        static ServiceDescriptor describe(const ServiceLifeTime lifeTime,
                                           std::unique_ptr<std::string> serviceKey = nullptr)
         {
             details::Assert::inheritance<TService, TImplementation>();
@@ -115,7 +132,7 @@ namespace sb::di
                     typeid(TImplementation),
                     std::move(serviceKey),
                     nullptr,
-                    lifetime,
+                    lifeTime,
                     std::make_unique<details::ServiceFactory<TImplementation>>(),
                     details::Cast::getCastOffset<TService, TImplementation>()};
         }
@@ -126,9 +143,14 @@ namespace sb::di
          * lifetime - singleton,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
-         * factory - factory with external service pointer
+         * serviceKey - service key passed,
+         * implementationKey - nullptr,
+         * factory - factory with external service pointer,
+         * castOffset - cast offset between TImplementation and TService in bytes,
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService
+         * @param serviceKey service key can be empty or nullptr to describe default service
+         * @param service external service pointer
          *
          * Example:
          * @code{.cpp}
@@ -153,9 +175,14 @@ namespace sb::di
          * lifetime - singleton,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - typeid(TImplementation),
-         * factory - factory with external service pointer
+         * serviceKey - service key passed,
+         * implementationKey - nullptr,
+         * factory - factory with external service pointer,
+         * castOffset - cast offset between TImplementation and TService in bytes,
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService
+         * @param serviceKey service key can be empty or nullptr to describe default service
+         * @param service external service pointer
          *
          * Example:
          * @code{.cpp}
@@ -188,10 +215,15 @@ namespace sb::di
          * lifetime - singleton,
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * serviceKey - service key passed,
+         * implementationKey - nullptr,
+         * factory - default factory using FactoryFcn factory functor,
+         * castOffset - cast offset between TImplementation and TService in bytes
+         * @tparam FactoryFcn factory functor type
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
+         * @param serviceKey service key can be empty or nullptr to describe default service
          *
          * Example:
          * @code{.cpp}
@@ -213,10 +245,15 @@ namespace sb::di
          * lifetime - scoped,
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * serviceKey - service key passed,
+         * implementationKey - nullptr,
+         * factory - default factory using FactoryFcn factory functor,
+         * castOffset - cast offset between TImplementation and TService in bytes
+         * @tparam FactoryFcn factory functor type
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
+         * @param serviceKey service key can be empty or nullptr to describe default service
          *
          * Example:
          * @code{.cpp}
@@ -238,10 +275,15 @@ namespace sb::di
          * lifetime - transient,
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * serviceKey - service key passed,
+         * implementationKey - nullptr,
+         * factory - default factory using FactoryFcn factory functor,
+         * castOffset - cast offset between TImplementation and TService in bytes
+         * @tparam FactoryFcn factory functor type
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
+         * @param serviceKey service key can be empty or nullptr to describe default service
          *
          * Example:
          * @code{.cpp}
@@ -263,10 +305,16 @@ namespace sb::di
          * lifetime - given service lifetime,
          * serviceTypeId - extracted from factory return type,
          * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers
+         * serviceKey - service key passed,
+         * implementationKey - nullptr,
+         * factory - default factory using FactoryFcn factory functor,
+         * castOffset - cast offset between TImplementation and TService in bytes
+         * @tparam FactoryFcn factory functor type
+         * @param lifeTime service life time Singleton Scoped or Transient
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
+         * @param serviceKey service key can be empty or nullptr to describe default service
          *
          * Example:
          * @code{.cpp}
@@ -275,11 +323,10 @@ namespace sb::di
          * @endcode
          */
         template <class FactoryFcn>
-        static ServiceDescriptor describeFrom(const ServiceLifeTime lifetime, FactoryFcn &&factoryFcn,
+        static ServiceDescriptor describeFrom(const ServiceLifeTime lifeTime, FactoryFcn &&factory,
                                               std::unique_ptr<std::string> serviceKey = nullptr)
         {
-            return describeFrom<void, FactoryFcn>(lifetime, std::forward<FactoryFcn>(factoryFcn),
-                                                  std::move(serviceKey));
+            return describeFrom<void, FactoryFcn>(lifeTime, std::forward<FactoryFcn>(factory), std::move(serviceKey));
         }
 
         /**
@@ -288,11 +335,15 @@ namespace sb::di
          * lifetime - singleton,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers, implementation type must inherit from TService
+         * serviceKey - service key passed,
+         * implementationKey - nullptr,
+         * factory - default factory using FactoryFcn factory functor,
+         * castOffset - cast offset between TImplementation and TService in bytes
+         * @tparam FactoryFcn factory functor type
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
+         * @param serviceKey service key can be empty or nullptr to describe default service
          *
          * Example:
          * @code{.cpp}
@@ -314,11 +365,15 @@ namespace sb::di
          * lifetime - scoped,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers, implementation type must inherit from TService
+         * serviceKey - service key passed,
+         * implementationKey - nullptr,
+         * factory - default factory using FactoryFcn factory functor,
+         * castOffset - cast offset between TImplementation and TService in bytes
+         * @tparam FactoryFcn factory functor type
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
+         * @param serviceKey service key can be empty or nullptr to describe default service
          *
          * Example:
          * @code{.cpp}
@@ -340,11 +395,15 @@ namespace sb::di
          * lifetime - transient,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers, implementation type must inherit from TService
+         * serviceKey - service key passed,
+         * implementationKey - nullptr,
+         * factory - default factory using FactoryFcn factory functor,
+         * castOffset - cast offset between TImplementation and TService in bytes
+         * @tparam FactoryFcn factory functor type
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
+         * @param serviceKey service key can be empty or nullptr to describe default service
          *
          * Example:
          * @code{.cpp}
@@ -366,11 +425,16 @@ namespace sb::di
          * lifetime - given service lifetime,
          * serviceTypeId - typeid(TService),
          * implementationTypeId - extracted from factory return type,
-         * factory - default factory using FactoryFcn factory functor
-         * @tparam TService base service type
-         * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
-         * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
-         * vectors with pointers or unique pointers, implementation type must inherit from TService
+         * serviceKey - service key passed,
+         * implementationKey - nullptr,
+         * factory - default factory using FactoryFcn factory functor,
+         * castOffset - cast offset between TImplementation and TService in bytes
+         * @tparam FactoryFcn factory functor type
+         * @param lifeTime service life time Singleton Scoped or Transient
+         * @param factory service factory functor with this scheme: (Services...) -> std::unique_ptr<TImplementation> |
+         * TImplementation, where services are pointers, unique pointers, references, vectors with pointers or unique
+         * pointers
+         * @param serviceKey service key can be empty or nullptr to describe default service
          *
          * Example:
          * @code{.cpp}
@@ -379,7 +443,7 @@ namespace sb::di
          * @endcode
          */
         template <class TService, class FactoryFcn>
-        static ServiceDescriptor describeFrom(const ServiceLifeTime lifetime, FactoryFcn &&factoryFcn,
+        static ServiceDescriptor describeFrom(const ServiceLifeTime lifeTime, FactoryFcn &&factory,
                                               std::unique_ptr<std::string> serviceKey = nullptr)
         {
             using Factory = details::ServiceFcnFactory<FactoryFcn>;
@@ -391,20 +455,25 @@ namespace sb::di
                     typeid(TImplementation),
                     std::move(serviceKey),
                     nullptr,
-                    lifetime,
-                    std::make_unique<Factory>(std::forward<FactoryFcn>(factoryFcn)),
+                    lifeTime,
+                    std::make_unique<Factory>(std::forward<FactoryFcn>(factory)),
                     details::Cast::getCastOffset<TFinalService, TImplementation>()};
         }
 
         /**
          * @brief Creates service descriptor
          * @details Creates service descriptor with:
-         * lifetime - scoped,
+         * lifetime - singleton,
          * serviceTypeId - typeid(TAlias),
          * implementationTypeId - typeid(TService),
-         * factory - nullptr
+         * serviceKey - service alias key passed,
+         * implementationKey - service key passed,
+         * factory - default factory using FactoryFcn factory functor,
+         * castOffset - cast offset between TImplementation and TService in bytes
          * @tparam TAlias base service type - alias type
          * @tparam TService service type must inherit from TService
+         * @param serviceAliasKey alias service key can be empty to describe default alias service
+         * @param serviceKey service key can be empty or nullptr to describe default service
          *
          * Example:
          * @code{.cpp}

@@ -750,7 +750,7 @@ TEST_F(ServiceCollectionTest, ShouldAddKeyedExternalSingleton)
     sb::di::ServiceCollection services;
 
     TestInheritClass5 test;
-    services.addKeyedSingleton(&test, "TestInheritClass5");
+    services.addKeyedSingleton("TestInheritClass5", &test);
 
     EXPECT_TRUE(services.contains<TestInheritClass5>());
     EXPECT_TRUE(services.containsKeyed<TestInheritClass5>("TestInheritClass5"));
@@ -762,7 +762,7 @@ TEST_F(ServiceCollectionTest, ShouldAddKeyedExternalInheritedSingleton)
     sb::di::ServiceCollection services;
 
     TestInheritClass5 test;
-    services.addKeyedSingleton<TestInheritClass1>(&test, "TestInheritClass5");
+    services.addKeyedSingleton<TestInheritClass1>("TestInheritClass5", &test);
 
     EXPECT_TRUE(services.contains<TestInheritClass1>());
     EXPECT_TRUE(services.containsKeyed<TestInheritClass1>("TestInheritClass5"));

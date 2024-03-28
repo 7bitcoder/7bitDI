@@ -28,8 +28,8 @@ namespace sb::di
          * @brief Construct a new service descriptor object
          * @param serviceTypeId - service type identifier
          * @param implementationTypeId - service implementation type identifier, type must inhetit from service type
-         * @param serviceKey - service type identifier
-         * @param implementationKey - service type identifier
+         * @param serviceKey - service key
+         * @param implementationKey - service implementation key
          * @param lifeTime - service life time: Singleton, Scoped or Transient
          * @param implementationFactory - service implementation factory, can be nullptr in that case describer is
          * treated as alias
@@ -63,8 +63,14 @@ namespace sb::di
          */
         [[nodiscard]] TypeId getImplementationTypeId() const { return _implementationTypeId; }
 
+        /**
+         * @brief Get the service key pointer
+         */
         [[nodiscard]] const std::string *getServiceKey() const { return _serviceKey.get(); }
 
+        /**
+         * @brief Get the service implementation key pointer
+         */
         [[nodiscard]] const std::string *getImplementationKey() const { return _implementationKey.get(); }
 
         /**
@@ -73,7 +79,7 @@ namespace sb::di
         [[nodiscard]] ServiceLifeTime getLifeTime() const { return _lifeTime; }
 
         /**
-         * @brief Get the service implementation factory
+         * @brief Get the service implementation factory pointer
          */
         [[nodiscard]] const IServiceFactory *getImplementationFactory() const { return _implementationFactory.get(); }
 

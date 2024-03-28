@@ -1,9 +1,10 @@
 Keyed Services
 ========================================
 
-Multiple services with the same implementation can be registered using keyed services with
-addKeyed... ServiceCollection methods, similarly to normal services ServiceProvider has special Keyed methods to retrieve these services.
-Each keyed service is instantiated independently and has different address, default service can be retrieved with empty serviceKey = ""
+Multiple services with the same implementation can be registered using keyed services with addKeyed... ServiceCollection
+methods, similarly to normal services ServiceProvider has special Keyed methods to retrieve these services. Each keyed
+service is created independently and has a different address, the default service can be retrieved or registered with an 
+empty serviceKey = ""
 
 
 .. literalinclude:: ../../Examples/Guides/KeyedServices.cpp

@@ -29,9 +29,8 @@ namespace sb::di
         bool checkServiceGlobalUniqueness = true;
 
         /**
-         * @brief Provider is searching for service in singleton container first then in scoped
-         * @details If set to true service provider will check if service implementation was already registered and
-         * throw exception in this case
+         * @brief Set service search strategy
+         * @details If set to true provider will search for service in singleton container first then in scoped
          */
         bool searchInSigletonsFirts = true;
     };

@@ -24,7 +24,8 @@ class ServiceExecutor final : public IServiceExecutor
 
   public:
     explicit ServiceExecutor(ServiceProvider &provider)
-        : _serviceA(provider.getService<Service>()), _serviceB(provider.getKeyedService<Service>("serviceB")),
+        : _serviceA(provider.getService<Service>()), // equivalent of provider.getKeyedService<Service>("")
+          _serviceB(provider.getKeyedService<Service>("serviceB")),
           _serviceC(provider.getKeyedService<Service>("serviceC"))
     {
         assert(&_serviceA != &_serviceB);
@@ -41,7 +42,7 @@ class ServiceExecutor final : public IServiceExecutor
 int main()
 {
     ServiceProvider provider = ServiceCollection{}
-                                   .addSingleton<Service>()
+                                   .addKeyedSingleton<Service>("") // equivalent of addSingleton<Service>()
                                    .addKeyedSingleton<Service>("serviceB")
                                    .addKeyedSingleton<Service>("serviceC")
                                    .addScoped<IServiceExecutor, ServiceExecutor>()
