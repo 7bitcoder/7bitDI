@@ -20,7 +20,10 @@ Using this command several cache variables can be set:
 * <variable cache name>: [possible values] (default value) - Description
 * _7BIT_DI_LIBRARY_TYPE: ["Shared", "Static", "HeaderOnly"] ("Static") - Library build type
 * _7BIT_DI_BUILD_DOCS: ["ON", "OFF"] ("OFF") - Turn on to build documentation (requires Sphinx_, Breathe_ and Doxygen_ to be installed)
-* _7BIT_DI_BUILD_TESTS: ["ON", "OFF"] ("OFF") - Turn on to build tests
+* _7BIT_DI_BUILD_UNIT_TESTS: ["ON", "OFF"] ("OFF") - Turn on to build unit tests
+* _7BIT_DI_BUILD_INTEGRATION_TESTS: ["ON", "OFF"] ("OFF") - Turn on to build integration tests
+* _7BIT_DI_BUILD_E2E_TESTS: ["ON", "OFF"] ("OFF") - Turn on to build e2e tests
+* _7BIT_DI_BUILD_ALL_TESTS: ["ON", "OFF"] ("OFF") - Turn on to build all tests: e2e, unit and integration
 * _7BIT_DI_BUILD_EXAMPLES: ["ON", "OFF"] ("OFF") - Turn on to build examples
 * _7BIT_DI_BUILD_BENCHMARKS: ["ON", "OFF"] ("OFF") - Turn on to build benchmarks
 * _7BIT_DI_BUILD_SINGLE_HEADER: ["ON", "OFF"] ("OFF") - Turn on to build single header SevenBitDI.hpp (requires Quom_ to be installed)
