@@ -8,7 +8,6 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
 #include "SevenBit/DI/Details/Models/ServiceId.hpp"
-#include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di::details
 {

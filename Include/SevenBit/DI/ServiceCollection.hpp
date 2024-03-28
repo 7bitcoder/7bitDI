@@ -216,11 +216,23 @@ namespace sb::di
          */
         [[nodiscard]] bool contains(TypeId serviceTypeId) const;
 
+        /**
+         * @brief Checks if contains descriptor matching requirement
+         * @code{.cpp}
+         * descriptor.getServiceTypeId() == typeid(TService) && *descriptor.getServiceKey() == serviceKey
+         * @endcode
+         */
         template <class TService> [[nodiscard]] bool containsKeyed(const std::string_view serviceKey) const
         {
             return containsKeyed(typeid(TService), serviceKey);
         }
 
+        /**
+         * @brief Checks if contains descriptor matching requirement
+         * @code{.cpp}
+         * descriptor.getServiceTypeId() == serviceTypeId && *descriptor.getServiceKey() == serviceKey
+         * @endcode
+         */
         [[nodiscard]] bool containsKeyed(TypeId serviceTypeId, std::string_view serviceKey) const;
 
         /**
@@ -244,12 +256,26 @@ namespace sb::di
          */
         [[nodiscard]] bool containsExact(TypeId serviceTypeId, TypeId implementationTypeId) const;
 
+        /**
+         * @brief Checks if contains descriptor matching requirement
+         * @code{.cpp}
+         * descriptor.getImplementationTypeId() == typeid(TImplementation) && descriptor.getServiceTypeId() ==
+         * typeid(TService) && *descriptor.getServiceKey() == serviceKey
+         * @endcode
+         */
         template <class TService, class TImplementation = TService>
         [[nodiscard]] bool containsKeyedExact(const std::string_view serviceKey) const
         {
             return containsKeyedExact(typeid(TService), typeid(TImplementation), serviceKey);
         }
 
+        /**
+         * @brief Checks if contains descriptor matching requirement
+         * @code{.cpp}
+         * descriptor.getImplementationTypeId() == implementationTypeId && descriptor.getServiceTypeId() ==
+         * serviceTypeId && *descriptor.getServiceKey() == serviceKey
+         * @endcode
+         */
         [[nodiscard]] bool containsKeyedExact(TypeId serviceTypeId, TypeId implementationTypeId,
                                               std::string_view serviceKey) const;
 
@@ -324,11 +350,25 @@ namespace sb::di
          */
         std::size_t removeAll(TypeId serviceTypeId);
 
+        /**
+         * @brief Removes all descriptors meeting requirement
+         * @code{.cpp}
+         * descriptor.getServiceTypeId() == typeid(TService) && *descriptor.getServiceKey() == serviceKey
+         * @endcode
+         * @details Returns number of removed elements
+         */
         template <class TService> std::size_t removeAllKeyed(const std::string_view serviceKey)
         {
             return removeAllKeyed(typeid(TService), serviceKey);
         }
 
+        /**
+         * @brief Removes all descriptors meeting requirement
+         * @code{.cpp}
+         * descriptor.getServiceTypeId() == serviceTypeId && *descriptor.getServiceKey() == serviceKey
+         * @endcode
+         * @details Returns number of removed elements
+         */
         std::size_t removeAllKeyed(TypeId serviceTypeId, std::string_view serviceKey);
 
         /**
@@ -354,12 +394,28 @@ namespace sb::di
          */
         std::size_t remove(TypeId serviceTypeId, TypeId implementationTypeId);
 
+        /**
+         * @brief Removes all descriptors meeting requirement
+         * @code{.cpp}
+         * descriptor.getImplementationTypeId() == typeid(TImplementation) && descriptor.getServiceTypeId() ==
+         * typeid(TService) && *descriptor.getServiceKey() == serviceKey
+         * @endcode
+         * @details Returns number of removed elements
+         */
         template <class TService, class TImplementation = TService>
         std::size_t removeKeyed(const std::string_view serviceKey)
         {
             return removeKeyed(typeid(TService), typeid(TImplementation), serviceKey);
         }
 
+        /**
+         * @brief Removes all descriptors meeting requirement
+         * @code{.cpp}
+         * descriptor.getImplementationTypeId() == implementationTypeId && descriptor.getServiceTypeId() ==
+         * serviceTypeId && *descriptor.getServiceKey() == serviceKey
+         * @endcode
+         * @details Returns number of removed elements
+         */
         std::size_t removeKeyed(TypeId serviceTypeId, TypeId implementationTypeId, std::string_view serviceKey);
 
         /**
@@ -401,12 +457,14 @@ namespace sb::di
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
+         * @param lifeTime service life time Singleton Scoped or Transient
+         * @param serviceKey service key can be empty to retreive default service
          * @see Constructor requirements
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.add<TestClass>(ServiceLifeTimes::Scoped);
-         * ServiceCollection{}.add<BaseClass, ImplementationClass>(ServiceLifeTimes::Transient);
+         * ServiceCollection{}.add<TestClass>(ServiceLifeTimes::Scoped, "key");
+         * ServiceCollection{}.add<BaseClass, ImplementationClass>(ServiceLifeTimes::Transient, "key");
          * @endcode
          */
         template <class TService, class TImplementation = TService>
@@ -449,12 +507,13 @@ namespace sb::di
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
+         * @param serviceKey service key can be empty to retreive default service
          * @see Constructor requirements
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addSingleton<TestClass>();
-         * ServiceCollection{}.addSingleton<BaseClass, ImplementationClass>();
+         * ServiceCollection{}.addSingleton<TestClass>("key");
+         * ServiceCollection{}.addSingleton<BaseClass, ImplementationClass>("key");
          * @endcode
          */
         template <class TService, class TImplementation = TService>
@@ -497,12 +556,13 @@ namespace sb::di
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
+         * @param serviceKey service key can be empty to retreive default service
          * @see Constructor requirements
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addScoped<TestClass>();
-         * ServiceCollection{}.addScoped<BaseClass, ImplementationClass>();
+         * ServiceCollection{}.addScoped<TestClass>("key");
+         * ServiceCollection{}.addScoped<BaseClass, ImplementationClass>("key");
          * @endcode
          */
         template <class TService, class TImplementation = TService>
@@ -545,6 +605,7 @@ namespace sb::di
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService and must have one
          * constructor
+         * @param serviceKey service key can be empty to retreive default service
          * @see Constructor requirements
          *
          * Example:
@@ -588,6 +649,8 @@ namespace sb::di
          * implementationTypeId - typeid(TService),
          * factory - factory with external service pointer
          * @tparam TService service type
+         * @param service external service pointer
+         * @param serviceKey service key can be empty to retreive default service
          *
          * Example:
          * @code{.cpp}
@@ -610,6 +673,7 @@ namespace sb::di
          * factory - factory with external service pointer
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService
+         * @param service external service pointer
          * @see Constructor requirements
          *
          * Example:
@@ -632,6 +696,8 @@ namespace sb::di
          * factory - factory with external service pointer
          * @tparam TService base service type
          * @tparam TImplementation service implementation type must inherit from TService
+         * @param service external service pointer
+         * @param serviceKey service key can be empty to retreive default service
          * @see Constructor requirements
          *
          * Example:
@@ -658,6 +724,8 @@ namespace sb::di
          * @tparam FactoryFcn is factory functor with this scheme: (Services...) ->
          * std::unique_ptr<TImplementation> | TImplementation, where services are pointers, unique pointers, references,
          * vectors with pointers or unique pointers
+         * @param lifeTime service life time Singleton Scoped or Transient
+         * @param factory service factory functor
          *
          * Example:
          * @code{.cpp}
