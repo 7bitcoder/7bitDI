@@ -22,7 +22,7 @@ namespace sb::di::details
         ServiceInstance createInstanceAlias(const ServiceDescriptor &descriptor, const ServiceInstance &instance);
 
       private:
-        ServiceInstance createInstance(IServiceInstance::Ptr &&implementation, ptrdiff_t castOffset);
+        static ServiceInstance createInstance(IServiceInstance::Ptr &&implementation, ptrdiff_t castOffset);
     };
 } // namespace sb::di::details
 

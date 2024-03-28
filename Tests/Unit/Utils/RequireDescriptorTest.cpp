@@ -2,9 +2,6 @@
 
 #include "../../Helpers/Classes/Basic.hpp"
 #include "../../Helpers/Classes/Inherit.hpp"
-#include "SevenBit/DI/Details/Services/ExternalService.hpp"
-#include "SevenBit/DI/Details/Services/InPlaceService.hpp"
-#include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
 #include "SevenBit/DI/Details/Utils/RequireDescriptor.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"

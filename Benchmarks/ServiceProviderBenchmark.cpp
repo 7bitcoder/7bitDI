@@ -8,11 +8,11 @@ class ServiceProviderBenchmark : public benchmark::Fixture
   public:
     sb::di::ServiceProvider _provider = make();
 
-    void SetUp(const ::benchmark::State &state) {}
+    void SetUp(const benchmark::State &state) override {}
 
-    void TearDown(const ::benchmark::State &state) {}
+    void TearDown(const benchmark::State &state) override {}
 
-    sb::di::ServiceProvider make()
+    static sb::di::ServiceProvider make()
     {
         return sb::di::ServiceCollection()
             .addSingleton<ITestComplexClass1, TestComplexClass1>()

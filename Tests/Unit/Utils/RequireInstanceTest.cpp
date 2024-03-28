@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include "../../Helpers/Classes/Basic.hpp"
-#include "../../Helpers/Classes/Inherit.hpp"
 #include "SevenBit/DI/Details/Services/ExternalService.hpp"
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 #include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
@@ -29,8 +28,7 @@ TEST_F(RequireInstanceTest, ShoulRequireValidInstance)
 {
     TestClass1 test;
     EXPECT_THROW(sb::di::details::RequireInstance::valid(nullptr), sb::di::NullPointerException);
-    EXPECT_THROW(sb::di::details::RequireInstance::valid(sb::di::ServiceInstance{}),
-                 sb::di::InvalidServiceException);
+    EXPECT_THROW(sb::di::details::RequireInstance::valid(sb::di::ServiceInstance{}), sb::di::InvalidServiceException);
     EXPECT_THROW(sb::di::details::RequireInstance::valid(
                      sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestClass1>>(nullptr)}),
                  sb::di::InvalidServiceException);

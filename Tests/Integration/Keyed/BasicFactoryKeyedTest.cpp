@@ -2,7 +2,6 @@
 #include <memory>
 
 #include "../../Helpers/Classes/Basic.hpp"
-#include "../../Helpers/Classes/CirularDependency.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceCollection.hpp"
 

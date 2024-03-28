@@ -4,7 +4,6 @@
 #include "../Helpers/Classes/Basic.hpp"
 #include "../Helpers/Classes/Complex.hpp"
 #include "SevenBit/DI/Details/Factories/ServiceFactory.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
 
 class ServiceDescriptorTest : public testing::Test

@@ -88,9 +88,9 @@ namespace sb::di
         });
     }
 
-    INLINE ServiceCollection::Iterator ServiceCollection::insert(ConstIterator pos, ServiceDescriptor descriptor)
+    INLINE ServiceCollection::Iterator ServiceCollection::insert(const ConstIterator pos, ServiceDescriptor descriptor)
     {
-        return _serviceDescriptors.insert(std::move(pos), std::move(descriptor));
+        return _serviceDescriptors.insert(pos, std::move(descriptor));
     }
 
     INLINE ServiceCollection &ServiceCollection::add(ServiceDescriptor descriptor)
@@ -109,22 +109,23 @@ namespace sb::di
         return *this;
     }
 
-    INLINE ServiceCollection::Iterator ServiceCollection::remove(Iterator pos)
+    INLINE ServiceCollection::Iterator ServiceCollection::remove(const Iterator pos)
     {
-        return _serviceDescriptors.erase(std::move(pos));
+        return _serviceDescriptors.erase(pos);
     }
-    INLINE ServiceCollection::Iterator ServiceCollection::remove(ConstIterator pos)
+    INLINE ServiceCollection::Iterator ServiceCollection::remove(const ConstIterator pos)
     {
-        return _serviceDescriptors.erase(std::move(pos));
+        return _serviceDescriptors.erase(pos);
     }
 
-    INLINE ServiceCollection::Iterator ServiceCollection::removeRange(Iterator begin, Iterator end)
+    INLINE ServiceCollection::Iterator ServiceCollection::removeRange(const Iterator begin, const Iterator end)
     {
-        return _serviceDescriptors.erase(std::move(begin), std::move(end));
+        return _serviceDescriptors.erase(begin, end);
     }
-    INLINE ServiceCollection::Iterator ServiceCollection::removeRange(ConstIterator begin, ConstIterator end)
+    INLINE ServiceCollection::Iterator ServiceCollection::removeRange(const ConstIterator begin,
+                                                                      const ConstIterator end)
     {
-        return _serviceDescriptors.erase(std::move(begin), std::move(end));
+        return _serviceDescriptors.erase(begin, end);
     }
 
     INLINE std::size_t ServiceCollection::removeAll(const TypeId serviceTypeId)
