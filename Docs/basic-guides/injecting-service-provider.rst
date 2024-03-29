@@ -1,7 +1,9 @@
 Injecting Service Provider
 ========================================
 
-Service Provider object can be injected and can be used to manually get (scoped/singletons) or create (transient) services.
+ServiceProvider_ object can be injected and can be used to manually get (scoped/singletons) or create (transient) services.
+
+.. _ServiceProvider: ../reference/di/serviceprovider.html
 
 .. literalinclude:: ../../Examples/Guides/InjectingServiceProvider.cpp
    :caption: Examples/Guides/InjectingServiceProvider
@@ -11,5 +13,3 @@ Service Provider object can be injected and can be used to manually get (scoped/
    :caption: Output
 
    actionA, actionB executed.
-
-

@@ -1,8 +1,10 @@
 Configuring Service Provider
 ========================================
 
-ServiceProviderOptions struct can be used to configure service provider,
+ServiceProviderOptions_ struct can be used to configure service provider,
 read comment documentation for details:
+
+.. _ServiceProviderOptions: ../reference/di/serviceprovideroptions.html
 
 .. literalinclude:: ../../Include/SevenBit/DI/ServiceProviderOptions.hpp
    :caption: Include/SevenBit/DI/ServiceProviderOptions.hpp
