@@ -3,4 +3,3 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/ServiceCollection.hpp"
-#include "SevenBit/DI/Injected.hpp"

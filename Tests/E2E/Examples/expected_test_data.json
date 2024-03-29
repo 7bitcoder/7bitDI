@@ -4,7 +4,6 @@
   "CoreClasses": "",
   "ExternalSingleton": "^Hello from service!",
   "FactoryFunctions": "^Hello from service!",
-  "InjectedUtilityClass": "^actionA, actionB executed.",
   "InjectingMultipleServices": "^work all: work A done! work B done! work C done! \nsingle work: work C done!",
   "InjectingServiceProvider": "^actionA, actionB executed.",
   "InjectingServices": "^actionA, actionB executed.",
