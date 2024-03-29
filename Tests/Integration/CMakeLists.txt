@@ -10,10 +10,6 @@ target_link_libraries(IntegrationTests PUBLIC
         7bitDI
 )
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND APPLE)
-    target_compile_options(IntegrationTests PRIVATE -Wl,-ld_classic)
-endif ()
-
 include(GoogleTest)
 gtest_discover_tests(IntegrationTests
         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
