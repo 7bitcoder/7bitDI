@@ -28,13 +28,12 @@ TEST_F(ServiceInstanceTest, ShouldCreateEmptyInstance)
     EXPECT_FALSE(instance);
     EXPECT_FALSE(instance.isValid());
     EXPECT_FALSE(instance.tryGetImplementation());
-    EXPECT_THROW(instance.getImplementation(), sb::di::NullPointerException);
     EXPECT_EQ(instance.getCastOffset(), 0);
 }
 
 TEST_F(ServiceInstanceTest, ShouldCreateInstance)
 {
-    auto implementation = std::make_unique<sb::di::details::services::InPlaceService<TestClass1>>();
+    auto implementation = std::make_unique<sb::di::details::InPlaceService<TestClass1>>();
     sb::di::ServiceInstance instance{std::move(implementation), 12};
 
     EXPECT_TRUE(instance);
@@ -47,7 +46,7 @@ TEST_F(ServiceInstanceTest, ShouldCreateInstance)
 
 TEST_F(ServiceInstanceTest, ShouldAddCastOffset)
 {
-    auto implementation = std::make_unique<sb::di::details::services::InPlaceService<TestClass1>>();
+    auto implementation = std::make_unique<sb::di::details::InPlaceService<TestClass1>>();
     sb::di::ServiceInstance instance{std::move(implementation), 12};
 
     EXPECT_TRUE(instance);
@@ -58,7 +57,7 @@ TEST_F(ServiceInstanceTest, ShouldAddCastOffset)
 
 TEST_F(ServiceInstanceTest, ShouldSetCastOffset)
 {
-    auto implementation = std::make_unique<sb::di::details::services::InPlaceService<TestClass1>>();
+    auto implementation = std::make_unique<sb::di::details::InPlaceService<TestClass1>>();
     sb::di::ServiceInstance instance{std::move(implementation), 12};
 
     EXPECT_TRUE(instance);
@@ -69,7 +68,7 @@ TEST_F(ServiceInstanceTest, ShouldSetCastOffset)
 
 TEST_F(ServiceInstanceTest, ShouldClear)
 {
-    auto implementation = std::make_unique<sb::di::details::services::InPlaceService<TestClass1>>();
+    auto implementation = std::make_unique<sb::di::details::InPlaceService<TestClass1>>();
     sb::di::ServiceInstance instance{std::move(implementation), 12};
 
     EXPECT_TRUE(instance);

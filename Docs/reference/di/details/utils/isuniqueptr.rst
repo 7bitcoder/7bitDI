@@ -1,10 +1,10 @@
 IsUniquePtr
 ========================================
 
-.. doxygenstruct:: sb::di::details::utils::IsUniquePtr
+.. doxygenstruct:: sb::di::details::IsUniquePtr
    :members:
    :undoc-members:
 
-.. doxygenstruct:: sb::di::details::utils::IsUniquePtr< std::unique_ptr< T > >
+.. doxygenstruct:: sb::di::details::IsUniquePtr< std::unique_ptr< T > >
    :members:
    :undoc-members:

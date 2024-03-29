@@ -7,7 +7,7 @@
 #include "SevenBit/DI/ServiceLifeTime.hpp"
 #include "SevenBit/DI/TypeId.hpp"
 
-namespace sb::di::details::containers
+namespace sb::di::details
 {
     class EXPORT ServiceDescriptorList
     {
@@ -36,11 +36,13 @@ namespace sb::di::details::containers
 
         [[nodiscard]] bool empty() const;
 
-        [[nodiscard]] size_t size() const;
+        [[nodiscard]] std::size_t size() const;
 
         [[nodiscard]] ServiceLifeTime getLifeTime() const;
 
         [[nodiscard]] TypeId getServiceTypeId() const;
+
+        [[nodiscard]] const std::string *getServiceKey() const;
 
         [[nodiscard]] bool isAlias() const;
 
@@ -48,11 +50,12 @@ namespace sb::di::details::containers
 
       private:
         void checkBaseType(const ServiceDescriptor &descriptor) const;
+        void checkKey(const ServiceDescriptor &descriptor) const;
         void checkAlias(const ServiceDescriptor &descriptor) const;
         void checkLifeTime(const ServiceDescriptor &descriptor) const;
     };
 
-} // namespace sb::di::details::containers
+} // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
 #include "SevenBit/DI/Details/Containers/Impl/ServiceDescriptorList.hpp"

@@ -49,13 +49,6 @@ namespace sb::di
     {
     }
 
-    INLINE ServiceBaseTypeMismatchException::ServiceBaseTypeMismatchException(const TypeId typeIndex,
-                                                                              const TypeId interface)
-        : InjectorException{std::string{"Service: '"} + typeIndex.name() + "' should implement this base type '" +
-                            interface.name() + "' ."}
-    {
-    }
-
     INLINE ServiceAliasMismatchException::ServiceAliasMismatchException(const TypeId typeIndex, const TypeId interface,
                                                                         const bool shoudBeAlias)
         : InjectorException{std::string{"Service: '"} + typeIndex.name() +

@@ -1,41 +1,26 @@
 #include <SevenBit/DI.hpp>
 #include <iostream>
-#include <memory>
 
 using namespace sb::di;
 
-struct IServiceA
+struct ServiceA
 {
-    virtual std::string actionA() = 0;
-
-    virtual ~IServiceA() = default;
+    std::string actionA() { return "actionA"; }
 };
 
-struct IServiceB
+struct ServiceB
 {
-    virtual std::string actionB() = 0;
-
-    virtual ~IServiceB() = default;
-};
-
-struct ServiceA final : IServiceA
-{
-    std::string actionA() override { return "actionA"; }
-};
-
-struct ServiceB final : IServiceB
-{
-    std::string actionB() override { return "actionB"; }
+    std::string actionB() { return "actionB"; }
 };
 
 class ServiceExecutor
 {
-    IServiceA &_serviceA;
-    std::unique_ptr<IServiceB> _serviceB;
+    ServiceA &_serviceA;
+    std::unique_ptr<ServiceB> _serviceB;
 
   public:
     explicit ServiceExecutor(ServiceProvider &provider)
-        : _serviceA(provider.getService<IServiceA>()), _serviceB(provider.createService<IServiceB>())
+        : _serviceA(provider.getService<ServiceA>()), _serviceB(provider.createService<ServiceB>())
     {
     }
 
@@ -47,8 +32,8 @@ class ServiceExecutor
 int main()
 {
     ServiceProvider provider = ServiceCollection{}
-                                   .addSingleton<IServiceA, ServiceA>()
-                                   .addTransient<IServiceB, ServiceB>()
+                                   .addSingleton<ServiceA>()
+                                   .addTransient<ServiceB>()
                                    .addScoped<ServiceExecutor>()
                                    .buildServiceProvider();
 

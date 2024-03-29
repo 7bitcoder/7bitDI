@@ -5,7 +5,7 @@
 #include "SevenBit/DI/OneOrList.hpp"
 #include "SevenBit/DI/ServiceInstance.hpp"
 
-namespace sb::di::details::containers
+namespace sb::di::details
 {
     class EXPORT ServiceInstanceList
     {
@@ -14,7 +14,7 @@ namespace sb::di::details::containers
 
       public:
         explicit ServiceInstanceList(ServiceInstance instance);
-        explicit ServiceInstanceList(size_t size);
+        explicit ServiceInstanceList(std::size_t size);
 
         ServiceInstanceList(const ServiceInstanceList &) = delete;
         ServiceInstanceList(ServiceInstanceList &&) = default;
@@ -36,11 +36,11 @@ namespace sb::di::details::containers
         ServiceInstance &last();
         [[nodiscard]] const ServiceInstance &last() const;
 
-        [[nodiscard]] size_t size() const;
+        [[nodiscard]] std::size_t size() const;
 
         [[nodiscard]] bool empty() const;
 
-        void reserve(size_t newCapacity);
+        void reserve(std::size_t newCapacity);
 
         void shrink();
 
@@ -52,7 +52,7 @@ namespace sb::di::details::containers
 
         ~ServiceInstanceList() = default;
     };
-} // namespace sb::di::details::containers
+} // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
 #include "SevenBit/DI/Details/Containers/Impl/ServiceInstanceList.hpp"

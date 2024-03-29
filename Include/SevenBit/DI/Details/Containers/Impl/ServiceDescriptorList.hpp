@@ -5,7 +5,7 @@
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 
-namespace sb::di::details::containers
+namespace sb::di::details
 {
 
     INLINE ServiceDescriptorList::ServiceDescriptorList(ServiceDescriptor &&descriptor)
@@ -18,6 +18,7 @@ namespace sb::di::details::containers
         if (!empty())
         {
             checkBaseType(descriptor);
+            checkKey(descriptor);
             checkAlias(descriptor);
             checkLifeTime(descriptor);
         }
@@ -33,25 +34,36 @@ namespace sb::di::details::containers
 
     INLINE bool ServiceDescriptorList::empty() const { return _oneOrList.empty(); }
 
-    INLINE size_t ServiceDescriptorList::size() const { return _oneOrList.size(); }
+    INLINE std::size_t ServiceDescriptorList::size() const { return _oneOrList.size(); }
 
     INLINE ServiceLifeTime ServiceDescriptorList::getLifeTime() const { return first().getLifeTime(); }
 
     INLINE TypeId ServiceDescriptorList::getServiceTypeId() const { return first().getServiceTypeId(); }
 
+    INLINE const std::string *ServiceDescriptorList::getServiceKey() const { return first().getServiceKey(); }
+
     INLINE bool ServiceDescriptorList::isAlias() const { return first().isAlias(); }
 
     INLINE void ServiceDescriptorList::checkBaseType(const ServiceDescriptor &descriptor) const
     {
-        if (descriptor.getServiceTypeId() != getServiceTypeId())
+        if (getServiceTypeId() != descriptor.getServiceTypeId())
         {
-            throw ServiceBaseTypeMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
+            throw InjectorException{"Service base type does not match"};
+        }
+    }
+
+    INLINE void ServiceDescriptorList::checkKey(const ServiceDescriptor &descriptor) const
+    {
+        if (static_cast<bool>(getServiceKey()) != static_cast<bool>(descriptor.getServiceKey()) ||
+            (getServiceKey() && *getServiceKey() != *descriptor.getServiceKey()))
+        {
+            throw InjectorException{"Service key does not match"};
         }
     }
 
     INLINE void ServiceDescriptorList::checkAlias(const ServiceDescriptor &descriptor) const
     {
-        if (descriptor.isAlias() != isAlias())
+        if (isAlias() != descriptor.isAlias())
         {
             throw ServiceAliasMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId(), isAlias()};
         }
@@ -59,7 +71,7 @@ namespace sb::di::details::containers
 
     INLINE void ServiceDescriptorList::checkLifeTime(const ServiceDescriptor &descriptor) const
     {
-        if (!isAlias() && !descriptor.isAlias() && descriptor.getLifeTime() != getLifeTime())
+        if (!isAlias() && !descriptor.isAlias() && getLifeTime() != descriptor.getLifeTime())
         {
             throw ServiceLifeTimeMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
         }
@@ -67,4 +79,4 @@ namespace sb::di::details::containers
 
     INLINE void ServiceDescriptorList::seal() { _oneOrList.shrink(); }
 
-} // namespace sb::di::details::containers
+} // namespace sb::di::details

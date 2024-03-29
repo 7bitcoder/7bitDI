@@ -1,6 +1,6 @@
 ServiceInstanceProviderRoot
 ========================================
 
-.. doxygenclass:: sb::di::details::core::ServiceInstanceProviderRoot
+.. doxygenclass:: sb::di::details::ServiceInstanceProviderRoot
    :members:
    :undoc-members:

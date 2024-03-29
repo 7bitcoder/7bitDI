@@ -26,12 +26,11 @@ class ServiceInstanceResolverTest : public testing::Test
 TEST_F(ServiceInstanceResolverTest, ShouldCreateInstance)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    const sb::di::details::containers::ServiceDescriptorList descriptors{
-        sb::di::ServiceDescriber::describeSingleton<TestClass1>()};
+    const sb::di::details::ServiceDescriptorList descriptors{sb::di::ServiceDescriber::describeSingleton<TestClass1>()};
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
     const auto instance = resolver.createInstance();
 
@@ -44,14 +43,14 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateInstance)
 TEST_F(ServiceInstanceResolverTest, ShouldCreateInheritedInstance)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    sb::di::details::containers::ServiceDescriptorList descriptors{
+    sb::di::details::ServiceDescriptorList descriptors{
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>()};
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
     const auto instance = resolver.createInstance();
 
@@ -64,12 +63,11 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateInheritedInstance)
 TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInstance)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    const sb::di::details::containers::ServiceDescriptorList descriptors{
-        sb::di::ServiceDescriber::describeSingleton<TestClass1>()};
+    const sb::di::details::ServiceDescriptorList descriptors{sb::di::ServiceDescriber::describeSingleton<TestClass1>()};
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
     const auto instances = resolver.createOneInstance();
 
@@ -83,14 +81,14 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInstance)
 TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInheritedInstance)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    sb::di::details::containers::ServiceDescriptorList descriptors{
+    sb::di::details::ServiceDescriptorList descriptors{
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>()};
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
     const auto instances = resolver.createOneInstance();
 
@@ -104,12 +102,11 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInheritedInstance)
 TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInstances)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    const sb::di::details::containers::ServiceDescriptorList descriptors{
-        sb::di::ServiceDescriber::describeSingleton<TestClass1>()};
+    const sb::di::details::ServiceDescriptorList descriptors{sb::di::ServiceDescriber::describeSingleton<TestClass1>()};
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
     const auto instances = resolver.createAllInstances();
 
@@ -123,14 +120,14 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInstances)
 TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInheritedInstances)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    sb::di::details::containers::ServiceDescriptorList descriptors{
+    sb::di::details::ServiceDescriptorList descriptors{
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>()};
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
     const auto instances = resolver.createAllInstances();
 
@@ -150,17 +147,17 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInheritedInstances)
 TEST_F(ServiceInstanceResolverTest, ShouldCreateRestInheritedInstances)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    sb::di::details::containers::ServiceDescriptorList descriptors{
+    sb::di::details::ServiceDescriptorList descriptors{
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>()};
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
-    sb::di::details::containers::ServiceInstanceList instances{
-        sb::di::ServiceInstance{descriptors.last().getImplementationFactory().createInstance(mock, false)}};
+    sb::di::details::ServiceInstanceList instances{
+        sb::di::ServiceInstance{descriptors.last().getImplementationFactory()->createInstance(mock, false)}};
     resolver.createRestInstances(instances);
 
     EXPECT_EQ(instances.size(), 3);
@@ -179,12 +176,11 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateRestInheritedInstances)
 TEST_F(ServiceInstanceResolverTest, ShouldCreateInstanceInPlace)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    const sb::di::details::containers::ServiceDescriptorList descriptors{
-        sb::di::ServiceDescriber::describeSingleton<TestClass1>()};
+    const sb::di::details::ServiceDescriptorList descriptors{sb::di::ServiceDescriber::describeSingleton<TestClass1>()};
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
     const auto instance = resolver.createInstanceInPlace();
 
@@ -197,14 +193,14 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateInstanceInPlace)
 TEST_F(ServiceInstanceResolverTest, ShouldCreateInheritedInstanceInPlace)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    sb::di::details::containers::ServiceDescriptorList descriptors{
+    sb::di::details::ServiceDescriptorList descriptors{
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>()};
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
     const auto instance = resolver.createInstanceInPlace();
 
@@ -217,12 +213,11 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateInheritedInstanceInPlace)
 TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInstanceInPlace)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    const sb::di::details::containers::ServiceDescriptorList descriptors{
-        sb::di::ServiceDescriber::describeSingleton<TestClass1>()};
+    const sb::di::details::ServiceDescriptorList descriptors{sb::di::ServiceDescriber::describeSingleton<TestClass1>()};
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
     const auto instances = resolver.createOneInstanceInPlace();
 
@@ -236,14 +231,14 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInstanceInPlace)
 TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInheritedInstanceInPlace)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    sb::di::details::containers::ServiceDescriptorList descriptors{
+    sb::di::details::ServiceDescriptorList descriptors{
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>()};
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
     const auto instances = resolver.createOneInstanceInPlace();
 
@@ -257,12 +252,11 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInheritedInstanceInPlace)
 TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInstancesInPlace)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    const sb::di::details::containers::ServiceDescriptorList descriptors{
-        sb::di::ServiceDescriber::describeSingleton<TestClass1>()};
+    const sb::di::details::ServiceDescriptorList descriptors{sb::di::ServiceDescriber::describeSingleton<TestClass1>()};
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
     const auto instances = resolver.createAllInstancesInPlace();
 
@@ -276,14 +270,14 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInstancesInPlace)
 TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInheritedInstancesInPlace)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    sb::di::details::containers::ServiceDescriptorList descriptors{
+    sb::di::details::ServiceDescriptorList descriptors{
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>()};
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
     const auto instances = resolver.createAllInstancesInPlace();
 
@@ -303,17 +297,17 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInheritedInstancesInPlace)
 TEST_F(ServiceInstanceResolverTest, ShouldCreateRestInheritedInstancesInPlace)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    sb::di::details::containers::ServiceDescriptorList descriptors{
+    sb::di::details::ServiceDescriptorList descriptors{
         sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>()};
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
-    sb::di::details::containers::ServiceInstanceList instances{
-        sb::di::ServiceInstance{descriptors.last().getImplementationFactory().createInstance(mock, true)}};
+    sb::di::details::ServiceInstanceList instances{
+        sb::di::ServiceInstance{descriptors.last().getImplementationFactory()->createInstance(mock, true)}};
     resolver.createRestInstancesInPlace(instances);
 
     EXPECT_EQ(instances.size(), 3);
@@ -332,18 +326,18 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateRestInheritedInstancesInPlace)
 TEST_F(ServiceInstanceResolverTest, ShouldCreateAlias)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    sb::di::details::containers::ServiceDescriptorList descriptors{
+    sb::di::details::ServiceDescriptorList descriptors{
         sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass3>()};
     descriptors.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass4>());
     descriptors.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass5>());
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
     TestInheritClass6 test;
     const sb::di::ServiceInstance external{
-        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass6>>(&test)};
+        std::make_unique<sb::di::details::ExternalService<TestInheritClass6>>(&test)};
 
     const auto instance = resolver.createAlias(external);
 
@@ -356,18 +350,17 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateAlias)
 TEST_F(ServiceInstanceResolverTest, ShouldCreateOneAlias)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    sb::di::details::containers::ServiceDescriptorList descriptors{
+    sb::di::details::ServiceDescriptorList descriptors{
         sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass3>()};
     descriptors.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass4>());
     descriptors.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass5>());
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
     TestInheritClass6 test;
-    sb::di::ServiceInstance external{
-        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass6>>(&test)};
+    sb::di::ServiceInstance external{std::make_unique<sb::di::details::ExternalService<TestInheritClass6>>(&test)};
 
     const auto instances = resolver.createOneAlias(external);
 
@@ -381,22 +374,22 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateOneAlias)
 TEST_F(ServiceInstanceResolverTest, ShouldCreateAllAliases)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    sb::di::details::containers::ServiceDescriptorList descriptors{
+    sb::di::details::ServiceDescriptorList descriptors{
         sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass2>()};
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
     TestInheritClass3 test3;
     TestInheritClass4 test4;
     TestInheritClass5 test5;
-    sb::di::details::containers::ServiceInstanceList externals{sb::di::ServiceInstance{
-        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass3>>(&test3)}};
-    externals.add(sb::di::ServiceInstance{
-        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass4>>(&test4)});
-    externals.add(sb::di::ServiceInstance{
-        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass5>>(&test5)});
+    sb::di::details::ServiceInstanceList externals{
+        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass3>>(&test3)}};
+    externals.add(
+        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass4>>(&test4)});
+    externals.add(
+        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass5>>(&test5)});
 
     const auto instances = resolver.createAllAliases(externals.getInnerList());
 
@@ -416,25 +409,25 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateAllAliases)
 TEST_F(ServiceInstanceResolverTest, ShouldCreateRestAliases)
 {
     ServiceProviderMock mock;
-    sb::di::details::core::ServiceInstanceCreator creator;
+    sb::di::details::ServiceInstanceCreator creator;
     creator.setServiceProvider(mock);
-    sb::di::details::containers::ServiceDescriptorList descriptors{
+    sb::di::details::ServiceDescriptorList descriptors{
         sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass2>()};
 
-    const sb::di::details::core::ServiceInstancesResolver resolver{creator, descriptors};
+    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
     TestInheritClass3 test3;
     TestInheritClass4 test4;
     TestInheritClass5 test5;
-    sb::di::details::containers::ServiceInstanceList externals{sb::di::ServiceInstance{
-        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass3>>(&test3)}};
-    externals.add(sb::di::ServiceInstance{
-        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass4>>(&test4)});
-    externals.add(sb::di::ServiceInstance{
-        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass5>>(&test5)});
+    sb::di::details::ServiceInstanceList externals{
+        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass3>>(&test3)}};
+    externals.add(
+        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass4>>(&test4)});
+    externals.add(
+        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass5>>(&test5)});
 
-    sb::di::details::containers::ServiceInstanceList instances{sb::di::ServiceInstance{
-        std::make_unique<sb::di::details::services::ExternalService<TestInheritClass2>>(&test5)}};
+    sb::di::details::ServiceInstanceList instances{
+        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass2>>(&test5)}};
 
     auto &_ = resolver.createRestAliases(externals.getInnerList(), instances);
 

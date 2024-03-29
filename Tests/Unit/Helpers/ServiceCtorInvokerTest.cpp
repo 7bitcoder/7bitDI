@@ -24,12 +24,12 @@ class ServiceCtorInvokerTest : public testing::Test
 TEST_F(ServiceCtorInvokerTest, ShouldInvokeFuncWithCtorParams)
 {
     ServiceProviderMock mock;
-    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::services::InPlaceService<TestDependencyClass>>()};
+    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::InPlaceService<TestDependencyClass>>()};
 
     EXPECT_CALL(mock.getMock(), tryGetInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&test1));
 
-    sb::di::details::helpers::ServiceCtorInvoker<TestDependencyPtrClass1> invoker{mock};
+    sb::di::details::ServiceCtorInvoker<TestDependencyPtrClass1> invoker{mock};
 
     auto func = [&](TestDependencyClass *service) {
         EXPECT_TRUE(service);

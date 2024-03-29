@@ -23,7 +23,7 @@ class AliasServiceTest : public testing::Test
 TEST_F(AliasServiceTest, ShouldCreateAliasService)
 {
     TestClass1 test;
-    const sb::di::details::services::AliasService service{&test, typeid(TestClass1)};
+    const sb::di::details::AliasService service{&test, typeid(TestClass1)};
 
     EXPECT_TRUE(service.isValid());
     EXPECT_EQ(service.get(), &test);
@@ -33,7 +33,7 @@ TEST_F(AliasServiceTest, ShouldCreateAliasService)
 TEST_F(AliasServiceTest, ShouldFailReleaseAliasService)
 {
     TestClass1 test;
-    sb::di::details::services::AliasService service{&test, typeid(TestClass1)};
+    sb::di::details::AliasService service{&test, typeid(TestClass1)};
 
     EXPECT_TRUE(service.isValid());
     EXPECT_THROW(service.release(), sb::di::CannotReleaseServiceException);
@@ -42,7 +42,7 @@ TEST_F(AliasServiceTest, ShouldFailReleaseAliasService)
 TEST_F(AliasServiceTest, ShouldFailMoveOutAliasService)
 {
     TestClass1 test;
-    sb::di::details::services::AliasService service{&test, typeid(TestClass1)};
+    sb::di::details::AliasService service{&test, typeid(TestClass1)};
 
     EXPECT_TRUE(service.isValid());
     EXPECT_THROW(service.getForMoveOut(), sb::di::CannotMoveOutServiceException);
@@ -50,7 +50,7 @@ TEST_F(AliasServiceTest, ShouldFailMoveOutAliasService)
 
 TEST_F(AliasServiceTest, ShouldCreateAliasNullService)
 {
-    const sb::di::details::services::AliasService service{nullptr, typeid(TestClass1)};
+    const sb::di::details::AliasService service{nullptr, typeid(TestClass1)};
 
     EXPECT_FALSE(service.isValid());
     EXPECT_FALSE(service.get());
@@ -59,7 +59,7 @@ TEST_F(AliasServiceTest, ShouldCreateAliasNullService)
 
 TEST_F(AliasServiceTest, ShouldFailReleaseAliasNullService)
 {
-    sb::di::details::services::AliasService service{nullptr, typeid(TestClass1)};
+    sb::di::details::AliasService service{nullptr, typeid(TestClass1)};
 
     EXPECT_FALSE(service.isValid());
     EXPECT_THROW(service.release(), sb::di::CannotReleaseServiceException);
@@ -67,7 +67,7 @@ TEST_F(AliasServiceTest, ShouldFailReleaseAliasNullService)
 
 TEST_F(AliasServiceTest, ShouldFailMoveOutAliasNullService)
 {
-    sb::di::details::services::AliasService service{nullptr, typeid(TestClass1)};
+    sb::di::details::AliasService service{nullptr, typeid(TestClass1)};
 
     EXPECT_FALSE(service.isValid());
     EXPECT_THROW(service.getForMoveOut(), sb::di::CannotMoveOutServiceException);

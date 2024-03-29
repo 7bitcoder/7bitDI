@@ -2,18 +2,21 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/ServiceInstance.hpp"
-
-namespace sb::di::details::utils
+namespace sb::di::details
 {
-    struct EXPORT Check
+    struct Check
     {
-        static bool instanceValidity(const ServiceInstance *instance);
+        template <class T> constexpr static bool notNull(const std::unique_ptr<T> &ptr) { return notNull(ptr.get()); }
 
-        static bool instanceValidity(const ServiceInstance &instance);
+        template <class T> constexpr static bool notNull(const std::shared_ptr<T> &ptr) { return notNull(ptr.get()); }
+
+        template <class T> constexpr static bool notNull(const T *ptr) { return ptr != nullptr; }
+
+        template <class TEnum> constexpr static bool enumValidity(TEnum value)
+        {
+            auto index = static_cast<std::underlying_type_t<TEnum>>(value);
+            auto count = static_cast<std::underlying_type_t<TEnum>>(TEnum::Count);
+            return std::is_enum_v<TEnum> && index >= 0 && index < count;
+        }
     };
-} // namespace sb::di::details::utils
-
-#ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Utils/Impl/Check.hpp"
-#endif
+} // namespace sb::di::details

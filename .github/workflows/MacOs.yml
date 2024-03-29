@@ -15,13 +15,12 @@ jobs:
       matrix:
         compiler: [
           { tool: apple-clang },
-          { tool: gcc, ver: 9 },
           { tool: gcc, ver: 10 },
           { tool: gcc, ver: 11 },
           { tool: gcc, ver: 12 },
           { tool: gcc, ver: 13 } ]
         build_type: [ Release ]
-        os: [ macos-12, macos-13 ]
+        os: [ macos-12 ]
         std: [ 17 ]
         library_type: [ Static ]
         include:
@@ -31,8 +30,6 @@ jobs:
           - compiler: { tool: apple-clang }
             cxx: ''
             cc: ''
-        exclude:
-          - { os: macos-12, compiler: { tool: gcc, ver: 9 } }
 
     runs-on: ${{matrix.os}}
     steps:
@@ -48,13 +45,13 @@ jobs:
           echo "CC=${{matrix.cc}}-${{matrix.compiler.ver}}" >> $GITHUB_ENV
 
       - name: Configure
-        run: cmake -B ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON
+        run: cmake -B ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_ALL_TESTS=ON
 
       - name: Build
         run: cmake --build ${{runner.workspace}}/build --config ${{matrix.build_type}} -j
 
       - name: Test
-        working-directory: ${{runner.workspace}}/build/Tests
+        working-directory: ${{runner.workspace}}/build
         run: ctest -C ${{matrix.build_type}}
         env:
           CTEST_OUTPUT_ON_FAILURE: True

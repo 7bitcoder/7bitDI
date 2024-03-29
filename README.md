@@ -65,7 +65,7 @@ include(FetchContent)
 FetchContent_Declare(
         7bitDI
         GIT_REPOSITORY https://github.com/7bitcoder/7bitDI.git
-        GIT_TAG d13c02d81dc4e90013af854b9a8a50784ff740f5 # release 2.1.0
+        GIT_TAG v3.0.0
 )
 FetchContent_MakeAvailable(7bitDI)
 
@@ -140,19 +140,19 @@ Service can be registered as a singleton, scoped, or transient.
 ### Injecting Services
 
 - Singleton/scoped services can be injected using one of:
-  - References: (T&)
-  - Pointers: (T\*)
+    - References: (T&)
+    - Pointers: (T\*)
 - Transient services can be injected using one of:
-  - std::unique_ptr: (unique_ptr< T>)
-  - In place object if the type is movable or copyable: T
+    - std::unique_ptr: (unique_ptr< T>)
+    - In place object if the type is movable or copyable: T
 - Multiple services implementing the same interface can be injected using std::vector:
-  - Transient (std::vector<std::unique_ptr< T>>)
-  - Singleton/scoped (std::vector<T\*>)
+    - Transient (std::vector<std::unique_ptr< T>>)
+    - Singleton/scoped (std::vector<T\*>)
 
 ### Injection Table
 
 | Constructor param type           | ServiceProvider method used         |
-| -------------------------------- | ----------------------------------- |
+|----------------------------------|-------------------------------------|
 | T - if movable or copyable       | provider.createServiceInPlace< T>() |
 | std::unique_ptr< T>              | provider.createService< T>()        |
 | T&                               | provider.getService< T>()           |

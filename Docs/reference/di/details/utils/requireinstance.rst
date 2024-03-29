@@ -1,6 +1,6 @@
-CheckBase
+RequireInstance
 ========================================
 
-.. doxygenstruct:: sb::di::details::utils::CheckBase
+.. doxygenstruct:: sb::di::details::RequireInstance
    :members:
    :undoc-members:

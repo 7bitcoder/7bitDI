@@ -23,7 +23,7 @@ class UniquePtrServiceTest : public testing::Test
 
 TEST_F(UniquePtrServiceTest, ShouldCreateUniquePtrService)
 {
-    const sb::di::details::services::UniquePtrService service{std::make_unique<TestClass1>()};
+    const sb::di::details::UniquePtrService service{std::make_unique<TestClass1>()};
 
     EXPECT_TRUE(service.isValid());
     EXPECT_TRUE(service.get());
@@ -32,7 +32,7 @@ TEST_F(UniquePtrServiceTest, ShouldCreateUniquePtrService)
 
 TEST_F(UniquePtrServiceTest, ShouldSuccedReleasePtrService)
 {
-    sb::di::details::services::UniquePtrService service{std::make_unique<TestClass1>()};
+    sb::di::details::UniquePtrService service{std::make_unique<TestClass1>()};
 
     EXPECT_TRUE(service.isValid());
     const auto ptr = static_cast<TestClass1 *>(service.release());
@@ -43,7 +43,7 @@ TEST_F(UniquePtrServiceTest, ShouldSuccedReleasePtrService)
 
 TEST_F(UniquePtrServiceTest, ShouldSuccedMoveOutUniquePtrService)
 {
-    sb::di::details::services::UniquePtrService service{std::make_unique<TestClass1>()};
+    sb::di::details::UniquePtrService service{std::make_unique<TestClass1>()};
 
     EXPECT_TRUE(service.isValid());
     EXPECT_NO_THROW(service.getForMoveOut());
@@ -52,7 +52,7 @@ TEST_F(UniquePtrServiceTest, ShouldSuccedMoveOutUniquePtrService)
 
 TEST_F(UniquePtrServiceTest, ShouldCreateExternalNullService)
 {
-    const sb::di::details::services::UniquePtrService<TestClass1> service{nullptr};
+    const sb::di::details::UniquePtrService<TestClass1> service{nullptr};
 
     EXPECT_FALSE(service.isValid());
     EXPECT_FALSE(service.get());
@@ -61,7 +61,7 @@ TEST_F(UniquePtrServiceTest, ShouldCreateExternalNullService)
 
 TEST_F(UniquePtrServiceTest, ShouldFailReleaseExternalNullService)
 {
-    sb::di::details::services::UniquePtrService<TestClass1> service{nullptr};
+    sb::di::details::UniquePtrService<TestClass1> service{nullptr};
 
     EXPECT_FALSE(service.isValid());
     EXPECT_NO_THROW(service.release());
@@ -70,7 +70,7 @@ TEST_F(UniquePtrServiceTest, ShouldFailReleaseExternalNullService)
 
 TEST_F(UniquePtrServiceTest, ShouldFailMoveOutExternalNullService)
 {
-    sb::di::details::services::UniquePtrService<TestClass1> service{nullptr};
+    sb::di::details::UniquePtrService<TestClass1> service{nullptr};
 
     EXPECT_FALSE(service.isValid());
     EXPECT_FALSE(service.getForMoveOut());

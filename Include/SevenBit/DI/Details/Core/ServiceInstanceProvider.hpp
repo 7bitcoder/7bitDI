@@ -13,14 +13,14 @@
 #include "SevenBit/DI/IServiceInstanceProvider.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 
-namespace sb::di::details::core
+namespace sb::di::details
 {
     class EXPORT ServiceInstanceProvider : public IServiceInstanceProvider
     {
         ServiceProviderOptions _options;
         ServiceInstanceCreator _instanceCreator;
         IServiceInstanceProviderRoot &_root;
-        containers::ServiceInstancesMap _scoped;
+        ServiceInstancesMap _scoped;
 
       public:
         using Ptr = std::unique_ptr<ServiceInstanceProvider>;
@@ -29,53 +29,124 @@ namespace sb::di::details::core
 
         ServiceInstanceProvider(ServiceInstanceProvider &&) = delete;
         ServiceInstanceProvider(const ServiceInstanceProvider &) = delete;
-
         ServiceInstanceProvider &operator=(const ServiceInstanceProvider &) = delete;
         ServiceInstanceProvider &operator=(ServiceInstanceProvider &&) = delete;
 
-        void init(ServiceProvider &serviceProvider) override;
+        [[nodiscard]] const ServiceProviderOptions &getOptions() const { return _options; }
 
-        [[nodiscard]] const ServiceProviderOptions &getOptions() const override;
+        void init(ServiceProvider &serviceProvider) override;
 
         [[nodiscard]] IServiceInstanceProvider::Ptr createScope() const override;
 
-        const ServiceInstance &getInstance(TypeId serviceTypeId) override;
-        const ServiceInstance *tryGetInstance(TypeId serviceTypeId) override;
-        const OneOrList<ServiceInstance> *tryGetInstances(TypeId serviceTypeId) override;
+        const ServiceInstance &getInstance(const TypeId serviceTypeId) override
+        {
+            return getInstance(ServiceId{serviceTypeId});
+        }
+        const ServiceInstance *tryGetInstance(const TypeId serviceTypeId) override
+        {
+            return tryGetInstance(ServiceId{serviceTypeId});
+        }
+        const OneOrList<ServiceInstance> *tryGetInstances(const TypeId serviceTypeId) override
+        {
+            return tryGetInstances(ServiceId{serviceTypeId});
+        }
 
-        ServiceInstance createInstance(TypeId serviceTypeId) override;
-        ServiceInstance tryCreateInstance(TypeId serviceTypeId) override;
-        std::optional<OneOrList<ServiceInstance>> tryCreateInstances(TypeId serviceTypeId) override;
+        ServiceInstance createInstance(const TypeId serviceTypeId) override
+        {
+            return createInstance(ServiceId{serviceTypeId});
+        }
+        ServiceInstance tryCreateInstance(const TypeId serviceTypeId) override
+        {
+            return tryCreateInstance(ServiceId{serviceTypeId});
+        }
+        std::optional<OneOrList<ServiceInstance>> tryCreateInstances(const TypeId serviceTypeId) override
+        {
+            return tryCreateInstances(ServiceId{serviceTypeId});
+        }
 
-        ServiceInstance createInstanceInPlace(TypeId serviceTypeId) override;
-        ServiceInstance tryCreateInstanceInPlace(TypeId serviceTypeId) override;
+        ServiceInstance createInstanceInPlace(const TypeId serviceTypeId) override
+        {
+            return createInstanceInPlace(ServiceId{serviceTypeId});
+        }
+        ServiceInstance tryCreateInstanceInPlace(const TypeId serviceTypeId) override
+        {
+            return tryCreateInstanceInPlace(ServiceId{serviceTypeId});
+        }
 
-        void clear();
+        const ServiceInstance &getKeyedInstance(const TypeId serviceTypeId, const std::string_view serviceKey) override
+        {
+            return getInstance(ServiceId{serviceTypeId, serviceKey});
+        }
+        const ServiceInstance *tryGetKeyedInstance(const TypeId serviceTypeId,
+                                                   const std::string_view serviceKey) override
+        {
+            return tryGetInstance(ServiceId{serviceTypeId, serviceKey});
+        }
+        const OneOrList<ServiceInstance> *tryGetKeyedInstances(const TypeId serviceTypeId,
+                                                               const std::string_view serviceKey) override
+        {
+            return tryGetInstances(ServiceId{serviceTypeId, serviceKey});
+        }
+
+        ServiceInstance createKeyedInstance(const TypeId serviceTypeId, const std::string_view serviceKey) override
+        {
+            return createInstance(ServiceId{serviceTypeId, serviceKey});
+        }
+        ServiceInstance tryCreateKeyedInstance(const TypeId serviceTypeId, const std::string_view serviceKey) override
+        {
+            return tryCreateInstance(ServiceId{serviceTypeId, serviceKey});
+        }
+        std::optional<OneOrList<ServiceInstance>> tryCreateKeyedInstances(const TypeId serviceTypeId,
+                                                                          const std::string_view serviceKey) override
+        {
+            return tryCreateInstances(ServiceId{serviceTypeId, serviceKey});
+        }
+
+        ServiceInstance createKeyedInstanceInPlace(const TypeId serviceTypeId,
+                                                   const std::string_view serviceKey) override
+        {
+            return createInstanceInPlace(ServiceId{serviceTypeId, serviceKey});
+        }
+        ServiceInstance tryCreateKeyedInstanceInPlace(const TypeId serviceTypeId,
+                                                      const std::string_view serviceKey) override
+        {
+            return tryCreateInstanceInPlace(ServiceId{serviceTypeId, serviceKey});
+        }
 
       protected:
-        containers::ServiceInstanceList *findRegisteredInstances(TypeId serviceTypeId);
+        const ServiceInstance &getInstance(const ServiceId &id);
+        const ServiceInstance *tryGetInstance(const ServiceId &id);
+        const OneOrList<ServiceInstance> *tryGetInstances(const ServiceId &id);
 
-        [[nodiscard]] const containers::ServiceDescriptorList *findDescriptors(TypeId serviceTypeId,
-                                                                               bool transient) const;
+        ServiceInstance createInstance(const ServiceId &id);
+        ServiceInstance tryCreateInstance(const ServiceId &id);
+        std::optional<OneOrList<ServiceInstance>> tryCreateInstances(const ServiceId &id);
 
-        containers::ServiceInstanceList *tryRegisterAndGet(const containers::ServiceDescriptorList &descriptors,
-                                                           std::optional<containers::ServiceInstanceList> &&instances);
+        ServiceInstance createInstanceInPlace(const ServiceId &id);
+        ServiceInstance tryCreateInstanceInPlace(const ServiceId &id);
 
-        std::optional<containers::ServiceInstanceList> tryCreateNonTransient(
-            const containers::ServiceDescriptorList &descriptors);
-        std::optional<containers::ServiceInstanceList> tryCreateAllNonTransient(
-            const containers::ServiceDescriptorList &descriptors);
-        containers::ServiceInstanceList *createRestNonTransientAndGet(
-            const containers::ServiceDescriptorList &descriptors, containers::ServiceInstanceList &instances);
+        void clear() { _scoped.clear(); }
 
-        ServiceInstance tryCreateTransient(const containers::ServiceDescriptorList &descriptors);
-        std::optional<OneOrList<ServiceInstance>> tryCreateAllTransient(
-            const containers::ServiceDescriptorList &descriptors);
+        ServiceInstanceList *findRegisteredInstances(const ServiceId &id);
 
-        ServiceInstancesResolver makeResolver(const containers::ServiceDescriptorList &descriptors);
-        ServiceInstanceCreator &getInstanceCreator();
+        [[nodiscard]] const ServiceDescriptorList *findDescriptors(const ServiceId &id, bool transient) const;
+
+        ServiceInstanceList *tryRegisterAndGet(const ServiceId &id, const ServiceDescriptorList &descriptors,
+                                               std::optional<ServiceInstanceList> &&instances);
+
+        std::optional<ServiceInstanceList> tryCreateNonTransient(const ServiceDescriptorList &descriptors);
+        std::optional<ServiceInstanceList> tryCreateAllNonTransient(const ServiceDescriptorList &descriptors);
+        ServiceInstanceList *createRestNonTransientAndGet(const ServiceDescriptorList &descriptors,
+                                                          ServiceInstanceList &instances);
+
+        ServiceInstance tryCreateTransient(const ServiceDescriptorList &descriptors);
+        std::optional<OneOrList<ServiceInstance>> tryCreateAllTransient(const ServiceDescriptorList &descriptors);
+
+        ServiceInstancesResolver makeResolver(const ServiceDescriptorList &descriptors);
+
+        ServiceInstanceCreator &getInstanceCreator() { return _instanceCreator; }
     };
-} // namespace sb::di::details::core
+} // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
 #include "SevenBit/DI/Details/Core/Impl/ServiceInstanceProvider.hpp"

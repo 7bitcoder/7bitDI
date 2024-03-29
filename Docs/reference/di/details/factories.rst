@@ -1,4 +1,4 @@
-sb::di::details::factories
+sb::di::details - Factories
 ========================================
 
 .. toctree::

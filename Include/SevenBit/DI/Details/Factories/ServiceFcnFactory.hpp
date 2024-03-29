@@ -13,41 +13,41 @@
 #include "SevenBit/DI/Details/Utils/RemoveUniquePtr.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
 
-namespace sb::di::details::factories
+namespace sb::di::details
 {
     template <class FactoryFcn> class ServiceFcnFactory final : public IServiceFactory
     {
-        using ServiceFactoryInvoker = helpers::ServiceFactoryInvoker<FactoryFcn>;
-        using FactoryReturnType = typename ServiceFactoryInvoker::ReturnType;
+        using FactoryInvoker = ServiceFactoryInvoker<FactoryFcn>;
+        using FactoryReturnType = typename FactoryInvoker::ReturnType;
 
         mutable FactoryFcn _factoryFunction;
 
       public:
-        using ServiceType = utils::RemoveUniquePtrT<FactoryReturnType>;
+        using ServiceType = RemoveUniquePtrT<FactoryReturnType>;
 
         explicit ServiceFcnFactory(FactoryFcn &&factoryFunction) : _factoryFunction{std::move(factoryFunction)}
         {
-            static_assert(utils::IsInPlaceObjectConstructableV<ServiceType> || utils::IsUniquePtrV<FactoryReturnType> ||
-                              utils::notSupportedType<FactoryFcn>,
+            static_assert(IsInPlaceObjectConstructableV<ServiceType> || IsUniquePtrV<FactoryReturnType> ||
+                              notSupportedType<FactoryFcn>,
                           "Service factory return type must be std::unique_ptr<TService> or copyable/movable object");
         }
 
         IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
-            ServiceFactoryInvoker invoker{_factoryFunction, serviceProvider};
-            if constexpr (utils::IsUniquePtrV<FactoryReturnType>)
+            FactoryInvoker invoker{_factoryFunction, serviceProvider};
+            if constexpr (IsUniquePtrV<FactoryReturnType>)
             {
-                return std::make_unique<services::UniquePtrService<ServiceType>>(invoker.invoke());
+                return std::make_unique<UniquePtrService<ServiceType>>(invoker.invoke());
             }
             else
             {
                 if (inPlaceRequest)
                 {
-                    return std::make_unique<services::InPlaceService<ServiceType>>(invoker.invoke());
+                    return std::make_unique<InPlaceService<ServiceType>>(invoker.invoke());
                 }
                 auto servicePtr = std::make_unique<ServiceType>(invoker.invoke());
-                return std::make_unique<services::UniquePtrService<ServiceType>>(std::move(servicePtr));
+                return std::make_unique<UniquePtrService<ServiceType>>(std::move(servicePtr));
             }
         }
     };
-} // namespace sb::di::details::factories
+} // namespace sb::di::details

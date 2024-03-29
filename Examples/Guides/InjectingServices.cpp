@@ -17,6 +17,13 @@ struct IServiceB
     virtual ~IServiceB() = default;
 };
 
+struct IServiceExecutor
+{
+    [[nodiscard]] virtual std::string execute() const = 0;
+
+    virtual ~IServiceExecutor() = default;
+};
+
 struct ServiceA final : IServiceA
 {
     std::string actionA() override { return "actionA"; }
@@ -27,7 +34,7 @@ struct ServiceB final : IServiceB
     std::string actionB() override { return "actionB"; }
 };
 
-class ServiceExecutor
+class ServiceExecutor final : public IServiceExecutor
 {
     IServiceA &_serviceA;
     std::unique_ptr<IServiceB> _serviceB;
@@ -38,7 +45,7 @@ class ServiceExecutor
     {
     }
 
-    [[nodiscard]] std::string execute() const
+    [[nodiscard]] std::string execute() const override
     {
         return _serviceA.actionA() + ", " + _serviceB->actionB() + " executed.";
     }
@@ -49,10 +56,10 @@ int main()
     ServiceProvider provider = ServiceCollection{}
                                    .addSingleton<IServiceA, ServiceA>()
                                    .addTransient<IServiceB, ServiceB>()
-                                   .addScoped<ServiceExecutor>()
+                                   .addScoped<IServiceExecutor, ServiceExecutor>()
                                    .buildServiceProvider();
 
-    const auto &executor = provider.getService<ServiceExecutor>();
+    const auto &executor = provider.getService<IServiceExecutor>();
 
     std::cout << executor.execute();
     return 0;

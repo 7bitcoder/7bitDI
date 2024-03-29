@@ -1,6 +1,6 @@
 ServiceFcnFactory
 ========================================
 
-.. doxygenclass:: sb::di::details::factories::ServiceFcnFactory
+.. doxygenclass:: sb::di::details::ServiceFcnFactory
    :members:
    :undoc-members:

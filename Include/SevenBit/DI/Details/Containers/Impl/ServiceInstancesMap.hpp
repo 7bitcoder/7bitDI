@@ -4,40 +4,37 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
 
-namespace sb::di::details::containers
+namespace sb::di::details
 {
     INLINE ServiceInstancesMap::ServiceInstancesMap(const bool strongDestructionOrder)
         : _strongDestructionOrder(strongDestructionOrder)
     {
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesMap::insert(const TypeId serviceTypeId, ServiceInstance instance)
+    INLINE ServiceInstanceList &ServiceInstancesMap::insert(const ServiceId &id, ServiceInstance &&instance)
     {
-        return insert(serviceTypeId, ServiceInstanceList{std::move(instance)});
+        return insert(id, ServiceInstanceList{std::move(instance)});
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesMap::insert(const TypeId serviceTypeId, ServiceInstanceList instances)
+    INLINE ServiceInstanceList &ServiceInstancesMap::insert(const ServiceId &id, ServiceInstanceList &&instances)
     {
-        auto [it, inserted] = _serviceListMap.emplace(serviceTypeId, std::move(instances));
+        auto [it, inserted] = _instancesMap.emplace(id, std::move(instances));
         if (inserted && _strongDestructionOrder)
         {
-            _constructionOrder.push_back(serviceTypeId);
+            _constructionOrder.push_back(it->first);
         }
         return it->second;
     }
 
-    INLINE bool ServiceInstancesMap::contains(const TypeId serviceTypeId) const
+    INLINE bool ServiceInstancesMap::contains(const ServiceId &id) const { return _instancesMap.count(id); }
+
+    INLINE ServiceInstanceList *ServiceInstancesMap::findInstances(const ServiceId &id)
     {
-        return _serviceListMap.count(serviceTypeId);
+        const auto it = _instancesMap.find(id);
+        return it != _instancesMap.end() ? &it->second : nullptr;
     }
 
-    INLINE ServiceInstanceList *ServiceInstancesMap::findInstances(const TypeId serviceTypeId)
-    {
-        const auto it = _serviceListMap.find(serviceTypeId);
-        return it != _serviceListMap.end() ? &it->second : nullptr;
-    }
-
-    INLINE bool ServiceInstancesMap::empty() const { return _serviceListMap.empty(); }
+    INLINE bool ServiceInstancesMap::empty() const { return _instancesMap.empty(); }
 
     INLINE void ServiceInstancesMap::clear()
     {
@@ -52,8 +49,8 @@ namespace sb::di::details::containers
             }
         }
         _constructionOrder.clear();
-        _serviceListMap.clear();
+        _instancesMap.clear();
     }
 
     INLINE ServiceInstancesMap::~ServiceInstancesMap() { clear(); }
-} // namespace sb::di::details::containers
+} // namespace sb::di::details

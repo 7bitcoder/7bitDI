@@ -6,6 +6,8 @@ Advanced Guides
    :titlesonly:
 
    advanced-guides/using-factories
-   advanced-guides/using-aliases
    advanced-guides/external-singleton
+   advanced-guides/keyed-services
+   advanced-guides/using-aliases
+   advanced-guides/configuring-service-provider
    advanced-guides/building-library

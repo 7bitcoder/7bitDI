@@ -1,6 +1,6 @@
 ServiceDescriptorsMap
 ========================================
 
-.. doxygenclass:: sb::di::details::containers::ServiceDescriptorsMap
+.. doxygenclass:: sb::di::details::ServiceDescriptorsMap
    :members:
    :undoc-members:

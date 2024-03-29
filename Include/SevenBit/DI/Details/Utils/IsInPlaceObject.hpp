@@ -4,7 +4,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-namespace sb::di::details::utils
+namespace sb::di::details
 {
     template <class T>
     struct IsInPlaceObject
@@ -23,4 +23,4 @@ namespace sb::di::details::utils
 
     template <class T> inline constexpr bool IsInPlaceObjectConstructableV = IsInPlaceObjectConstructable<T>::value;
 
-} // namespace sb::di::details::utils
+} // namespace sb::di::details

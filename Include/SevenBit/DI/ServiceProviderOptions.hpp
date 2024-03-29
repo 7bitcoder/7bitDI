@@ -23,8 +23,15 @@ namespace sb::di
 
         /**
          * @brief Set global uniqueness check
-         * @details If set to true service provider will check if service was already registered
+         * @details If set to true service provider will check if service implementation was already registered and
+         * throw exception in this case
          */
         bool checkServiceGlobalUniqueness = true;
+
+        /**
+         * @brief Set service search strategy
+         * @details If set to true provider will search for service in singleton container first then in scoped
+         */
+        bool searchInSigletonsFirts = true;
     };
 } // namespace sb::di

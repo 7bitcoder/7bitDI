@@ -1,6 +1,6 @@
 ScopedGuard
 ========================================
 
-.. doxygenclass:: sb::di::details::helpers::ScopedGuard
+.. doxygenclass:: sb::di::details::ScopedGuard
    :members:
    :undoc-members:

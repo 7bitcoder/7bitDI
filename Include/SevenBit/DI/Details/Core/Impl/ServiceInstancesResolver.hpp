@@ -7,69 +7,64 @@
 
 #include "SevenBit/DI/Details/Core/ServiceInstancesResolver.hpp"
 
-namespace sb::di::details::core
+namespace sb::di::details
 {
     INLINE ServiceInstancesResolver::ServiceInstancesResolver(ServiceInstanceCreator &creator,
-                                                              const containers::ServiceDescriptorList &descriptors)
+                                                              const ServiceDescriptorList &descriptors)
         : _creator(creator), _descriptors(descriptors)
     {
     }
 
     INLINE ServiceInstance ServiceInstancesResolver::createInstance() const { return createInstance(false); }
 
-    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneInstance() const
-    {
-        return createOneInstance(false);
-    }
+    INLINE ServiceInstanceList ServiceInstancesResolver::createOneInstance() const { return createOneInstance(false); }
 
-    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllInstances() const
+    INLINE ServiceInstanceList ServiceInstancesResolver::createAllInstances() const
     {
         return createAllInstances(false);
     }
 
-    INLINE containers::ServiceInstanceList &ServiceInstancesResolver::createRestInstances(
-        containers::ServiceInstanceList &instances) const
+    INLINE ServiceInstanceList &ServiceInstancesResolver::createRestInstances(ServiceInstanceList &instances) const
     {
         return createRestInstances(instances, false);
     }
 
     INLINE ServiceInstance ServiceInstancesResolver::createInstanceInPlace() const { return createInstance(true); }
 
-    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneInstanceInPlace() const
+    INLINE ServiceInstanceList ServiceInstancesResolver::createOneInstanceInPlace() const
     {
         return createOneInstance(true);
     }
 
-    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllInstancesInPlace() const
+    INLINE ServiceInstanceList ServiceInstancesResolver::createAllInstancesInPlace() const
     {
         return createAllInstances(true);
     }
 
-    INLINE containers::ServiceInstanceList &ServiceInstancesResolver::createRestInstancesInPlace(
-        containers::ServiceInstanceList &instances) const
+    INLINE ServiceInstanceList &ServiceInstancesResolver::createRestInstancesInPlace(
+        ServiceInstanceList &instances) const
     {
         return createRestInstances(instances, true);
     }
 
     INLINE ServiceInstance ServiceInstancesResolver::createAlias(const ServiceInstance &original) const
     {
-        return createAlias(&original);
+        return _creator.createInstanceAlias(_descriptors.last(), original);
     }
 
-    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneAlias(
-        const ServiceInstance &original) const
+    INLINE ServiceInstanceList ServiceInstancesResolver::createOneAlias(const ServiceInstance &original) const
     {
-        return containers::ServiceInstanceList{createAlias(&original)};
+        return ServiceInstanceList{createAlias(original)};
     }
 
-    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllAliases(
-        const OneOrList<ServiceInstance> &originals) const
+    INLINE ServiceInstanceList
+    ServiceInstancesResolver::createAllAliases(const OneOrList<ServiceInstance> &originals) const
     {
-        containers::ServiceInstanceList instances{createAlias(originals.first())};
+        ServiceInstanceList instances{createAlias(originals.first())};
         if (const auto size = originals.size(); size > 1)
         {
             instances.reserve(size);
-            originals.forEach([&](const ServiceInstance &instance, const size_t index) {
+            originals.forEach([&](const ServiceInstance &instance, const std::size_t index) {
                 if (index) // skip first
                 {
                     instances.add(createAlias(instance));
@@ -80,14 +75,14 @@ namespace sb::di::details::core
         return instances;
     }
 
-    INLINE containers::ServiceInstanceList &ServiceInstancesResolver::createRestAliases(
-        const OneOrList<ServiceInstance> &originals, containers::ServiceInstanceList &instances) const
+    INLINE ServiceInstanceList &ServiceInstancesResolver::createRestAliases(const OneOrList<ServiceInstance> &originals,
+                                                                            ServiceInstanceList &instances) const
     {
         if (const auto size = originals.size(); size > 1)
         {
             instances.reserve(size);
             auto first = createAlias(originals.first());
-            originals.forEach([&](const ServiceInstance &instance, const size_t index) {
+            originals.forEach([&](const ServiceInstance &instance, const std::size_t index) {
                 if (index && index < size - 1) // skip first and last
                 {
                     instances.add(createAlias(instance));
@@ -105,9 +100,9 @@ namespace sb::di::details::core
         return _creator.createInstance(_descriptors.last(), inPlaceRequest);
     }
 
-    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createOneInstance(const bool inPlaceRequest) const
+    INLINE ServiceInstanceList ServiceInstancesResolver::createOneInstance(const bool inPlaceRequest) const
     {
-        containers::ServiceInstanceList instances{_creator.createInstance(_descriptors.last(), inPlaceRequest)};
+        ServiceInstanceList instances{_creator.createInstance(_descriptors.last(), inPlaceRequest)};
         if (_descriptors.size() == 1)
         {
             instances.seal();
@@ -115,13 +110,13 @@ namespace sb::di::details::core
         return instances;
     }
 
-    INLINE containers::ServiceInstanceList ServiceInstancesResolver::createAllInstances(const bool inPlaceRequest) const
+    INLINE ServiceInstanceList ServiceInstancesResolver::createAllInstances(const bool inPlaceRequest) const
     {
-        containers::ServiceInstanceList instances{_creator.createInstance(_descriptors.first(), inPlaceRequest)};
+        ServiceInstanceList instances{_creator.createInstance(_descriptors.first(), inPlaceRequest)};
         if (const auto size = _descriptors.size(); size > 1)
         {
             instances.reserve(size);
-            _descriptors.getInnerList().forEach([&](const ServiceDescriptor &descriptor, const size_t index) {
+            _descriptors.getInnerList().forEach([&](const ServiceDescriptor &descriptor, const std::size_t index) {
                 if (index) // skip first
                 {
                     instances.add(_creator.createInstance(descriptor, inPlaceRequest));
@@ -132,14 +127,14 @@ namespace sb::di::details::core
         return instances;
     }
 
-    INLINE containers::ServiceInstanceList &ServiceInstancesResolver::createRestInstances(
-        containers::ServiceInstanceList &instances, const bool inPlaceRequest) const
+    INLINE ServiceInstanceList &ServiceInstancesResolver::createRestInstances(ServiceInstanceList &instances,
+                                                                              const bool inPlaceRequest) const
     {
         if (const auto size = _descriptors.size(); size > 1)
         {
             instances.reserve(size);
             auto first = _creator.createInstance(_descriptors.first(), inPlaceRequest);
-            _descriptors.getInnerList().forEach([&](const ServiceDescriptor &descriptor, const size_t index) {
+            _descriptors.getInnerList().forEach([&](const ServiceDescriptor &descriptor, const std::size_t index) {
                 if (index && index < size - 1) // skip first and last
                 {
                     instances.add(_creator.createInstance(descriptor, inPlaceRequest));
@@ -151,10 +146,4 @@ namespace sb::di::details::core
         instances.seal();
         return instances;
     }
-
-    INLINE ServiceInstance ServiceInstancesResolver::createAlias(const ServiceInstance *original) const
-    {
-        return _creator.createInstanceAlias(_descriptors.last(), original);
-    }
-
-} // namespace sb::di::details::core
+} // namespace sb::di::details

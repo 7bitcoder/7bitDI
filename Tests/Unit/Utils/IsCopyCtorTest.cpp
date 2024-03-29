@@ -21,9 +21,9 @@ class IsCopyCtorTest : public testing::Test
 
 TEST_F(IsCopyCtorTest, ShouldCheckForCopyCtor)
 {
-    EXPECT_TRUE((sb::di::details::utils::IsCopyCtorV<TestComplexClass1, TestComplexClass1>));
-    EXPECT_TRUE((sb::di::details::utils::IsCopyCtorV<TestComplexClass1, const TestComplexClass1>));
-    EXPECT_FALSE((sb::di::details::utils::IsCopyCtorV<TestComplexClass2, TestComplexClass1>));
-    EXPECT_FALSE((sb::di::details::utils::IsCopyCtorV<TestComplexClass2, const TestComplexClass1>));
-    EXPECT_FALSE((sb::di::details::utils::IsCopyCtorV<TestComplexClass2, TestComplexClass3>));
+    EXPECT_TRUE((sb::di::details::IsCopyCtorV<TestComplexClass1, TestComplexClass1>));
+    EXPECT_TRUE((sb::di::details::IsCopyCtorV<TestComplexClass1, const TestComplexClass1>));
+    EXPECT_FALSE((sb::di::details::IsCopyCtorV<TestComplexClass2, TestComplexClass1>));
+    EXPECT_FALSE((sb::di::details::IsCopyCtorV<TestComplexClass2, const TestComplexClass1>));
+    EXPECT_FALSE((sb::di::details::IsCopyCtorV<TestComplexClass2, TestComplexClass3>));
 }

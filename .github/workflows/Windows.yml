@@ -32,7 +32,8 @@ jobs:
           { tool: LLVM, ver: 14.0.6 },
           { tool: LLVM, ver: 15.0.7 },
           { tool: LLVM, ver: 16.0.6 },
-          { tool: LLVM, ver: 17.0.6 } ]
+          { tool: LLVM, ver: 17.0.6 },
+          { tool: LLVM, ver: 18.1.2 } ]
         build_type: [ Release ]
         os: [ windows-2019 ]
         std: [ 17 ]
@@ -70,13 +71,13 @@ jobs:
           CXX: ${{matrix.cxx}}
           CC: ${{matrix.cc}}
           PARAMETERS: ${{ matrix.compiler.tool == 'msvc' && format('-A x64 -T v{0}', matrix.compiler.ver) || format('-G "{0}"', matrix.generator) }}
-        run: cmake -B ${{runner.workspace}}/build ${{env.PARAMETERS}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_TESTS=ON
+        run: cmake -B ${{runner.workspace}}/build ${{env.PARAMETERS}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_ALL_TESTS=ON
 
       - name: Build
         run: cmake --build ${{runner.workspace}}/build --config ${{matrix.build_type}} -j
 
       - name: Test
-        working-directory: ${{runner.workspace}}/build/Tests
+        working-directory: ${{runner.workspace}}/build
         run: ctest -C ${{matrix.build_type}}
         env:
           CTEST_OUTPUT_ON_FAILURE: True

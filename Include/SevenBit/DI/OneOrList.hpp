@@ -15,7 +15,7 @@ namespace sb::di
         std::variant<T, std::vector<T>> _variant{};
 
       public:
-        explicit OneOrList(const size_t size) : _variant(std::vector<T>{}) { reserve(size); }
+        explicit OneOrList(const std::size_t size) : _variant(std::vector<T>{}) { reserve(size); }
         explicit OneOrList(T &&mainElement) : _variant(std::move(mainElement)) {}
 
         OneOrList(const OneOrList &) = delete;
@@ -69,18 +69,18 @@ namespace sb::di
             return single ? *single : getAsList().back();
         }
 
-        T &operator[](size_t index)
+        T &operator[](std::size_t index)
         {
             auto single = tryGetAsSingle();
             return single ? *single : getAsList().at(index);
         }
-        const T &operator[](size_t index) const
+        const T &operator[](std::size_t index) const
         {
             auto single = tryGetAsSingle();
             return single ? *single : getAsList().at(index);
         }
 
-        [[nodiscard]] size_t size() const
+        [[nodiscard]] std::size_t size() const
         {
             auto list = tryGetAsList();
             return list ? list->size() : 1;
@@ -88,7 +88,7 @@ namespace sb::di
 
         [[nodiscard]] bool empty() const { return !size(); }
 
-        void reserve(size_t newCapacity)
+        void reserve(std::size_t newCapacity)
         {
             tryConvertToList();
             getAsList().reserve(newCapacity);
@@ -109,7 +109,7 @@ namespace sb::di
                 callFcn(fcn, *instance, 0);
                 return;
             }
-            size_t index = 0;
+            std::size_t index = 0;
             for (auto &instance : getAsList())
             {
                 callFcn(fcn, instance, index++);
@@ -123,7 +123,7 @@ namespace sb::di
                 callFcn(fcn, *instance, 0);
                 return;
             }
-            size_t index = 0;
+            std::size_t index = 0;
             for (const auto &instance : getAsList())
             {
                 callFcn(fcn, instance, index++);
@@ -134,7 +134,7 @@ namespace sb::di
         {
             std::vector<decltype(callFcn(mapFcn, first(), 0))> result;
             result.reserve(size());
-            forEach([&](T &item, size_t index) { result.push_back(callFcn(mapFcn, item, index)); });
+            forEach([&](T &item, std::size_t index) { result.push_back(callFcn(mapFcn, item, index)); });
             return result;
         }
 
@@ -142,7 +142,7 @@ namespace sb::di
         {
             std::vector<decltype(callFcn(mapFcn, first(), 0))> result;
             result.reserve(size());
-            forEach([&](const T &item, size_t index) { result.push_back(callFcn(mapFcn, item, index)); });
+            forEach([&](const T &item, std::size_t index) { result.push_back(callFcn(mapFcn, item, index)); });
             return result;
         }
 
@@ -157,13 +157,13 @@ namespace sb::di
             }
         }
 
-        template <class TFunc, class TItem> static auto callFcn(TFunc &fcn, TItem &item, size_t index)
+        template <class TFunc, class TItem> static auto callFcn(TFunc &fcn, TItem &item, std::size_t index)
         {
             if constexpr (std::is_invocable_v<TFunc, TItem &>)
             {
                 return fcn(item);
             }
-            else if constexpr (std::is_invocable_v<TFunc, TItem &, size_t>)
+            else if constexpr (std::is_invocable_v<TFunc, TItem &, std::size_t>)
             {
                 return fcn(item, index);
             }
@@ -175,7 +175,7 @@ namespace sb::di
 
         template <class TFunc> static void badFunctor()
         {
-            static_assert(details::utils::notSupportedType<TFunc>,
+            static_assert(details::notSupportedType<TFunc>,
                           "Functor should take as arguments: T and additionally index");
         }
     };

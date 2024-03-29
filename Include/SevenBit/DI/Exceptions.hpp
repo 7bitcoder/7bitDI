@@ -48,11 +48,6 @@ namespace sb::di
         explicit ServiceAlreadyRegisteredException(TypeId typeIndex);
     };
 
-    struct EXPORT ServiceBaseTypeMismatchException : InjectorException
-    {
-        ServiceBaseTypeMismatchException(TypeId typeIndex, TypeId interface);
-    };
-
     struct EXPORT ServiceLifeTimeMismatchException : InjectorException
     {
         ServiceLifeTimeMismatchException(TypeId typeIndex, TypeId interface);

@@ -10,5 +10,6 @@ Reference
    reference/di/details/core
    reference/di/details/factories
    reference/di/details/helpers
+   reference/di/details/models
    reference/di/details/services
    reference/di/details/utils

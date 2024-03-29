@@ -7,21 +7,21 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
+#include "SevenBit/DI/Details/Models/ServiceId.hpp"
 #include "SevenBit/DI/ServiceDescriptor.hpp"
-#include "SevenBit/DI/TypeId.hpp"
 
-namespace sb::di::details::containers
+namespace sb::di::details
 {
     class EXPORT ServiceDescriptorsMap
     {
-        std::unordered_map<TypeId, ServiceDescriptorList> _serviceCreatorsMap;
-        std::unique_ptr<std::unordered_set<TypeId>> _registeredServicesCheck;
+        std::unordered_map<ServiceId, ServiceDescriptorList> _descriptorsMap;
+        std::unique_ptr<std::unordered_set<ServiceId>> _registeredServices;
 
       public:
         using Ptr = std::unique_ptr<ServiceDescriptorsMap>;
 
-        [[nodiscard]] auto begin() const { return _serviceCreatorsMap.begin(); }
-        [[nodiscard]] auto end() const { return _serviceCreatorsMap.end(); }
+        [[nodiscard]] auto begin() const { return _descriptorsMap.begin(); }
+        [[nodiscard]] auto end() const { return _descriptorsMap.end(); }
 
         explicit ServiceDescriptorsMap(bool checkDescriptorUniqueness);
 
@@ -44,13 +44,13 @@ namespace sb::di::details::containers
 
         void seal();
 
-        [[nodiscard]] const ServiceDescriptorList *findDescriptors(TypeId typeId) const;
+        [[nodiscard]] const ServiceDescriptorList *findDescriptors(const ServiceId &id) const;
 
       private:
         void addDescriptorWithCheck(ServiceDescriptor &&descriptor);
         void addDescriptor(ServiceDescriptor &&descriptor);
     };
-} // namespace sb::di::details::containers
+} // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
 #include "SevenBit/DI/Details/Containers/Impl/ServiceDescriptorsMap.hpp"

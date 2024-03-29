@@ -1,6 +1,6 @@
-RequireBase
+RequireDescriptor
 ========================================
 
-.. doxygenstruct:: sb::di::details::utils::RequireBase
+.. doxygenstruct:: sb::di::details::RequireDescriptor
    :members:
    :undoc-members:

@@ -4,7 +4,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-namespace sb::di::details::utils
+namespace sb::di::details
 {
     struct Container
     {
@@ -25,4 +25,4 @@ namespace sb::di::details::utils
             return first;
         }
     };
-} // namespace sb::di::details::utils
+} // namespace sb::di::details

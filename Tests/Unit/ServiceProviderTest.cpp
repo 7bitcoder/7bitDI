@@ -22,16 +22,11 @@ class ServiceProviderTest : public testing::Test
 TEST_F(ServiceProviderTest, ShouldCreateServiceProvider)
 {
     sb::di::IServiceInstanceProvider::Ptr instanceProvider =
-        std::make_unique<sb::di::details::core::ServiceInstanceProviderRoot>();
+        std::make_unique<sb::di::details::ServiceInstanceProviderRoot>();
 
     const auto providerPtr = instanceProvider.get();
     sb::di::ServiceProvider provider{std::move(instanceProvider)};
 
-    const auto &options = provider.getOptions();
-
-    EXPECT_EQ(options.prebuildSingletons, false);
-    EXPECT_EQ(options.strongDestructionOrder, false);
-    EXPECT_EQ(options.checkServiceGlobalUniqueness, true);
     EXPECT_EQ(&provider.getInstanceProvider(), providerPtr);
 }
 

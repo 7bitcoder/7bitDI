@@ -4,7 +4,7 @@
 
 #include "SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp"
 
-namespace sb::di::details::helpers
+namespace sb::di::details
 {
     INLINE ScopedGuard CircularDependencyGuard::spawnGuard(const TypeId typeIdUnderConstruction)
     {
@@ -16,4 +16,4 @@ namespace sb::di::details::helpers
         return spawnGuard(typeIdUnderConstruction);
     }
 
-} // namespace sb::di::details::helpers
+} // namespace sb::di::details

@@ -4,7 +4,7 @@
 
 #include "SevenBit/DI/Details/Utils/Inheritance.hpp"
 
-namespace sb::di::details::utils
+namespace sb::di::details
 {
     struct EXPORT Assert
     {
@@ -30,4 +30,4 @@ namespace sb::di::details::utils
             static_assert(!std::is_same_v<TAlias, TService>, "Alias type: TAlias cannot be same as TService");
         }
     };
-} // namespace sb::di::details::utils
+} // namespace sb::di::details
