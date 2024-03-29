@@ -12,6 +12,6 @@
 #define _7BIT_DI_HEADER_ONLY_LIB
 #endif
 
-#define _7BIT_DI_VERSION_MAJOR 2
-#define _7BIT_DI_VERSION_MINOR 2
+#define _7BIT_DI_VERSION_MAJOR 3
+/* #undef _7BIT_DI_VERSION_MINOR */
 /* #undef _7BIT_DI_VERSION_PATCH */
