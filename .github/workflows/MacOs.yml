@@ -15,7 +15,6 @@ jobs:
       matrix:
         compiler: [
           { tool: apple-clang },
-          { tool: gcc, ver: 9 },
           { tool: gcc, ver: 10 },
           { tool: gcc, ver: 11 },
           { tool: gcc, ver: 12 },
@@ -31,8 +30,6 @@ jobs:
           - compiler: { tool: apple-clang }
             cxx: ''
             cc: ''
-        exclude:
-          - { os: macos-12, compiler: { tool: gcc, ver: 9 } }
 
     runs-on: ${{matrix.os}}
     steps:

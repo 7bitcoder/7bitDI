@@ -12,7 +12,7 @@ add_executable(BigLoadTest BigLoadTest.cpp)
 target_link_libraries(BigLoadTest PUBLIC 7bitDI)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND WIN32)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(BigLoadTest PRIVATE -Wa,-mbig-obj)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")

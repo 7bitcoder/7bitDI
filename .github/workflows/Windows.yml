@@ -32,7 +32,8 @@ jobs:
           { tool: LLVM, ver: 14.0.6 },
           { tool: LLVM, ver: 15.0.7 },
           { tool: LLVM, ver: 16.0.6 },
-          { tool: LLVM, ver: 17.0.6 } ]
+          { tool: LLVM, ver: 17.0.6 },
+          { tool: LLVM, ver: 18.1.2 } ]
         build_type: [ Release ]
         os: [ windows-2019 ]
         std: [ 17 ]
