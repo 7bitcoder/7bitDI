@@ -36,7 +36,7 @@ Installation
         FetchContent_Declare(
                 7bitDI
                 GIT_REPOSITORY https://github.com/7bitcoder/7bitDI.git
-                GIT_TAG d13c02d81dc4e90013af854b9a8a50784ff740f5 # release 2.1.0
+                GIT_TAG v3.0.0
         )
         FetchContent_MakeAvailable(7bitDI)
 
