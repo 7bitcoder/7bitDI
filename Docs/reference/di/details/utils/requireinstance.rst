@@ -1,6 +1,6 @@
-ExtRequire
+RequireInstance
 ========================================
 
-.. doxygenstruct:: sb::di::details::ExtRequire
+.. doxygenstruct:: sb::di::details::RequireInstance
    :members:
    :undoc-members:

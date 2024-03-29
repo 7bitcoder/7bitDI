@@ -11,7 +11,7 @@
 
 namespace sb::di::details
 {
-    class EXPORT ServiceId
+    class ServiceId
     {
         TypeId _typeId;
         std::string_view _key{};

@@ -1,6 +1,6 @@
-ExtCheck
+RequireDescriptor
 ========================================
 
-.. doxygenstruct:: sb::di::details::ExtCheck
+.. doxygenstruct:: sb::di::details::RequireDescriptor
    :members:
    :undoc-members:

@@ -8,7 +8,6 @@ sb::di::details - Utils
    utils/assert.rst
    utils/cast.rst
    utils/check.rst
-   utils/extcheck.rst
    utils/container.rst
    utils/ctorparamsnumber.rst
    utils/iscopyctor.rst
@@ -16,4 +15,5 @@ sb::di::details - Utils
    utils/isuniqueptr.rst
    utils/removeuniqueptr.rst
    utils/require.rst
-   utils/extrequire.rst
+   utils/requiredescriptor.rst
+   utils/requireinstance.rst
