@@ -6,7 +6,6 @@ sb::di
    :titlesonly:
 
    di/exceptions
-   di/injected
    di/iservicefactory
    di/iserviceinstance
    di/iserviceinstanceprovider

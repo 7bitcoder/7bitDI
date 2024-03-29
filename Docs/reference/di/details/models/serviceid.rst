@@ -1,7 +1,6 @@
-Injected
+ServiceId
 ========================================
 
-.. doxygenstruct:: sb::di::Injected
+.. doxygenclass:: sb::di::details::ServiceId
    :members:
-   :protected-members:
    :undoc-members:
