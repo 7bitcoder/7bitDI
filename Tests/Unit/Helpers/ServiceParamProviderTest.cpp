@@ -32,7 +32,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyInPlaceService)
 
     auto act = [&] {
         TestDependencyClass instance =
-            sb::di::details::ServiceParamProvider<TestDependencyClass>::getParam(mock);
+            sb::di::details::ServiceGetter<TestDependencyClass>::get(mock);
     };
 
     EXPECT_NO_THROW(act());
@@ -48,7 +48,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyPtr1Service)
 
     auto act = [&] {
         TestDependencyClass *instance =
-            sb::di::details::ServiceParamProvider<TestDependencyClass *>::getParam(mock);
+            sb::di::details::ServiceGetter<TestDependencyClass *>::getParam(mock);
     };
 
     EXPECT_NO_THROW(act());
@@ -64,7 +64,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyPtr2Service)
 
     auto act = [&] {
         const TestDependencyClass *instance =
-            sb::di::details::ServiceParamProvider<const TestDependencyClass *>::getParam(mock);
+            sb::di::details::ServiceGetter<const TestDependencyClass *>::getParam(mock);
     };
 
     EXPECT_NO_THROW(act());
@@ -80,7 +80,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyPtr3Service)
 
     auto act = [&] {
         const TestDependencyClass *const instance =
-            sb::di::details::ServiceParamProvider<const TestDependencyClass *const>::getParam(mock);
+            sb::di::details::ServiceGetter<const TestDependencyClass *const>::getParam(mock);
     };
 
     EXPECT_NO_THROW(act());
@@ -96,7 +96,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyPtr4Service)
 
     auto act = [&] {
         TestDependencyClass *const instance =
-            sb::di::details::ServiceParamProvider<TestDependencyClass *const>::getParam(mock);
+            sb::di::details::ServiceGetter<TestDependencyClass *const>::getParam(mock);
     };
 
     EXPECT_NO_THROW(act());
@@ -112,7 +112,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyRef1Service)
 
     auto act = [&] {
         TestDependencyClass &instance =
-            sb::di::details::ServiceParamProvider<TestDependencyClass &>::getParam(mock);
+            sb::di::details::ServiceGetter<TestDependencyClass &>::getParam(mock);
     };
 
     EXPECT_NO_THROW(act());
@@ -128,7 +128,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyRef2Service)
 
     auto act = [&] {
         const TestDependencyClass &instance =
-            sb::di::details::ServiceParamProvider<const TestDependencyClass &>::getParam(mock);
+            sb::di::details::ServiceGetter<const TestDependencyClass &>::getParam(mock);
     };
 
     EXPECT_NO_THROW(act());
@@ -146,7 +146,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyUniq1Service)
 
     auto act = [&] {
         std::unique_ptr<TestDependencyClass> instance =
-            sb::di::details::ServiceParamProvider<std::unique_ptr<TestDependencyClass>>::getParam(mock);
+            sb::di::details::ServiceGetter<std::unique_ptr<TestDependencyClass>>::getParam(mock);
     };
 
     EXPECT_NO_THROW(act());
@@ -164,7 +164,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyUniq2Service)
 
     auto act = [&] {
         const std::unique_ptr<TestDependencyClass> instance =
-            sb::di::details::ServiceParamProvider<const std::unique_ptr<TestDependencyClass>>::getParam(mock);
+            sb::di::details::ServiceGetter<const std::unique_ptr<TestDependencyClass>>::getParam(mock);
     };
 
     EXPECT_NO_THROW(act());
@@ -182,7 +182,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyVec1Service)
 
     auto act = [&] {
         std::vector<TestDependencyClass *> instance =
-            sb::di::details::ServiceParamProvider<std::vector<TestDependencyClass *>>::getParam(mock);
+            sb::di::details::ServiceGetter<std::vector<TestDependencyClass *>>::getParam(mock);
     };
 
     EXPECT_NO_THROW(act());
@@ -199,7 +199,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyVec2Service)
 
     auto act = [&] {
         const std::vector<TestDependencyClass *> instance =
-            sb::di::details::ServiceParamProvider<const std::vector<TestDependencyClass *>>::getParam(mock);
+            sb::di::details::ServiceGetter<const std::vector<TestDependencyClass *>>::getParam(mock);
     };
 
     EXPECT_NO_THROW(act());
@@ -218,7 +218,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyVec3Service)
 
     auto act = [&] {
         std::vector<std::unique_ptr<TestDependencyClass>> instance =
-            sb::di::details::ServiceParamProvider<std::vector<std::unique_ptr<TestDependencyClass>>>::getParam(
+            sb::di::details::ServiceGetter<std::vector<std::unique_ptr<TestDependencyClass>>>::getParam(
                 mock);
     };
 
@@ -239,7 +239,7 @@ TEST_F(ServiceParamProviderTest, ShouldGetDependencyVec4Service)
 
     auto act = [&] {
         const std::vector<std::unique_ptr<TestDependencyClass>> instance =
-            sb::di::details::ServiceParamProvider<
+            sb::di::details::ServiceGetter<
                 const std::vector<std::unique_ptr<TestDependencyClass>>>::getParam(mock);
     };
 

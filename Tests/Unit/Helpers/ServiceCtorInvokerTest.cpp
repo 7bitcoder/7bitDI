@@ -29,7 +29,7 @@ TEST_F(ServiceCtorInvokerTest, ShouldInvokeFuncWithCtorParams)
     EXPECT_CALL(mock.getMock(), tryGetInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
         .WillOnce(testing::Return(&test1));
 
-    sb::di::details::ServiceCtorInvoker<TestDependencyPtrClass1> invoker{mock};
+    sb::di::details::CtorInjector<TestDependencyPtrClass1> invoker{mock};
 
     auto func = [&](TestDependencyClass *service) {
         EXPECT_TRUE(service);

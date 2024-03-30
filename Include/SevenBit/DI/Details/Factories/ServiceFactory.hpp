@@ -5,7 +5,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Helpers/ServiceCtorInvoker.hpp"
+#include "SevenBit/DI/Details/Helpers/CtorInjector.hpp"
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 #include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
@@ -34,12 +34,12 @@ namespace sb::di::details
       public:
         IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
-            ServiceCtorInvoker<T> invoker{serviceProvider};
+            CtorInjector<T> injector{serviceProvider};
             if (inPlaceRequest)
             {
-                return invoker.invokeWithCtorParams(InPlaceCreator{});
+                return injector.callWithCtorArgs(InPlaceCreator{});
             }
-            return invoker.invokeWithCtorParams(UniqueCreator{});
+            return injector.callWithCtorArgs(UniqueCreator{});
         }
     };
 

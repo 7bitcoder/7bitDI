@@ -2,7 +2,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Helpers/ServiceCtorParamConverter.hpp"
+#include "SevenBit/DI/Details/Utils/IsCopyCtor.hpp"
 #include "SevenBit/DI/Details/Utils/NotSupportedType.hpp"
 
 namespace sb::di::details
@@ -40,6 +40,9 @@ namespace sb::di::details
         }
     } // namespace ctorParamsNumberInternals
 
-    template <class T> constexpr std::size_t ctorParamsNumber() { return ctorParamsNumberInternals::paramsNumber<T>(0); };
+    template <class T> constexpr std::size_t ctorParamsNumber()
+    {
+        return ctorParamsNumberInternals::paramsNumber<T>(0);
+    };
 
 } // namespace sb::di::details
