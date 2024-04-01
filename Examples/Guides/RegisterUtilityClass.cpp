@@ -25,10 +25,9 @@ class ServiceExecutor final : public InjectedSingleton<IServiceExecutor, Service
 {
     ServiceA &_serviceA = inject();
     ServiceA *_optionalServiceA = inject();
-    std::vector<ServiceA *> _allServiceA = inject();
+    // std::vector<ServiceA *> _allServiceA = inject();
 
     std::unique_ptr<ServiceB> _serviceB = inject();
-    std::unique_ptr<ServiceB> _optionalServiceB = inject();
     std::vector<std::unique_ptr<ServiceB>> _allServiceB = inject();
 
   public:
