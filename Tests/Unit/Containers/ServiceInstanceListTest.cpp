@@ -44,7 +44,8 @@ TEST_F(ServiceInstanceListTest, ShouldFailAddNullService)
 TEST_F(ServiceInstanceListTest, ShouldFailAddInvalidService)
 {
     auto act = [&] {
-        auto implementation = std::make_unique<sb::di::details::UniquePtrService<TestClass1>>(nullptr);
+        auto implementation =
+            std::make_unique<sb::di::details::UniquePtrService<TestClass1>>(std::unique_ptr<TestClass1>{});
         sb::di::details::ServiceInstanceList list{sb::di::ServiceInstance{std::move(implementation)}};
     };
 

@@ -4,7 +4,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Helpers/ServiceInjector.hpp"
+#include "SevenBit/DI/Details/Helpers/ServiceExtractor.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 #include "SevenBit/DI/Utils/Register.hpp"
 
@@ -21,7 +21,7 @@ namespace sb::di
       protected:
         ServiceProvider &getProvider() const { return _provider; }
 
-        auto inject() const { return details::ServiceInjector{getProvider()}; }
+        auto inject() const { return details::ServiceExtractor{getProvider()}; }
     };
 
     template <class TService, class TImplementation = TService, class TServicesCollection = GlobalServices>

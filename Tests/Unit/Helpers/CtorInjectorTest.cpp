@@ -2,26 +2,26 @@
 
 #include "../../Helpers/Classes/Dependencies.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
-#include "SevenBit/DI/Details/Helpers/ServiceCtorInvoker.hpp"
+#include "SevenBit/DI/Details/Helpers/CtorInjector.hpp"
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 
-class ServiceCtorInvokerTest : public testing::Test
+class CtorInjectorTest : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}
 
-    ServiceCtorInvokerTest() {}
+    CtorInjectorTest() {}
 
     void SetUp() override {}
 
     void TearDown() override {}
 
-    ~ServiceCtorInvokerTest() override = default;
+    ~CtorInjectorTest() override = default;
 
     static void TearDownTestSuite() {}
 };
 
-TEST_F(ServiceCtorInvokerTest, ShouldInvokeFuncWithCtorParams)
+TEST_F(CtorInjectorTest, ShouldInvokeFuncWithCtorParams)
 {
     ServiceProviderMock mock;
     sb::di::ServiceInstance test1{std::make_unique<sb::di::details::InPlaceService<TestDependencyClass>>()};
@@ -31,9 +31,5 @@ TEST_F(ServiceCtorInvokerTest, ShouldInvokeFuncWithCtorParams)
 
     sb::di::details::CtorInjector<TestDependencyPtrClass1> invoker{mock};
 
-    auto func = [&](TestDependencyClass *service) {
-        EXPECT_TRUE(service);
-        return 1;
-    };
-    EXPECT_EQ(invoker.invokeWithCtorParams(func), 1);
+    EXPECT_TRUE(invoker.makeUnique<TestDependencyPtrClass1>());
 }

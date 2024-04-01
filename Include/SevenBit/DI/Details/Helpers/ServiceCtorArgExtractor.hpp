@@ -7,12 +7,12 @@
 
 namespace sb::di::details
 {
-    template <class T> class CtorArgServiceInjector
+    template <class T> class ServiceCtorArgExtractor
     {
         ServiceProvider &_provider;
 
       public:
-        explicit CtorArgServiceInjector(ServiceProvider &provider, std::size_t) : _provider(provider) {}
+        explicit ServiceCtorArgExtractor(ServiceProvider &provider, std::size_t) : _provider(provider) {}
 
         template <class S, class = std::enable_if_t<!IsCopyCtorV<T, S>>> operator S()
         {

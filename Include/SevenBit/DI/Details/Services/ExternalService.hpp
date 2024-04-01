@@ -14,7 +14,7 @@ namespace sb::di::details
         T *_service = nullptr;
 
       public:
-        using Ptr = std::unique_ptr<ExternalService<T>>;
+        using Ptr = std::unique_ptr<ExternalService>;
 
         explicit ExternalService(T *service) : _service(service) {}
 

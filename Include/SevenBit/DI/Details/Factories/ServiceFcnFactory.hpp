@@ -17,37 +17,40 @@ namespace sb::di::details
 {
     template <class FactoryFcn> class ServiceFcnFactory final : public IServiceFactory
     {
-        using FunctorInjector = FunctorInjector<FactoryFcn>;
-        using FactoryReturnType = typename FunctorInjector::ReturnType;
-
         mutable FactoryFcn _factoryFunction;
 
       public:
-        using ServiceType = RemoveUniquePtrT<FactoryReturnType>;
+        using FunctorReturnType = typename FunctorInjector<FactoryFcn>::ReturnType;
+        using ServiceType = RemoveUniquePtrT<FunctorReturnType>;
 
-        explicit ServiceFcnFactory(FactoryFcn &&factoryFunction) : _factoryFunction{std::move(factoryFunction)}
-        {
-            static_assert(IsInPlaceObjectConstructableV<ServiceType> || IsUniquePtrV<FactoryReturnType> ||
-                              notSupportedType<FactoryFcn>,
-                          "Service factory return type must be std::unique_ptr<TService> or copyable/movable object");
-        }
+        explicit ServiceFcnFactory(FactoryFcn &&factoryFunction) : _factoryFunction{std::move(factoryFunction)} {}
 
         IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
-            FunctorInjector injector{_factoryFunction, serviceProvider};
-            if constexpr (IsUniquePtrV<FactoryReturnType>)
+            FunctorInjector<FactoryFcn> injector{_factoryFunction, serviceProvider};
+            if constexpr (IsUniquePtrV<FunctorReturnType>)
             {
                 return std::make_unique<UniquePtrService<ServiceType>>(injector.call());
             }
-            else
+            else if constexpr (IsInPlaceObjectConstructableV<FunctorReturnType>)
             {
                 if (inPlaceRequest)
                 {
                     return std::make_unique<InPlaceService<ServiceType>>(injector.call());
                 }
-                auto servicePtr = std::make_unique<ServiceType>(injector.call());
-                return std::make_unique<UniquePtrService<ServiceType>>(std::move(servicePtr));
+                return std::make_unique<UniquePtrService<ServiceType>>(injector.call());
             }
+            else
+            {
+                badFunctor();
+                return nullptr;
+            }
+        }
+
+        static void badFunctor()
+        {
+            static_assert(notSupportedType<FactoryFcn>,
+                          "Service factory return type must be std::unique_ptr<TService> or copyable/movable object");
         }
     };
 } // namespace sb::di::details
