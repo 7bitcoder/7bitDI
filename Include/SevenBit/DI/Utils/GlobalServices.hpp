@@ -11,6 +11,11 @@ namespace sb::di
         GlobalServices() = default;
 
       public:
+        GlobalServices(const GlobalServices &) = delete;
+        GlobalServices(GlobalServices &&) noexcept = delete;
+        GlobalServices &operator=(const GlobalServices &) = delete;
+        GlobalServices &operator=(GlobalServices &&) noexcept = delete;
+
         static GlobalServices &instance()
         {
             static GlobalServices services;

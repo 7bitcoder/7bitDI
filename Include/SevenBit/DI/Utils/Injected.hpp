@@ -4,31 +4,13 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Helpers/ServiceGetter.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
 #include "SevenBit/DI/Utils/Register.hpp"
+#include "SevenBit/DI/Utils/ServiceExtractor.hpp"
 
 namespace sb::di
 {
     struct Injected
     {
-        struct ServiceExtractor
-        {
-            ServiceProvider &_provider;
-
-            template <class S, class = std::enable_if_t<!std::is_null_pointer_v<S> && !details::isInitializerListV<S>>>
-            operator S()
-            {
-                return details::ServiceGetter<S>::get(_provider);
-            }
-            template <class S, class = std::enable_if_t<!details::IsUniquePtrV<S> && !std::is_null_pointer_v<S> &&
-                                                        !details::IsVectorV<S> && !details::isInitializerListV<S>>>
-            operator S &() const
-            {
-                return details::ServiceGetter<S &>::get(_provider);
-            }
-        };
-
       private:
         ServiceProvider &_provider;
 
@@ -38,7 +20,12 @@ namespace sb::di
       protected:
         [[nodiscard]] ServiceProvider &getProvider() const { return _provider; }
 
-        [[nodiscard]] auto inject() const { return ServiceExtractor{getProvider()}; }
+        [[nodiscard]] ServiceExtractor inject() const { return ServiceExtractor{getProvider()}; }
+
+        template <class Type> [[nodiscard]] Type inject() const
+        {
+            return details::ServiceGetter<std::remove_cv_t<Type>>::get(getProvider());
+        }
     };
 
     template <class TService, class TImplementation = TService, class TServicesCollection = GlobalServices>

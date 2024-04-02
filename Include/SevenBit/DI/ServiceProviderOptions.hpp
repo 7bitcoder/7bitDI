@@ -32,6 +32,6 @@ namespace sb::di
          * @brief Set service search strategy
          * @details If set to true provider will search for service in singleton container first then in scoped
          */
-        bool searchInSigletonsFirts = true;
+        bool searchInSigletonsFirst = true;
     };
 } // namespace sb::di

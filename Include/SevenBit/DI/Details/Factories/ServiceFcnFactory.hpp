@@ -8,9 +8,7 @@
 #include "SevenBit/DI/Details/Helpers/FunctorInjector.hpp"
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 #include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
-#include "SevenBit/DI/Details/Utils/IsInPlaceObject.hpp"
-#include "SevenBit/DI/Details/Utils/IsUniquePtr.hpp"
-#include "SevenBit/DI/Details/Utils/RemoveUniquePtr.hpp"
+#include "SevenBit/DI/Details/Utils/Meta.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
 
 namespace sb::di::details
@@ -32,7 +30,7 @@ namespace sb::di::details
             {
                 return std::make_unique<UniquePtrService<ServiceType>>(injector.call());
             }
-            else if constexpr (IsInPlaceObjectConstructableV<FunctorReturnType>)
+            else if constexpr (IsInPlaceServiceV<FunctorReturnType>)
             {
                 if (inPlaceRequest)
                 {

@@ -1,17 +1,21 @@
 #include <SevenBit/DI.hpp>
-#include <SevenBit/DI/Utils/Injected.hpp>
+#include <SevenBit/DI/Utils/Register.hpp>
 #include <iostream>
 
 using namespace sb::di;
 
-struct ServiceA : RegisterSingleton<ServiceA>
+struct IServiceA
 {
-    std::string actionA() { return "actionA"; }
+    virtual std::string actionA() = 0;
+
+    virtual ~IServiceA() = default;
 };
 
-struct ServiceB : RegisterTransient<ServiceB>
+struct IServiceB
 {
-    std::string actionB() { return "actionB"; }
+    virtual std::string actionB() = 0;
+
+    virtual ~IServiceB() = default;
 };
 
 struct IServiceExecutor
@@ -21,17 +25,26 @@ struct IServiceExecutor
     virtual ~IServiceExecutor() = default;
 };
 
-class ServiceExecutor final : public InjectedSingleton<IServiceExecutor, ServiceExecutor>
+struct ServiceA final : IServiceA, RegisterSingleton<IServiceA, ServiceA>
 {
-    ServiceA &_serviceA = inject();
-    ServiceA *_optionalServiceA = inject();
-    // std::vector<ServiceA *> _allServiceA = inject();
+    std::string actionA() override { return "actionA"; }
+};
 
-    std::unique_ptr<ServiceB> _serviceB = inject();
-    std::vector<std::unique_ptr<ServiceB>> _allServiceB = inject();
+struct ServiceB final : IServiceB, RegisterTransient<IServiceB, ServiceB>
+{
+    std::string actionB() override { return "actionB"; }
+};
+
+class ServiceExecutor final : public IServiceExecutor, public RegisterScoped<IServiceExecutor, ServiceExecutor>
+{
+    IServiceA &_serviceA;
+    std::unique_ptr<IServiceB> _serviceB;
 
   public:
-    using InjectedSingleton::InjectedSingleton;
+    ServiceExecutor(IServiceA &serviceA, std::unique_ptr<IServiceB> serviceB)
+        : _serviceA(serviceA), _serviceB(std::move(serviceB))
+    {
+    }
 
     [[nodiscard]] std::string execute() const override
     {

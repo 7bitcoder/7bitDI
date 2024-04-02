@@ -59,40 +59,7 @@ TEST_F(ServiceGetterTest, ShouldGetDependencyPtr2Service)
         .WillOnce(testing::Return(&test1));
 
     auto act = [&] {
-        const TestDependencyClass *instance =
-            sb::di::details::ServiceGetter<const TestDependencyClass *>::get(mock);
-    };
-
-    EXPECT_NO_THROW(act());
-}
-
-TEST_F(ServiceGetterTest, ShouldGetDependencyPtr3Service)
-{
-    ServiceProviderMock mock;
-    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::InPlaceService<TestDependencyClass>>()};
-
-    EXPECT_CALL(mock.getMock(), tryGetInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
-        .WillOnce(testing::Return(&test1));
-
-    auto act = [&] {
-        const TestDependencyClass *const instance =
-            sb::di::details::ServiceGetter<const TestDependencyClass *const>::get(mock);
-    };
-
-    EXPECT_NO_THROW(act());
-}
-
-TEST_F(ServiceGetterTest, ShouldGetDependencyPtr4Service)
-{
-    ServiceProviderMock mock;
-    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::InPlaceService<TestDependencyClass>>()};
-
-    EXPECT_CALL(mock.getMock(), tryGetInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
-        .WillOnce(testing::Return(&test1));
-
-    auto act = [&] {
-        TestDependencyClass *const instance =
-            sb::di::details::ServiceGetter<TestDependencyClass *const>::get(mock);
+        const TestDependencyClass *instance = sb::di::details::ServiceGetter<const TestDependencyClass *>::get(mock);
     };
 
     EXPECT_NO_THROW(act());
@@ -108,22 +75,6 @@ TEST_F(ServiceGetterTest, ShouldGetDependencyRef1Service)
 
     auto act = [&] {
         TestDependencyClass &instance = sb::di::details::ServiceGetter<TestDependencyClass &>::get(mock);
-    };
-
-    EXPECT_NO_THROW(act());
-}
-
-TEST_F(ServiceGetterTest, ShouldGetDependencyRef2Service)
-{
-    ServiceProviderMock mock;
-    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::InPlaceService<TestDependencyClass>>()};
-
-    EXPECT_CALL(mock.getMock(), getInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
-        .WillOnce(testing::ReturnRef(test1));
-
-    auto act = [&] {
-        const TestDependencyClass &instance =
-            sb::di::details::ServiceGetter<const TestDependencyClass &>::get(mock);
     };
 
     EXPECT_NO_THROW(act());
@@ -147,24 +98,6 @@ TEST_F(ServiceGetterTest, ShouldGetDependencyUniq1Service)
     EXPECT_NO_THROW(act());
 }
 
-TEST_F(ServiceGetterTest, ShouldGetDependencyUniq2Service)
-{
-    ServiceProviderMock mock;
-    auto service = std::make_unique<TestDependencyClass>();
-    sb::di::ServiceInstance test1{
-        std::make_unique<sb::di::details::UniquePtrService<TestDependencyClass>>(std::move(service))};
-
-    EXPECT_CALL(mock.getMock(), createInstance(sb::di::TypeId{typeid(TestDependencyClass)}))
-        .WillOnce(testing::Return(std::move(test1)));
-
-    auto act = [&] {
-        const std::unique_ptr<TestDependencyClass> instance =
-            sb::di::details::ServiceGetter<const std::unique_ptr<TestDependencyClass>>::get(mock);
-    };
-
-    EXPECT_NO_THROW(act());
-}
-
 TEST_F(ServiceGetterTest, ShouldGetDependencyVec1Service)
 {
     ServiceProviderMock mock;
@@ -178,23 +111,6 @@ TEST_F(ServiceGetterTest, ShouldGetDependencyVec1Service)
     auto act = [&] {
         std::vector<TestDependencyClass *> instance =
             sb::di::details::ServiceGetter<std::vector<TestDependencyClass *>>::get(mock);
-    };
-
-    EXPECT_NO_THROW(act());
-}
-
-TEST_F(ServiceGetterTest, ShouldGetDependencyVec2Service)
-{
-    ServiceProviderMock mock;
-    sb::di::ServiceInstance test1{std::make_unique<sb::di::details::InPlaceService<TestDependencyClass>>()};
-    sb::di::OneOrList result{std::move(test1)};
-
-    EXPECT_CALL(mock.getMock(), tryGetInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
-        .WillOnce(testing::Return(&result));
-
-    auto act = [&] {
-        const std::vector<TestDependencyClass *> instance =
-            sb::di::details::ServiceGetter<const std::vector<TestDependencyClass *>>::get(mock);
     };
 
     EXPECT_NO_THROW(act());
@@ -214,26 +130,6 @@ TEST_F(ServiceGetterTest, ShouldGetDependencyVec3Service)
     auto act = [&] {
         std::vector<std::unique_ptr<TestDependencyClass>> instance =
             sb::di::details::ServiceGetter<std::vector<std::unique_ptr<TestDependencyClass>>>::get(mock);
-    };
-
-    EXPECT_NO_THROW(act());
-}
-
-TEST_F(ServiceGetterTest, ShouldGetDependencyVec4Service)
-{
-    ServiceProviderMock mock;
-    auto service = std::make_unique<TestDependencyClass>();
-    sb::di::ServiceInstance test1{
-        std::make_unique<sb::di::details::UniquePtrService<TestDependencyClass>>(std::move(service))};
-
-    sb::di::OneOrList result{std::move(test1)};
-
-    EXPECT_CALL(mock.getMock(), tryCreateInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
-        .WillOnce(testing::Return(std::make_optional(std::move(result))));
-
-    auto act = [&] {
-        const std::vector<std::unique_ptr<TestDependencyClass>> instance =
-            sb::di::details::ServiceGetter<const std::vector<std::unique_ptr<TestDependencyClass>>>::get(mock);
     };
 
     EXPECT_NO_THROW(act());
