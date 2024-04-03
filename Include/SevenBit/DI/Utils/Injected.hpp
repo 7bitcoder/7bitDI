@@ -11,58 +11,48 @@ namespace sb::di
 {
     struct Injected
     {
-      private:
-        ServiceProvider &_provider;
-
-      public:
-        explicit Injected(ServiceProvider &provider) : _provider(provider) {}
+        explicit Injected(ServiceProvider &provider) : provider(provider) {}
 
       protected:
-        [[nodiscard]] ServiceProvider &getProvider() const { return _provider; }
+        ServiceProvider &provider;
 
-        [[nodiscard]] ServiceExtractor inject() const { return ServiceExtractor{getProvider()}; }
-
-        template <class Type> [[nodiscard]] Type inject() const
-        {
-            return details::ServiceGetter<std::remove_cv_t<Type>>::get(getProvider());
-        }
+        [[nodiscard]] ServiceExtractor inject() const { return ServiceExtractor{provider}; }
     };
 
-    template <class TService, class TImplementation = TService, class TServicesCollection = GlobalServices>
-    struct InjectedSingleton : TService, Injected, RegisterSingleton<TService, TImplementation, TServicesCollection>
+    template <class TService, class TImplementation = TService, class TRegisterer = SingletonRegisterer>
+    struct InjectedSingleton : TService, Injected, RegisterSingleton<TService, TImplementation, TRegisterer>
     {
         using Injected::Injected;
     };
 
-    template <class TService, class TServicesCollection>
-    struct InjectedSingleton<TService, TService, TServicesCollection>
-        : Injected, RegisterSingleton<TService, TService, TServicesCollection>
+    template <class TService, class TRegisterer>
+    struct InjectedSingleton<TService, TService, TRegisterer> : Injected,
+                                                                RegisterSingleton<TService, TService, TRegisterer>
     {
         using Injected::Injected;
     };
 
-    template <class TService, class TImplementation = TService, class TServicesCollection = GlobalServices>
-    struct InjectedScoped : TService, Injected, RegisterScoped<TService, TImplementation, TServicesCollection>
+    template <class TService, class TImplementation = TService, class TRegisterer = ScopedRegisterer>
+    struct InjectedScoped : TService, Injected, RegisterScoped<TService, TImplementation, TRegisterer>
     {
         using Injected::Injected;
     };
 
-    template <class TService, class TServicesCollection>
-    struct InjectedScoped<TService, TService, TServicesCollection>
-        : Injected, RegisterScoped<TService, TService, TServicesCollection>
+    template <class TService, class TRegisterer>
+    struct InjectedScoped<TService, TService, TRegisterer> : Injected, RegisterScoped<TService, TService, TRegisterer>
     {
         using Injected::Injected;
     };
 
-    template <class TService, class TImplementation = TService, class TServicesCollection = GlobalServices>
-    struct InjectedTransient : TService, Injected, RegisterTransient<TService, TImplementation, TServicesCollection>
+    template <class TService, class TImplementation = TService, class TRegisterer = TransientRegisterer>
+    struct InjectedTransient : TService, Injected, RegisterTransient<TService, TImplementation, TRegisterer>
     {
         using Injected::Injected;
     };
 
-    template <class TService, class TServicesCollection>
-    struct InjectedTransient<TService, TService, TServicesCollection>
-        : Injected, RegisterTransient<TService, TService, TServicesCollection>
+    template <class TService, class TRegisterer>
+    struct InjectedTransient<TService, TService, TRegisterer> : Injected,
+                                                                RegisterTransient<TService, TService, TRegisterer>
     {
         using Injected::Injected;
     };

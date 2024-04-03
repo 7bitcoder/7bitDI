@@ -6,30 +6,45 @@
 
 namespace sb::di
 {
-    template <class TService, class TImplementation = TService, class TServicesCollection = GlobalServices>
-    struct RegisterSingleton
+
+    template <class TService, class TImplementation, class TRegisterer> struct RegisterService
     {
-        inline static const bool registered =
-            &TServicesCollection::instance().template addSingleton<TService, TImplementation>();
+        inline static const bool registered = TRegisterer::template registerService<TService, TImplementation>();
 
         static_assert(static_cast<bool>(&registered));
     };
 
-    template <class TService, class TImplementation = TService, class TServicesCollection = GlobalServices>
-    struct RegisterScoped
+    struct SingletonRegisterer
     {
-        inline static const bool registered =
-            &TServicesCollection::instance().template addScoped<TService, TImplementation>();
-
-        static_assert(static_cast<bool>(&registered));
+        template <class TService, class TImplementation> static bool registerService()
+        {
+            return &GlobalServices::instance().addSingleton<TService, TImplementation>();
+        }
     };
 
-    template <class TService, class TImplementation = TService, class TServicesCollection = GlobalServices>
-    struct RegisterTransient
-    {
-        inline static const bool registered =
-            &TServicesCollection::instance().template addTransient<TService, TImplementation>();
+    template <class TService, class TImplementation = TService, class TRegisterer = SingletonRegisterer>
+    using RegisterSingleton = RegisterService<TService, TImplementation, TRegisterer>;
 
-        static_assert(static_cast<bool>(&registered));
+    struct ScopedRegisterer
+    {
+        template <class TService, class TImplementation> static bool registerService()
+        {
+            return &GlobalServices::instance().addScoped<TService, TImplementation>();
+        }
     };
+
+    template <class TService, class TImplementation = TService, class TRegisterer = ScopedRegisterer>
+    using RegisterScoped = RegisterService<TService, TImplementation, TRegisterer>;
+
+    struct TransientRegisterer
+    {
+        template <class TService, class TImplementation> static bool registerService()
+        {
+            return &GlobalServices::instance().addTransient<TService, TImplementation>();
+        }
+    };
+
+    template <class TService, class TImplementation = TService, class TRegisterer = TransientRegisterer>
+    using RegisterTransient = RegisterService<TService, TImplementation, TRegisterer>;
+
 } // namespace sb::di
