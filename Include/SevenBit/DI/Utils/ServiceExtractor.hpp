@@ -11,18 +11,18 @@ namespace sb::di
 {
     struct ServiceExtractor
     {
-        ServiceProvider &_provider;
+        ServiceProvider &provider;
 
         template <class S, class = std::enable_if_t<!std::is_null_pointer_v<S> && !details::IsInitializerListV<S>>>
         operator S()
         {
-            return details::ServiceGetter<std::remove_cv_t<S>>::get(_provider);
+            return details::ServiceGetter<std::remove_cv_t<S>>::get(provider);
         }
         template <class S, class = std::enable_if_t<!std::is_const_v<S> && !std::is_null_pointer_v<S> &&
                                                     !details::IsInitializerListV<S>>>
         operator S &() const
         {
-            return _provider.getService<std::remove_cv_t<S>>();
+            return provider.getService<std::remove_cv_t<S>>();
         }
     };
 } // namespace sb::di

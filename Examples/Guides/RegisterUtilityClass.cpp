@@ -1,5 +1,4 @@
 #include <SevenBit/DI.hpp>
-#include <SevenBit/DI/Utils/Register.hpp>
 #include <iostream>
 
 using namespace sb::di;
