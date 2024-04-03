@@ -6,7 +6,6 @@
 
 namespace sb::di
 {
-
     template <class TService, class TImplementation, class TRegisterer> struct RegisterService
     {
         inline static const bool registered = TRegisterer::template registerService<TService, TImplementation>();
@@ -46,5 +45,4 @@ namespace sb::di
 
     template <class TService, class TImplementation = TService, class TRegisterer = TransientRegisterer>
     using RegisterTransient = RegisterService<TService, TImplementation, TRegisterer>;
-
 } // namespace sb::di
