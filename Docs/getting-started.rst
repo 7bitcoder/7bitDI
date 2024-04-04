@@ -48,7 +48,7 @@ Installation
     .. code-block:: Txt
 
         [requires]
-        7bitdi/2.1.0
+        7bitdi/3.0.0
     
     change the version to newer if available, then run the command:
 
