@@ -33,7 +33,7 @@ class Application
     IAppPartB &_partB;
 
   public:
-    Application(IAppPartA *partA, IAppPartB *partB) : _partA(*partA), _partB(*partB) {}
+    Application(IAppPartA &partA, IAppPartB &partB) : _partA(partA), _partB(partB) {}
 
     [[nodiscard]] int run() const
     {
@@ -42,6 +42,7 @@ class Application
         return 0;
     }
 };
+
 int main()
 {
     ServiceProvider provider = ServiceCollection{}
