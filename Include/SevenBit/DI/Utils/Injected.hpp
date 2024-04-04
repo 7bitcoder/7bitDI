@@ -19,40 +19,37 @@ namespace sb::di
         [[nodiscard]] ServiceExtractor inject() const { return ServiceExtractor{provider}; }
     };
 
-    template <class TService, class TImplementation = TService, class TRegisterer = SingletonRegisterer>
-    struct InjectedSingleton : TService, Injected, RegisterSingleton<TService, TImplementation, TRegisterer>
+    template <class TService, class TImplementation = TService>
+    struct InjectedSingleton : TService, Injected, RegisterSingleton<TService, TImplementation>
     {
         using Injected::Injected;
     };
 
-    template <class TService, class TRegisterer>
-    struct InjectedSingleton<TService, TService, TRegisterer> : Injected,
-                                                                RegisterSingleton<TService, TService, TRegisterer>
+    template <class TService>
+    struct InjectedSingleton<TService, TService> : Injected, RegisterSingleton<TService, TService>
     {
         using Injected::Injected;
     };
 
-    template <class TService, class TImplementation = TService, class TRegisterer = ScopedRegisterer>
-    struct InjectedScoped : TService, Injected, RegisterScoped<TService, TImplementation, TRegisterer>
+    template <class TService, class TImplementation = TService>
+    struct InjectedScoped : TService, Injected, RegisterScoped<TService, TImplementation>
     {
         using Injected::Injected;
     };
 
-    template <class TService, class TRegisterer>
-    struct InjectedScoped<TService, TService, TRegisterer> : Injected, RegisterScoped<TService, TService, TRegisterer>
+    template <class TService> struct InjectedScoped<TService, TService> : Injected, RegisterScoped<TService, TService>
     {
         using Injected::Injected;
     };
 
-    template <class TService, class TImplementation = TService, class TRegisterer = TransientRegisterer>
-    struct InjectedTransient : TService, Injected, RegisterTransient<TService, TImplementation, TRegisterer>
+    template <class TService, class TImplementation = TService>
+    struct InjectedTransient : TService, Injected, RegisterTransient<TService, TImplementation>
     {
         using Injected::Injected;
     };
 
-    template <class TService, class TRegisterer>
-    struct InjectedTransient<TService, TService, TRegisterer> : Injected,
-                                                                RegisterTransient<TService, TService, TRegisterer>
+    template <class TService>
+    struct InjectedTransient<TService, TService> : Injected, RegisterTransient<TService, TService>
     {
         using Injected::Injected;
     };

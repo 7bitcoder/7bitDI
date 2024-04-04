@@ -21,8 +21,8 @@ namespace sb::di
         }
     };
 
-    template <class TService, class TImplementation = TService, class TRegisterer = SingletonRegisterer>
-    using RegisterSingleton = RegisterService<TService, TImplementation, TRegisterer>;
+    template <class TService, class TImplementation = TService>
+    using RegisterSingleton = RegisterService<TService, TImplementation, SingletonRegisterer>;
 
     struct ScopedRegisterer
     {
@@ -32,8 +32,8 @@ namespace sb::di
         }
     };
 
-    template <class TService, class TImplementation = TService, class TRegisterer = ScopedRegisterer>
-    using RegisterScoped = RegisterService<TService, TImplementation, TRegisterer>;
+    template <class TService, class TImplementation = TService>
+    using RegisterScoped = RegisterService<TService, TImplementation, ScopedRegisterer>;
 
     struct TransientRegisterer
     {
@@ -43,6 +43,6 @@ namespace sb::di
         }
     };
 
-    template <class TService, class TImplementation = TService, class TRegisterer = TransientRegisterer>
-    using RegisterTransient = RegisterService<TService, TImplementation, TRegisterer>;
+    template <class TService, class TImplementation = TService>
+    using RegisterTransient = RegisterService<TService, TImplementation, TransientRegisterer>;
 } // namespace sb::di
