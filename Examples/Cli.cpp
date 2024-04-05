@@ -83,16 +83,15 @@ class CliHandler final : public ICliHandler
     {
         for (int i = 1; i < argc; ++i)
         {
-            auto [name, value] = _optionParser.parse(argv[i]);
-            if (auto it = _options.find(name); it != _options.end())
+            std::string option = argv[i];
+            auto [name, value] = _optionParser.parse(option);
+            auto it = _options.find(name);
+            if (it == _options.end())
             {
-                const auto handler = it->second;
-                handler->handle(value);
+                throw std::runtime_error{"Unrecognized option: " + option};
             }
-            else
-            {
-                std::cout << "Unrecognized option: " << argv[i] << std::endl;
-            }
+            const auto handler = it->second;
+            handler->handle(value);
         }
     }
 };

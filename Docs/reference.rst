@@ -6,6 +6,7 @@ Reference
    :titlesonly:
 
    reference/di
+   reference/di/utils
    reference/di/details/containers
    reference/di/details/core
    reference/di/details/factories
