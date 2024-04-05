@@ -1,6 +1,6 @@
 GlobalServices
 ========================================
 
-.. doxygenstruct:: sb::di::GlobalServices
+.. doxygenclass:: sb::di::GlobalServices
    :members:
    :undoc-members:

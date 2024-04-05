@@ -1,4 +1,4 @@
-Injected Utility Class
+Register Utility Class
 ========================================
 
 Library provides simple template RegisterService_ utility class.

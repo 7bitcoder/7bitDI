@@ -17,14 +17,14 @@ Register
    :members:
    :undoc-members:
 
-.. doxygenstruct:: sb::di::RegisterSingleton
+.. doxygentypedef:: sb::di::RegisterSingleton
    :members:
    :undoc-members:
 
-.. doxygenstruct:: sb::di::RegisterScoped
+.. doxygentypedef:: sb::di::RegisterScoped
    :members:
    :undoc-members:
 
-.. doxygenstruct:: sb::di::RegisterTransient
+.. doxygentypedef:: sb::di::RegisterTransient
    :members:
    :undoc-members:
