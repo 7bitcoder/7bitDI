@@ -1,4 +1,4 @@
-Simple
+Logger
 ========================================
 
 .. literalinclude:: ../../Examples/Logger.cpp
