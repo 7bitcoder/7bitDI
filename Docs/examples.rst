@@ -6,9 +6,5 @@ Examples
    :titlesonly:
 
    examples/simple
+   examples/logger
    examples/cli
-   
-   
-   
-
-
