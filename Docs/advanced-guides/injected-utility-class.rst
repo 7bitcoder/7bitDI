@@ -6,6 +6,8 @@ This base class has inject() method that can be used to inject services in simpl
 there are InjectedSingleton, InjectedScoped and InjectedTransient base classes that are inheriting
 from Injected and Registered classes to combine these two features
 
+.. _Injected: ../reference/di/utils/injected.html
+
 .. note::
    Class should inherit Injected constructor with 'using Injected::Injected;' in public section
 

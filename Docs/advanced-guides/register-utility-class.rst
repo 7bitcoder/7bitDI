@@ -2,7 +2,7 @@ Injected Utility Class
 ========================================
 
 Library provides simple template RegisterService_ utility class.
-This base class can be used to automatically register class in service collection with use of specjalized TRegisterer:
+This base class can be used to automatically register class in service collection with use of specjalized TRegisterer.
 There are already created aliases RegisterSingleton_, RegisterScoped_, RegisterTransient_ that are registering services
 in GlobalServices_ singleton.
 
