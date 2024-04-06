@@ -36,7 +36,7 @@ Installation
         FetchContent_Declare(
                 7bitDI
                 GIT_REPOSITORY https://github.com/7bitcoder/7bitDI.git
-                GIT_TAG v3.0.0
+                GIT_TAG v3.1.0
         )
         FetchContent_MakeAvailable(7bitDI)
 
@@ -48,7 +48,7 @@ Installation
     .. code-block:: Txt
 
         [requires]
-        7bitdi/3.0.0
+        7bitdi/3.1.0
     
     change the version to newer if available, then run the command:
 
