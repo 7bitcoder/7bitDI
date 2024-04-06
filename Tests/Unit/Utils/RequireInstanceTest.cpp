@@ -34,8 +34,8 @@ TEST_F(RequireInstanceTest, ShoulRequireValidInstance)
                  sb::di::InvalidServiceException);
     EXPECT_NO_THROW(sb::di::details::RequireInstance::valid(
         sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestClass1>>(&test)}));
-    EXPECT_THROW(sb::di::details::RequireInstance::valid(
-                     sb::di::ServiceInstance{std::make_unique<sb::di::details::UniquePtrService<TestClass1>>(nullptr)}),
+    EXPECT_THROW(sb::di::details::RequireInstance::valid(sb::di::ServiceInstance{
+                     std::make_unique<sb::di::details::UniquePtrService<TestClass1>>(std::unique_ptr<TestClass1>{})}),
                  sb::di::InvalidServiceException);
     EXPECT_NO_THROW(sb::di::details::RequireInstance::valid(sb::di::ServiceInstance{
         std::make_unique<sb::di::details::UniquePtrService<TestClass1>>(std::make_unique<TestClass1>())}));

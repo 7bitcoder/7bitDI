@@ -13,9 +13,13 @@ namespace sb::di::details
         std::unique_ptr<T> _service;
 
       public:
-        using Ptr = std::unique_ptr<UniquePtrService<T>>;
+        using Ptr = std::unique_ptr<UniquePtrService>;
 
         explicit UniquePtrService(std::unique_ptr<T> service) : _service(std::move(service)) {}
+        template <class... Args>
+        explicit UniquePtrService(Args &&...args) : _service(std::make_unique<T>(std::forward<Args>(args)...))
+        {
+        }
 
         UniquePtrService(const UniquePtrService &) = delete;
         UniquePtrService(UniquePtrService &&) = default;

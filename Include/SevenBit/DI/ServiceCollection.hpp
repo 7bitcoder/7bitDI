@@ -296,6 +296,22 @@ namespace sb::di
         ServiceCollection &add(const ServiceCollection &collection);
 
         /**
+         * @brief Adds descriptors from collection to the end of list, that matches filter functor
+         */
+        template <class TFilter> ServiceCollection &addWithFilter(const ServiceCollection &collection, TFilter filter)
+        {
+            reserve(size() + collection.size());
+            for (auto &descriptor : collection)
+            {
+                if (filter(descriptor))
+                {
+                    add(descriptor);
+                }
+            }
+            return *this;
+        }
+
+        /**
          * @brief Removes descriptor with given iterator
          * @details Returns iterator following the last removed element
          */

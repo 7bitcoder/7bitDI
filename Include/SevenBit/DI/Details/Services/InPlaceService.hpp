@@ -14,6 +14,8 @@ namespace sb::di::details
         T _service;
 
       public:
+        using Ptr = std::unique_ptr<InPlaceService>;
+
         template <class... Args> explicit InPlaceService(Args &&...args) : _service(std::forward<Args>(args)...) {}
 
         InPlaceService(const InPlaceService &) = delete;

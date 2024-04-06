@@ -85,7 +85,6 @@ namespace sb::di
 
         /**
          * @brief Get the service cast offset, non zero for multiinheritance
-         * @details
          */
         [[nodiscard]] ptrdiff_t getCastOffset() const { return _castOffset; }
 

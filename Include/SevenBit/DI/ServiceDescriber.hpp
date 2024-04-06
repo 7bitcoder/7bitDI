@@ -126,7 +126,7 @@ namespace sb::di
         static ServiceDescriptor describe(const ServiceLifeTime lifeTime,
                                           std::unique_ptr<std::string> serviceKey = nullptr)
         {
-            details::Assert::inheritance<TService, TImplementation>();
+            details::Assert::serviceTypes<TService, TImplementation>();
 
             return {typeid(TService),
                     typeid(TImplementation),
@@ -198,7 +198,7 @@ namespace sb::di
         static ServiceDescriptor describeSingleton(TImplementation *service,
                                                    std::unique_ptr<std::string> serviceKey = nullptr)
         {
-            details::Assert::inheritance<TService, TImplementation>();
+            details::Assert::serviceTypes<TService, TImplementation>();
 
             return {typeid(TService),
                     typeid(TImplementation),
@@ -449,7 +449,7 @@ namespace sb::di
             using Factory = details::ServiceFcnFactory<FactoryFcn>;
             using TImplementation = typename Factory::ServiceType;
             using TFinalService = std::conditional_t<std::is_void_v<TService>, TImplementation, TService>;
-            details::Assert::factoryInheritance<TFinalService, TImplementation>();
+            details::Assert::factoryTypes<TFinalService, TImplementation>();
 
             return {typeid(TFinalService),
                     typeid(TImplementation),
@@ -484,8 +484,7 @@ namespace sb::di
         static ServiceDescriptor describeAlias(std::unique_ptr<std::string> serviceAliasKey = nullptr,
                                                std::unique_ptr<std::string> serviceKey = nullptr)
         {
-            details::Assert::aliasNotSame<TAlias, TService>();
-            details::Assert::aliasInheritance<TAlias, TService>();
+            details::Assert::aliasTypes<TAlias, TService>();
 
             return {typeid(TAlias),
                     typeid(TService),

@@ -38,12 +38,40 @@ struct NumberOption final : IOptionHandler
     void handle(const std::string &value) override { std::cout << "number is: " << std::stoi(value) << std::endl; }
 };
 
-class CliHandler
+struct IOptionParser
 {
+    virtual std::pair<std::string, std::string> parse(const std::string &option) = 0;
+
+    virtual ~IOptionParser() = default;
+};
+
+struct OptionParser final : IOptionParser
+{
+    std::pair<std::string, std::string> parse(const std::string &option) override
+    {
+        if (const auto splitIndex = option.find_first_of('='); splitIndex != std::string::npos)
+        {
+            return {option.substr(0, splitIndex), option.substr(splitIndex + 1)};
+        }
+        return {option, ""};
+    }
+};
+
+struct ICliHandler
+{
+    virtual void handle(int argc, char *argv[]) = 0;
+
+    virtual ~ICliHandler() = default;
+};
+
+class CliHandler final : public ICliHandler
+{
+    IOptionParser &_optionParser;
     std::unordered_map<std::string, IOptionHandler *> _options;
 
   public:
-    explicit CliHandler(std::vector<IOptionHandler *> optionHandlers)
+    explicit CliHandler(IOptionParser &optionParser, std::vector<IOptionHandler *> optionHandlers)
+        : _optionParser(optionParser)
     {
         for (const auto handler : optionHandlers)
         {
@@ -51,66 +79,29 @@ class CliHandler
         }
     }
 
-    void handle(const int argc, char *argv[])
+    void handle(const int argc, char *argv[]) override
     {
         for (int i = 1; i < argc; ++i)
         {
-            auto [name, value] = parseOption(argv[i]);
-            if (auto it = _options.find(name); it != _options.end())
+            std::string option = argv[i];
+            auto [name, value] = _optionParser.parse(option);
+            auto it = _options.find(name);
+            if (it == _options.end())
             {
-                const auto handler = it->second;
-                handler->handle(value);
+                throw std::runtime_error{"Unrecognized option: " + option};
             }
+            const auto handler = it->second;
+            handler->handle(value);
         }
-    }
-
-  private:
-    static std::pair<std::string, std::string> parseOption(const std::string &option)
-    {
-        int idx = eatDashes(option);
-        return {getName(idx, option), getValue(idx, option)};
-    }
-
-    static int eatDashes(const std::string &option)
-    {
-        if (option.size() > 1 && option[0] == '-' && option[1] == '-')
-        {
-            return 2;
-        }
-        throw std::runtime_error("wrong option scheme use -- before each options");
-    }
-
-    static std::string getName(int &index, const std::string &option)
-    {
-        const int begin = index;
-        while (index < option.size() && option[index] != '=')
-        {
-            index++;
-        }
-        auto name = option.substr(begin, index - begin);
-        if (name.empty())
-        {
-            throw std::runtime_error("option cannot be empty");
-        }
-        return name;
-    }
-
-    static std::string getValue(int &index, const std::string &option)
-    {
-        if (index < option.size() && option[index] == '=')
-        {
-            index++;
-        }
-        return option.substr(index);
     }
 };
 
 class Application
 {
-    CliHandler &_cliHandler;
+    ICliHandler &_cliHandler;
 
   public:
-    explicit Application(CliHandler *cliHandler) : _cliHandler(*cliHandler) {}
+    explicit Application(ICliHandler &cliHandler) : _cliHandler(cliHandler) {}
 
     int run(const int argc, char *argv[]) const
     {
@@ -125,13 +116,15 @@ class Application
         return 0;
     }
 };
+
 int main(int argc, char *argv[])
 {
     ServiceProvider provider = ServiceCollection{}
                                    .addSingleton<IOptionHandler, HelpOption>()
                                    .addSingleton<IOptionHandler, InfoOption>()
                                    .addSingleton<IOptionHandler, NumberOption>()
-                                   .addSingleton<CliHandler>()
+                                   .addSingleton<IOptionParser, OptionParser>()
+                                   .addSingleton<ICliHandler, CliHandler>()
                                    .addScoped<Application>()
                                    .buildServiceProvider();
 

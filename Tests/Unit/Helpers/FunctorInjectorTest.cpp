@@ -2,26 +2,26 @@
 
 #include "../../Helpers/Classes/Dependencies.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
-#include "SevenBit/DI/Details/Helpers/ServiceFactoryInvoker.hpp"
+#include "SevenBit/DI/Details/Helpers/FunctorInjector.hpp"
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 
-class ServiceFactoryInvokerTest : public testing::Test
+class FunctorInjectorTest : public testing::Test
 {
   protected:
     static void TearUpTestSuite() {}
 
-    ServiceFactoryInvokerTest() {}
+    FunctorInjectorTest() {}
 
     void SetUp() override {}
 
     void TearDown() override {}
 
-    ~ServiceFactoryInvokerTest() override = default;
+    ~FunctorInjectorTest() override = default;
 
     static void TearDownTestSuite() {}
 };
 
-TEST_F(ServiceFactoryInvokerTest, ShouldInvokeFuncFactory)
+TEST_F(FunctorInjectorTest, ShouldInvokeFuncFactory)
 {
     ServiceProviderMock mock;
     sb::di::ServiceInstance test1{std::make_unique<sb::di::details::InPlaceService<TestDependencyClass>>()};
@@ -34,7 +34,7 @@ TEST_F(ServiceFactoryInvokerTest, ShouldInvokeFuncFactory)
         return 1;
     };
 
-    sb::di::details::ServiceFactoryInvoker<decltype(func)> invoker{func, mock};
+    sb::di::details::FunctorInjector<decltype(func)> invoker{func, mock};
 
-    EXPECT_EQ(invoker.invoke(), 1);
+    EXPECT_EQ(invoker.call(), 1);
 }

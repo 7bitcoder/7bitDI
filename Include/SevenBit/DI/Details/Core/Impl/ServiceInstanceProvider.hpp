@@ -118,9 +118,9 @@ namespace sb::di::details
 
     INLINE ServiceInstanceList *ServiceInstanceProvider::findRegisteredInstances(const ServiceId &id)
     {
-        const auto singletonsFirts = getOptions().searchInSigletonsFirts;
-        auto &first = singletonsFirts ? _root.getSingletons() : _scoped;
-        auto &second = singletonsFirts ? _scoped : _root.getSingletons();
+        const auto singletonsFirst = getOptions().searchInSigletonsFirst;
+        auto &first = singletonsFirst ? _root.getSingletons() : _scoped;
+        auto &second = singletonsFirst ? _scoped : _root.getSingletons();
         const auto instances = first.findInstances(id);
         return instances ? instances : second.findInstances(id);
     }
