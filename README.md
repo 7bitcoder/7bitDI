@@ -3,6 +3,7 @@
 [![Windows](https://github.com/7bitcoder/7bitDI/actions/workflows/Windows.yml/badge.svg)](https://github.com/7bitcoder/7bitDI/actions/workflows/Windows.yml)
 [![MacOs](https://github.com/7bitcoder/7bitDI/actions/workflows/MacOs.yml/badge.svg)](https://github.com/7bitcoder/7bitDI/actions/workflows/MacOs.yml)
 [![Conan Center](https://img.shields.io/conan/v/7bitdi)](https://conan.io/center/recipes/7bitdi)
+[![codecov](https://codecov.io/gh/7bitcoder/7bitDI/graph/badge.svg?token=UIC7KY8TZ3)](https://codecov.io/gh/7bitcoder/7bitDI)
 
 <div align="center">
 
