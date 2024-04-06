@@ -1,7 +1,5 @@
 #pragma once
 
-#include <type_traits>
-
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Utils/Register.hpp"
@@ -11,12 +9,16 @@ namespace sb::di
 {
     struct Injected
     {
-        explicit Injected(ServiceProvider &provider) : provider(provider) {}
+      private:
+        ServiceProvider &_provider;
+
+      public:
+        explicit Injected(ServiceProvider &provider) : _provider(provider) {}
 
       protected:
-        ServiceProvider &provider;
+        [[nodiscard]] ServiceProvider &getProvider() const { return _provider; }
 
-        [[nodiscard]] ServiceExtractor inject() const { return ServiceExtractor{provider}; }
+        [[nodiscard]] ServiceExtractor inject() const { return ServiceExtractor{getProvider()}; }
     };
 
     template <class TService, class TImplementation = TService>

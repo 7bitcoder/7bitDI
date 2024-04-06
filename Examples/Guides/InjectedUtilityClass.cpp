@@ -35,6 +35,7 @@ class ServiceExecutor final : public InjectedScoped<IServiceExecutor, ServiceExe
 
     [[nodiscard]] std::string execute() const override
     {
+        ServiceProvider &provider = getProvider(); // access also provider
         return _serviceA.actionA() + ", " + _serviceB->actionB() + " executed.";
     }
 };
