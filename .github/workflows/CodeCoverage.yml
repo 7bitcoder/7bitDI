@@ -1,0 +1,32 @@
+name: Code Coverage
+
+on:
+  push:
+    branches: [ "dev", "main" ]
+    paths-ignore:
+      - "Docs/**"
+      - ".readthedocs.yaml"
+      - "README.md"
+
+jobs:
+  code-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create Build Environment
+        run: cmake -E make_directory ${{runner.workspace}}/build
+
+      - name: Configure
+        run: cmake -B ${{runner.workspace}}/build -D_7BIT_DI_LIBRARY_TYPE=Static -D_7BIT_DI_BUILD_ALL_TESTS=ON -DCMAKE_CXX_FLAGS="-coverage"
+
+      - name: Build
+        run: cmake --build ${{runner.workspace}}/build -j
+
+      - name: Test
+        working-directory: ${{runner.workspace}}/build
+        run: ctest --output-on-failure
+
+      - working-directory: ${{runner.workspace}}/build
+        run: bash <(curl -s https://codecov.io/bash)
