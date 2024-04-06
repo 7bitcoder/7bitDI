@@ -1,4 +1,4 @@
-ctorParamsNumber
+CtorParamsNumber
 ========================================
 
 .. doxygenfunction:: sb::di::details::ctorParamsNumber
