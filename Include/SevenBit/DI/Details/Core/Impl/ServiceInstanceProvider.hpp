@@ -67,7 +67,7 @@ namespace sb::di::details
         {
             if (const auto descriptors = findDescriptors(id, false))
             {
-                instances = createRestNonTransientAndGet(*descriptors, *instances);
+                instances = createRestNonTransient(*descriptors, *instances);
             }
         }
         return instances ? &instances->getInnerList() : nullptr;
@@ -166,7 +166,7 @@ namespace sb::di::details
             return makeResolver(descriptors).createOneInstanceInPlace();
         }
         auto &last = descriptors.last();
-        const auto original = tryGetInstance(ServiceId{last.getImplementationTypeId(), last.getImplementationKey()});
+        const auto original = tryGetInstance({last.getImplementationTypeId(), last.getImplementationKey()});
         return original ? std::make_optional(makeResolver(descriptors).createOneAlias(*original)) : std::nullopt;
     }
 
@@ -179,9 +179,8 @@ namespace sb::di::details
             return makeResolver(descriptors).createAllInstancesInPlace();
         }
         std::optional<ServiceInstanceList> result;
-        descriptors.getInnerList().forEach([&](const ServiceDescriptor &aliasDescriptor) {
-            const ServiceId id{aliasDescriptor.getImplementationTypeId(), aliasDescriptor.getImplementationKey()};
-            if (const auto originals = tryGetInstances(id))
+        descriptors.getInnerList().forEach([&](const ServiceDescriptor &alias) {
+            if (const auto originals = tryGetInstances({alias.getImplementationTypeId(), alias.getImplementationKey()}))
             {
                 if (!result)
                 {
@@ -196,7 +195,7 @@ namespace sb::di::details
         return result;
     }
 
-    INLINE ServiceInstanceList *ServiceInstanceProvider::createRestNonTransientAndGet(
+    INLINE ServiceInstanceList *ServiceInstanceProvider::createRestNonTransient(
         const ServiceDescriptorList &descriptors, ServiceInstanceList &instances)
     {
         if (!descriptors.isAlias())
@@ -205,7 +204,7 @@ namespace sb::di::details
             return &makeResolver(descriptors).createRestInstancesInPlace(instances);
         }
         auto &last = descriptors.last();
-        const auto originals = tryGetInstances(ServiceId{last.getImplementationTypeId(), last.getImplementationKey()});
+        const auto originals = tryGetInstances({last.getImplementationTypeId(), last.getImplementationKey()});
         return originals ? &makeResolver(descriptors).createRestAliases(*originals, instances) : nullptr;
     }
 
@@ -217,9 +216,9 @@ namespace sb::di::details
             return makeResolver(descriptors).createInstance();
         }
         auto &last = descriptors.last();
-        auto alias = tryCreateInstance(ServiceId{last.getImplementationTypeId(), last.getImplementationKey()});
-        alias.addCastOffset(last.getCastOffset());
-        return alias;
+        auto original = tryCreateInstance({last.getImplementationTypeId(), last.getImplementationKey()});
+        original.addCastOffset(last.getCastOffset());
+        return original;
     }
 
     INLINE std::optional<OneOrList<ServiceInstance>> ServiceInstanceProvider::tryCreateAllTransient(
@@ -231,14 +230,13 @@ namespace sb::di::details
             return std::move(makeResolver(descriptors).createAllInstances().getInnerList());
         }
         std::optional<OneOrList<ServiceInstance>> result;
-        descriptors.getInnerList().forEach([&](const ServiceDescriptor &aliasDescriptor) {
-            const ServiceId id{aliasDescriptor.getImplementationTypeId(), aliasDescriptor.getImplementationKey()};
-            if (auto originals = tryCreateInstances(id))
+        descriptors.getInnerList().forEach([&](const ServiceDescriptor &alias) {
+            if (auto originals = tryCreateInstances({alias.getImplementationTypeId(), alias.getImplementationKey()}))
             {
-                if (aliasDescriptor.getCastOffset())
+                if (alias.getCastOffset())
                 {
                     originals->forEach(
-                        [&](ServiceInstance &instance) { instance.addCastOffset(aliasDescriptor.getCastOffset()); });
+                        [&](ServiceInstance &instance) { instance.addCastOffset(alias.getCastOffset()); });
                 }
                 if (!result)
                 {

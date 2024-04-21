@@ -136,7 +136,7 @@ namespace sb::di::details
 
         std::optional<ServiceInstanceList> tryCreateNonTransient(const ServiceDescriptorList &descriptors);
         std::optional<ServiceInstanceList> tryCreateAllNonTransient(const ServiceDescriptorList &descriptors);
-        ServiceInstanceList *createRestNonTransientAndGet(const ServiceDescriptorList &descriptors,
+        ServiceInstanceList *createRestNonTransient(const ServiceDescriptorList &descriptors,
                                                           ServiceInstanceList &instances);
 
         ServiceInstance tryCreateTransient(const ServiceDescriptorList &descriptors);

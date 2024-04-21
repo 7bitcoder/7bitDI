@@ -4,7 +4,7 @@
 
 template <int ID> class Legion
 {
-    int data[25] = {0}; // 100b
+    char data[100] = {0}; // 100b
 
   public:
     Legion() = default;
