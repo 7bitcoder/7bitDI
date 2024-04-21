@@ -16,27 +16,21 @@ namespace sb::di::details
       public:
         ServiceInstancesResolver(ServiceInstanceCreator &creator, const ServiceDescriptorList &descriptors);
 
-        [[nodiscard]] ServiceInstance createInstance() const;
-        [[nodiscard]] ServiceInstanceList createOneInstance() const;
-        [[nodiscard]] ServiceInstanceList createAllInstances() const;
-        ServiceInstanceList &createRestInstances(ServiceInstanceList &instances) const;
+        [[nodiscard]] ServiceInstance create() const;
+        [[nodiscard]] ServiceInstanceList createOne() const;
+        [[nodiscard]] ServiceInstanceList createAll() const;
+        ServiceInstanceList &createRest(ServiceInstanceList &instances) const;
 
-        [[nodiscard]] ServiceInstance createInstanceInPlace() const;
-        [[nodiscard]] ServiceInstanceList createOneInstanceInPlace() const;
-        [[nodiscard]] ServiceInstanceList createAllInstancesInPlace() const;
-        ServiceInstanceList &createRestInstancesInPlace(ServiceInstanceList &instances) const;
-
-        [[nodiscard]] ServiceInstance createAlias(const ServiceInstance &original) const;
-        [[nodiscard]] ServiceInstanceList createOneAlias(const ServiceInstance &original) const;
-        [[nodiscard]] ServiceInstanceList createAllAliases(const OneOrList<ServiceInstance> &originals) const;
-        [[nodiscard]] ServiceInstanceList &createRestAliases(const OneOrList<ServiceInstance> &originals,
-                                                             ServiceInstanceList &instances) const;
+        [[nodiscard]] ServiceInstance createInPlace() const;
+        [[nodiscard]] ServiceInstanceList createOneInPlace() const;
+        [[nodiscard]] ServiceInstanceList createAllInPlace() const;
+        ServiceInstanceList &createRestInPlace(ServiceInstanceList &instances) const;
 
       private:
-        [[nodiscard]] ServiceInstance createInstance(bool inPlaceRequest) const;
-        [[nodiscard]] ServiceInstanceList createOneInstance(bool inPlaceRequest) const;
-        [[nodiscard]] ServiceInstanceList createAllInstances(bool inPlaceRequest) const;
-        ServiceInstanceList &createRestInstances(ServiceInstanceList &instances, bool inPlaceRequest) const;
+        [[nodiscard]] ServiceInstance create(bool inPlaceRequest) const;
+        [[nodiscard]] ServiceInstanceList createOne(bool inPlaceRequest) const;
+        [[nodiscard]] ServiceInstanceList createAll(bool inPlaceRequest) const;
+        ServiceInstanceList &createRest(ServiceInstanceList &instances, bool inPlaceRequest) const;
     };
 } // namespace sb::di::details
 

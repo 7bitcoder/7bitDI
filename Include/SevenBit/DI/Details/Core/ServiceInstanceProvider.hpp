@@ -8,6 +8,7 @@
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
 #include "SevenBit/DI/Details/Core/IServiceInstanceProviderRoot.hpp"
+#include "SevenBit/DI/Details/Core/ServiceAliasInstancesResolver.hpp"
 #include "SevenBit/DI/Details/Core/ServiceInstanceCreator.hpp"
 #include "SevenBit/DI/Details/Core/ServiceInstancesResolver.hpp"
 #include "SevenBit/DI/IServiceInstanceProvider.hpp"
@@ -137,12 +138,13 @@ namespace sb::di::details
         std::optional<ServiceInstanceList> tryCreateNonTransient(const ServiceDescriptorList &descriptors);
         std::optional<ServiceInstanceList> tryCreateAllNonTransient(const ServiceDescriptorList &descriptors);
         ServiceInstanceList *createRestNonTransient(const ServiceDescriptorList &descriptors,
-                                                          ServiceInstanceList &instances);
+                                                    ServiceInstanceList &instances);
 
         ServiceInstance tryCreateTransient(const ServiceDescriptorList &descriptors);
         std::optional<OneOrList<ServiceInstance>> tryCreateAllTransient(const ServiceDescriptorList &descriptors);
 
         ServiceInstancesResolver makeResolver(const ServiceDescriptorList &descriptors);
+        ServiceAliasInstancesResolver makeAliasResolver(const ServiceDescriptorList &descriptors);
 
         ServiceInstanceCreator &getInstanceCreator() { return _instanceCreator; }
     };

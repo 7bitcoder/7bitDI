@@ -15,92 +15,34 @@ namespace sb::di::details
     {
     }
 
-    INLINE ServiceInstance ServiceInstancesResolver::createInstance() const { return createInstance(false); }
+    INLINE ServiceInstance ServiceInstancesResolver::create() const { return create(false); }
 
-    INLINE ServiceInstanceList ServiceInstancesResolver::createOneInstance() const { return createOneInstance(false); }
+    INLINE ServiceInstanceList ServiceInstancesResolver::createOne() const { return createOne(false); }
 
-    INLINE ServiceInstanceList ServiceInstancesResolver::createAllInstances() const
+    INLINE ServiceInstanceList ServiceInstancesResolver::createAll() const { return createAll(false); }
+
+    INLINE ServiceInstanceList &ServiceInstancesResolver::createRest(ServiceInstanceList &instances) const
     {
-        return createAllInstances(false);
+        return createRest(instances, false);
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesResolver::createRestInstances(ServiceInstanceList &instances) const
+    INLINE ServiceInstance ServiceInstancesResolver::createInPlace() const { return create(true); }
+
+    INLINE ServiceInstanceList ServiceInstancesResolver::createOneInPlace() const { return createOne(true); }
+
+    INLINE ServiceInstanceList ServiceInstancesResolver::createAllInPlace() const { return createAll(true); }
+
+    INLINE ServiceInstanceList &ServiceInstancesResolver::createRestInPlace(ServiceInstanceList &instances) const
     {
-        return createRestInstances(instances, false);
+        return createRest(instances, true);
     }
 
-    INLINE ServiceInstance ServiceInstancesResolver::createInstanceInPlace() const { return createInstance(true); }
-
-    INLINE ServiceInstanceList ServiceInstancesResolver::createOneInstanceInPlace() const
-    {
-        return createOneInstance(true);
-    }
-
-    INLINE ServiceInstanceList ServiceInstancesResolver::createAllInstancesInPlace() const
-    {
-        return createAllInstances(true);
-    }
-
-    INLINE ServiceInstanceList &ServiceInstancesResolver::createRestInstancesInPlace(
-        ServiceInstanceList &instances) const
-    {
-        return createRestInstances(instances, true);
-    }
-
-    INLINE ServiceInstance ServiceInstancesResolver::createAlias(const ServiceInstance &original) const
-    {
-        return _creator.createInstanceAlias(_descriptors.last(), original);
-    }
-
-    INLINE ServiceInstanceList ServiceInstancesResolver::createOneAlias(const ServiceInstance &original) const
-    {
-        return ServiceInstanceList{createAlias(original)};
-    }
-
-    INLINE ServiceInstanceList
-    ServiceInstancesResolver::createAllAliases(const OneOrList<ServiceInstance> &originals) const
-    {
-        ServiceInstanceList instances{createAlias(originals.first())};
-        if (const auto size = originals.size(); size > 1)
-        {
-            instances.reserve(size);
-            originals.forEach([&](const ServiceInstance &instance, const std::size_t index) {
-                if (index) // skip first
-                {
-                    instances.add(createAlias(instance));
-                }
-            });
-        }
-        instances.seal();
-        return instances;
-    }
-
-    INLINE ServiceInstanceList &ServiceInstancesResolver::createRestAliases(const OneOrList<ServiceInstance> &originals,
-                                                                            ServiceInstanceList &instances) const
-    {
-        if (const auto size = originals.size(); size > 1)
-        {
-            instances.reserve(size);
-            auto first = createAlias(originals.first());
-            originals.forEach([&](const ServiceInstance &instance, const std::size_t index) {
-                if (index && index < size - 1) // skip first and last
-                {
-                    instances.add(createAlias(instance));
-                }
-            });
-            instances.add(std::move(first));
-            std::swap(instances.first(), instances.last());
-        }
-        instances.seal();
-        return instances;
-    }
-
-    INLINE ServiceInstance ServiceInstancesResolver::createInstance(const bool inPlaceRequest) const
+    INLINE ServiceInstance ServiceInstancesResolver::create(const bool inPlaceRequest) const
     {
         return _creator.createInstance(_descriptors.last(), inPlaceRequest);
     }
 
-    INLINE ServiceInstanceList ServiceInstancesResolver::createOneInstance(const bool inPlaceRequest) const
+    INLINE ServiceInstanceList ServiceInstancesResolver::createOne(const bool inPlaceRequest) const
     {
         ServiceInstanceList instances{_creator.createInstance(_descriptors.last(), inPlaceRequest)};
         if (_descriptors.size() == 1)
@@ -110,7 +52,7 @@ namespace sb::di::details
         return instances;
     }
 
-    INLINE ServiceInstanceList ServiceInstancesResolver::createAllInstances(const bool inPlaceRequest) const
+    INLINE ServiceInstanceList ServiceInstancesResolver::createAll(const bool inPlaceRequest) const
     {
         ServiceInstanceList instances{_creator.createInstance(_descriptors.first(), inPlaceRequest)};
         if (const auto size = _descriptors.size(); size > 1)
@@ -127,8 +69,8 @@ namespace sb::di::details
         return instances;
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesResolver::createRestInstances(ServiceInstanceList &instances,
-                                                                              const bool inPlaceRequest) const
+    INLINE ServiceInstanceList &ServiceInstancesResolver::createRest(ServiceInstanceList &instances,
+                                                                     const bool inPlaceRequest) const
     {
         if (const auto size = _descriptors.size(); size > 1)
         {

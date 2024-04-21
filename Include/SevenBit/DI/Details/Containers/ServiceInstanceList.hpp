@@ -16,6 +16,8 @@ namespace sb::di::details
         explicit ServiceInstanceList(ServiceInstance instance);
         explicit ServiceInstanceList(std::size_t size);
 
+        explicit ServiceInstanceList(OneOrList<ServiceInstance> &&other) : _oneOrList(std::move(other)) {}
+
         ServiceInstanceList(const ServiceInstanceList &) = delete;
         ServiceInstanceList(ServiceInstanceList &&) = default;
 
@@ -25,6 +27,7 @@ namespace sb::di::details
         void add(ServiceInstance &&instance);
 
         void addRange(ServiceInstanceList &&instances);
+        void addRange(OneOrList<ServiceInstance> &&instances);
 
         [[nodiscard]] auto begin() const { return _oneOrList.getAsList().begin(); }
         [[nodiscard]] auto end() const { return _oneOrList.getAsList().end(); }

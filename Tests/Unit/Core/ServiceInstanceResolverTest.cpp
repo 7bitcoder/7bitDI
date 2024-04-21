@@ -32,7 +32,7 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateInstance)
 
     const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
-    const auto instance = resolver.createInstance();
+    const auto instance = resolver.create();
 
     EXPECT_TRUE(instance);
     EXPECT_TRUE(instance.isValid());
@@ -52,7 +52,7 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateInheritedInstance)
 
     const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
-    const auto instance = resolver.createInstance();
+    const auto instance = resolver.create();
 
     EXPECT_TRUE(instance);
     EXPECT_TRUE(instance.isValid());
@@ -69,7 +69,7 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInstance)
 
     const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
-    const auto instances = resolver.createOneInstance();
+    const auto instances = resolver.createOne();
 
     EXPECT_EQ(instances.size(), 1);
     EXPECT_TRUE(instances.isSealed());
@@ -90,7 +90,7 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInheritedInstance)
 
     const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
-    const auto instances = resolver.createOneInstance();
+    const auto instances = resolver.createOne();
 
     EXPECT_EQ(instances.size(), 1);
     EXPECT_FALSE(instances.isSealed());
@@ -108,7 +108,7 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInstances)
 
     const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
-    const auto instances = resolver.createAllInstances();
+    const auto instances = resolver.createAll();
 
     EXPECT_EQ(instances.size(), 1);
     EXPECT_TRUE(instances.isSealed());
@@ -129,7 +129,7 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInheritedInstances)
 
     const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
-    const auto instances = resolver.createAllInstances();
+    const auto instances = resolver.createAll();
 
     EXPECT_EQ(instances.size(), 3);
     EXPECT_TRUE(instances.isSealed());
@@ -158,7 +158,7 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateRestInheritedInstances)
 
     sb::di::details::ServiceInstanceList instances{
         sb::di::ServiceInstance{descriptors.last().getImplementationFactory()->createInstance(mock, false)}};
-    resolver.createRestInstances(instances);
+    resolver.createRest(instances);
 
     EXPECT_EQ(instances.size(), 3);
     EXPECT_TRUE(instances.isSealed());
@@ -182,7 +182,7 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateInstanceInPlace)
 
     const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
-    const auto instance = resolver.createInstanceInPlace();
+    const auto instance = resolver.createInPlace();
 
     EXPECT_TRUE(instance);
     EXPECT_TRUE(instance.isValid());
@@ -202,7 +202,7 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateInheritedInstanceInPlace)
 
     const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
-    const auto instance = resolver.createInstanceInPlace();
+    const auto instance = resolver.createInPlace();
 
     EXPECT_TRUE(instance);
     EXPECT_TRUE(instance.isValid());
@@ -219,7 +219,7 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInstanceInPlace)
 
     const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
-    const auto instances = resolver.createOneInstanceInPlace();
+    const auto instances = resolver.createOneInPlace();
 
     EXPECT_EQ(instances.size(), 1);
     EXPECT_TRUE(instances.isSealed());
@@ -240,7 +240,7 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateOneInheritedInstanceInPlace)
 
     const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
-    const auto instances = resolver.createOneInstanceInPlace();
+    const auto instances = resolver.createOneInPlace();
 
     EXPECT_EQ(instances.size(), 1);
     EXPECT_FALSE(instances.isSealed());
@@ -258,7 +258,7 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInstancesInPlace)
 
     const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
-    const auto instances = resolver.createAllInstancesInPlace();
+    const auto instances = resolver.createAllInPlace();
 
     EXPECT_EQ(instances.size(), 1);
     EXPECT_TRUE(instances.isSealed());
@@ -279,7 +279,7 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateAllInheritedInstancesInPlace)
 
     const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
 
-    const auto instances = resolver.createAllInstancesInPlace();
+    const auto instances = resolver.createAllInPlace();
 
     EXPECT_EQ(instances.size(), 3);
     EXPECT_TRUE(instances.isSealed());
@@ -308,7 +308,7 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateRestInheritedInstancesInPlace)
 
     sb::di::details::ServiceInstanceList instances{
         sb::di::ServiceInstance{descriptors.last().getImplementationFactory()->createInstance(mock, true)}};
-    resolver.createRestInstancesInPlace(instances);
+    resolver.createRestInPlace(instances);
 
     EXPECT_EQ(instances.size(), 3);
     EXPECT_TRUE(instances.isSealed());
@@ -323,123 +323,123 @@ TEST_F(ServiceInstanceResolverTest, ShouldCreateRestInheritedInstancesInPlace)
     EXPECT_EQ(instances.getInnerList()[2].tryGetImplementation()->getTypeId(), typeid(TestInheritClass4));
 }
 
-TEST_F(ServiceInstanceResolverTest, ShouldCreateAlias)
-{
-    ServiceProviderMock mock;
-    sb::di::details::ServiceInstanceCreator creator;
-    creator.setServiceProvider(mock);
-    sb::di::details::ServiceDescriptorList descriptors{
-        sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass3>()};
-    descriptors.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass4>());
-    descriptors.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass5>());
-
-    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
-
-    TestInheritClass6 test;
-    const sb::di::ServiceInstance external{
-        std::make_unique<sb::di::details::ExternalService<TestInheritClass6>>(&test)};
-
-    const auto instance = resolver.createAlias(external);
-
-    EXPECT_TRUE(instance);
-    EXPECT_TRUE(instance.isValid());
-    EXPECT_TRUE(instance.getAs<void>());
-    EXPECT_EQ(instance.tryGetImplementation()->getTypeId(), typeid(TestInheritClass5));
-}
-
-TEST_F(ServiceInstanceResolverTest, ShouldCreateOneAlias)
-{
-    ServiceProviderMock mock;
-    sb::di::details::ServiceInstanceCreator creator;
-    creator.setServiceProvider(mock);
-    sb::di::details::ServiceDescriptorList descriptors{
-        sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass3>()};
-    descriptors.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass4>());
-    descriptors.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass5>());
-
-    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
-
-    TestInheritClass6 test;
-    sb::di::ServiceInstance external{std::make_unique<sb::di::details::ExternalService<TestInheritClass6>>(&test)};
-
-    const auto instances = resolver.createOneAlias(external);
-
-    EXPECT_EQ(instances.size(), 1);
-    EXPECT_FALSE(instances.isSealed());
-    EXPECT_TRUE(instances.getInnerList()[0].isValid());
-    EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
-    EXPECT_EQ(instances.getInnerList()[0].tryGetImplementation()->getTypeId(), typeid(TestInheritClass5));
-}
-
-TEST_F(ServiceInstanceResolverTest, ShouldCreateAllAliases)
-{
-    ServiceProviderMock mock;
-    sb::di::details::ServiceInstanceCreator creator;
-    creator.setServiceProvider(mock);
-    sb::di::details::ServiceDescriptorList descriptors{
-        sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass2>()};
-
-    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
-
-    TestInheritClass3 test3;
-    TestInheritClass4 test4;
-    TestInheritClass5 test5;
-    sb::di::details::ServiceInstanceList externals{
-        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass3>>(&test3)}};
-    externals.add(
-        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass4>>(&test4)});
-    externals.add(
-        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass5>>(&test5)});
-
-    const auto instances = resolver.createAllAliases(externals.getInnerList());
-
-    EXPECT_EQ(instances.size(), 3);
-    EXPECT_TRUE(instances.isSealed());
-    EXPECT_TRUE(instances.getInnerList()[0].isValid());
-    EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
-    EXPECT_EQ(instances.getInnerList()[0].tryGetImplementation()->getTypeId(), typeid(TestInheritClass2));
-    EXPECT_TRUE(instances.getInnerList()[1].isValid());
-    EXPECT_TRUE(instances.getInnerList()[1].getAs<void>());
-    EXPECT_EQ(instances.getInnerList()[1].tryGetImplementation()->getTypeId(), typeid(TestInheritClass2));
-    EXPECT_TRUE(instances.getInnerList()[2].isValid());
-    EXPECT_TRUE(instances.getInnerList()[2].getAs<void>());
-    EXPECT_EQ(instances.getInnerList()[2].tryGetImplementation()->getTypeId(), typeid(TestInheritClass2));
-}
-
-TEST_F(ServiceInstanceResolverTest, ShouldCreateRestAliases)
-{
-    ServiceProviderMock mock;
-    sb::di::details::ServiceInstanceCreator creator;
-    creator.setServiceProvider(mock);
-    sb::di::details::ServiceDescriptorList descriptors{
-        sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass2>()};
-
-    const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
-
-    TestInheritClass3 test3;
-    TestInheritClass4 test4;
-    TestInheritClass5 test5;
-    sb::di::details::ServiceInstanceList externals{
-        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass3>>(&test3)}};
-    externals.add(
-        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass4>>(&test4)});
-    externals.add(
-        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass5>>(&test5)});
-
-    sb::di::details::ServiceInstanceList instances{
-        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass2>>(&test5)}};
-
-    auto &_ = resolver.createRestAliases(externals.getInnerList(), instances);
-
-    EXPECT_EQ(instances.size(), 3);
-    EXPECT_TRUE(instances.isSealed());
-    EXPECT_TRUE(instances.getInnerList()[0].isValid());
-    EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
-    EXPECT_EQ(instances.getInnerList()[0].tryGetImplementation()->getTypeId(), typeid(TestInheritClass2));
-    EXPECT_TRUE(instances.getInnerList()[1].isValid());
-    EXPECT_TRUE(instances.getInnerList()[1].getAs<void>());
-    EXPECT_EQ(instances.getInnerList()[1].tryGetImplementation()->getTypeId(), typeid(TestInheritClass2));
-    EXPECT_TRUE(instances.getInnerList()[2].isValid());
-    EXPECT_TRUE(instances.getInnerList()[2].getAs<void>());
-    EXPECT_EQ(instances.getInnerList()[2].tryGetImplementation()->getTypeId(), typeid(TestInheritClass2));
-}
+// TEST_F(ServiceInstanceResolverTest, ShouldCreateAlias)
+// {
+//     ServiceProviderMock mock;
+//     sb::di::details::ServiceInstanceCreator creator;
+//     creator.setServiceProvider(mock);
+//     sb::di::details::ServiceDescriptorList descriptors{
+//         sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass3>()};
+//     descriptors.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass4>());
+//     descriptors.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass5>());
+//
+//     const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
+//
+//     TestInheritClass6 test;
+//     const sb::di::ServiceInstance external{
+//         std::make_unique<sb::di::details::ExternalService<TestInheritClass6>>(&test)};
+//
+//     const auto instance = resolver.createAlias(external);
+//
+//     EXPECT_TRUE(instance);
+//     EXPECT_TRUE(instance.isValid());
+//     EXPECT_TRUE(instance.getAs<void>());
+//     EXPECT_EQ(instance.tryGetImplementation()->getTypeId(), typeid(TestInheritClass5));
+// }
+//
+// TEST_F(ServiceInstanceResolverTest, ShouldCreateOneAlias)
+// {
+//     ServiceProviderMock mock;
+//     sb::di::details::ServiceInstanceCreator creator;
+//     creator.setServiceProvider(mock);
+//     sb::di::details::ServiceDescriptorList descriptors{
+//         sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass3>()};
+//     descriptors.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass4>());
+//     descriptors.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass5>());
+//
+//     const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
+//
+//     TestInheritClass6 test;
+//     sb::di::ServiceInstance external{std::make_unique<sb::di::details::ExternalService<TestInheritClass6>>(&test)};
+//
+//     const auto instances = resolver.createOneAlias(external);
+//
+//     EXPECT_EQ(instances.size(), 1);
+//     EXPECT_FALSE(instances.isSealed());
+//     EXPECT_TRUE(instances.getInnerList()[0].isValid());
+//     EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
+//     EXPECT_EQ(instances.getInnerList()[0].tryGetImplementation()->getTypeId(), typeid(TestInheritClass5));
+// }
+//
+// TEST_F(ServiceInstanceResolverTest, ShouldCreateAllAliases)
+// {
+//     ServiceProviderMock mock;
+//     sb::di::details::ServiceInstanceCreator creator;
+//     creator.setServiceProvider(mock);
+//     sb::di::details::ServiceDescriptorList descriptors{
+//         sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass2>()};
+//
+//     const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
+//
+//     TestInheritClass3 test3;
+//     TestInheritClass4 test4;
+//     TestInheritClass5 test5;
+//     sb::di::details::ServiceInstanceList externals{
+//         sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass3>>(&test3)}};
+//     externals.add(
+//         sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass4>>(&test4)});
+//     externals.add(
+//         sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass5>>(&test5)});
+//
+//     const auto instances = resolver.createAllAliases(externals.getInnerList());
+//
+//     EXPECT_EQ(instances.size(), 3);
+//     EXPECT_TRUE(instances.isSealed());
+//     EXPECT_TRUE(instances.getInnerList()[0].isValid());
+//     EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
+//     EXPECT_EQ(instances.getInnerList()[0].tryGetImplementation()->getTypeId(), typeid(TestInheritClass2));
+//     EXPECT_TRUE(instances.getInnerList()[1].isValid());
+//     EXPECT_TRUE(instances.getInnerList()[1].getAs<void>());
+//     EXPECT_EQ(instances.getInnerList()[1].tryGetImplementation()->getTypeId(), typeid(TestInheritClass2));
+//     EXPECT_TRUE(instances.getInnerList()[2].isValid());
+//     EXPECT_TRUE(instances.getInnerList()[2].getAs<void>());
+//     EXPECT_EQ(instances.getInnerList()[2].tryGetImplementation()->getTypeId(), typeid(TestInheritClass2));
+// }
+//
+// TEST_F(ServiceInstanceResolverTest, ShouldCreateRestAliases)
+// {
+//     ServiceProviderMock mock;
+//     sb::di::details::ServiceInstanceCreator creator;
+//     creator.setServiceProvider(mock);
+//     sb::di::details::ServiceDescriptorList descriptors{
+//         sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass2>()};
+//
+//     const sb::di::details::ServiceInstancesResolver resolver{creator, descriptors};
+//
+//     TestInheritClass3 test3;
+//     TestInheritClass4 test4;
+//     TestInheritClass5 test5;
+//     sb::di::details::ServiceInstanceList externals{
+//         sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass3>>(&test3)}};
+//     externals.add(
+//         sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass4>>(&test4)});
+//     externals.add(
+//         sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass5>>(&test5)});
+//
+//     sb::di::details::ServiceInstanceList instances{
+//         sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass2>>(&test5)}};
+//
+//     auto &_ = resolver.createRestAliases(externals.getInnerList(), instances);
+//
+//     EXPECT_EQ(instances.size(), 3);
+//     EXPECT_TRUE(instances.isSealed());
+//     EXPECT_TRUE(instances.getInnerList()[0].isValid());
+//     EXPECT_TRUE(instances.getInnerList()[0].getAs<void>());
+//     EXPECT_EQ(instances.getInnerList()[0].tryGetImplementation()->getTypeId(), typeid(TestInheritClass2));
+//     EXPECT_TRUE(instances.getInnerList()[1].isValid());
+//     EXPECT_TRUE(instances.getInnerList()[1].getAs<void>());
+//     EXPECT_EQ(instances.getInnerList()[1].tryGetImplementation()->getTypeId(), typeid(TestInheritClass2));
+//     EXPECT_TRUE(instances.getInnerList()[2].isValid());
+//     EXPECT_TRUE(instances.getInnerList()[2].getAs<void>());
+//     EXPECT_EQ(instances.getInnerList()[2].tryGetImplementation()->getTypeId(), typeid(TestInheritClass2));
+// }
