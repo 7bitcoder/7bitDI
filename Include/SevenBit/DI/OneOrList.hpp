@@ -47,6 +47,24 @@ namespace sb::di
             getAsList().emplace_back(std::move(element));
         }
 
+        void addRange(OneOrList &&other)
+        {
+            tryConvertToList();
+            auto &thisList = getAsList();
+            if (auto list = other.tryGetAsList())
+            {
+                thisList.reserve(thisList.size() + list->size());
+                for (auto &element : *list)
+                {
+                    thisList.emplace_back(std::move(element));
+                }
+            }
+            else
+            {
+                thisList.emplace_back(std::move(other.getAsSingle()));
+            }
+        }
+
         T &first()
         {
             auto single = tryGetAsSingle();

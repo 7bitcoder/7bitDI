@@ -19,6 +19,11 @@ namespace sb::di::details
         _oneOrList.add(RequireInstance::validAndGet(std::move(instance)));
     }
 
+    INLINE void ServiceInstanceList::addRange(ServiceInstanceList &&instances)
+    {
+        _oneOrList.addRange(std::move(instances.getInnerList()));
+    }
+
     INLINE OneOrList<ServiceInstance> &ServiceInstanceList::getInnerList() { return _oneOrList; }
     INLINE const OneOrList<ServiceInstance> &ServiceInstanceList::getInnerList() const { return _oneOrList; }
 

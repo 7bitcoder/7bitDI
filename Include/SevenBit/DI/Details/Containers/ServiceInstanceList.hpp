@@ -24,6 +24,8 @@ namespace sb::di::details
 
         void add(ServiceInstance &&instance);
 
+        void addRange(ServiceInstanceList &&instances);
+
         [[nodiscard]] auto begin() const { return _oneOrList.getAsList().begin(); }
         [[nodiscard]] auto end() const { return _oneOrList.getAsList().end(); }
 
