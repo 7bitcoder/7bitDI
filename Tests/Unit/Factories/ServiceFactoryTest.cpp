@@ -191,8 +191,7 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyUniq1Service)
     EXPECT_TRUE(instance);
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
-    EXPECT_TRUE(
-        dynamic_cast<sb::di::details::InPlaceService<TestDependencyUniquePtrClass1> *>(instance.get()));
+    EXPECT_TRUE(dynamic_cast<sb::di::details::InPlaceService<TestDependencyUniquePtrClass1> *>(instance.get()));
 }
 
 TEST_F(ServiceFactoryTest, ShouldCreateDependencyUniq2Service)
@@ -212,8 +211,7 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyUniq2Service)
     EXPECT_TRUE(instance);
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
-    EXPECT_TRUE(
-        dynamic_cast<sb::di::details::InPlaceService<TestDependencyUniquePtrClass2> *>(instance.get()));
+    EXPECT_TRUE(dynamic_cast<sb::di::details::InPlaceService<TestDependencyUniquePtrClass2> *>(instance.get()));
 }
 
 TEST_F(ServiceFactoryTest, ShouldCreateDependencyVec1Service)
@@ -265,7 +263,7 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyVec3Service)
     sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryCreateInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
-        .WillOnce(testing::Return(std::make_optional(std::move(result))));
+        .WillOnce(testing::Return(std::move(result)));
 
     const sb::di::details::ServiceFactory<TestDependencyVecClass3> factory;
 
@@ -287,7 +285,7 @@ TEST_F(ServiceFactoryTest, ShouldCreateDependencyVec4Service)
     sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryCreateInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
-        .WillOnce(testing::Return(std::make_optional(std::move(result))));
+        .WillOnce(testing::Return(std::move(result)));
 
     const sb::di::details::ServiceFactory<TestDependencyVecClass4> factory;
 

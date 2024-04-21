@@ -9,6 +9,7 @@
 #include "SevenBit/DI/Details/Core/Impl/ServiceInstanceProvider.hpp"
 #include "SevenBit/DI/Details/Core/Impl/ServiceInstanceProviderRoot.hpp"
 #include "SevenBit/DI/Details/Core/Impl/ServiceInstancesResolver.hpp"
+#include "SevenBit/DI/Details/Core/Impl/ServiceAliasInstancesResolver.hpp"
 #include "SevenBit/DI/Details/Helpers/Impl/CircularDependencyGuard.hpp"
 #include "SevenBit/DI/Details/Helpers/Impl/ScopedGuard.hpp"
 #include "SevenBit/DI/Details/Utils/Impl/RequireDescriptor.hpp"

@@ -19,14 +19,11 @@ namespace sb::di::details
         _oneOrList.add(RequireInstance::validAndGet(std::move(instance)));
     }
 
-    INLINE void ServiceInstanceList::addRange(ServiceInstanceList &&instances)
-    {
-        addRange(std::move(instances.getInnerList()));
-    }
+    INLINE void ServiceInstanceList::add(ServiceInstanceList &&instances) { add(std::move(instances.getInnerList())); }
 
-    INLINE void ServiceInstanceList::addRange(OneOrList<ServiceInstance> &&instances)
+    INLINE void ServiceInstanceList::add(OneOrList<ServiceInstance> &&instances)
     {
-        _oneOrList.addRange(std::move(instances));
+        _oneOrList.add(std::move(instances));
     }
 
     INLINE OneOrList<ServiceInstance> &ServiceInstanceList::getInnerList() { return _oneOrList; }
@@ -51,8 +48,6 @@ namespace sb::di::details
         _oneOrList.shrink();
         _sealed = true;
     }
-
-    INLINE bool ServiceInstanceList::isSealed() const { return _sealed; }
 
     INLINE void ServiceInstanceList::clear()
     {

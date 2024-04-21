@@ -125,7 +125,7 @@ TEST_F(ServiceGetterTest, ShouldGetDependencyVec3Service)
     sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryCreateInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
-        .WillOnce(testing::Return(std::make_optional(std::move(result))));
+        .WillOnce(testing::Return(std::move(result)));
 
     auto act = [&] {
         std::vector<std::unique_ptr<TestDependencyClass>> instance =

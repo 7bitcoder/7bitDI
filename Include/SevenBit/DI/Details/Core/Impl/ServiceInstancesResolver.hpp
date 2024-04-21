@@ -54,17 +54,11 @@ namespace sb::di::details
 
     INLINE ServiceInstanceList ServiceInstancesResolver::createAll(const bool inPlaceRequest) const
     {
-        ServiceInstanceList instances{_creator.createInstance(_descriptors.first(), inPlaceRequest)};
-        if (const auto size = _descriptors.size(); size > 1)
-        {
-            instances.reserve(size);
-            _descriptors.getInnerList().forEach([&](const ServiceDescriptor &descriptor, const std::size_t index) {
-                if (index) // skip first
-                {
-                    instances.add(_creator.createInstance(descriptor, inPlaceRequest));
-                }
-            });
-        }
+        ServiceInstanceList instances{};
+        instances.reserve(_descriptors.size());
+        _descriptors.getInnerList().forEach([&](const ServiceDescriptor &descriptor) {
+            instances.add(_creator.createInstance(descriptor, inPlaceRequest));
+        });
         instances.seal();
         return instances;
     }

@@ -13,6 +13,7 @@ namespace sb::di::details
         bool _sealed = false;
 
       public:
+        ServiceInstanceList() = default;
         explicit ServiceInstanceList(ServiceInstance instance);
         explicit ServiceInstanceList(std::size_t size);
 
@@ -25,9 +26,8 @@ namespace sb::di::details
         ServiceInstanceList &operator=(ServiceInstanceList &&) = default;
 
         void add(ServiceInstance &&instance);
-
-        void addRange(ServiceInstanceList &&instances);
-        void addRange(OneOrList<ServiceInstance> &&instances);
+        void add(ServiceInstanceList &&instances);
+        void add(OneOrList<ServiceInstance> &&instances);
 
         [[nodiscard]] auto begin() const { return _oneOrList.getAsList().begin(); }
         [[nodiscard]] auto end() const { return _oneOrList.getAsList().end(); }
@@ -51,10 +51,11 @@ namespace sb::di::details
 
         void seal();
 
-        [[nodiscard]] bool isSealed() const;
+        [[nodiscard]] bool isSealed() const { return _sealed; }
 
         void clear();
 
+        operator bool() const { return !_oneOrList.isUninitialized(); }
         ~ServiceInstanceList() = default;
     };
 } // namespace sb::di::details

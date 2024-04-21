@@ -16,27 +16,26 @@ namespace sb::di::details
       public:
         ServiceAliasInstancesResolver(ServiceInstanceCreator &creator, const ServiceDescriptorList &descriptors);
 
-        [[nodiscard]] std::optional<ServiceInstanceList> createOne(const ServiceInstance *original) const;
+        [[nodiscard]] ServiceInstanceList createOne(const ServiceInstance *original) const;
 
-        template <class TFactory> std::optional<ServiceInstanceList> createAll(TFactory originalFactory) const
+        template <class TFactory> ServiceInstanceList createAll(TFactory originalFactory) const
         {
-            std::optional<ServiceInstanceList> result;
+            ServiceInstanceList instances;
             _descriptors.getInnerList().forEach([&](const ServiceDescriptor &aliasDescriptor) {
                 if (const OneOrList<ServiceInstance> *originals = originalFactory(aliasDescriptor))
                 {
-                    createAll(aliasDescriptor, *originals, result);
+                    createAll(aliasDescriptor, *originals, instances);
                 }
             });
-            if (result)
-            {
-                result->seal();
-            }
-            return result;
+            instances.seal();
+            return instances;
         }
 
         template <class TFactory>
         ServiceInstanceList &createRest(ServiceInstanceList &instances, TFactory originalFactory) const
         {
+            auto first = std::move(instances.first());
+            instances = ServiceInstanceList{};
             const auto size = _descriptors.size();
             _descriptors.getInnerList().forEach([&](const ServiceDescriptor &aliasDescriptor, const std::size_t index) {
                 if (const OneOrList<ServiceInstance> *originals = originalFactory(aliasDescriptor))
@@ -47,7 +46,7 @@ namespace sb::di::details
                     }
                     else
                     {
-                        createRest(aliasDescriptor, *originals, instances);
+                        createRest(aliasDescriptor, *originals, std::move(first), instances);
                     }
                 }
             });
@@ -57,29 +56,22 @@ namespace sb::di::details
 
         [[nodiscard]] ServiceInstance map(ServiceInstance &&original) const;
 
-        template <class TFactory> std::optional<OneOrList<ServiceInstance>> mapAll(TFactory originalFactory) const
+        template <class TFactory> OneOrList<ServiceInstance> mapAll(TFactory originalFactory) const
         {
-            std::optional<OneOrList<ServiceInstance>> result;
+            OneOrList<ServiceInstance> instances;
             _descriptors.getInnerList().forEach([&](const ServiceDescriptor &aliasDescriptor) {
-                if (std::optional<OneOrList<ServiceInstance>> originals = originalFactory(aliasDescriptor))
+                if (OneOrList<ServiceInstance> originals = originalFactory(aliasDescriptor))
                 {
                     if (aliasDescriptor.getCastOffset())
                     {
-                        originals->forEach([&](ServiceInstance &instance) {
+                        originals.forEach([&](ServiceInstance &instance) {
                             instance.addCastOffset(aliasDescriptor.getCastOffset());
                         });
                     }
-                    if (!result)
-                    {
-                        result = std::move(originals);
-                    }
-                    else
-                    {
-                        result->addRange(std::move(*originals));
-                    }
+                    instances.add(std::move(originals));
                 }
             });
-            return result;
+            return instances;
         }
 
       private:
@@ -87,13 +79,10 @@ namespace sb::di::details
                                              const ServiceInstance &original) const;
 
         void createAll(const ServiceDescriptor &descriptor, const OneOrList<ServiceInstance> &originals,
-                       std::optional<ServiceInstanceList> &instances) const;
-
-        void createAll(const ServiceDescriptor &descriptor, const OneOrList<ServiceInstance> &originals,
                        ServiceInstanceList &instances) const;
 
         void createRest(const ServiceDescriptor &descriptor, const OneOrList<ServiceInstance> &originals,
-                        ServiceInstanceList &instances) const;
+                        ServiceInstance &&first, ServiceInstanceList &instances) const;
     };
 } // namespace sb::di::details
 

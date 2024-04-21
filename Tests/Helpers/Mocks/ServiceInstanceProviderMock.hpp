@@ -16,8 +16,8 @@ struct ServiceInstanceProviderMock : public sb::di::IServiceInstanceProvider
     MOCK_METHOD((sb::di::ServiceInstance), createInstance, (sb::di::TypeId serviceTypeId), (override));
     MOCK_METHOD((sb::di::ServiceInstance), tryCreateInstanceInPlace, (sb::di::TypeId serviceTypeId), (override));
     MOCK_METHOD((sb::di::ServiceInstance), createInstanceInPlace, (sb::di::TypeId serviceTypeId), (override));
-    MOCK_METHOD((std::optional<sb::di::OneOrList<sb::di::ServiceInstance>>), tryCreateInstances,
-                (sb::di::TypeId serviceTypeId), (override));
+    MOCK_METHOD((sb::di::OneOrList<sb::di::ServiceInstance>), tryCreateInstances, (sb::di::TypeId serviceTypeId),
+                (override));
 
     MOCK_METHOD((const sb::di::ServiceInstance *), tryGetKeyedInstance,
                 (sb::di::TypeId serviceTypeId, std::string_view serviceKey), (override));
@@ -33,6 +33,6 @@ struct ServiceInstanceProviderMock : public sb::di::IServiceInstanceProvider
                 (sb::di::TypeId serviceTypeId, std::string_view serviceKey), (override));
     MOCK_METHOD((sb::di::ServiceInstance), createKeyedInstanceInPlace,
                 (sb::di::TypeId serviceTypeId, std::string_view serviceKey), (override));
-    MOCK_METHOD((std::optional<sb::di::OneOrList<sb::di::ServiceInstance>>), tryCreateKeyedInstances,
+    MOCK_METHOD((sb::di::OneOrList<sb::di::ServiceInstance>), tryCreateKeyedInstances,
                 (sb::di::TypeId serviceTypeId, std::string_view serviceKey), (override));
 };

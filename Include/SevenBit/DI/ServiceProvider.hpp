@@ -367,13 +367,11 @@ namespace sb::di
          */
         template <class TService> std::vector<std::unique_ptr<TService>> createServices()
         {
-            if (auto optInstances = getInstanceProvider().tryCreateInstances(typeid(TService)))
-            {
-                return optInstances->map([&](ServiceInstance &instance) {
-                    details::RequireInstance::valid(instance);
-                    return instance.moveOutAsUniquePtr<TService>();
-                });
-            }
+            auto instances = getInstanceProvider().tryCreateInstances(typeid(TService));
+            return instances.map([&](ServiceInstance &instance) {
+                details::RequireInstance::valid(instance);
+                return instance.moveOutAsUniquePtr<TService>();
+            });
             return {};
         }
 
@@ -395,13 +393,11 @@ namespace sb::di
         template <class TService>
         std::vector<std::unique_ptr<TService>> createKeyedServices(const std::string_view serviceKey)
         {
-            if (auto optInstances = getInstanceProvider().tryCreateKeyedInstances(typeid(TService), serviceKey))
-            {
-                return optInstances->map([&](ServiceInstance &instance) {
-                    details::RequireInstance::valid(instance);
-                    return instance.moveOutAsUniquePtr<TService>();
-                });
-            }
+            auto instances = getInstanceProvider().tryCreateKeyedInstances(typeid(TService), serviceKey);
+            return instances.map([&](ServiceInstance &instance) {
+                details::RequireInstance::valid(instance);
+                return instance.moveOutAsUniquePtr<TService>();
+            });
             return {};
         }
     };

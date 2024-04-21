@@ -60,7 +60,7 @@ namespace sb::di::details
         {
             return tryCreateInstance(ServiceId{serviceTypeId});
         }
-        std::optional<OneOrList<ServiceInstance>> tryCreateInstances(const TypeId serviceTypeId) override
+        OneOrList<ServiceInstance> tryCreateInstances(const TypeId serviceTypeId) override
         {
             return tryCreateInstances(ServiceId{serviceTypeId});
         }
@@ -97,8 +97,8 @@ namespace sb::di::details
         {
             return tryCreateInstance(ServiceId{serviceTypeId, serviceKey});
         }
-        std::optional<OneOrList<ServiceInstance>> tryCreateKeyedInstances(const TypeId serviceTypeId,
-                                                                          const std::string_view serviceKey) override
+        OneOrList<ServiceInstance> tryCreateKeyedInstances(const TypeId serviceTypeId,
+                                                           const std::string_view serviceKey) override
         {
             return tryCreateInstances(ServiceId{serviceTypeId, serviceKey});
         }
@@ -121,7 +121,7 @@ namespace sb::di::details
 
         ServiceInstance createInstance(const ServiceId &id);
         ServiceInstance tryCreateInstance(const ServiceId &id);
-        std::optional<OneOrList<ServiceInstance>> tryCreateInstances(const ServiceId &id);
+        OneOrList<ServiceInstance> tryCreateInstances(const ServiceId &id);
 
         ServiceInstance createInstanceInPlace(const ServiceId &id);
         ServiceInstance tryCreateInstanceInPlace(const ServiceId &id);
@@ -133,15 +133,15 @@ namespace sb::di::details
         [[nodiscard]] const ServiceDescriptorList *findDescriptors(const ServiceId &id, bool transient) const;
 
         ServiceInstanceList *tryRegisterAndGet(const ServiceId &id, const ServiceDescriptorList &descriptors,
-                                               std::optional<ServiceInstanceList> &&instances);
+                                               ServiceInstanceList &&instances);
 
-        std::optional<ServiceInstanceList> tryCreateNonTransient(const ServiceDescriptorList &descriptors);
-        std::optional<ServiceInstanceList> tryCreateAllNonTransient(const ServiceDescriptorList &descriptors);
+        ServiceInstanceList tryCreateNonTransient(const ServiceDescriptorList &descriptors);
+        ServiceInstanceList tryCreateAllNonTransient(const ServiceDescriptorList &descriptors);
         ServiceInstanceList *createRestNonTransient(const ServiceDescriptorList &descriptors,
                                                     ServiceInstanceList &instances);
 
         ServiceInstance tryCreateTransient(const ServiceDescriptorList &descriptors);
-        std::optional<OneOrList<ServiceInstance>> tryCreateAllTransient(const ServiceDescriptorList &descriptors);
+        OneOrList<ServiceInstance> tryCreateAllTransient(const ServiceDescriptorList &descriptors);
 
         ServiceInstancesResolver makeResolver(const ServiceDescriptorList &descriptors);
         ServiceAliasInstancesResolver makeAliasResolver(const ServiceDescriptorList &descriptors);

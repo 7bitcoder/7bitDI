@@ -212,8 +212,7 @@ TEST_F(ServiceFcnFactoryTest, ShouldCreateDependencyUniq1Service)
     EXPECT_TRUE(instance);
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
-    EXPECT_TRUE(
-        dynamic_cast<sb::di::details::InPlaceService<TestDependencyUniquePtrClass1> *>(instance.get()));
+    EXPECT_TRUE(dynamic_cast<sb::di::details::InPlaceService<TestDependencyUniquePtrClass1> *>(instance.get()));
 }
 
 TEST_F(ServiceFcnFactoryTest, ShouldCreateDependencyUniq2Service)
@@ -235,8 +234,7 @@ TEST_F(ServiceFcnFactoryTest, ShouldCreateDependencyUniq2Service)
     EXPECT_TRUE(instance);
     EXPECT_TRUE(instance->isValid());
     EXPECT_TRUE(instance->get());
-    EXPECT_TRUE(
-        dynamic_cast<sb::di::details::UniquePtrService<TestDependencyUniquePtrClass2> *>(instance.get()));
+    EXPECT_TRUE(dynamic_cast<sb::di::details::UniquePtrService<TestDependencyUniquePtrClass2> *>(instance.get()));
 }
 
 TEST_F(ServiceFcnFactoryTest, ShouldCreateDependencyVec1Service)
@@ -290,7 +288,7 @@ TEST_F(ServiceFcnFactoryTest, ShouldCreateDependencyVec3Service)
     sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryCreateInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
-        .WillOnce(testing::Return(std::make_optional(std::move(result))));
+        .WillOnce(testing::Return(std::move(result)));
 
     const sb::di::details::ServiceFcnFactory factory{
         [&](std::vector<std::unique_ptr<TestDependencyClass>> ob) { return TestDependencyVecClass3(std::move(ob)); }};
@@ -313,12 +311,11 @@ TEST_F(ServiceFcnFactoryTest, ShouldCreateDependencyVec4Service)
     sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryCreateInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
-        .WillOnce(testing::Return(std::make_optional(std::move(result))));
+        .WillOnce(testing::Return(std::move(result)));
 
-    const sb::di::details::ServiceFcnFactory factory{
-        [&](const std::vector<std::unique_ptr<TestDependencyClass>> ob) {
-            return std::make_unique<TestDependencyVecClass4>(std::vector<std::unique_ptr<TestDependencyClass>>{});
-        }};
+    const sb::di::details::ServiceFcnFactory factory{[&](const std::vector<std::unique_ptr<TestDependencyClass>> ob) {
+        return std::make_unique<TestDependencyVecClass4>(std::vector<std::unique_ptr<TestDependencyClass>>{});
+    }};
 
     const auto instance = factory.createInstance(mock, true);
 
