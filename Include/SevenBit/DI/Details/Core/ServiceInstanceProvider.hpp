@@ -133,26 +133,19 @@ namespace sb::di::details
         [[nodiscard]] const ServiceDescriptorList *findDescriptors(const ServiceId &id) const;
         [[nodiscard]] const ServiceDescriptorList *findTransientDescriptors(const ServiceId &id) const;
 
-        ServiceInstanceList *tryRegisterAndGet(const ServiceId &id, const ServiceDescriptorList &descriptors,
-                                               ServiceInstance &&instance);
-        ServiceInstanceList *tryRegisterAndGet(const ServiceId &id, const ServiceDescriptorList &descriptors,
-                                               ServiceInstanceList &&instances);
+        ServiceLifeTime resolveLifeTime(const ServiceDescriptor &descriptor) const;
+        ServiceInstancesMap &getContainer(ServiceLifeTime lifetime);
 
-        void trySeal(ServiceInstanceList *instances, const ServiceDescriptorList &descriptors) const;
-
-        ServiceInstance tryCreateLast(const ServiceDescriptorList &descriptors);
+        ServiceInstance tryCreate(const ServiceDescriptor &descriptor);
         ServiceInstanceList tryCreateAll(const ServiceDescriptorList &descriptors);
         void createRest(const ServiceDescriptorList &descriptors, ServiceInstanceList &instances);
 
-        ServiceInstance tryCreateLastTransient(const ServiceDescriptorList &descriptors);
+        ServiceInstance tryCreateTransient(const ServiceDescriptor &descriptor);
         ServiceInstanceList tryCreateAllTransient(const ServiceDescriptorList &descriptors);
 
+        ServiceInstancesCreator &selectCreator(const ServiceDescriptor &descriptor);
         ServiceAliasesCreator &getAliasesCreator() { return _aliasesCreator; }
         ServiceInstancesCreator &getCreator() { return _instanceCreator; }
-        ServiceInstancesCreator &selectCreator(const ServiceDescriptor &descriptor)
-        {
-            return descriptor.getLifeTime().isSingleton() ? _root.getRootCreator() : getCreator();
-        }
     };
 } // namespace sb::di::details
 

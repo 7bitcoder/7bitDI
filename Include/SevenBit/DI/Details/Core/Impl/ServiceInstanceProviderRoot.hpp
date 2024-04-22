@@ -33,12 +33,11 @@ namespace sb::di::details
 
     INLINE void ServiceInstanceProviderRoot::prebuildSingletons()
     {
-        for (auto &[_, descriptors] : getDescriptorsMap())
+        for (auto &[id, descriptors] : getDescriptorsMap())
         {
             if (!descriptors.isAlias() && descriptors.getLifeTime().isSingleton())
             {
-                tryRegisterAndGet({descriptors.getServiceTypeId(), descriptors.getServiceKey()}, descriptors,
-                                  tryCreateAll(descriptors));
+                tryGetInstances(id);
             }
         }
     }

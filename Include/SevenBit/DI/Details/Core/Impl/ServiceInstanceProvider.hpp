@@ -42,37 +42,50 @@ namespace sb::di::details
 
     INLINE const ServiceInstance *ServiceInstanceProvider::tryGetInstance(const ServiceId &id)
     {
-        auto instances = findRegisteredInstances(id);
-        if (!instances)
+        if (const auto instances = findRegisteredInstances(id))
         {
-            if (const auto descriptors = findDescriptors(id))
+            return &instances->last();
+        }
+        if (const auto descriptors = findDescriptors(id))
+        {
+            const auto &descriptor = descriptors->last();
+            if (auto instance = tryCreate(descriptor))
             {
-                instances = tryRegisterAndGet(id, *descriptors, tryCreateLast(*descriptors));
+                auto &inserted = getContainer(resolveLifeTime(descriptor)).insert(id, std::move(instance));
+                if (!descriptors->isAlias() && descriptors->size() == 1)
+                {
+                    inserted.seal();
+                }
+                return &inserted.last();
             }
         }
-        return instances ? &instances->last() : nullptr;
+        return nullptr;
     }
 
     INLINE const OneOrList<ServiceInstance> *ServiceInstanceProvider::tryGetInstances(const ServiceId &id)
     {
-        auto instances = findRegisteredInstances(id);
-        if (!instances)
+        if (const auto instances = findRegisteredInstances(id))
         {
-            if (const auto descriptors = findDescriptors(id))
+            if (!instances->isSealed())
             {
-                instances = tryRegisterAndGet(id, *descriptors, tryCreateAll(*descriptors));
-                trySeal(instances, *descriptors);
+                if (const auto descriptors = findDescriptors(id))
+                {
+                    createRest(*descriptors, *instances);
+                    instances->seal();
+                }
+            }
+            return &instances->getInnerList();
+        }
+        if (const auto descriptors = findDescriptors(id))
+        {
+            if (auto instances = tryCreateAll(*descriptors))
+            {
+                auto &inserted = getContainer(resolveLifeTime(descriptors->last())).insert(id, std::move(instances));
+                inserted.seal();
+                return &inserted.getInnerList();
             }
         }
-        else if (!instances->isSealed())
-        {
-            if (const auto descriptors = findDescriptors(id))
-            {
-                createRest(*descriptors, *instances);
-                instances->seal();
-            }
-        }
-        return instances ? &instances->getInnerList() : nullptr;
+        return nullptr;
     }
 
     INLINE ServiceInstance ServiceInstanceProvider::createInstance(const ServiceId &id)
@@ -88,7 +101,7 @@ namespace sb::di::details
     INLINE ServiceInstance ServiceInstanceProvider::tryCreateInstance(const ServiceId &id)
     {
         const auto descriptors = findTransientDescriptors(id);
-        return descriptors ? tryCreateLastTransient(*descriptors) : ServiceInstance{};
+        return descriptors ? tryCreateTransient(descriptors->last()) : ServiceInstance{};
     }
 
     INLINE OneOrList<ServiceInstance> ServiceInstanceProvider::tryCreateInstances(const ServiceId &id)
@@ -113,7 +126,7 @@ namespace sb::di::details
     {
         if (const auto descriptors = findTransientDescriptors(id))
         {
-            if (auto &descriptor = descriptors->last();
+            if (const auto &descriptor = descriptors->last();
                 !descriptor.isAlias() && descriptor.getImplementationTypeId() == id.getTypeId())
             {
                 return selectCreator(descriptor).createInPlace(descriptor);
@@ -131,13 +144,6 @@ namespace sb::di::details
         return instances ? instances : second.findInstances(id);
     }
 
-    INLINE const ServiceDescriptorList *ServiceInstanceProvider::findTransientDescriptors(const ServiceId &id) const
-    {
-        const auto descriptors = _root.getDescriptorsMap().findDescriptors(id);
-        const auto isCorrect = descriptors && (descriptors->getLifeTime().isTransient() || descriptors->isAlias());
-        return isCorrect ? descriptors : nullptr;
-    }
-
     INLINE const ServiceDescriptorList *ServiceInstanceProvider::findDescriptors(const ServiceId &id) const
     {
         const auto descriptors = _root.getDescriptorsMap().findDescriptors(id);
@@ -145,44 +151,30 @@ namespace sb::di::details
         return isCorrect ? descriptors : nullptr;
     }
 
-    INLINE ServiceInstanceList *ServiceInstanceProvider::tryRegisterAndGet(const ServiceId &id,
-                                                                           const ServiceDescriptorList &descriptors,
-                                                                           ServiceInstance &&instance)
+    INLINE const ServiceDescriptorList *ServiceInstanceProvider::findTransientDescriptors(const ServiceId &id) const
     {
-        return instance ? tryRegisterAndGet(id, descriptors, ServiceInstanceList{std::move(instance)}) : nullptr;
+        const auto descriptors = _root.getDescriptorsMap().findDescriptors(id);
+        const auto isCorrect = descriptors && (descriptors->getLifeTime().isTransient() || descriptors->isAlias());
+        return isCorrect ? descriptors : nullptr;
     }
 
-    INLINE ServiceInstanceList *ServiceInstanceProvider::tryRegisterAndGet(const ServiceId &id,
-                                                                           const ServiceDescriptorList &descriptors,
-                                                                           ServiceInstanceList &&instances)
+    INLINE ServiceLifeTime ServiceInstanceProvider::resolveLifeTime(const ServiceDescriptor &descriptor) const
     {
-        if (!instances.empty())
+        if (descriptor.isAlias())
         {
-            auto &descriptor = descriptors.last();
-            auto lifeTime = descriptor.getLifeTime();
-            if (descriptor.isAlias())
-            {
-                const ServiceId originalId{descriptor.getImplementationTypeId(), descriptor.getImplementationKey()};
-                lifeTime = _scoped.contains(originalId) ? ServiceLifeTimes::Scoped : ServiceLifeTimes::Singleton;
-            }
-            auto &instancesMap = lifeTime.isSingleton() ? _root.getSingletons() : _scoped;
-            return &instancesMap.insert(id, std::move(instances));
+            const ServiceId originalId{descriptor.getImplementationTypeId(), descriptor.getImplementationKey()};
+            return _scoped.contains(originalId) ? ServiceLifeTimes::Scoped : ServiceLifeTimes::Singleton;
         }
-        return nullptr;
+        return descriptor.getLifeTime();
     }
 
-    INLINE void ServiceInstanceProvider::trySeal(ServiceInstanceList *instances,
-                                                 const ServiceDescriptorList &descriptors) const
+    INLINE ServiceInstancesMap &ServiceInstanceProvider::getContainer(const ServiceLifeTime lifetime)
     {
-        if (instances && (instances->size() > 1 || !descriptors.isAlias() && descriptors.size() == 1))
-        {
-            instances->seal();
-        }
+        return lifetime.isSingleton() ? _root.getSingletons() : _scoped;
     }
 
-    INLINE ServiceInstance ServiceInstanceProvider::tryCreateLast(const ServiceDescriptorList &descriptors)
+    INLINE ServiceInstance ServiceInstanceProvider::tryCreate(const ServiceDescriptor &descriptor)
     {
-        const auto &descriptor = descriptors.last();
         if (descriptor.isAlias())
         {
             return getAliasesCreator().tryCreate(
@@ -219,9 +211,8 @@ namespace sb::di::details
         selectCreator(descriptor).createRestInPlace(descriptors, instances);
     }
 
-    INLINE ServiceInstance ServiceInstanceProvider::tryCreateLastTransient(const ServiceDescriptorList &descriptors)
+    INLINE ServiceInstance ServiceInstanceProvider::tryCreateTransient(const ServiceDescriptor &descriptor)
     {
-        const auto &descriptor = descriptors.last();
         if (descriptor.isAlias())
         {
             return getAliasesCreator().tryMap(descriptor, tryCreateInstance({descriptor.getImplementationTypeId(),
@@ -242,5 +233,10 @@ namespace sb::di::details
         }
         RequireDescriptor::transient(descriptor);
         return selectCreator(descriptor).createAll(descriptors);
+    }
+
+    INLINE ServiceInstancesCreator &ServiceInstanceProvider::selectCreator(const ServiceDescriptor &descriptor)
+    {
+        return descriptor.getLifeTime().isSingleton() ? _root.getRootCreator() : getCreator();
     }
 } // namespace sb::di::details
