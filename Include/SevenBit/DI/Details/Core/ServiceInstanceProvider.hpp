@@ -18,7 +18,7 @@ namespace sb::di::details
     class EXPORT ServiceInstanceProvider : public IServiceInstanceProvider
     {
         ServiceProviderOptions _options;
-        ServiceInstancesCreator _instanceCreator;
+        ServiceInstancesCreator _instancesCreator;
         ServiceAliasesCreator _aliasesCreator;
         IServiceInstanceProviderRoot &_root;
         ServiceInstancesMap _scoped;
@@ -128,24 +128,24 @@ namespace sb::di::details
 
         void clear() { _scoped.clear(); }
 
-        ServiceInstanceList *findRegisteredInstances(const ServiceId &id);
+        ServiceInstanceList *findInstances(const ServiceId &id);
 
         [[nodiscard]] const ServiceDescriptorList *findDescriptors(const ServiceId &id) const;
         [[nodiscard]] const ServiceDescriptorList *findTransientDescriptors(const ServiceId &id) const;
 
-        ServiceLifeTime resolveLifeTime(const ServiceDescriptor &descriptor) const;
-        ServiceInstancesMap &getContainer(ServiceLifeTime lifetime);
+        ServiceLifeTime getLifeTime(const ServiceDescriptor &descriptor) const;
+        ServiceInstancesMap &getInstancesMap(ServiceLifeTime lifetime);
 
-        ServiceInstance tryCreate(const ServiceDescriptor &descriptor);
-        ServiceInstanceList tryCreateAll(const ServiceDescriptorList &descriptors);
-        void createRest(const ServiceDescriptorList &descriptors, ServiceInstanceList &instances);
+        ServiceInstance tryCreateInstance(const ServiceDescriptor &descriptor);
+        ServiceInstanceList tryCreateInstances(const ServiceDescriptorList &descriptors);
+        void createRestInstances(const ServiceDescriptorList &descriptors, ServiceInstanceList &instances);
 
-        ServiceInstance tryCreateTransient(const ServiceDescriptor &descriptor);
-        ServiceInstanceList tryCreateAllTransient(const ServiceDescriptorList &descriptors);
+        ServiceInstance tryCreateTransientInstance(const ServiceDescriptor &descriptor);
+        ServiceInstanceList tryCreateTransientInstances(const ServiceDescriptorList &descriptors);
 
         ServiceInstancesCreator &selectCreator(const ServiceDescriptor &descriptor);
         ServiceAliasesCreator &getAliasesCreator() { return _aliasesCreator; }
-        ServiceInstancesCreator &getCreator() { return _instanceCreator; }
+        ServiceInstancesCreator &getCreator() { return _instancesCreator; }
     };
 } // namespace sb::di::details
 
