@@ -18,18 +18,16 @@ namespace sb::di::details
 
         [[nodiscard]] ServiceInstance create(const ServiceDescriptor &descriptor);
         [[nodiscard]] ServiceInstanceList createAll(const ServiceDescriptorList &descriptors);
-        ServiceInstanceList &createRest(const ServiceDescriptorList &descriptors, ServiceInstanceList &instances);
+        void createRest(const ServiceDescriptorList &descriptors, ServiceInstanceList &instances);
 
         [[nodiscard]] ServiceInstance createInPlace(const ServiceDescriptor &descriptor);
         [[nodiscard]] ServiceInstanceList createAllInPlace(const ServiceDescriptorList &descriptors);
-        ServiceInstanceList &createRestInPlace(const ServiceDescriptorList &descriptors,
-                                               ServiceInstanceList &instances);
+        void createRestInPlace(const ServiceDescriptorList &descriptors, ServiceInstanceList &instances);
 
       private:
         [[nodiscard]] ServiceInstance create(const ServiceDescriptor &descriptor, bool inPlaceRequest);
         [[nodiscard]] ServiceInstanceList createAll(const ServiceDescriptorList &descriptors, bool inPlaceRequest);
-        ServiceInstanceList &createRest(const ServiceDescriptorList &descriptors, ServiceInstanceList &instances,
-                                        bool inPlaceRequest);
+        void createRest(const ServiceDescriptorList &descriptors, ServiceInstanceList &instances, bool inPlaceRequest);
     };
 } // namespace sb::di::details
 

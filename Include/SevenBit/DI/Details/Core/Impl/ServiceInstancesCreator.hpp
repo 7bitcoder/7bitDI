@@ -22,8 +22,8 @@ namespace sb::di::details
         return createAll(descriptors, false);
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesCreator::createRest(const ServiceDescriptorList &descriptors,
-                                                                    ServiceInstanceList &instances)
+    INLINE void ServiceInstancesCreator::createRest(const ServiceDescriptorList &descriptors,
+                                                    ServiceInstanceList &instances)
     {
         return createRest(descriptors, instances, false);
     }
@@ -38,8 +38,8 @@ namespace sb::di::details
         return createAll(descriptors, true);
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesCreator::createRestInPlace(const ServiceDescriptorList &descriptors,
-                                                                           ServiceInstanceList &instances)
+    INLINE void ServiceInstancesCreator::createRestInPlace(const ServiceDescriptorList &descriptors,
+                                                           ServiceInstanceList &instances)
     {
         return createRest(descriptors, instances, true);
     }
@@ -47,17 +47,15 @@ namespace sb::di::details
     INLINE ServiceInstanceList ServiceInstancesCreator::createAll(const ServiceDescriptorList &descriptors,
                                                                   const bool inPlaceRequest)
     {
-        ServiceInstanceList instances{};
+        ServiceInstanceList instances;
         instances.reserve(descriptors.size());
         descriptors.getInnerList().forEach(
             [&](const ServiceDescriptor &descriptor) { instances.add(create(descriptor, inPlaceRequest)); });
-        instances.seal();
         return instances;
     }
 
-    INLINE ServiceInstanceList &ServiceInstancesCreator::createRest(const ServiceDescriptorList &descriptors,
-                                                                    ServiceInstanceList &instances,
-                                                                    const bool inPlaceRequest)
+    INLINE void ServiceInstancesCreator::createRest(const ServiceDescriptorList &descriptors,
+                                                    ServiceInstanceList &instances, const bool inPlaceRequest)
     {
         if (const auto size = descriptors.size(); size > 1)
         {
@@ -72,8 +70,6 @@ namespace sb::di::details
             instances.add(std::move(first));
             std::swap(instances.first(), instances.last());
         }
-        instances.seal();
-        return instances;
     }
 
     INLINE ServiceInstance ServiceInstancesCreator::create(const ServiceDescriptor &descriptor,

@@ -51,10 +51,10 @@ namespace sb::di::details
 
       private:
         void tryCreateAll(ServiceInstanceList &instances, const ServiceDescriptor &descriptor,
-                          const ServiceInstanceList *originals) const;
+                          const OneOrList<ServiceInstance> *originals) const;
 
         void tryCreateRest(ServiceInstanceList &instances, const ServiceDescriptor &descriptor,
-                           const ServiceInstanceList *originals, ServiceInstance &&first) const;
+                           const OneOrList<ServiceInstance> *originals, ServiceInstance &&first) const;
 
         void tryMapAll(ServiceInstanceList &instances, const ServiceDescriptor &descriptor,
                        OneOrList<ServiceInstance> &&originals) const;

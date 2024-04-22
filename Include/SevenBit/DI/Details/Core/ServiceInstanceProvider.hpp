@@ -130,17 +130,21 @@ namespace sb::di::details
 
         ServiceInstanceList *findRegisteredInstances(const ServiceId &id);
 
+        [[nodiscard]] const ServiceDescriptorList *findDescriptors(const ServiceId &id) const;
         [[nodiscard]] const ServiceDescriptorList *findTransientDescriptors(const ServiceId &id) const;
-        [[nodiscard]] const ServiceDescriptorList *findNonTransientDescriptors(const ServiceId &id) const;
 
+        ServiceInstanceList *tryRegisterAndGet(const ServiceId &id, const ServiceDescriptorList &descriptors,
+                                               ServiceInstance &&instance);
         ServiceInstanceList *tryRegisterAndGet(const ServiceId &id, const ServiceDescriptorList &descriptors,
                                                ServiceInstanceList &&instances);
 
-        ServiceInstance tryCreateNonTransient(const ServiceDescriptorList &descriptors);
-        ServiceInstanceList tryCreateAllNonTransient(const ServiceDescriptorList &descriptors);
-        void createRestNonTransient(const ServiceDescriptorList &descriptors, ServiceInstanceList &instances);
+        void trySeal(ServiceInstanceList *instances, const ServiceDescriptorList &descriptors) const;
 
-        ServiceInstance tryCreateTransient(const ServiceDescriptorList &descriptors);
+        ServiceInstance tryCreateLast(const ServiceDescriptorList &descriptors);
+        ServiceInstanceList tryCreateAll(const ServiceDescriptorList &descriptors);
+        void createRest(const ServiceDescriptorList &descriptors, ServiceInstanceList &instances);
+
+        ServiceInstance tryCreateLastTransient(const ServiceDescriptorList &descriptors);
         ServiceInstanceList tryCreateAllTransient(const ServiceDescriptorList &descriptors);
 
         ServiceAliasesCreator &getAliasesCreator() { return _aliasesCreator; }

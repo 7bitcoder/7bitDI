@@ -26,8 +26,6 @@ namespace sb::di::details
 
         explicit operator bool() const { return !_oneOrList.isUninitialized(); }
 
-        operator OneOrList<ServiceInstance>() && { return std::move(_oneOrList); }
-
         void add(ServiceInstance &&instance);
         void add(ServiceInstanceList &&instances);
         void add(OneOrList<ServiceInstance> &&instances);

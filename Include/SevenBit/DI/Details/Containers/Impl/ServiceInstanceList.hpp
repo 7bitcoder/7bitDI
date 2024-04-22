@@ -37,11 +37,7 @@ namespace sb::di::details
 
     INLINE void ServiceInstanceList::shrink() { return _oneOrList.shrink(); }
 
-    INLINE void ServiceInstanceList::seal()
-    {
-        _oneOrList.shrink();
-        _sealed = true;
-    }
+    INLINE void ServiceInstanceList::seal() { _sealed = true; }
 
     INLINE void ServiceInstanceList::clear() { _oneOrList.clear(); }
 
