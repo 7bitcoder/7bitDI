@@ -155,6 +155,18 @@ namespace sb::di
             }
         }
 
+        void clear()
+        {
+            if (auto list = tryGetAsList())
+            {
+                list->clear();
+            }
+            else
+            {
+                _variant = Uninitialized{};
+            }
+        }
+
         template <class TFunc> void forEach(TFunc fcn)
         {
             if (auto single = tryGetAsSingle())

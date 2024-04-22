@@ -29,10 +29,7 @@ namespace sb::di::details
 
     INLINE ServiceInstancesMap &ServiceInstanceProviderRoot::getSingletons() { return _singletons; }
 
-    INLINE ServiceInstanceCreator &ServiceInstanceProviderRoot::getRootInstanceCreator()
-    {
-        return getInstanceCreator();
-    }
+    INLINE ServiceInstancesCreator &ServiceInstanceProviderRoot::getRootCreator() { return getCreator(); }
 
     INLINE void ServiceInstanceProviderRoot::prebuildSingletons()
     {

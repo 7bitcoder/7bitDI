@@ -35,7 +35,7 @@ namespace sb::di::details
 
         ServiceInstancesMap &getSingletons() override;
 
-        ServiceInstanceCreator &getRootInstanceCreator() override;
+        ServiceInstancesCreator &getRootCreator() override;
 
       private:
         void prebuildSingletons();

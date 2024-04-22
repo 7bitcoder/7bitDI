@@ -8,9 +8,8 @@
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
 #include "SevenBit/DI/Details/Core/IServiceInstanceProviderRoot.hpp"
-#include "SevenBit/DI/Details/Core/ServiceAliasInstancesResolver.hpp"
-#include "SevenBit/DI/Details/Core/ServiceInstanceCreator.hpp"
-#include "SevenBit/DI/Details/Core/ServiceInstancesResolver.hpp"
+#include "SevenBit/DI/Details/Core/ServiceAliasesCreator.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstancesCreator.hpp"
 #include "SevenBit/DI/IServiceInstanceProvider.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 
@@ -19,7 +18,8 @@ namespace sb::di::details
     class EXPORT ServiceInstanceProvider : public IServiceInstanceProvider
     {
         ServiceProviderOptions _options;
-        ServiceInstanceCreator _instanceCreator;
+        ServiceInstancesCreator _instanceCreator;
+        ServiceAliasesCreator _aliasesCreator;
         IServiceInstanceProviderRoot &_root;
         ServiceInstancesMap _scoped;
 
@@ -130,23 +130,25 @@ namespace sb::di::details
 
         ServiceInstanceList *findRegisteredInstances(const ServiceId &id);
 
-        [[nodiscard]] const ServiceDescriptorList *findDescriptors(const ServiceId &id, bool transient) const;
+        [[nodiscard]] const ServiceDescriptorList *findTransientDescriptors(const ServiceId &id) const;
+        [[nodiscard]] const ServiceDescriptorList *findNonTransientDescriptors(const ServiceId &id) const;
 
         ServiceInstanceList *tryRegisterAndGet(const ServiceId &id, const ServiceDescriptorList &descriptors,
                                                ServiceInstanceList &&instances);
 
-        ServiceInstanceList tryCreateNonTransient(const ServiceDescriptorList &descriptors);
+        ServiceInstance tryCreateNonTransient(const ServiceDescriptorList &descriptors);
         ServiceInstanceList tryCreateAllNonTransient(const ServiceDescriptorList &descriptors);
-        ServiceInstanceList *createRestNonTransient(const ServiceDescriptorList &descriptors,
-                                                    ServiceInstanceList &instances);
+        void createRestNonTransient(const ServiceDescriptorList &descriptors, ServiceInstanceList &instances);
 
         ServiceInstance tryCreateTransient(const ServiceDescriptorList &descriptors);
-        OneOrList<ServiceInstance> tryCreateAllTransient(const ServiceDescriptorList &descriptors);
+        ServiceInstanceList tryCreateAllTransient(const ServiceDescriptorList &descriptors);
 
-        ServiceInstancesResolver makeResolver(const ServiceDescriptorList &descriptors);
-        ServiceAliasInstancesResolver makeAliasResolver(const ServiceDescriptorList &descriptors);
-
-        ServiceInstanceCreator &getInstanceCreator() { return _instanceCreator; }
+        ServiceAliasesCreator &getAliasesCreator() { return _aliasesCreator; }
+        ServiceInstancesCreator &getCreator() { return _instanceCreator; }
+        ServiceInstancesCreator &selectCreator(const ServiceDescriptor &descriptor)
+        {
+            return descriptor.getLifeTime().isSingleton() ? _root.getRootCreator() : getCreator();
+        }
     };
 } // namespace sb::di::details
 
