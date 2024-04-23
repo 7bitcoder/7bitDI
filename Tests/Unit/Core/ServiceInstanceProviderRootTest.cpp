@@ -4,9 +4,9 @@
 #include "../../Helpers/Classes/Basic.hpp"
 #include "../../Helpers/Classes/Inherit.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
-#include "SevenBit/DI/Details/Core/ServiceInstanceProviderRoot.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/ServiceDescriber.hpp"
+#include <SevenBit/DI/Details/Core/ServiceInstanceProviderRoot.hpp>
+#include <SevenBit/DI/Exceptions.hpp>
+#include <SevenBit/DI/ServiceDescriber.hpp>
 
 class ServiceInstanceProviderRootTest : public testing::Test
 {

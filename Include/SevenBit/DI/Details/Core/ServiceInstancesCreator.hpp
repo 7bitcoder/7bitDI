@@ -1,10 +1,10 @@
 #pragma once
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
-#include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
-#include "SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp"
+#include <SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp>
+#include <SevenBit/DI/Details/Containers/ServiceInstanceList.hpp>
+#include <SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp>
 
 namespace sb::di::details
 {
@@ -32,5 +32,5 @@ namespace sb::di::details
 } // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Core/Impl/ServiceInstancesCreator.hpp"
+#include <SevenBit/DI/Details/Core/Impl/ServiceInstancesCreator.hpp>
 #endif

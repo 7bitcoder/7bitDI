@@ -3,13 +3,13 @@
 #include <memory>
 #include <type_traits>
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Details/Helpers/FunctorInjector.hpp"
-#include "SevenBit/DI/Details/Services/InPlaceService.hpp"
-#include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
-#include "SevenBit/DI/Details/Utils/Meta.hpp"
-#include "SevenBit/DI/IServiceFactory.hpp"
+#include <SevenBit/DI/Details/Helpers/FunctorInjector.hpp>
+#include <SevenBit/DI/Details/Services/InPlaceService.hpp>
+#include <SevenBit/DI/Details/Services/UniquePtrService.hpp>
+#include <SevenBit/DI/Details/Utils/Meta.hpp>
+#include <SevenBit/DI/IServiceFactory.hpp>
 
 namespace sb::di::details
 {

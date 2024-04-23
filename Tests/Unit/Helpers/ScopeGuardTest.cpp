@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 #include "../../Helpers/Classes/Basic.hpp"
-#include "SevenBit/DI/Details/Helpers/ScopedGuard.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
+#include <SevenBit/DI/Details/Helpers/ScopedGuard.hpp>
+#include <SevenBit/DI/Exceptions.hpp>
 
 class ScopeGuardTest : public testing::Test
 {

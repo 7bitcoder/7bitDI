@@ -3,15 +3,15 @@
 #include <memory>
 #include <optional>
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
-#include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
-#include "SevenBit/DI/Details/Core/IServiceInstanceProviderRoot.hpp"
-#include "SevenBit/DI/Details/Core/ServiceAliasesCreator.hpp"
-#include "SevenBit/DI/Details/Core/ServiceInstancesCreator.hpp"
-#include "SevenBit/DI/IServiceInstanceProvider.hpp"
-#include "SevenBit/DI/ServiceProviderOptions.hpp"
+#include <SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp>
+#include <SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp>
+#include <SevenBit/DI/Details/Core/IServiceInstanceProviderRoot.hpp>
+#include <SevenBit/DI/Details/Core/ServiceAliasesCreator.hpp>
+#include <SevenBit/DI/Details/Core/ServiceInstancesCreator.hpp>
+#include <SevenBit/DI/IServiceInstanceProvider.hpp>
+#include <SevenBit/DI/ServiceProviderOptions.hpp>
 
 namespace sb::di::details
 {
@@ -150,5 +150,5 @@ namespace sb::di::details
 } // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Core/Impl/ServiceInstanceProvider.hpp"
+#include <SevenBit/DI/Details/Core/Impl/ServiceInstanceProvider.hpp>
 #endif

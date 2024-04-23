@@ -2,10 +2,10 @@
 
 #include <memory>
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Details/Core/IServiceInstanceProviderRoot.hpp"
-#include "SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp"
+#include <SevenBit/DI/Details/Core/IServiceInstanceProviderRoot.hpp>
+#include <SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp>
 
 namespace sb::di::details
 {
@@ -31,11 +31,11 @@ namespace sb::di::details
 
         void init(ServiceProvider &serviceProvider) override;
 
-        [[nodiscard]] const ServiceDescriptorsMap &getDescriptorsMap() const override;
+        [[nodiscard]] const ServiceDescriptorsMap &getDescriptorsMap() const override { return _descriptorsMap; }
 
-        ServiceInstancesMap &getSingletons() override;
+        ServiceInstancesMap &getSingletons() override { return _singletons; }
 
-        ServiceInstancesCreator &getRootCreator() override;
+        ServiceInstancesCreator &getRootCreator() override { return getCreator(); }
 
       private:
         void prebuildSingletons();
@@ -43,5 +43,5 @@ namespace sb::di::details
 } // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Core/Impl/ServiceInstanceProviderRoot.hpp"
+#include <SevenBit/DI/Details/Core/Impl/ServiceInstanceProviderRoot.hpp>
 #endif

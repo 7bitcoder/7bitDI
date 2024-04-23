@@ -1,8 +1,8 @@
 #pragma once
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Details/Core/ServiceInstanceProviderRoot.hpp"
+#include <SevenBit/DI/Details/Core/ServiceInstanceProviderRoot.hpp>
 
 namespace sb::di::details
 {
@@ -21,15 +21,6 @@ namespace sb::di::details
             prebuildSingletons();
         }
     }
-
-    INLINE const ServiceDescriptorsMap &ServiceInstanceProviderRoot::getDescriptorsMap() const
-    {
-        return _descriptorsMap;
-    }
-
-    INLINE ServiceInstancesMap &ServiceInstanceProviderRoot::getSingletons() { return _singletons; }
-
-    INLINE ServiceInstancesCreator &ServiceInstanceProviderRoot::getRootCreator() { return getCreator(); }
 
     INLINE void ServiceInstanceProviderRoot::prebuildSingletons()
     {

@@ -2,8 +2,8 @@
 #include <memory>
 
 #include "../Helpers/Classes/Inherit.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/ServiceCollection.hpp"
+#include <SevenBit/DI/Exceptions.hpp>
+#include <SevenBit/DI/ServiceCollection.hpp>
 
 class InheritanceUniqFactoryTest : public testing::Test
 {

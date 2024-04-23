@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "SevenBit/DI/Details/Utils/Check.hpp"
+#include <SevenBit/DI/Details/Utils/Check.hpp>
 
 class CheckTest : public testing::Test
 {

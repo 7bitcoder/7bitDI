@@ -3,7 +3,7 @@
 #include <memory>
 #include <string>
 
-#include "SevenBit/DI/ServiceProvider.hpp"
+#include <SevenBit/DI/ServiceProvider.hpp>
 
 struct TestDependencyClass
 {

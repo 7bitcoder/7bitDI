@@ -5,8 +5,8 @@
 
 #include <gtest/gtest.h>
 
-#include "SevenBit/DI/ServiceCollection.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
+#include <SevenBit/DI/ServiceCollection.hpp>
+#include <SevenBit/DI/ServiceProvider.hpp>
 
 struct ITestComplexClass1
 {

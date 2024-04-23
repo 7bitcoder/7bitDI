@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 #include "../../Helpers/Classes/Basic.hpp"
-#include "SevenBit/DI/Details/Services/ExternalService.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
+#include <SevenBit/DI/Details/Services/ExternalService.hpp>
+#include <SevenBit/DI/Exceptions.hpp>
 
 class ExternalServiceTest : public testing::Test
 {

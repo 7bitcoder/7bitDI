@@ -2,15 +2,15 @@
 
 #include <type_traits>
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Details/Factories/ExternalServiceFactory.hpp"
-#include "SevenBit/DI/Details/Factories/ServiceFactory.hpp"
-#include "SevenBit/DI/Details/Factories/ServiceFcnFactory.hpp"
-#include "SevenBit/DI/Details/Utils/Assert.hpp"
-#include "SevenBit/DI/Details/Utils/Cast.hpp"
-#include "SevenBit/DI/ServiceDescriptor.hpp"
-#include "SevenBit/DI/ServiceLifeTimes.hpp"
+#include <SevenBit/DI/Details/Factories/ExternalServiceFactory.hpp>
+#include <SevenBit/DI/Details/Factories/ServiceFactory.hpp>
+#include <SevenBit/DI/Details/Factories/ServiceFcnFactory.hpp>
+#include <SevenBit/DI/Details/Utils/Assert.hpp>
+#include <SevenBit/DI/Details/Utils/Cast.hpp>
+#include <SevenBit/DI/ServiceDescriptor.hpp>
+#include <SevenBit/DI/ServiceLifeTimes.hpp>
 
 namespace sb::di
 {

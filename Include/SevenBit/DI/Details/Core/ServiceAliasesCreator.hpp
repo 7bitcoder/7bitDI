@@ -1,9 +1,9 @@
 #pragma once
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
-#include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
+#include <SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp>
+#include <SevenBit/DI/Details/Containers/ServiceInstanceList.hpp>
 
 namespace sb::di::details
 {
@@ -17,7 +17,7 @@ namespace sb::di::details
         ServiceInstanceList tryCreateAll(const ServiceDescriptorList &descriptors, TResolver originalResolver) const
         {
             ServiceInstanceList instances;
-            descriptors.getInnerList().forEach([&](const ServiceDescriptor &aliasDescriptor) {
+            descriptors.forEach([&](const ServiceDescriptor &aliasDescriptor) {
                 tryCreateAll(instances, aliasDescriptor, originalResolver(aliasDescriptor));
             });
             return instances;
@@ -30,7 +30,7 @@ namespace sb::di::details
             auto first = std::move(instances.first());
             instances.clear();
             const auto size = descriptors.size();
-            descriptors.getInnerList().forEach([&](const ServiceDescriptor &aliasDescriptor, const std::size_t index) {
+            descriptors.forEach([&](const ServiceDescriptor &aliasDescriptor, const std::size_t index) {
                 index < size - 1
                     ? tryCreateAll(instances, aliasDescriptor, originalResolver(aliasDescriptor))
                     : tryCreateRest(instances, aliasDescriptor, originalResolver(aliasDescriptor), std::move(first));
@@ -43,7 +43,7 @@ namespace sb::di::details
         ServiceInstanceList tryMapAll(const ServiceDescriptorList &descriptors, TResolver originalResolver) const
         {
             ServiceInstanceList instances;
-            descriptors.getInnerList().forEach([&](const ServiceDescriptor &aliasDescriptor) {
+            descriptors.forEach([&](const ServiceDescriptor &aliasDescriptor) {
                 tryMapAll(instances, aliasDescriptor, originalResolver(aliasDescriptor));
             });
             return instances;
@@ -65,5 +65,5 @@ namespace sb::di::details
 } // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Core/Impl/ServiceAliasesCreator.hpp"
+#include <SevenBit/DI/Details/Core/Impl/ServiceAliasesCreator.hpp>
 #endif

@@ -2,9 +2,9 @@
 
 #include <memory>
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/IServiceInstance.hpp"
+#include <SevenBit/DI/IServiceInstance.hpp>
 
 namespace sb::di::details
 {

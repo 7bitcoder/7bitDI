@@ -5,13 +5,13 @@
 #include <memory>
 #include <vector>
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Details/Utils/Container.hpp"
-#include "SevenBit/DI/ServiceDescriber.hpp"
-#include "SevenBit/DI/ServiceLifeTimes.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
-#include "SevenBit/DI/ServiceProviderOptions.hpp"
+#include <SevenBit/DI/Details/Utils/Container.hpp>
+#include <SevenBit/DI/ServiceDescriber.hpp>
+#include <SevenBit/DI/ServiceLifeTimes.hpp>
+#include <SevenBit/DI/ServiceProvider.hpp>
+#include <SevenBit/DI/ServiceProviderOptions.hpp>
 
 namespace sb::di
 {
@@ -79,102 +79,105 @@ namespace sb::di
         /**
          * @brief Returns inner vector container
          */
-        std::vector<ServiceDescriptor> &getInnerVector();
+        std::vector<ServiceDescriptor> &getInnerVector() { return _serviceDescriptors; }
         /**
          * @brief Returns inner vector container
          */
-        [[nodiscard]] const std::vector<ServiceDescriptor> &getInnerVector() const;
+        [[nodiscard]] const std::vector<ServiceDescriptor> &getInnerVector() const { return _serviceDescriptors; }
 
         /**
          * @brief Returns service descriptor at giver position
          * @details might throw exception
          * @throws std::out_of_range if index >= size()
          */
-        ServiceDescriptor &at(std::size_t index);
+        ServiceDescriptor &at(const std::size_t index) { return _serviceDescriptors.at(index); }
         /**
          * @brief Returns service descriptor at giver position
          * @details might throw exception
          * @throws std::out_of_range if index >= size()
          */
-        [[nodiscard]] const ServiceDescriptor &at(std::size_t index) const;
+        [[nodiscard]] const ServiceDescriptor &at(const std::size_t index) const
+        {
+            return _serviceDescriptors.at(index);
+        }
 
         /**
          * @brief Returns first descriptor
          * @details might throw exception
          * @throws std::out_of_range if empty()
          */
-        ServiceDescriptor &first();
+        ServiceDescriptor &first() { return at(0); }
         /**
          * @brief Returns first descriptor
          * @details might throw exception
          * @throws std::out_of_range if empty()
          */
-        [[nodiscard]] const ServiceDescriptor &first() const;
+        [[nodiscard]] const ServiceDescriptor &first() const { return at(0); }
 
         /**
          * @brief Returns last descriptor
          * @details might throw exception
          * @throws std::out_of_range if empty()
          */
-        ServiceDescriptor &last();
+        ServiceDescriptor &last() { return at(size() - 1); }
         /**
          * @brief Returns last descriptor
          * @details might throw exception
          * @throws std::out_of_range if empty()
          */
-        [[nodiscard]] const ServiceDescriptor &last() const;
+        [[nodiscard]] const ServiceDescriptor &last() const { return at(size() - 1); }
 
         /**
          * @brief Returns service descriptor at giver position
          * @details might throw exception
          * @throws std::out_of_range if index >= size()
          */
-        ServiceDescriptor &operator[](std::size_t index);
+        ServiceDescriptor &operator[](const std::size_t index) { return _serviceDescriptors[index]; }
         /**
          * @brief Returns service descriptor at giver position
          * @details might throw exception
          * @throws std::out_of_range if index >= size()
          */
-        const ServiceDescriptor &operator[](std::size_t index) const;
+        const ServiceDescriptor &operator[](const std::size_t index) const { return _serviceDescriptors[index]; }
 
         /**
          * @brief Returns the maximum possible number of stored descriptors
          */
-        [[nodiscard]] std::size_t maxSize() const;
+        [[nodiscard]] std::size_t maxSize() const { return _serviceDescriptors.max_size(); }
 
         /**
          * @brief Returns number of stored descriptors
          */
-        [[nodiscard]] std::size_t size() const;
+        [[nodiscard]] std::size_t size() const { return _serviceDescriptors.size(); }
         /**
          * @brief Returns number of stored descriptors
          */
-        [[nodiscard]] std::size_t count() const;
+        [[nodiscard]] std::size_t count() const { return size(); }
 
         /**
          * @brief Returns true if there are no descriptors
          */
-        [[nodiscard]] bool empty() const;
+        [[nodiscard]] bool empty() const { return _serviceDescriptors.empty(); }
 
         /**
          * @brief Returns capacity
          */
-        [[nodiscard]] std::size_t capacity() const;
+        [[nodiscard]] std::size_t capacity() const { return _serviceDescriptors.capacity(); }
 
         /**
          * @brief Reserves space for descriptors
          */
-        void reserve(std::size_t space);
+        void reserve(const std::size_t space) { _serviceDescriptors.reserve(space); }
 
         /**
          * @brief Shrinks to fit current size of descriptors
          */
-        void shrinkToFit();
+        void shrinkToFit() { _serviceDescriptors.shrink_to_fit(); }
 
         /**
          * @brief Removes all descriptors
          */
-        void clear();
+        void clear() { _serviceDescriptors.clear(); }
 
         /**
          * @brief Find first descriptor meeting TPred requirement
@@ -283,7 +286,10 @@ namespace sb::di
          * @brief Inserts descriptor before giver iterator
          * @details Returns iterator pointing to the inserted
          */
-        Iterator insert(ConstIterator pos, ServiceDescriptor descriptor);
+        Iterator insert(ConstIterator pos, ServiceDescriptor descriptor)
+        {
+            return _serviceDescriptors.insert(pos, std::move(descriptor));
+        }
 
         /**
          * @brief Adds descriptor to the end of list
@@ -315,25 +321,25 @@ namespace sb::di
          * @brief Removes descriptor with given iterator
          * @details Returns iterator following the last removed element
          */
-        Iterator remove(Iterator pos);
+        Iterator remove(Iterator pos) { return _serviceDescriptors.erase(pos); }
 
         /**
          * @brief Removes descriptor with given iterator
          * @details Returns iterator following the last removed element
          */
-        Iterator remove(ConstIterator pos);
+        Iterator remove(ConstIterator pos) { return _serviceDescriptors.erase(pos); }
 
         /**
          * @brief Removes descriptors between given iterators
          * @details Returns iterator following the last removed element
          */
-        Iterator removeRange(Iterator begin, Iterator end);
+        Iterator removeRange(Iterator begin, Iterator end) { return _serviceDescriptors.erase(begin, end); }
 
         /**
          * @brief Removes descriptors between given iterators
          * @details Returns iterator following the last removed element
          */
-        Iterator removeRange(ConstIterator begin, ConstIterator end);
+        Iterator removeRange(ConstIterator begin, ConstIterator end) { return _serviceDescriptors.erase(begin, end); }
 
         /**
          * @brief Removes all descriptors meeting TPred requirement
@@ -437,7 +443,7 @@ namespace sb::di
         /**
          * @brief Removes last descriptor
          */
-        void pop();
+        void pop() { _serviceDescriptors.pop_back(); }
 
         /**
          * @brief Adds service descriptor
@@ -1048,12 +1054,18 @@ namespace sb::di
                 std::make_unique<std::string>(std::move(serviceAliasKey)), nullptr));
         }
 
-        friend bool operator==(const ServiceCollection &lhs, const ServiceCollection &rhs);
-        friend bool operator!=(const ServiceCollection &lhs, const ServiceCollection &rhs);
+        friend bool operator==(const ServiceCollection &lhs, const ServiceCollection &rhs)
+        {
+            return lhs._serviceDescriptors == rhs._serviceDescriptors;
+        }
+        friend bool operator!=(const ServiceCollection &lhs, const ServiceCollection &rhs)
+        {
+            return lhs._serviceDescriptors != rhs._serviceDescriptors;
+        }
     };
 
 } // namespace sb::di
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Impl/ServiceCollection.hpp"
+#include <SevenBit/DI/Impl/ServiceCollection.hpp>
 #endif

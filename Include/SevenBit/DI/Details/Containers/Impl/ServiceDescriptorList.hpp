@@ -1,18 +1,12 @@
 #pragma once
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
+#include <SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp>
+#include <SevenBit/DI/Exceptions.hpp>
 
 namespace sb::di::details
 {
-
-    INLINE ServiceDescriptorList::ServiceDescriptorList(ServiceDescriptor &&descriptor)
-        : _oneOrList(std::move(descriptor))
-    {
-    }
-
     INLINE void ServiceDescriptorList::add(ServiceDescriptor &&descriptor)
     {
         if (!empty())
@@ -22,19 +16,8 @@ namespace sb::di::details
             checkAlias(descriptor);
             checkLifeTime(descriptor);
         }
-        _oneOrList.add(std::move(descriptor));
+        OneOrList::add(std::move(descriptor));
     }
-
-    INLINE OneOrList<ServiceDescriptor> &ServiceDescriptorList::getInnerList() { return _oneOrList; }
-    INLINE const OneOrList<ServiceDescriptor> &ServiceDescriptorList::getInnerList() const { return _oneOrList; }
-
-    INLINE const ServiceDescriptor &ServiceDescriptorList::first() const { return _oneOrList.first(); }
-
-    INLINE const ServiceDescriptor &ServiceDescriptorList::last() const { return _oneOrList.last(); }
-
-    INLINE bool ServiceDescriptorList::empty() const { return _oneOrList.empty(); }
-
-    INLINE std::size_t ServiceDescriptorList::size() const { return _oneOrList.size(); }
 
     INLINE ServiceLifeTime ServiceDescriptorList::getLifeTime() const { return first().getLifeTime(); }
 
@@ -76,7 +59,4 @@ namespace sb::di::details
             throw ServiceLifeTimeMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
         }
     }
-
-    INLINE void ServiceDescriptorList::seal() { _oneOrList.shrink(); }
-
 } // namespace sb::di::details

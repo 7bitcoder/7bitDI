@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
 #include "../../Helpers/Classes/Inherit.hpp"
-#include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/ServiceDescriber.hpp"
+#include <SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp>
+#include <SevenBit/DI/Exceptions.hpp>
+#include <SevenBit/DI/ServiceDescriber.hpp>
 
 class ServiceDescriptorListTest : public testing::Test
 {

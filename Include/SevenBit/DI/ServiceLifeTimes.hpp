@@ -1,8 +1,8 @@
 #pragma once
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/ServiceLifeTime.hpp"
+#include <SevenBit/DI/ServiceLifeTime.hpp>
 
 namespace sb::di
 {

@@ -2,10 +2,10 @@
 
 #include <type_traits>
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Details/Helpers/ServiceGetter.hpp"
-#include "SevenBit/DI/Details/Utils/Meta.hpp"
+#include <SevenBit/DI/Details/Helpers/ServiceGetter.hpp>
+#include <SevenBit/DI/Details/Utils/Meta.hpp>
 
 namespace sb::di
 {

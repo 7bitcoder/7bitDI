@@ -4,11 +4,11 @@
 #include <optional>
 #include <string_view>
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/OneOrList.hpp"
-#include "SevenBit/DI/ServiceInstance.hpp"
-#include "SevenBit/DI/TypeId.hpp"
+#include <SevenBit/DI/OneOrList.hpp>
+#include <SevenBit/DI/ServiceInstance.hpp>
+#include <SevenBit/DI/TypeId.hpp>
 
 namespace sb::di
 {

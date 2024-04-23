@@ -1,14 +1,14 @@
 #pragma once
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp"
-#include "SevenBit/DI/Details/Services/ExternalService.hpp"
-#include "SevenBit/DI/Details/Utils/RequireDescriptor.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/ServiceInstance.hpp"
-#include "SevenBit/DI/ServiceLifeTimes.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
+#include <SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp>
+#include <SevenBit/DI/Details/Services/ExternalService.hpp>
+#include <SevenBit/DI/Details/Utils/RequireDescriptor.hpp>
+#include <SevenBit/DI/Exceptions.hpp>
+#include <SevenBit/DI/ServiceInstance.hpp>
+#include <SevenBit/DI/ServiceLifeTimes.hpp>
+#include <SevenBit/DI/ServiceProvider.hpp>
 
 namespace sb::di::details
 {
@@ -49,10 +49,10 @@ namespace sb::di::details
         if (const auto descriptors = findDescriptors(id))
         {
             const auto &descriptor = descriptors->last();
-            if (auto instance = tryCreateInstance(descriptor))
+            if (auto created = tryCreateInstance(descriptor))
             {
-                auto &inserted = getInstancesMap(getLifeTime(descriptor)).insert(id, std::move(instance));
-                if (!descriptors->isAlias() && descriptors->size() == 1)
+                auto &inserted = getInstancesMap(getLifeTime(descriptor)).insert(id, std::move(created));
+                if (!descriptor.isAlias() && descriptors->size() == 1)
                 {
                     inserted.seal();
                 }
@@ -74,15 +74,15 @@ namespace sb::di::details
                     instances->seal();
                 }
             }
-            return &instances->getInnerList();
+            return instances;
         }
         if (const auto descriptors = findDescriptors(id))
         {
-            if (auto instances = tryCreateInstances(*descriptors))
+            if (auto created = tryCreateInstances(*descriptors))
             {
-                auto &inserted = getInstancesMap(getLifeTime(descriptors->last())).insert(id, std::move(instances));
+                auto &inserted = getInstancesMap(getLifeTime(descriptors->last())).insert(id, std::move(created));
                 inserted.seal();
-                return &inserted.getInnerList();
+                return &inserted;
             }
         }
         return nullptr;
@@ -107,8 +107,7 @@ namespace sb::di::details
     INLINE OneOrList<ServiceInstance> ServiceInstanceProvider::tryCreateInstances(const ServiceId &id)
     {
         const auto descriptors = findTransientDescriptors(id);
-        return descriptors ? std::move(tryCreateTransientInstances(*descriptors).getInnerList())
-                           : OneOrList<ServiceInstance>{};
+        return descriptors ? tryCreateTransientInstances(*descriptors) : OneOrList<ServiceInstance>{};
     }
 
     INLINE ServiceInstance ServiceInstanceProvider::createInstanceInPlace(const ServiceId &id)
@@ -189,7 +188,7 @@ namespace sb::di::details
         const auto &descriptor = descriptors.last();
         if (descriptor.isAlias())
         {
-            return getAliasesCreator().tryCreateAll(descriptors, [&](const ServiceDescriptor &original) {
+            return getAliasesCreator().tryCreateAll(descriptors, [this](const ServiceDescriptor &original) {
                 return tryGetInstances({original.getImplementationTypeId(), original.getImplementationKey()});
             });
         }
@@ -203,7 +202,7 @@ namespace sb::di::details
         const auto &descriptor = descriptors.last();
         if (descriptor.isAlias())
         {
-            return getAliasesCreator().tryCreateRest(descriptors, instances, [&](const ServiceDescriptor &original) {
+            return getAliasesCreator().tryCreateRest(descriptors, instances, [this](const ServiceDescriptor &original) {
                 return tryGetInstances({original.getImplementationTypeId(), original.getImplementationKey()});
             });
         }
@@ -228,7 +227,7 @@ namespace sb::di::details
         const auto &descriptor = descriptors.last();
         if (descriptor.isAlias())
         {
-            return getAliasesCreator().tryMapAll(descriptors, [&](const ServiceDescriptor &original) {
+            return getAliasesCreator().tryMapAll(descriptors, [this](const ServiceDescriptor &original) {
                 return tryCreateInstances({original.getImplementationTypeId(), original.getImplementationKey()});
             });
         }

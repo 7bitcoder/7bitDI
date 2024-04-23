@@ -2,7 +2,7 @@
 
 #include <gmock/gmock.h>
 
-#include "SevenBit/DI/IServiceInstanceProvider.hpp"
+#include <SevenBit/DI/IServiceInstanceProvider.hpp>
 
 struct ServiceInstanceProviderMock : public sb::di::IServiceInstanceProvider
 {

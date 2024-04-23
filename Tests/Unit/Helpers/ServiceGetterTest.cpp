@@ -2,9 +2,9 @@
 
 #include "../../Helpers/Classes/Dependencies.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
-#include "SevenBit/DI/Details/Helpers/ServiceGetter.hpp"
-#include "SevenBit/DI/Details/Services/InPlaceService.hpp"
-#include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
+#include <SevenBit/DI/Details/Helpers/ServiceGetter.hpp>
+#include <SevenBit/DI/Details/Services/InPlaceService.hpp>
+#include <SevenBit/DI/Details/Services/UniquePtrService.hpp>
 
 class ServiceGetterTest : public testing::Test
 {

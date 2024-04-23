@@ -3,12 +3,12 @@
 #include <memory>
 #include <utility>
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Details/Core/ServiceInstancesCreator.hpp"
-#include "SevenBit/DI/Details/Utils/Require.hpp"
-#include "SevenBit/DI/Details/Utils/RequireDescriptor.hpp"
-#include "SevenBit/DI/Details/Utils/RequireInstance.hpp"
+#include <SevenBit/DI/Details/Core/ServiceInstancesCreator.hpp>
+#include <SevenBit/DI/Details/Utils/Require.hpp>
+#include <SevenBit/DI/Details/Utils/RequireDescriptor.hpp>
+#include <SevenBit/DI/Details/Utils/RequireInstance.hpp>
 
 namespace sb::di::details
 {
@@ -49,7 +49,7 @@ namespace sb::di::details
     {
         ServiceInstanceList instances;
         instances.reserve(descriptors.size());
-        descriptors.getInnerList().forEach(
+        descriptors.forEach(
             [&](const ServiceDescriptor &descriptor) { instances.add(create(descriptor, inPlaceRequest)); });
         return instances;
     }
@@ -61,7 +61,7 @@ namespace sb::di::details
         {
             instances.reserve(size);
             auto first = create(descriptors.first(), inPlaceRequest);
-            descriptors.getInnerList().forEach([&](const ServiceDescriptor &descriptor, const std::size_t index) {
+            descriptors.forEach([&](const ServiceDescriptor &descriptor, const std::size_t index) {
                 if (index && index < size - 1) // skip first and last
                 {
                     instances.add(create(descriptor, inPlaceRequest));

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "../Helpers/Classes/MultiInherit.hpp"
-#include "SevenBit/DI/ServiceCollection.hpp"
+#include <SevenBit/DI/ServiceCollection.hpp>
 
 class AliasTest : public testing::Test
 {

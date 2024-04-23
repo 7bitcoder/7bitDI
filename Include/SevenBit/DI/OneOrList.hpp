@@ -4,9 +4,9 @@
 #include <variant>
 #include <vector>
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Details/Utils/Meta.hpp"
+#include <SevenBit/DI/Details/Utils/Meta.hpp>
 
 namespace sb::di
 {
@@ -37,9 +37,6 @@ namespace sb::di
         std::vector<T> &getAsList() { return std::get<std::vector<T>>(_variant); }
         const std::vector<T> &getAsList() const { return std::get<std::vector<T>>(_variant); }
 
-        std::variant<T, std::vector<T>> &getVariant() { return _variant; }
-        const std::variant<T, std::vector<T>> &getVariant() const { return _variant; }
-
         T &getAsSingle() { return std::get<T>(_variant); }
         const T &getAsSingle() const { return std::get<T>(_variant); }
 
@@ -56,6 +53,10 @@ namespace sb::di
             if (isUninitialized())
             {
                 _variant = std::move(element);
+            }
+            else if (auto list = tryGetAsList())
+            {
+                list->emplace_back(std::move(element));
             }
             else
             {

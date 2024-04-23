@@ -1,8 +1,8 @@
 #pragma once
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Details/Utils/RequireDescriptor.hpp"
+#include <SevenBit/DI/Details/Utils/RequireDescriptor.hpp>
 
 namespace sb::di::details
 {

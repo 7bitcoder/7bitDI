@@ -4,8 +4,8 @@
 
 #include "../Helpers/Classes/Basic.hpp"
 #include "../Helpers/Classes/CirularDependency.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/ServiceCollection.hpp"
+#include <SevenBit/DI/Exceptions.hpp>
+#include <SevenBit/DI/ServiceCollection.hpp>
 
 class BasicUniqFactoryTest : public testing::Test
 {

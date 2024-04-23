@@ -1,9 +1,9 @@
 #pragma once
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Utils/Register.hpp"
-#include "SevenBit/DI/Utils/ServiceExtractor.hpp"
+#include <SevenBit/DI/Utils/Register.hpp>
+#include <SevenBit/DI/Utils/ServiceExtractor.hpp>
 
 namespace sb::di
 {

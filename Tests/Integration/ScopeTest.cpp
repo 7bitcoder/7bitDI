@@ -4,7 +4,7 @@
 #include "../Helpers/Classes/Basic.hpp"
 #include "../Helpers/Classes/Complex.hpp"
 #include "../Helpers/Classes/Dependencies.hpp"
-#include "SevenBit/DI/ServiceCollection.hpp"
+#include <SevenBit/DI/ServiceCollection.hpp>
 
 class ScopeTest : public testing::Test
 {

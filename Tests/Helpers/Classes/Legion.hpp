@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SevenBit/DI/ServiceCollection.hpp"
+#include <SevenBit/DI/ServiceCollection.hpp>
 
 template <int ID> class Legion
 {

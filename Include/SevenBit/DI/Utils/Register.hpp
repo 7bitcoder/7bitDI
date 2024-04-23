@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Utils/GlobalServices.hpp"
+#include <SevenBit/DI/Utils/GlobalServices.hpp>
 
 namespace sb::di
 {

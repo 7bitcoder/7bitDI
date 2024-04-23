@@ -2,8 +2,8 @@
 #include <memory>
 
 #include "../../Helpers/Classes/Basic.hpp"
-#include "SevenBit/DI/Details/Services/InPlaceService.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
+#include <SevenBit/DI/Details/Services/InPlaceService.hpp>
+#include <SevenBit/DI/Exceptions.hpp>
 
 class InPlaceServiceTest : public testing::Test
 {

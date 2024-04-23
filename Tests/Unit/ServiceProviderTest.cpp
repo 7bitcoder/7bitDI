@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "SevenBit/DI/Details/Core/ServiceInstanceProviderRoot.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
+#include <SevenBit/DI/Details/Core/ServiceInstanceProviderRoot.hpp>
+#include <SevenBit/DI/ServiceProvider.hpp>
 
 class ServiceProviderTest : public testing::Test
 {

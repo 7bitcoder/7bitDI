@@ -3,11 +3,11 @@
 #include <memory>
 #include <string>
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/IServiceFactory.hpp"
-#include "SevenBit/DI/ServiceLifeTime.hpp"
-#include "SevenBit/DI/TypeId.hpp"
+#include <SevenBit/DI/IServiceFactory.hpp>
+#include <SevenBit/DI/ServiceLifeTime.hpp>
+#include <SevenBit/DI/TypeId.hpp>
 
 namespace sb::di
 {

@@ -3,12 +3,12 @@
 #include <memory>
 #include <utility>
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Details/Core/ServiceAliasesCreator.hpp"
-#include "SevenBit/DI/Details/Services/AliasService.hpp"
-#include "SevenBit/DI/Details/Utils/RequireDescriptor.hpp"
-#include "SevenBit/DI/Details/Utils/RequireInstance.hpp"
+#include <SevenBit/DI/Details/Core/ServiceAliasesCreator.hpp>
+#include <SevenBit/DI/Details/Services/AliasService.hpp>
+#include <SevenBit/DI/Details/Utils/RequireDescriptor.hpp>
+#include <SevenBit/DI/Details/Utils/RequireInstance.hpp>
 
 namespace sb::di::details
 {

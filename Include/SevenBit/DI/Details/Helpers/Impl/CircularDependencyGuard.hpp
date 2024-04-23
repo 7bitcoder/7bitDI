@@ -1,8 +1,8 @@
 #pragma once
 
-#include "SevenBit/DI/LibraryConfig.hpp"
+#include <SevenBit/DI/LibraryConfig.hpp>
 
-#include "SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp"
+#include <SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp>
 
 namespace sb::di::details
 {

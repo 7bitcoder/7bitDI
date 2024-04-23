@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 #include "../../Helpers/Classes/Basic.hpp"
-#include "SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
+#include <SevenBit/DI/Details/Helpers/CircularDependencyGuard.hpp>
+#include <SevenBit/DI/Exceptions.hpp>
 
 class CircularDependencyGuardTest : public testing::Test
 {
