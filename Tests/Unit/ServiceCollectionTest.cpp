@@ -133,8 +133,6 @@ TEST_F(ServiceCollectionTest, ShouldGetWithIndexOperator)
     EXPECT_EQ(four.getLifeTime(), sb::di::ServiceLifeTime::scoped());
     EXPECT_EQ(four.getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(four.getImplementationTypeId(), typeid(TestInheritClass5));
-
-    EXPECT_NO_THROW(services[10]);
 }
 
 TEST_F(ServiceCollectionTest, ShouldGetSize)

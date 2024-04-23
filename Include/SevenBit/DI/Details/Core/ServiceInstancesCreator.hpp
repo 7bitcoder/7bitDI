@@ -16,17 +16,17 @@ namespace sb::di::details
       public:
         void setServiceProvider(ServiceProvider &serviceProvider) { _serviceProvider = &serviceProvider; }
 
-        [[nodiscard]] ServiceInstance create(const ServiceDescriptor &descriptor);
-        [[nodiscard]] ServiceInstanceList createAll(const ServiceDescriptorList &descriptors);
+        ServiceInstance create(const ServiceDescriptor &descriptor);
+        ServiceInstanceList createAll(const ServiceDescriptorList &descriptors);
         void createRest(const ServiceDescriptorList &descriptors, ServiceInstanceList &instances);
 
-        [[nodiscard]] ServiceInstance createInPlace(const ServiceDescriptor &descriptor);
-        [[nodiscard]] ServiceInstanceList createAllInPlace(const ServiceDescriptorList &descriptors);
+        ServiceInstance createInPlace(const ServiceDescriptor &descriptor);
+        ServiceInstanceList createAllInPlace(const ServiceDescriptorList &descriptors);
         void createRestInPlace(const ServiceDescriptorList &descriptors, ServiceInstanceList &instances);
 
       private:
-        [[nodiscard]] ServiceInstance create(const ServiceDescriptor &descriptor, bool inPlaceRequest);
-        [[nodiscard]] ServiceInstanceList createAll(const ServiceDescriptorList &descriptors, bool inPlaceRequest);
+        ServiceInstance create(const ServiceDescriptor &descriptor, bool inPlaceRequest);
+        ServiceInstanceList createAll(const ServiceDescriptorList &descriptors, bool inPlaceRequest);
         void createRest(const ServiceDescriptorList &descriptors, ServiceInstanceList &instances, bool inPlaceRequest);
     };
 } // namespace sb::di::details

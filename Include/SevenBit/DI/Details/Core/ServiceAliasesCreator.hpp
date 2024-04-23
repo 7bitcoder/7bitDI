@@ -10,8 +10,7 @@ namespace sb::di::details
     class EXPORT ServiceAliasesCreator
     {
       public:
-        [[nodiscard]] ServiceInstance tryCreate(const ServiceDescriptor &descriptor,
-                                                const ServiceInstance *original) const;
+        ServiceInstance tryCreate(const ServiceDescriptor &descriptor, const ServiceInstance *original) const;
 
         template <class TResolver>
         ServiceInstanceList tryCreateAll(const ServiceDescriptorList &descriptors, TResolver originalResolver) const
@@ -37,7 +36,7 @@ namespace sb::di::details
             });
         }
 
-        [[nodiscard]] ServiceInstance tryMap(const ServiceDescriptor &descriptor, ServiceInstance &&original) const;
+        ServiceInstance tryMap(const ServiceDescriptor &descriptor, ServiceInstance &&original) const;
 
         template <class TResolver>
         ServiceInstanceList tryMapAll(const ServiceDescriptorList &descriptors, TResolver originalResolver) const
@@ -59,8 +58,7 @@ namespace sb::di::details
         void tryMapAll(ServiceInstanceList &instances, const ServiceDescriptor &descriptor,
                        OneOrList<ServiceInstance> &&originals) const;
 
-        [[nodiscard]] ServiceInstance create(const ServiceDescriptor &descriptor,
-                                             const ServiceInstance &original) const;
+        ServiceInstance create(const ServiceDescriptor &descriptor, const ServiceInstance &original) const;
     };
 } // namespace sb::di::details
 
