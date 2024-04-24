@@ -27,17 +27,16 @@ namespace sb::di::details
 
     INLINE void ServiceAliasesCreator::tryCreateAll(ServiceInstanceList &instances, const ServiceDescriptor &descriptor,
                                                     const OneOrList<ServiceInstance> *originals,
-                                                    const size_t skipLast) const
+                                                    const std::size_t skipLast) const
     {
         if (originals)
         {
-            const auto take = originals->size() - skipLast;
-            instances.reserve(instances.size() + take);
-            originals->forEach([&](const ServiceInstance &instance, const size_t index) {
-                if (index < take)
-                {
-                    instances.add(create(descriptor, instance));
-                }
+            const auto size = originals->size();
+            instances.reserve(size);
+            auto take = size - skipLast;
+            originals->forEach([&](const ServiceInstance &instance) {
+                instances.add(create(descriptor, instance));
+                return --take;
             });
         }
     }

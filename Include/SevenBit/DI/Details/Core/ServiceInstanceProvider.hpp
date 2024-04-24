@@ -137,7 +137,7 @@ namespace sb::di::details
         ServiceInstancesMap &getInstancesMap(ServiceLifeTime lifetime);
 
         ServiceInstance tryCreateInstance(const ServiceDescriptor &descriptor);
-        ServiceInstanceList tryCreateInstances(const ServiceDescriptorList &descriptors, size_t skipLast = 0);
+        ServiceInstanceList tryCreateInstances(const ServiceDescriptorList &descriptors, std::size_t skipLast = 0);
 
         ServiceInstance tryCreateTransientInstance(const ServiceDescriptor &descriptor);
         ServiceInstanceList tryCreateTransientInstances(const ServiceDescriptorList &descriptors);

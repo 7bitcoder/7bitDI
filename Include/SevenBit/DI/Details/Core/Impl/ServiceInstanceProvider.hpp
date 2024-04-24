@@ -186,7 +186,7 @@ namespace sb::di::details
     }
 
     INLINE ServiceInstanceList ServiceInstanceProvider::tryCreateInstances(const ServiceDescriptorList &descriptors,
-                                                                           const size_t skipLast)
+                                                                           const std::size_t skipLast)
     {
         const auto &descriptor = descriptors.last();
         if (descriptor.isAlias())

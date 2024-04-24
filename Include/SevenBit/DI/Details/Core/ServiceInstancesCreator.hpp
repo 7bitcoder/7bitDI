@@ -17,14 +17,15 @@ namespace sb::di::details
         void setServiceProvider(ServiceProvider &serviceProvider) { _serviceProvider = &serviceProvider; }
 
         ServiceInstance create(const ServiceDescriptor &descriptor);
-        ServiceInstanceList createAll(const ServiceDescriptorList &descriptors, size_t skipLast = 0);
+        ServiceInstanceList createAll(const ServiceDescriptorList &descriptors, std::size_t skipLast = 0);
 
         ServiceInstance createInPlace(const ServiceDescriptor &descriptor);
-        ServiceInstanceList createAllInPlace(const ServiceDescriptorList &descriptors, size_t skipLast = 0);
+        ServiceInstanceList createAllInPlace(const ServiceDescriptorList &descriptors, std::size_t skipLast = 0);
 
       private:
         ServiceInstance create(const ServiceDescriptor &descriptor, bool inPlaceRequest);
-        ServiceInstanceList createAll(const ServiceDescriptorList &descriptors, bool inPlaceRequest, size_t skipLast);
+        ServiceInstanceList createAll(const ServiceDescriptorList &descriptors, bool inPlaceRequest,
+                                      std::size_t skipLast);
     };
 } // namespace sb::di::details
 

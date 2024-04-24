@@ -18,7 +18,7 @@ namespace sb::di::details
     }
 
     INLINE ServiceInstanceList ServiceInstancesCreator::createAll(const ServiceDescriptorList &descriptors,
-                                                                  const size_t skipLast)
+                                                                  const std::size_t skipLast)
     {
         return createAll(descriptors, false, skipLast);
     }
@@ -29,22 +29,21 @@ namespace sb::di::details
     }
 
     INLINE ServiceInstanceList ServiceInstancesCreator::createAllInPlace(const ServiceDescriptorList &descriptors,
-                                                                         const size_t skipLast)
+                                                                         const std::size_t skipLast)
     {
         return createAll(descriptors, true, skipLast);
     }
 
     INLINE ServiceInstanceList ServiceInstancesCreator::createAll(const ServiceDescriptorList &descriptors,
-                                                                  const bool inPlaceRequest, const size_t skipLast)
+                                                                  const bool inPlaceRequest, const std::size_t skipLast)
     {
         ServiceInstanceList instances;
-        const auto take = descriptors.size() - skipLast;
-        instances.reserve(take);
-        descriptors.forEach([&](const ServiceDescriptor &descriptor, const size_t index) {
-            if (index < take)
-            {
-                instances.add(create(descriptor, inPlaceRequest));
-            }
+        const auto size = descriptors.size();
+        instances.reserve(size);
+        auto take = size - skipLast;
+        descriptors.forEach([&](const ServiceDescriptor &descriptor) {
+            instances.add(create(descriptor, inPlaceRequest));
+            return --take;
         });
         return instances;
     }

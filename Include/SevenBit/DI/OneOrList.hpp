@@ -176,11 +176,7 @@ namespace sb::di
             }
             else if (auto list = tryGetAsList())
             {
-                std::size_t index = 0;
-                for (auto &instance : *list)
-                {
-                    callFcn(fcn, instance, index++);
-                }
+                listForEach(*list, fcn);
             }
         }
 
@@ -192,11 +188,7 @@ namespace sb::di
             }
             else if (auto list = tryGetAsList())
             {
-                std::size_t index = 0;
-                for (const auto &instance : *list)
-                {
-                    callFcn(fcn, instance, index++);
-                }
+                listForEach(*list, fcn);
             }
         }
 
@@ -230,6 +222,26 @@ namespace sb::di
                 else
                 {
                     _variant = std::vector<T>{};
+                }
+            }
+        }
+
+        template <class TList, class TFunc> static void listForEach(TList &list, TFunc &fcn)
+        {
+            std::size_t index = 0;
+            for (auto &instance : list)
+            {
+                using Ret = decltype(callFcn(fcn, instance, 0));
+                if constexpr (std::is_integral_v<Ret>)
+                {
+                    if (!callFcn(fcn, instance, index++))
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    callFcn(fcn, instance, index++);
                 }
             }
         }
