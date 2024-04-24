@@ -133,12 +133,11 @@ namespace sb::di::details
         [[nodiscard]] const ServiceDescriptorList *findDescriptors(const ServiceId &id) const;
         [[nodiscard]] const ServiceDescriptorList *findTransientDescriptors(const ServiceId &id) const;
 
-        ServiceLifeTime getLifeTime(const ServiceDescriptor &descriptor) const;
+        [[nodiscard]] ServiceLifeTime getLifeTime(const ServiceDescriptor &descriptor) const;
         ServiceInstancesMap &getInstancesMap(ServiceLifeTime lifetime);
 
         ServiceInstance tryCreateInstance(const ServiceDescriptor &descriptor);
-        ServiceInstanceList tryCreateInstances(const ServiceDescriptorList &descriptors);
-        void createRestInstances(const ServiceDescriptorList &descriptors, ServiceInstanceList &instances);
+        ServiceInstanceList tryCreateInstances(const ServiceDescriptorList &descriptors, size_t skipLast = 0);
 
         ServiceInstance tryCreateTransientInstance(const ServiceDescriptor &descriptor);
         ServiceInstanceList tryCreateTransientInstances(const ServiceDescriptorList &descriptors);

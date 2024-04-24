@@ -70,7 +70,9 @@ namespace sb::di::details
             {
                 if (const auto descriptors = findDescriptors(id))
                 {
-                    createRestInstances(*descriptors, *instances);
+                    auto newInstances = tryCreateInstances(*descriptors, instances->size());
+                    newInstances.add(std::move(*instances));
+                    *instances = std::move(newInstances);
                     instances->seal();
                 }
             }
@@ -183,31 +185,21 @@ namespace sb::di::details
         return selectCreator(descriptor).createInPlace(descriptor);
     }
 
-    INLINE ServiceInstanceList ServiceInstanceProvider::tryCreateInstances(const ServiceDescriptorList &descriptors)
+    INLINE ServiceInstanceList ServiceInstanceProvider::tryCreateInstances(const ServiceDescriptorList &descriptors,
+                                                                           const size_t skipLast)
     {
         const auto &descriptor = descriptors.last();
         if (descriptor.isAlias())
         {
-            return getAliasesCreator().tryCreateAll(descriptors, [this](const ServiceDescriptor &original) {
-                return tryGetInstances({original.getImplementationTypeId(), original.getImplementationKey()});
-            });
+            return getAliasesCreator().tryCreateAll(
+                descriptors,
+                [this](const ServiceDescriptor &original) {
+                    return tryGetInstances({original.getImplementationTypeId(), original.getImplementationKey()});
+                },
+                skipLast);
         }
         RequireDescriptor::nonTransient(descriptor);
-        return selectCreator(descriptor).createAllInPlace(descriptors);
-    }
-
-    INLINE void ServiceInstanceProvider::createRestInstances(const ServiceDescriptorList &descriptors,
-                                                             ServiceInstanceList &instances)
-    {
-        const auto &descriptor = descriptors.last();
-        if (descriptor.isAlias())
-        {
-            return getAliasesCreator().tryCreateRest(descriptors, instances, [this](const ServiceDescriptor &original) {
-                return tryGetInstances({original.getImplementationTypeId(), original.getImplementationKey()});
-            });
-        }
-        RequireDescriptor::nonTransient(descriptor);
-        selectCreator(descriptor).createRestInPlace(descriptors, instances);
+        return selectCreator(descriptor).createAllInPlace(descriptors, skipLast);
     }
 
     INLINE ServiceInstance ServiceInstanceProvider::tryCreateTransientInstance(const ServiceDescriptor &descriptor)

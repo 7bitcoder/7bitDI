@@ -13,27 +13,16 @@ namespace sb::di::details
         ServiceInstance tryCreate(const ServiceDescriptor &descriptor, const ServiceInstance *original) const;
 
         template <class TResolver>
-        ServiceInstanceList tryCreateAll(const ServiceDescriptorList &descriptors, TResolver originalResolver) const
+        ServiceInstanceList tryCreateAll(const ServiceDescriptorList &descriptors, TResolver originalResolver,
+                                         const size_t skipLast = 0) const
         {
             ServiceInstanceList instances;
-            descriptors.forEach([&](const ServiceDescriptor &aliasDescriptor) {
-                tryCreateAll(instances, aliasDescriptor, originalResolver(aliasDescriptor));
+            const auto size = descriptors.size();
+            descriptors.forEach([&](const ServiceDescriptor &aliasDescriptor, const size_t index) {
+                const auto lastDescriptorSkip = index + 1 == size ? skipLast : 0;
+                tryCreateAll(instances, aliasDescriptor, originalResolver(aliasDescriptor), lastDescriptorSkip);
             });
             return instances;
-        }
-
-        template <class TResolver>
-        void tryCreateRest(const ServiceDescriptorList &descriptors, ServiceInstanceList &instances,
-                           TResolver originalResolver) const
-        {
-            auto first = std::move(instances.first());
-            instances.clear();
-            const auto size = descriptors.size();
-            descriptors.forEach([&](const ServiceDescriptor &aliasDescriptor, const std::size_t index) {
-                index < size - 1
-                    ? tryCreateAll(instances, aliasDescriptor, originalResolver(aliasDescriptor))
-                    : tryCreateRest(instances, aliasDescriptor, originalResolver(aliasDescriptor), std::move(first));
-            });
         }
 
         ServiceInstance tryMap(const ServiceDescriptor &descriptor, ServiceInstance &&original) const;
@@ -50,15 +39,13 @@ namespace sb::di::details
 
       private:
         void tryCreateAll(ServiceInstanceList &instances, const ServiceDescriptor &descriptor,
-                          const OneOrList<ServiceInstance> *originals) const;
-
-        void tryCreateRest(ServiceInstanceList &instances, const ServiceDescriptor &descriptor,
-                           const OneOrList<ServiceInstance> *originals, ServiceInstance &&first) const;
+                          const OneOrList<ServiceInstance> *originals, size_t skipLast = 0) const;
 
         void tryMapAll(ServiceInstanceList &instances, const ServiceDescriptor &descriptor,
                        OneOrList<ServiceInstance> &&originals) const;
 
-        ServiceInstance create(const ServiceDescriptor &descriptor, const ServiceInstance &original) const;
+        [[nodiscard]] ServiceInstance create(const ServiceDescriptor &descriptor,
+                                             const ServiceInstance &original) const;
     };
 } // namespace sb::di::details
 

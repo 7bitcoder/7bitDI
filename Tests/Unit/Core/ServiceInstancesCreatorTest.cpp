@@ -152,7 +152,20 @@ TEST_F(ServiceInstancesCreatorTest, ShouldCreateAllInheritedInstances)
     EXPECT_EQ(instances[2].tryGetImplementation()->getTypeId(), typeid(TestInheritClass4));
 }
 
-TEST_F(ServiceInstancesCreatorTest, ShouldCreateRestInheritedInstances)
+TEST_F(ServiceInstancesCreatorTest, ShouldCreateEmptyInstances)
+{
+    ServiceProviderMock mock;
+    sb::di::details::ServiceInstancesCreator creator;
+    creator.setServiceProvider(mock);
+
+    const sb::di::details::ServiceDescriptorList descriptors;
+    const auto instances = creator.createAll(descriptors);
+
+    EXPECT_TRUE(instances.empty());
+    EXPECT_FALSE(instances.isSealed());
+}
+
+TEST_F(ServiceInstancesCreatorTest, ShouldCreateSkippedInheritedInstances)
 {
     ServiceProviderMock mock;
     sb::di::details::ServiceInstancesCreator creator;
@@ -163,11 +176,9 @@ TEST_F(ServiceInstancesCreatorTest, ShouldCreateRestInheritedInstances)
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    sb::di::details::ServiceInstanceList instances{
-        sb::di::ServiceInstance{descriptors.last().getImplementationFactory()->createInstance(mock, false)}};
-    creator.createRest(descriptors, instances);
+    auto instances = creator.createAll(descriptors, 1);
 
-    EXPECT_EQ(instances.size(), 3);
+    EXPECT_EQ(instances.size(), 2);
     EXPECT_FALSE(instances.isSealed());
     EXPECT_TRUE(instances[0].isValid());
     EXPECT_TRUE(instances[0].getAs<void>());
@@ -175,9 +186,6 @@ TEST_F(ServiceInstancesCreatorTest, ShouldCreateRestInheritedInstances)
     EXPECT_TRUE(instances[1].isValid());
     EXPECT_TRUE(instances[1].getAs<void>());
     EXPECT_EQ(instances[1].tryGetImplementation()->getTypeId(), typeid(TestInheritClass5));
-    EXPECT_TRUE(instances[2].isValid());
-    EXPECT_TRUE(instances[2].getAs<void>());
-    EXPECT_EQ(instances[2].tryGetImplementation()->getTypeId(), typeid(TestInheritClass4));
 }
 
 TEST_F(ServiceInstancesCreatorTest, ShouldCreateInstanceInPlace)
@@ -250,7 +258,7 @@ TEST_F(ServiceInstancesCreatorTest, ShouldCreateAllInheritedInstancesInPlace)
     EXPECT_EQ(instances[2].tryGetImplementation()->getTypeId(), typeid(TestInheritClass4));
 }
 
-TEST_F(ServiceInstancesCreatorTest, ShouldCreateRestInheritedInstancesInPlace)
+TEST_F(ServiceInstancesCreatorTest, ShouldCreateSkippedInheritedInstancesInPlace)
 {
     ServiceProviderMock mock;
     sb::di::details::ServiceInstancesCreator creator;
@@ -261,11 +269,9 @@ TEST_F(ServiceInstancesCreatorTest, ShouldCreateRestInheritedInstancesInPlace)
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    sb::di::details::ServiceInstanceList instances{
-        sb::di::ServiceInstance{descriptors.last().getImplementationFactory()->createInstance(mock, true)}};
-    creator.createRestInPlace(descriptors, instances);
+    auto instances = creator.createAll(descriptors, 1);
 
-    EXPECT_EQ(instances.size(), 3);
+    EXPECT_EQ(instances.size(), 2);
     EXPECT_FALSE(instances.isSealed());
     EXPECT_TRUE(instances[0].isValid());
     EXPECT_TRUE(instances[0].getAs<void>());
@@ -273,7 +279,4 @@ TEST_F(ServiceInstancesCreatorTest, ShouldCreateRestInheritedInstancesInPlace)
     EXPECT_TRUE(instances[1].isValid());
     EXPECT_TRUE(instances[1].getAs<void>());
     EXPECT_EQ(instances[1].tryGetImplementation()->getTypeId(), typeid(TestInheritClass5));
-    EXPECT_TRUE(instances[2].isValid());
-    EXPECT_TRUE(instances[2].getAs<void>());
-    EXPECT_EQ(instances[2].tryGetImplementation()->getTypeId(), typeid(TestInheritClass4));
 }

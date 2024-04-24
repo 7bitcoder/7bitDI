@@ -17,15 +17,10 @@ namespace sb::di::details
         return create(descriptor, false);
     }
 
-    INLINE ServiceInstanceList ServiceInstancesCreator::createAll(const ServiceDescriptorList &descriptors)
+    INLINE ServiceInstanceList ServiceInstancesCreator::createAll(const ServiceDescriptorList &descriptors,
+                                                                  const size_t skipLast)
     {
-        return createAll(descriptors, false);
-    }
-
-    INLINE void ServiceInstancesCreator::createRest(const ServiceDescriptorList &descriptors,
-                                                    ServiceInstanceList &instances)
-    {
-        return createRest(descriptors, instances, false);
+        return createAll(descriptors, false, skipLast);
     }
 
     INLINE ServiceInstance ServiceInstancesCreator::createInPlace(const ServiceDescriptor &descriptor)
@@ -33,43 +28,25 @@ namespace sb::di::details
         return create(descriptor, true);
     }
 
-    INLINE ServiceInstanceList ServiceInstancesCreator::createAllInPlace(const ServiceDescriptorList &descriptors)
+    INLINE ServiceInstanceList ServiceInstancesCreator::createAllInPlace(const ServiceDescriptorList &descriptors,
+                                                                         const size_t skipLast)
     {
-        return createAll(descriptors, true);
-    }
-
-    INLINE void ServiceInstancesCreator::createRestInPlace(const ServiceDescriptorList &descriptors,
-                                                           ServiceInstanceList &instances)
-    {
-        return createRest(descriptors, instances, true);
+        return createAll(descriptors, true, skipLast);
     }
 
     INLINE ServiceInstanceList ServiceInstancesCreator::createAll(const ServiceDescriptorList &descriptors,
-                                                                  const bool inPlaceRequest)
+                                                                  const bool inPlaceRequest, const size_t skipLast)
     {
         ServiceInstanceList instances;
-        instances.reserve(descriptors.size());
-        descriptors.forEach(
-            [&](const ServiceDescriptor &descriptor) { instances.add(create(descriptor, inPlaceRequest)); });
+        const auto take = descriptors.size() - skipLast;
+        instances.reserve(take);
+        descriptors.forEach([&](const ServiceDescriptor &descriptor, const size_t index) {
+            if (index < take)
+            {
+                instances.add(create(descriptor, inPlaceRequest));
+            }
+        });
         return instances;
-    }
-
-    INLINE void ServiceInstancesCreator::createRest(const ServiceDescriptorList &descriptors,
-                                                    ServiceInstanceList &instances, const bool inPlaceRequest)
-    {
-        if (const auto size = descriptors.size(); size > 1)
-        {
-            instances.reserve(size);
-            auto first = create(descriptors.first(), inPlaceRequest);
-            descriptors.forEach([&](const ServiceDescriptor &descriptor, const std::size_t index) {
-                if (index && index < size - 1) // skip first and last
-                {
-                    instances.add(create(descriptor, inPlaceRequest));
-                }
-            });
-            instances.add(std::move(first));
-            std::swap(instances.first(), instances.last());
-        }
     }
 
     INLINE ServiceInstance ServiceInstancesCreator::create(const ServiceDescriptor &descriptor,
@@ -80,7 +57,7 @@ namespace sb::di::details
         const auto &factory = *Require::notNullAndGet(descriptor.getImplementationFactory());
         auto _ = _circularDependencyGuard(descriptor.getImplementationTypeId());
 
-        auto implementation = factory.createInstance(provider, inPlaceRequest);
-        return RequireInstance::validAndGet(ServiceInstance{std::move(implementation), descriptor.getCastOffset()});
+        return RequireInstance::validAndGet(
+            ServiceInstance{factory.createInstance(provider, inPlaceRequest), descriptor.getCastOffset()});
     }
 } // namespace sb::di::details

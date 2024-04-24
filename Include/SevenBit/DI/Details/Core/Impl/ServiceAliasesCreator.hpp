@@ -26,31 +26,19 @@ namespace sb::di::details
     }
 
     INLINE void ServiceAliasesCreator::tryCreateAll(ServiceInstanceList &instances, const ServiceDescriptor &descriptor,
-                                                    const OneOrList<ServiceInstance> *originals) const
+                                                    const OneOrList<ServiceInstance> *originals,
+                                                    const size_t skipLast) const
     {
         if (originals)
         {
-            instances.reserve(instances.size() + originals->size());
-            originals->forEach([&](const ServiceInstance &instance) { instances.add(create(descriptor, instance)); });
-        }
-    }
-
-    INLINE void ServiceAliasesCreator::tryCreateRest(ServiceInstanceList &instances,
-                                                     const ServiceDescriptor &descriptor,
-                                                     const OneOrList<ServiceInstance> *originals,
-                                                     ServiceInstance &&first) const
-    {
-        if (originals)
-        {
-            const auto size = originals->size();
-            instances.reserve(instances.size() + size);
-            originals->forEach([&](const ServiceInstance &instance, const std::size_t index) {
-                if (index < size - 1) // skip last
+            const auto take = originals->size() - skipLast;
+            instances.reserve(instances.size() + take);
+            originals->forEach([&](const ServiceInstance &instance, const size_t index) {
+                if (index < take)
                 {
                     instances.add(create(descriptor, instance));
                 }
             });
-            instances.add(std::move(first));
         }
     }
 
@@ -73,9 +61,9 @@ namespace sb::di::details
     {
         RequireDescriptor::alias(descriptor);
         RequireInstance::valid(original);
-        auto implementationType = descriptor.getImplementationTypeId();
 
-        auto implementation = std::make_unique<AliasService>(original.getAs<void>(), implementationType);
+        auto implementation =
+            std::make_unique<AliasService>(original.getAs<void>(), descriptor.getImplementationTypeId());
         return ServiceInstance{std::move(implementation), descriptor.getCastOffset()};
     }
 } // namespace sb::di::details
