@@ -3,10 +3,10 @@
 #include <memory>
 #include <vector>
 
-#include <SevenBit/DI/LibraryConfig.hpp>
+#include "SevenBit/DI/LibraryConfig.hpp"
 
-#include <SevenBit/DI/Details/Utils/Meta.hpp>
-#include <SevenBit/DI/ServiceProvider.hpp>
+#include "SevenBit/DI/Details/Utils/Meta.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 
 namespace sb::di::details
 {

@@ -3,12 +3,12 @@
 #include <memory>
 #include <utility>
 
-#include <SevenBit/DI/LibraryConfig.hpp>
+#include "SevenBit/DI/LibraryConfig.hpp"
 
-#include <SevenBit/DI/Details/Core/ServiceAliasesCreator.hpp>
-#include <SevenBit/DI/Details/Services/AliasService.hpp>
-#include <SevenBit/DI/Details/Utils/RequireDescriptor.hpp>
-#include <SevenBit/DI/Details/Utils/RequireInstance.hpp>
+#include "SevenBit/DI/Details/Core/ServiceAliasesCreator.hpp"
+#include "SevenBit/DI/Details/Services/AliasService.hpp"
+#include "SevenBit/DI/Details/Utils/RequireDescriptor.hpp"
+#include "SevenBit/DI/Details/Utils/RequireInstance.hpp"
 
 namespace sb::di::details
 {
@@ -32,11 +32,13 @@ namespace sb::di::details
         if (originals)
         {
             const auto size = originals->size();
+            const auto take = skipLast <= size ? size - skipLast : 0;
             instances.reserve(size);
-            auto take = size - skipLast;
-            originals->forEach([&](const ServiceInstance &instance) {
-                instances.add(create(descriptor, instance));
-                return --take;
+            originals->forEach([&](const ServiceInstance &instance, const std::size_t index) {
+                if (index < take)
+                {
+                    instances.add(create(descriptor, instance));
+                }
             });
         }
     }
@@ -51,7 +53,7 @@ namespace sb::di::details
                 originals.forEach(
                     [&](ServiceInstance &instance) { instance.addCastOffset(descriptor.getCastOffset()); });
             }
-            instances.add(std::move(originals));
+            instances.addList(std::move(originals));
         }
     }
 

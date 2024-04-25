@@ -5,13 +5,13 @@
 #include <memory>
 #include <vector>
 
-#include <SevenBit/DI/LibraryConfig.hpp>
+#include "SevenBit/DI/LibraryConfig.hpp"
 
-#include <SevenBit/DI/Details/Utils/Container.hpp>
-#include <SevenBit/DI/ServiceDescriber.hpp>
-#include <SevenBit/DI/ServiceLifeTimes.hpp>
-#include <SevenBit/DI/ServiceProvider.hpp>
-#include <SevenBit/DI/ServiceProviderOptions.hpp>
+#include "SevenBit/DI/Details/Utils/Container.hpp"
+#include "SevenBit/DI/ServiceDescriber.hpp"
+#include "SevenBit/DI/ServiceLifeTimes.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
+#include "SevenBit/DI/ServiceProviderOptions.hpp"
 
 namespace sb::di
 {
@@ -1067,5 +1067,5 @@ namespace sb::di
 } // namespace sb::di
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include <SevenBit/DI/Impl/ServiceCollection.hpp>
+#include "SevenBit/DI/Impl/ServiceCollection.hpp"
 #endif

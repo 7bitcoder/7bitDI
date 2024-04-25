@@ -1,9 +1,9 @@
 #pragma once
 
-#include <SevenBit/DI/LibraryConfig.hpp>
+#include "SevenBit/DI/LibraryConfig.hpp"
 
-#include <SevenBit/DI/Details/Containers/ServiceDescriptorsMap.hpp>
-#include <SevenBit/DI/Exceptions.hpp>
+#include "SevenBit/DI/Details/Containers/ServiceDescriptorsMap.hpp"
+#include "SevenBit/DI/Exceptions.hpp"
 
 namespace sb::di::details
 {

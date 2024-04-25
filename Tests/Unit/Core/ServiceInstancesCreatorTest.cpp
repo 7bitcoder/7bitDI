@@ -176,7 +176,7 @@ TEST_F(ServiceInstancesCreatorTest, ShouldCreateSkippedInheritedInstances)
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    auto instances = creator.createAll(descriptors, 1);
+    const auto instances = creator.createAll(descriptors, 1);
 
     EXPECT_EQ(instances.size(), 2);
     EXPECT_FALSE(instances.isSealed());
@@ -269,7 +269,7 @@ TEST_F(ServiceInstancesCreatorTest, ShouldCreateSkippedInheritedInstancesInPlace
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
     descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
 
-    auto instances = creator.createAll(descriptors, 1);
+    const auto instances = creator.createAll(descriptors, 1);
 
     EXPECT_EQ(instances.size(), 2);
     EXPECT_FALSE(instances.isSealed());
@@ -279,4 +279,21 @@ TEST_F(ServiceInstancesCreatorTest, ShouldCreateSkippedInheritedInstancesInPlace
     EXPECT_TRUE(instances[1].isValid());
     EXPECT_TRUE(instances[1].getAs<void>());
     EXPECT_EQ(instances[1].tryGetImplementation()->getTypeId(), typeid(TestInheritClass5));
+}
+
+TEST_F(ServiceInstancesCreatorTest, ShouldNotCreateSkippedInheritedInstancesInPlace)
+{
+    ServiceProviderMock mock;
+    sb::di::details::ServiceInstancesCreator creator;
+    creator.setServiceProvider(mock);
+
+    sb::di::details::ServiceDescriptorList descriptors{
+        sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>()};
+    descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass5>());
+    descriptors.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass4>());
+
+    const auto instances = creator.createAll(descriptors, 5);
+
+    EXPECT_TRUE(instances.empty());
+    EXPECT_FALSE(instances.isSealed());
 }

@@ -20,7 +20,7 @@ class OneOrListTest : public testing::Test
 
 TEST_F(OneOrListTest, ShouldCreateUninitialized)
 {
-    sb::di::OneOrList<int> list;
+    const sb::di::OneOrList<int> list;
 
     EXPECT_TRUE(list.isUninitialized());
     EXPECT_TRUE(list.empty());
@@ -76,6 +76,25 @@ TEST_F(OneOrListTest, ShouldAdd)
     EXPECT_EQ(list[0], 2);
     EXPECT_EQ(list[1], 3);
     EXPECT_EQ(list[2], 4);
+}
+
+TEST_F(OneOrListTest, ShouldAddList)
+{
+    sb::di::OneOrList<int> list;
+
+    list.add(2);
+    list.add(3);
+    list.add(4);
+
+    sb::di::OneOrList<int> list2;
+    list2.add(5);
+    list2.addList(std::move(list));
+
+    EXPECT_TRUE(list.isList());
+    EXPECT_EQ(list2[0], 5);
+    EXPECT_EQ(list2[1], 2);
+    EXPECT_EQ(list2[2], 3);
+    EXPECT_EQ(list2[3], 4);
 }
 
 TEST_F(OneOrListTest, ShouldGetFirst)

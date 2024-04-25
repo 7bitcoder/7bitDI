@@ -2,10 +2,10 @@
 
 #include <utility>
 
-#include <SevenBit/DI/LibraryConfig.hpp>
+#include "SevenBit/DI/LibraryConfig.hpp"
 
-#include <SevenBit/DI/Details/Core/ServiceInstanceProviderRoot.hpp>
-#include <SevenBit/DI/ServiceCollection.hpp>
+#include "SevenBit/DI/Details/Core/ServiceInstanceProviderRoot.hpp"
+#include "SevenBit/DI/ServiceCollection.hpp"
 
 namespace sb::di
 {

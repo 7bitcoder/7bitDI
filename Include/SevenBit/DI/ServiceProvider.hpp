@@ -4,11 +4,11 @@
 #include <type_traits>
 #include <vector>
 
-#include <SevenBit/DI/LibraryConfig.hpp>
+#include "SevenBit/DI/LibraryConfig.hpp"
 
-#include <SevenBit/DI/Details/Utils/Require.hpp>
-#include <SevenBit/DI/Details/Utils/RequireInstance.hpp>
-#include <SevenBit/DI/IServiceInstanceProvider.hpp>
+#include "SevenBit/DI/Details/Utils/Require.hpp"
+#include "SevenBit/DI/Details/Utils/RequireInstance.hpp"
+#include "SevenBit/DI/IServiceInstanceProvider.hpp"
 
 namespace sb::di
 {
@@ -372,7 +372,6 @@ namespace sb::di
                 details::RequireInstance::valid(instance);
                 return instance.moveOutAsUniquePtr<TService>();
             });
-            return {};
         }
 
         /**
@@ -398,7 +397,6 @@ namespace sb::di
                 details::RequireInstance::valid(instance);
                 return instance.moveOutAsUniquePtr<TService>();
             });
-            return {};
         }
     };
 } // namespace sb::di

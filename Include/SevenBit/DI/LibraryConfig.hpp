@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SevenBit/DI/CmakeDef.hpp>
+#include "SevenBit/DI/CmakeDef.hpp"
 
 #ifndef _7BIT_DI_VERSION_MAJOR
 #define _7BIT_DI_VERSION_MAJOR 0
@@ -56,4 +56,4 @@
 #define _7BIT_DI_CTOR_PARAMS_LIMIT 100
 #endif
 
-#include <SevenBit/DI/Export.hpp>
+#include "SevenBit/DI/Export.hpp"

@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <memory>
 
-#include "../../Helpers/Classes/Basic.hpp"
 #include "../../Helpers/Classes/Inherit.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
 #include <SevenBit/DI/Details/Core/ServiceAliasesCreator.hpp>
@@ -140,7 +139,7 @@ TEST_F(ServiceAliasesCreatorTest, ShouldNotCreateAllAliasesForEmpty)
 
 TEST_F(ServiceAliasesCreatorTest, ShouldNotCreateAllAliasesForNull)
 {
-    sb::di::details::ServiceDescriptorList descriptors{
+    const sb::di::details::ServiceDescriptorList descriptors{
         sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass2>()};
 
     constexpr sb::di::details::ServiceAliasesCreator creator;
@@ -152,37 +151,56 @@ TEST_F(ServiceAliasesCreatorTest, ShouldNotCreateAllAliasesForNull)
     EXPECT_TRUE(instances.empty());
 }
 
-// TEST_F(ServiceAliasesCreatorTest, ShouldCreateRestAliases)
-// {
-//     sb::di::details::ServiceDescriptorList descriptors{
-//         sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass2>()};
-//
-//     constexpr sb::di::details::ServiceAliasesCreator creator;
-//
-//     TestInheritClass3 test3;
-//     TestInheritClass4 test4;
-//     TestInheritClass5 test5;
-//     sb::di::details::ServiceInstanceList externals{
-//         sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass3>>(&test3)}};
-//     externals.add(
-//         sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass4>>(&test4)});
-//     externals.add(
-//         sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass5>>(&test5)});
-//
-//     sb::di::details::ServiceInstanceList instances{
-//         sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass2>>(&test5)}};
-//
-//     creator.tryCreateRest(descriptors, instances, [&](const sb::di::ServiceDescriptor &) { return &externals; });
-//
-//     EXPECT_EQ(instances.size(), 3);
-//     EXPECT_FALSE(instances.isSealed());
-//     EXPECT_TRUE(instances[0].isValid());
-//     EXPECT_TRUE(instances[0].getAs<void>());
-//     EXPECT_EQ(instances[0].tryGetImplementation()->getTypeId(), typeid(TestInheritClass2));
-//     EXPECT_TRUE(instances[1].isValid());
-//     EXPECT_TRUE(instances[1].getAs<void>());
-//     EXPECT_EQ(instances[1].tryGetImplementation()->getTypeId(), typeid(TestInheritClass2));
-//     EXPECT_TRUE(instances[2].isValid());
-//     EXPECT_TRUE(instances[2].getAs<void>());
-//     EXPECT_EQ(instances[2].tryGetImplementation()->getTypeId(), typeid(TestInheritClass2));
-// }
+TEST_F(ServiceAliasesCreatorTest, ShouldCreateSkippedAliases)
+{
+    sb::di::details::ServiceDescriptorList descriptors{
+        sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass2>()};
+
+    constexpr sb::di::details::ServiceAliasesCreator creator;
+
+    TestInheritClass3 test3;
+    TestInheritClass4 test4;
+    TestInheritClass5 test5;
+    sb::di::details::ServiceInstanceList externals{
+        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass3>>(&test3)}};
+    externals.add(
+        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass4>>(&test4)});
+    externals.add(
+        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass5>>(&test5)});
+
+    const auto instances =
+        creator.tryCreateAll(descriptors, [&](const sb::di::ServiceDescriptor &) { return &externals; }, 1);
+
+    EXPECT_EQ(instances.size(), 2);
+    EXPECT_FALSE(instances.isSealed());
+    EXPECT_TRUE(instances[0].isValid());
+    EXPECT_TRUE(instances[0].getAs<void>());
+    EXPECT_EQ(instances[0].tryGetImplementation()->getTypeId(), typeid(TestInheritClass2));
+    EXPECT_TRUE(instances[1].isValid());
+    EXPECT_TRUE(instances[1].getAs<void>());
+    EXPECT_EQ(instances[1].tryGetImplementation()->getTypeId(), typeid(TestInheritClass2));
+}
+
+TEST_F(ServiceAliasesCreatorTest, ShouldNotCreateSkippedAliases)
+{
+    const sb::di::details::ServiceDescriptorList descriptors{
+        sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass2>()};
+
+    constexpr sb::di::details::ServiceAliasesCreator creator;
+
+    TestInheritClass3 test3;
+    TestInheritClass4 test4;
+    TestInheritClass5 test5;
+    sb::di::details::ServiceInstanceList externals{
+        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass3>>(&test3)}};
+    externals.add(
+        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass4>>(&test4)});
+    externals.add(
+        sb::di::ServiceInstance{std::make_unique<sb::di::details::ExternalService<TestInheritClass5>>(&test5)});
+
+    const auto instances =
+        creator.tryCreateAll(descriptors, [&](const sb::di::ServiceDescriptor &) { return &externals; }, 5);
+
+    EXPECT_TRUE(instances.empty());
+    EXPECT_FALSE(instances.isSealed());
+}

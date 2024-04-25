@@ -3,9 +3,9 @@
 #include <stdexcept>
 #include <string>
 
-#include <SevenBit/DI/LibraryConfig.hpp>
+#include "SevenBit/DI/LibraryConfig.hpp"
 
-#include <SevenBit/DI/TypeId.hpp>
+#include "SevenBit/DI/TypeId.hpp"
 
 namespace sb::di
 {
@@ -65,5 +65,5 @@ namespace sb::di
 } // namespace sb::di
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include <SevenBit/DI/Impl/Exceptions.hpp>
+#include "SevenBit/DI/Impl/Exceptions.hpp"
 #endif

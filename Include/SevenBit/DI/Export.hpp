@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SevenBit/DI/CmakeDef.hpp>
+#include "SevenBit/DI/CmakeDef.hpp"
 
 #ifdef _7BIT_DI_SHARED_LIB
 //!!! cmake when compiling shared lib sets <target_name>_EXPORTS

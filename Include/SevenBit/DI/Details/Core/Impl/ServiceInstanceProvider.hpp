@@ -1,14 +1,14 @@
 #pragma once
 
-#include <SevenBit/DI/LibraryConfig.hpp>
+#include "SevenBit/DI/LibraryConfig.hpp"
 
-#include <SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp>
-#include <SevenBit/DI/Details/Services/ExternalService.hpp>
-#include <SevenBit/DI/Details/Utils/RequireDescriptor.hpp>
-#include <SevenBit/DI/Exceptions.hpp>
-#include <SevenBit/DI/ServiceInstance.hpp>
-#include <SevenBit/DI/ServiceLifeTimes.hpp>
-#include <SevenBit/DI/ServiceProvider.hpp>
+#include "SevenBit/DI/Details/Core/ServiceInstanceProvider.hpp"
+#include "SevenBit/DI/Details/Services/ExternalService.hpp"
+#include "SevenBit/DI/Details/Utils/RequireDescriptor.hpp"
+#include "SevenBit/DI/Exceptions.hpp"
+#include "SevenBit/DI/ServiceInstance.hpp"
+#include "SevenBit/DI/ServiceLifeTimes.hpp"
+#include "SevenBit/DI/ServiceProvider.hpp"
 
 namespace sb::di::details
 {
@@ -71,7 +71,7 @@ namespace sb::di::details
                 if (const auto descriptors = findDescriptors(id))
                 {
                     auto newInstances = tryCreateInstances(*descriptors, instances->size());
-                    newInstances.add(std::move(*instances));
+                    newInstances.addList(std::move(*instances));
                     *instances = std::move(newInstances);
                     instances->seal();
                 }

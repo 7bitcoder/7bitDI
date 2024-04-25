@@ -3,7 +3,7 @@
 #include <memory>
 #include <type_traits>
 
-#include <SevenBit/DI/LibraryConfig.hpp>
+#include "SevenBit/DI/LibraryConfig.hpp"
 
 namespace sb::di::details
 {

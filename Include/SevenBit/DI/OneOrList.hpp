@@ -4,9 +4,9 @@
 #include <variant>
 #include <vector>
 
-#include <SevenBit/DI/LibraryConfig.hpp>
+#include "SevenBit/DI/LibraryConfig.hpp"
 
-#include <SevenBit/DI/Details/Utils/Meta.hpp>
+#include "SevenBit/DI/Details/Utils/Meta.hpp"
 
 namespace sb::di
 {
@@ -65,7 +65,7 @@ namespace sb::di
             }
         }
 
-        void add(OneOrList &&other)
+        void addList(OneOrList &&other)
         {
             if (auto list = other.tryGetAsList())
             {
@@ -176,7 +176,11 @@ namespace sb::di
             }
             else if (auto list = tryGetAsList())
             {
-                listForEach(*list, fcn);
+                std::size_t index = 0;
+                for (auto &instance : *list)
+                {
+                    callFcn(fcn, instance, index++);
+                }
             }
         }
 
@@ -188,7 +192,11 @@ namespace sb::di
             }
             else if (auto list = tryGetAsList())
             {
-                listForEach(*list, fcn);
+                std::size_t index = 0;
+                for (auto &instance : *list)
+                {
+                    callFcn(fcn, instance, index++);
+                }
             }
         }
 
@@ -222,26 +230,6 @@ namespace sb::di
                 else
                 {
                     _variant = std::vector<T>{};
-                }
-            }
-        }
-
-        template <class TList, class TFunc> static void listForEach(TList &list, TFunc &fcn)
-        {
-            std::size_t index = 0;
-            for (auto &instance : list)
-            {
-                using Ret = decltype(callFcn(fcn, instance, 0));
-                if constexpr (std::is_integral_v<Ret>)
-                {
-                    if (!callFcn(fcn, instance, index++))
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    callFcn(fcn, instance, index++);
                 }
             }
         }

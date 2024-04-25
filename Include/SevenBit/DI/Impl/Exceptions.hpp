@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include <SevenBit/DI/LibraryConfig.hpp>
+#include "SevenBit/DI/LibraryConfig.hpp"
 
-#include <SevenBit/DI/Exceptions.hpp>
+#include "SevenBit/DI/Exceptions.hpp"
 
 namespace sb::di
 {

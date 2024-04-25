@@ -4,11 +4,11 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include <SevenBit/DI/LibraryConfig.hpp>
+#include "SevenBit/DI/LibraryConfig.hpp"
 
-#include <SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp>
-#include <SevenBit/DI/Details/Models/ServiceId.hpp>
-#include <SevenBit/DI/ServiceDescriptor.hpp>
+#include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
+#include "SevenBit/DI/Details/Models/ServiceId.hpp"
+#include "SevenBit/DI/ServiceDescriptor.hpp"
 
 namespace sb::di::details
 {
@@ -54,5 +54,5 @@ namespace sb::di::details
 } // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include <SevenBit/DI/Details/Containers/Impl/ServiceDescriptorsMap.hpp>
+#include "SevenBit/DI/Details/Containers/Impl/ServiceDescriptorsMap.hpp"
 #endif

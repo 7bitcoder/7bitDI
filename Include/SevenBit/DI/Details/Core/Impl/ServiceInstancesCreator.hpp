@@ -3,12 +3,12 @@
 #include <memory>
 #include <utility>
 
-#include <SevenBit/DI/LibraryConfig.hpp>
+#include "SevenBit/DI/LibraryConfig.hpp"
 
-#include <SevenBit/DI/Details/Core/ServiceInstancesCreator.hpp>
-#include <SevenBit/DI/Details/Utils/Require.hpp>
-#include <SevenBit/DI/Details/Utils/RequireDescriptor.hpp>
-#include <SevenBit/DI/Details/Utils/RequireInstance.hpp>
+#include "SevenBit/DI/Details/Core/ServiceInstancesCreator.hpp"
+#include "SevenBit/DI/Details/Utils/Require.hpp"
+#include "SevenBit/DI/Details/Utils/RequireDescriptor.hpp"
+#include "SevenBit/DI/Details/Utils/RequireInstance.hpp"
 
 namespace sb::di::details
 {
@@ -39,11 +39,13 @@ namespace sb::di::details
     {
         ServiceInstanceList instances;
         const auto size = descriptors.size();
+        const auto take = skipLast <= size ? size - skipLast : 0;
         instances.reserve(size);
-        auto take = size - skipLast;
-        descriptors.forEach([&](const ServiceDescriptor &descriptor) {
-            instances.add(create(descriptor, inPlaceRequest));
-            return --take;
+        descriptors.forEach([&](const ServiceDescriptor &descriptor, const std::size_t index) {
+            if (index < take)
+            {
+                instances.add(create(descriptor, inPlaceRequest));
+            }
         });
         return instances;
     }

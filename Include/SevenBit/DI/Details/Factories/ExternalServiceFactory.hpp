@@ -2,10 +2,10 @@
 
 #include <memory>
 
-#include <SevenBit/DI/LibraryConfig.hpp>
+#include "SevenBit/DI/LibraryConfig.hpp"
 
-#include <SevenBit/DI/Details/Services/ExternalService.hpp>
-#include <SevenBit/DI/IServiceFactory.hpp>
+#include "SevenBit/DI/Details/Services/ExternalService.hpp"
+#include "SevenBit/DI/IServiceFactory.hpp"
 
 namespace sb::di::details
 {

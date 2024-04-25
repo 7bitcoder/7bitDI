@@ -1,8 +1,8 @@
 #pragma once
 
-#include <SevenBit/DI/LibraryConfig.hpp>
+#include "SevenBit/DI/LibraryConfig.hpp"
 
-#include <SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp>
+#include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
 
 namespace sb::di::details
 {

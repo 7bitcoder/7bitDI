@@ -2,10 +2,10 @@
 
 #include <unordered_set>
 
-#include <SevenBit/DI/LibraryConfig.hpp>
+#include "SevenBit/DI/LibraryConfig.hpp"
 
-#include <SevenBit/DI/Details/Helpers/ScopedGuard.hpp>
-#include <SevenBit/DI/Exceptions.hpp>
+#include "SevenBit/DI/Details/Helpers/ScopedGuard.hpp"
+#include "SevenBit/DI/Exceptions.hpp"
 
 namespace sb::di::details
 {
