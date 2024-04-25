@@ -21,7 +21,7 @@ namespace sb::di
 
       public:
         OneOrList() = default;
-        explicit OneOrList(const std::size_t size) : _variant(std::vector<T>{}) { reserve(size); }
+        explicit OneOrList(const std::size_t size) { reserve(size); }
         explicit OneOrList(T &&mainElement) : _variant(std::move(mainElement)) {}
 
         OneOrList(const OneOrList &) = delete;

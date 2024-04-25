@@ -37,10 +37,9 @@ namespace sb::di::details
     INLINE ServiceInstanceList ServiceInstancesCreator::createAll(const ServiceDescriptorList &descriptors,
                                                                   const bool inPlaceRequest, const std::size_t skipLast)
     {
-        ServiceInstanceList instances;
         const auto size = descriptors.size();
+        ServiceInstanceList instances{size};
         const auto take = skipLast <= size ? size - skipLast : 0;
-        instances.reserve(size);
         descriptors.forEach([&](const ServiceDescriptor &descriptor, const std::size_t index) {
             if (index < take)
             {

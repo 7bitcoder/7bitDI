@@ -16,9 +16,8 @@ namespace sb::di::details
         ServiceInstanceList tryCreateAll(const ServiceDescriptorList &descriptors, TResolver originalsResolver,
                                          const std::size_t skipLast = 0) const
         {
-            ServiceInstanceList instances;
             const auto size = descriptors.size();
-            instances.reserve(size);
+            ServiceInstanceList instances{size};
             descriptors.forEach([&](const ServiceDescriptor &aliasDescriptor, const std::size_t index) {
                 const auto lastDescriptorSkip = index + 1 == size ? skipLast : 0;
                 tryCreateAll(instances, aliasDescriptor, originalsResolver(aliasDescriptor), lastDescriptorSkip);
@@ -31,7 +30,7 @@ namespace sb::di::details
         template <class TResolver>
         ServiceInstanceList tryMapAll(const ServiceDescriptorList &descriptors, TResolver originalsResolver) const
         {
-            ServiceInstanceList instances;
+            ServiceInstanceList instances{descriptors.size()};
             descriptors.forEach([&](const ServiceDescriptor &aliasDescriptor) {
                 tryMapAll(instances, aliasDescriptor, originalsResolver(aliasDescriptor));
             });
