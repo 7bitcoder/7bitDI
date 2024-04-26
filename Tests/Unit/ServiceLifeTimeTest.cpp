@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "SevenBit/DI/ServiceLifeTimes.hpp"
+#include <SevenBit/DI/ServiceLifeTimes.hpp>
 
 class ServiceLifeTime : public testing::Test
 {

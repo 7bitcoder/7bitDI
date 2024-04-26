@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "../Helpers/Classes/MultiInherit.hpp"
-#include "SevenBit/DI/ServiceCollection.hpp"
+#include <SevenBit/DI/ServiceCollection.hpp>
 
 class AliasTest : public testing::Test
 {
@@ -210,6 +210,43 @@ TEST_F(AliasTest, ShouldGetServices)
     EXPECT_TRUE(provider.getServices<TestMultiInherit4Class4>().empty());
 }
 
+TEST_F(AliasTest, ShouldGetMultipleServices)
+{
+    auto provider = sb::di::ServiceCollection{}
+                        .addSingleton<TestMultiInheritClass3>()
+                        .addSingleton<TestMultiInheritClass4>()
+                        .addAlias<TestMultiInheritClass2, TestMultiInheritClass4>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass4>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass3>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass2>()
+                        .buildServiceProvider();
+
+    const auto services = provider.getServices<TestMultiInheritClass1>();
+
+    EXPECT_EQ(services.size(), 3);
+    EXPECT_EQ(services[0]->first(), 4);
+    EXPECT_EQ(services[1]->first(), 3);
+    EXPECT_EQ(services[2]->first(), 4);
+    EXPECT_EQ(services[2], services[0]);
+}
+
+TEST_F(AliasTest, ShouldGetMultipleSomeWrongServices)
+{
+    auto provider = sb::di::ServiceCollection{}
+                        .addSingleton<TestMultiInheritClass4>()
+                        .addAlias<TestMultiInheritClass2, TestMultiInheritClass4>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass4>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass3>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass2>()
+                        .buildServiceProvider();
+
+    const auto services = provider.getServices<TestMultiInheritClass1>();
+
+    EXPECT_EQ(services.size(), 2);
+    EXPECT_EQ(services[0]->first(), 4);
+    EXPECT_EQ(services[1]->first(), 4);
+}
+
 TEST_F(AliasTest, ShoulNotGetServices)
 {
     auto provider = sb::di::ServiceCollection{}
@@ -242,6 +279,23 @@ TEST_F(AliasTest, ShouldGetCastedServicesInOrder)
     EXPECT_EQ(services[1]->first(), 4);
 }
 
+TEST_F(AliasTest, ShouldGetCastedMultipleServicesInOrder)
+{
+    auto provider = sb::di::ServiceCollection{}
+                        .addSingleton<TestMultiInheritClass4>()
+                        .addSingleton<TestMultiInheritClass3>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass4>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass3>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass2>()
+                        .buildServiceProvider();
+
+    const auto services = provider.getServices<TestMultiInheritClass1>();
+
+    EXPECT_EQ(services.size(), 2);
+    EXPECT_EQ(services[0]->first(), 4);
+    EXPECT_EQ(services[1]->first(), 3);
+}
+
 TEST_F(AliasTest, ShouldGetServicesInOrderAfterNormalGet)
 {
     auto provider = sb::di::ServiceCollection{}
@@ -251,10 +305,50 @@ TEST_F(AliasTest, ShouldGetServicesInOrderAfterNormalGet)
                         .buildServiceProvider();
 
     EXPECT_TRUE(provider.tryGetService<TestMultiInheritClass1>());
+
     const auto services = provider.getServices<TestMultiInheritClass1>();
+
     EXPECT_EQ(services.size(), 2);
     EXPECT_EQ(services[0]->first(), 3);
     EXPECT_EQ(services[1]->first(), 4);
+}
+
+TEST_F(AliasTest, ShouldGetMultipleServicesInOrderAfterNormalGet)
+{
+    auto provider = sb::di::ServiceCollection{}
+                        .addSingleton<TestMultiInheritClass4>()
+                        .addSingleton<TestMultiInheritClass3>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass2>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass4>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass3>()
+                        .buildServiceProvider();
+
+    EXPECT_TRUE(provider.tryGetService<TestMultiInheritClass1>());
+
+    const auto services = provider.getServices<TestMultiInheritClass1>();
+
+    EXPECT_EQ(services.size(), 2);
+    EXPECT_EQ(services[0]->first(), 4);
+    EXPECT_EQ(services[1]->first(), 3);
+}
+
+TEST_F(AliasTest, ShouldGetNotMultipleServicesInOrderAfterNormalGet)
+{
+    auto provider = sb::di::ServiceCollection{}
+                        .addSingleton<TestMultiInheritClass4>()
+                        .addSingleton<TestMultiInheritClass3>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass4>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass3>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass2>()
+                        .buildServiceProvider();
+
+    EXPECT_FALSE(provider.tryGetService<TestMultiInheritClass1>());
+
+    const auto services = provider.getServices<TestMultiInheritClass1>();
+
+    EXPECT_EQ(services.size(), 2);
+    EXPECT_EQ(services[0]->first(), 4);
+    EXPECT_EQ(services[1]->first(), 3);
 }
 
 TEST_F(AliasTest, ShouldTryCreateService)
@@ -367,6 +461,42 @@ TEST_F(AliasTest, ShouldCreateServices)
     EXPECT_EQ(provider.createServices<TestMultiInherit4Class4>().size(), 1);
     EXPECT_TRUE(provider.createServices<TestMultiInheritClass1>().empty());
     EXPECT_TRUE(provider.createServices<TestMultiInherit2Class1>().empty());
+}
+
+TEST_F(AliasTest, ShouldCreateMultipleServices)
+{
+    auto provider = sb::di::ServiceCollection{}
+                        .addTransient<TestMultiInheritClass3>()
+                        .addTransient<TestMultiInheritClass4>()
+                        .addAlias<TestMultiInheritClass2, TestMultiInheritClass4>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass4>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass3>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass2>()
+                        .buildServiceProvider();
+
+    const auto services = provider.createServices<TestMultiInheritClass1>();
+
+    EXPECT_EQ(services.size(), 3);
+    EXPECT_EQ(services[0]->first(), 4);
+    EXPECT_EQ(services[1]->first(), 3);
+    EXPECT_EQ(services[2]->first(), 4);
+}
+
+TEST_F(AliasTest, ShouldCreateMultipleSomeWrongServices)
+{
+    auto provider = sb::di::ServiceCollection{}
+                        .addTransient<TestMultiInheritClass4>()
+                        .addAlias<TestMultiInheritClass2, TestMultiInheritClass4>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass4>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass3>()
+                        .addAlias<TestMultiInheritClass1, TestMultiInheritClass2>()
+                        .buildServiceProvider();
+
+    const auto services = provider.createServices<TestMultiInheritClass1>();
+
+    EXPECT_EQ(services.size(), 2);
+    EXPECT_EQ(services[0]->first(), 4);
+    EXPECT_EQ(services[1]->first(), 4);
 }
 
 TEST_F(AliasTest, ShoulNotCreateServices)

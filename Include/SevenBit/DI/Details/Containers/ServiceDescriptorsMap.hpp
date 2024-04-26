@@ -36,9 +36,10 @@ namespace sb::di::details
         }
 
         ServiceDescriptorsMap(const ServiceDescriptorsMap &) = delete;
-        ServiceDescriptorsMap(ServiceDescriptorsMap &&) noexcept = default;
+        ServiceDescriptorsMap(ServiceDescriptorsMap &&) = default;
 
         ServiceDescriptorsMap &operator=(const ServiceDescriptorsMap &) = delete;
+        ServiceDescriptorsMap &operator=(ServiceDescriptorsMap &&) = delete;
 
         void add(ServiceDescriptor descriptor);
 

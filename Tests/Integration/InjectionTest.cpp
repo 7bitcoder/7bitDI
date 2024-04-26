@@ -2,7 +2,7 @@
 #include <memory>
 
 #include "../Helpers/Classes/Complex.hpp"
-#include "SevenBit/DI/ServiceCollection.hpp"
+#include <SevenBit/DI/ServiceCollection.hpp>
 
 class InjectionTest : public testing::Test
 {

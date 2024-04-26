@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 #include "../../Helpers/Classes/MultiInherit.hpp"
-#include "SevenBit/DI/Details/Services/InPlaceService.hpp"
-#include "SevenBit/DI/Details/Utils/Cast.hpp"
+#include <SevenBit/DI/Details/Services/InPlaceService.hpp>
+#include <SevenBit/DI/Details/Utils/Cast.hpp>
 
 class CastTest : public testing::Test
 {

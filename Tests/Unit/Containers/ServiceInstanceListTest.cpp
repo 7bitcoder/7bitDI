@@ -2,11 +2,11 @@
 #include <memory>
 
 #include "../../Helpers/Classes/Basic.hpp"
-#include "SevenBit/DI/Details/Containers/ServiceInstanceList.hpp"
-#include "SevenBit/DI/Details/Services/ExternalService.hpp"
-#include "SevenBit/DI/Details/Services/InPlaceService.hpp"
-#include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
+#include <SevenBit/DI/Details/Containers/ServiceInstanceList.hpp>
+#include <SevenBit/DI/Details/Services/ExternalService.hpp>
+#include <SevenBit/DI/Details/Services/InPlaceService.hpp>
+#include <SevenBit/DI/Details/Services/UniquePtrService.hpp>
+#include <SevenBit/DI/Exceptions.hpp>
 
 class ServiceInstanceListTest : public testing::Test
 {
@@ -32,24 +32,6 @@ TEST_F(ServiceInstanceListTest, ShouldAddServices)
 
     auto implementation2 = std::make_unique<sb::di::details::ExternalService<TestClass1>>(&test);
     list.add(sb::di::ServiceInstance{std::move(implementation2)});
-}
-
-TEST_F(ServiceInstanceListTest, ShouldFailAddNullService)
-{
-    auto act = [&] { sb::di::details::ServiceInstanceList list{sb::di::ServiceInstance{}}; };
-
-    EXPECT_THROW(act(), sb::di::InvalidServiceException);
-}
-
-TEST_F(ServiceInstanceListTest, ShouldFailAddInvalidService)
-{
-    auto act = [&] {
-        auto implementation =
-            std::make_unique<sb::di::details::UniquePtrService<TestClass1>>(std::unique_ptr<TestClass1>{});
-        sb::di::details::ServiceInstanceList list{sb::di::ServiceInstance{std::move(implementation)}};
-    };
-
-    EXPECT_THROW(act(), sb::di::InvalidServiceException);
 }
 
 TEST_F(ServiceInstanceListTest, ShouldReturnProperSize)

@@ -22,26 +22,13 @@ namespace sb::di::details
         }
     }
 
-    INLINE const ServiceDescriptorsMap &ServiceInstanceProviderRoot::getDescriptorsMap() const
-    {
-        return _descriptorsMap;
-    }
-
-    INLINE ServiceInstancesMap &ServiceInstanceProviderRoot::getSingletons() { return _singletons; }
-
-    INLINE ServiceInstanceCreator &ServiceInstanceProviderRoot::getRootInstanceCreator()
-    {
-        return getInstanceCreator();
-    }
-
     INLINE void ServiceInstanceProviderRoot::prebuildSingletons()
     {
-        for (auto &[_, descriptors] : getDescriptorsMap())
+        for (auto &[id, descriptors] : getDescriptorsMap())
         {
             if (!descriptors.isAlias() && descriptors.getLifeTime().isSingleton())
             {
-                tryRegisterAndGet({descriptors.getServiceTypeId(), descriptors.getServiceKey()}, descriptors,
-                                  tryCreateAllNonTransient(descriptors));
+                tryGetInstances(id);
             }
         }
     }

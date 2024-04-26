@@ -4,7 +4,7 @@
 
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorsMap.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
-#include "SevenBit/DI/Details/Core/ServiceInstanceCreator.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstancesCreator.hpp"
 
 namespace sb::di::details
 {
@@ -14,7 +14,7 @@ namespace sb::di::details
 
         virtual ServiceInstancesMap &getSingletons() = 0;
 
-        virtual ServiceInstanceCreator &getRootInstanceCreator() = 0;
+        virtual ServiceInstancesCreator &getRootCreator() = 0;
 
         virtual ~IServiceInstanceProviderRoot() = default;
     };

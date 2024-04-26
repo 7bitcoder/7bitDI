@@ -2,9 +2,9 @@
 
 #include "../../Helpers/Classes/Dependencies.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
-#include "SevenBit/DI/Details/Helpers/ServiceGetter.hpp"
-#include "SevenBit/DI/Details/Services/InPlaceService.hpp"
-#include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
+#include <SevenBit/DI/Details/Helpers/ServiceGetter.hpp>
+#include <SevenBit/DI/Details/Services/InPlaceService.hpp>
+#include <SevenBit/DI/Details/Services/UniquePtrService.hpp>
 
 class ServiceGetterTest : public testing::Test
 {
@@ -125,7 +125,7 @@ TEST_F(ServiceGetterTest, ShouldGetDependencyVec3Service)
     sb::di::OneOrList result{std::move(test1)};
 
     EXPECT_CALL(mock.getMock(), tryCreateInstances(sb::di::TypeId{typeid(TestDependencyClass)}))
-        .WillOnce(testing::Return(std::make_optional(std::move(result))));
+        .WillOnce(testing::Return(std::move(result)));
 
     auto act = [&] {
         std::vector<std::unique_ptr<TestDependencyClass>> instance =

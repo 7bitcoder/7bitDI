@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
 #include "../Helpers/Classes/Basic.hpp"
-#include "SevenBit/DI/Details/Services/InPlaceService.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/ServiceInstance.hpp"
+#include <SevenBit/DI/Details/Services/InPlaceService.hpp>
+#include <SevenBit/DI/Exceptions.hpp>
+#include <SevenBit/DI/ServiceInstance.hpp>
 
 class ServiceInstanceTest : public testing::Test
 {

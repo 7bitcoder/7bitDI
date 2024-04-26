@@ -2,8 +2,8 @@
 
 #include "../../Helpers/Classes/Dependencies.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
-#include "SevenBit/DI/Details/Helpers/CtorInjector.hpp"
-#include "SevenBit/DI/Details/Services/InPlaceService.hpp"
+#include <SevenBit/DI/Details/Helpers/CtorInjector.hpp>
+#include <SevenBit/DI/Details/Services/InPlaceService.hpp>
 
 class CtorInjectorTest : public testing::Test
 {

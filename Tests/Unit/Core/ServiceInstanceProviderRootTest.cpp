@@ -4,9 +4,9 @@
 #include "../../Helpers/Classes/Basic.hpp"
 #include "../../Helpers/Classes/Inherit.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
-#include "SevenBit/DI/Details/Core/ServiceInstanceProviderRoot.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/ServiceDescriber.hpp"
+#include <SevenBit/DI/Details/Core/ServiceInstanceProviderRoot.hpp>
+#include <SevenBit/DI/Exceptions.hpp>
+#include <SevenBit/DI/ServiceDescriber.hpp>
 
 class ServiceInstanceProviderRootTest : public testing::Test
 {
@@ -917,7 +917,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldCreateInstances)
 
     EXPECT_FALSE(provider.tryCreateInstances(typeid(TestClass1)));
     EXPECT_FALSE(provider.tryCreateInstances(typeid(TestClass2)));
-    EXPECT_EQ(provider.tryCreateInstances(typeid(TestClass3))->size(), 1);
+    EXPECT_EQ(provider.tryCreateInstances(typeid(TestClass3)).size(), 1);
     EXPECT_FALSE(provider.tryCreateInstances(typeid(TestClass4)));
     EXPECT_FALSE(provider.tryCreateInstances(typeid(TestInheritClass5)));
     EXPECT_FALSE(provider.tryCreateInstances(typeid(TestInheritClass6)));
@@ -941,7 +941,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldCreateKeyedInstances)
 
     EXPECT_FALSE(provider.tryCreateKeyedInstances(typeid(TestClass1), "key"));
     EXPECT_FALSE(provider.tryCreateKeyedInstances(typeid(TestClass2), "key"));
-    EXPECT_EQ(provider.tryCreateKeyedInstances(typeid(TestClass3), "key")->size(), 1);
+    EXPECT_EQ(provider.tryCreateKeyedInstances(typeid(TestClass3), "key").size(), 1);
     EXPECT_FALSE(provider.tryCreateKeyedInstances(typeid(TestClass4), "key"));
     EXPECT_FALSE(provider.tryCreateKeyedInstances(typeid(TestInheritClass5), "key"));
     EXPECT_FALSE(provider.tryCreateKeyedInstances(typeid(TestInheritClass6), "key"));
@@ -962,7 +962,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldCreateInstancesInOrder)
     sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
-    auto services = *provider.tryCreateInstances(typeid(TestInheritClass1));
+    auto services = provider.tryCreateInstances(typeid(TestInheritClass1));
     EXPECT_EQ(services.size(), 5);
     EXPECT_EQ(static_cast<TestInheritClass1 *>(services[0].getAs<void>())->number(), 1);
     EXPECT_EQ(static_cast<TestInheritClass1 *>(services[1].getAs<void>())->number(), 2);
@@ -994,7 +994,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldCreateKeyedInstancesInOrder)
     sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
-    auto services = *provider.tryCreateKeyedInstances(typeid(TestInheritClass1), "key");
+    auto services = provider.tryCreateKeyedInstances(typeid(TestInheritClass1), "key");
     EXPECT_EQ(services.size(), 5);
     EXPECT_EQ(static_cast<TestInheritClass1 *>(services[0].getAs<void>())->number(), 1);
     EXPECT_EQ(static_cast<TestInheritClass1 *>(services[1].getAs<void>())->number(), 2);
@@ -1021,7 +1021,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldCreateAliasInstancesInOrder)
     sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
-    auto services = *provider.tryCreateInstances(typeid(TestInheritClass1));
+    auto services = provider.tryCreateInstances(typeid(TestInheritClass1));
     EXPECT_EQ(services.size(), 5);
     EXPECT_EQ(static_cast<TestInheritClass1 *>(services[0].getAs<void>())->number(), 2);
     EXPECT_EQ(static_cast<TestInheritClass1 *>(services[1].getAs<void>())->number(), 3);
@@ -1051,7 +1051,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldCreateKeyedAliasInstancesInOrder)
     sb::di::details::ServiceInstanceProviderRoot provider(describers.begin(), describers.end());
     provider.init(mock);
 
-    auto services = *provider.tryCreateKeyedInstances(typeid(TestInheritClass1), "key");
+    auto services = provider.tryCreateKeyedInstances(typeid(TestInheritClass1), "key");
     EXPECT_EQ(services.size(), 5);
     EXPECT_EQ(static_cast<TestInheritClass1 *>(services[0].getAs<void>())->number(), 2);
     EXPECT_EQ(static_cast<TestInheritClass1 *>(services[1].getAs<void>())->number(), 3);

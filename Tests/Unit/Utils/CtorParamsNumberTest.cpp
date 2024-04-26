@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "../../Helpers/Classes/Complex.hpp"
-#include "SevenBit/DI/Details/Utils/CtorParamsNumber.hpp"
+#include <SevenBit/DI/Details/Utils/CtorParamsNumber.hpp>
 
 class CtorParamsNumberTest : public testing::Test
 {

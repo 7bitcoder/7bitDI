@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "SevenBit/DI/OneOrList.hpp"
+#include <SevenBit/DI/OneOrList.hpp>
 
 class OneOrListTest : public testing::Test
 {
@@ -17,6 +17,23 @@ class OneOrListTest : public testing::Test
 
     static void TearDownTestSuite() {}
 };
+
+TEST_F(OneOrListTest, ShouldCreateUninitialized)
+{
+    const sb::di::OneOrList<int> list;
+
+    EXPECT_TRUE(list.isUninitialized());
+    EXPECT_TRUE(list.empty());
+}
+
+TEST_F(OneOrListTest, ShouldCheck)
+{
+    sb::di::OneOrList<int> list;
+
+    EXPECT_FALSE(list);
+    list.add(1);
+    EXPECT_TRUE(list);
+}
 
 TEST_F(OneOrListTest, ShouldCreateSingle)
 {
@@ -49,8 +66,9 @@ TEST_F(OneOrListTest, ShouldMove)
 
 TEST_F(OneOrListTest, ShouldAdd)
 {
-    sb::di::OneOrList list{2};
+    sb::di::OneOrList<int> list;
 
+    list.add(2);
     list.add(3);
     list.add(4);
 
@@ -58,6 +76,25 @@ TEST_F(OneOrListTest, ShouldAdd)
     EXPECT_EQ(list[0], 2);
     EXPECT_EQ(list[1], 3);
     EXPECT_EQ(list[2], 4);
+}
+
+TEST_F(OneOrListTest, ShouldAddList)
+{
+    sb::di::OneOrList<int> list;
+
+    list.add(2);
+    list.add(3);
+    list.add(4);
+
+    sb::di::OneOrList<int> list2;
+    list2.add(5);
+    list2.addList(std::move(list));
+
+    EXPECT_TRUE(list.isList());
+    EXPECT_EQ(list2[0], 5);
+    EXPECT_EQ(list2[1], 2);
+    EXPECT_EQ(list2[2], 3);
+    EXPECT_EQ(list2[3], 4);
 }
 
 TEST_F(OneOrListTest, ShouldGetFirst)
@@ -104,7 +141,10 @@ TEST_F(OneOrListTest, ShouldGetIndexed)
 
 TEST_F(OneOrListTest, ShouldGetSize)
 {
-    sb::di::OneOrList list{2};
+    sb::di::OneOrList<int> list;
+
+    EXPECT_EQ(list.size(), 0);
+    list.add(2);
 
     EXPECT_EQ(list.size(), 1);
 
@@ -119,7 +159,11 @@ TEST_F(OneOrListTest, ShouldGetSize)
 
 TEST_F(OneOrListTest, ShouldGetEmpty)
 {
-    sb::di::OneOrList list{2};
+    sb::di::OneOrList<int> list;
+
+    EXPECT_TRUE(list.empty());
+
+    list.add(2);
 
     EXPECT_FALSE(list.empty());
 
@@ -195,6 +239,22 @@ TEST_F(OneOrListTest, ShouldTryGetAsSingle)
     list.add(5);
 
     EXPECT_FALSE(list.tryGetAsSingle());
+}
+
+TEST_F(OneOrListTest, ShouldClear)
+{
+    sb::di::OneOrList list{2};
+    EXPECT_FALSE(list.empty());
+
+    list.clear();
+    EXPECT_TRUE(list.empty());
+
+    list.add(2);
+    list.add(2);
+    EXPECT_FALSE(list.empty());
+
+    list.clear();
+    EXPECT_TRUE(list.empty());
 }
 
 TEST_F(OneOrListTest, ShouldForEach)

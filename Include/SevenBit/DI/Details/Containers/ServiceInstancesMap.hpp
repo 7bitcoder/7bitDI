@@ -23,9 +23,10 @@ namespace sb::di::details
         explicit ServiceInstancesMap(bool strongDestructionOrder = false);
 
         ServiceInstancesMap(const ServiceInstancesMap &) = delete;
-        ServiceInstancesMap(ServiceInstancesMap &&) noexcept = default;
+        ServiceInstancesMap(ServiceInstancesMap &&) = default;
 
         ServiceInstancesMap &operator=(const ServiceInstancesMap &) = delete;
+        ServiceInstancesMap &operator=(ServiceInstancesMap &&) = delete;
 
         ServiceInstanceList &insert(const ServiceId &id, ServiceInstance &&instance);
 

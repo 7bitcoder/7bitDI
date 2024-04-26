@@ -5,9 +5,9 @@
 #include "../../Helpers/Classes/Inherit.hpp"
 #include "../../Helpers/Classes/InheritDesctuction.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
-#include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
-#include "SevenBit/DI/Details/Services/ExternalService.hpp"
-#include "SevenBit/DI/ServiceDescriber.hpp"
+#include <SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp>
+#include <SevenBit/DI/Details/Services/ExternalService.hpp>
+#include <SevenBit/DI/ServiceDescriber.hpp>
 
 class ServiceInstancesMapTest : public testing::Test
 {

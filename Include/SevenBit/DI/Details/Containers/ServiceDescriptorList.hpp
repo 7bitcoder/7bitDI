@@ -9,12 +9,10 @@
 
 namespace sb::di::details
 {
-    class EXPORT ServiceDescriptorList
+    class EXPORT ServiceDescriptorList : public OneOrList<ServiceDescriptor>
     {
-        OneOrList<ServiceDescriptor> _oneOrList;
-
       public:
-        explicit ServiceDescriptorList(ServiceDescriptor &&descriptor);
+        using OneOrList::OneOrList;
 
         ServiceDescriptorList(const ServiceDescriptorList &) = delete;
         ServiceDescriptorList(ServiceDescriptorList &&) = default;
@@ -22,21 +20,7 @@ namespace sb::di::details
         ServiceDescriptorList &operator=(const ServiceDescriptorList &) = delete;
         ServiceDescriptorList &operator=(ServiceDescriptorList &&) = default;
 
-        OneOrList<ServiceDescriptor> &getInnerList();
-        [[nodiscard]] const OneOrList<ServiceDescriptor> &getInnerList() const;
-
         void add(ServiceDescriptor &&descriptor);
-
-        [[nodiscard]] auto begin() const { return _oneOrList.getAsList().begin(); }
-        [[nodiscard]] auto end() const { return _oneOrList.getAsList().end(); }
-
-        [[nodiscard]] const ServiceDescriptor &first() const;
-
-        [[nodiscard]] const ServiceDescriptor &last() const;
-
-        [[nodiscard]] bool empty() const;
-
-        [[nodiscard]] std::size_t size() const;
 
         [[nodiscard]] ServiceLifeTime getLifeTime() const;
 
@@ -45,8 +29,6 @@ namespace sb::di::details
         [[nodiscard]] const std::string *getServiceKey() const;
 
         [[nodiscard]] bool isAlias() const;
-
-        void seal();
 
       private:
         void checkBaseType(const ServiceDescriptor &descriptor) const;

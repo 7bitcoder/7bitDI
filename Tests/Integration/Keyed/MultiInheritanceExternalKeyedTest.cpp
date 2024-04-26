@@ -2,7 +2,7 @@
 #include <memory>
 
 #include "../../Helpers/Classes/MultiInherit.hpp"
-#include "SevenBit/DI/ServiceCollection.hpp"
+#include <SevenBit/DI/ServiceCollection.hpp>
 
 class MultiInheritanceExternalKeyedTest : public testing::Test
 {

@@ -2,9 +2,9 @@
 
 #include "../../Helpers/Classes/Basic.hpp"
 #include "../../Helpers/Classes/Inherit.hpp"
-#include "SevenBit/DI/Details/Utils/RequireDescriptor.hpp"
-#include "SevenBit/DI/Exceptions.hpp"
-#include "SevenBit/DI/ServiceDescriber.hpp"
+#include <SevenBit/DI/Details/Utils/RequireDescriptor.hpp>
+#include <SevenBit/DI/Exceptions.hpp>
+#include <SevenBit/DI/ServiceDescriber.hpp>
 
 class RequireDescriptorTest : public testing::Test
 {

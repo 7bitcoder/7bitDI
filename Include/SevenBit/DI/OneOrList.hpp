@@ -10,12 +10,18 @@
 
 namespace sb::di
 {
+
     template <class T> class OneOrList
     {
-        std::variant<T, std::vector<T>> _variant{};
+        struct Uninitialized
+        {
+        };
+
+        std::variant<Uninitialized, T, std::vector<T>> _variant{};
 
       public:
-        explicit OneOrList(const std::size_t size) : _variant(std::vector<T>{}) { reserve(size); }
+        OneOrList() = default;
+        explicit OneOrList(const std::size_t size) { reserve(size); }
         explicit OneOrList(T &&mainElement) : _variant(std::move(mainElement)) {}
 
         OneOrList(const OneOrList &) = delete;
@@ -24,13 +30,12 @@ namespace sb::di
         OneOrList &operator=(const OneOrList &) = delete;
         OneOrList &operator=(OneOrList &&other) noexcept = default;
 
+        [[nodiscard]] bool isUninitialized() const { return std::holds_alternative<Uninitialized>(_variant); }
+        [[nodiscard]] bool isSingle() const { return std::holds_alternative<T>(_variant); }
         [[nodiscard]] bool isList() const { return std::holds_alternative<std::vector<T>>(_variant); }
 
         std::vector<T> &getAsList() { return std::get<std::vector<T>>(_variant); }
         const std::vector<T> &getAsList() const { return std::get<std::vector<T>>(_variant); }
-
-        std::variant<T, std::vector<T>> &getVariant() { return _variant; }
-        const std::variant<T, std::vector<T>> &getVariant() const { return _variant; }
 
         T &getAsSingle() { return std::get<T>(_variant); }
         const T &getAsSingle() const { return std::get<T>(_variant); }
@@ -41,10 +46,41 @@ namespace sb::di
         T *tryGetAsSingle() { return std::get_if<T>(&_variant); }
         const T *tryGetAsSingle() const { return std::get_if<T>(&_variant); }
 
+        explicit operator bool() const { return !isUninitialized(); }
+
         void add(T &&element)
         {
-            tryConvertToList();
-            getAsList().emplace_back(std::move(element));
+            if (isUninitialized())
+            {
+                _variant = std::move(element);
+            }
+            else if (auto list = tryGetAsList())
+            {
+                list->emplace_back(std::move(element));
+            }
+            else
+            {
+                tryConvertToList();
+                getAsList().emplace_back(std::move(element));
+            }
+        }
+
+        void addList(OneOrList &&other)
+        {
+            if (auto list = other.tryGetAsList())
+            {
+                tryConvertToList();
+                auto &thisList = getAsList();
+                thisList.reserve(thisList.size() + list->size());
+                for (auto &element : *list)
+                {
+                    thisList.emplace_back(std::move(element));
+                }
+            }
+            else if (auto single = other.tryGetAsSingle())
+            {
+                add(std::move(*single));
+            }
         }
 
         T &first()
@@ -72,9 +108,20 @@ namespace sb::di
         T &operator[](std::size_t index)
         {
             auto single = tryGetAsSingle();
-            return single ? *single : getAsList().at(index);
+            return single ? *single : getAsList()[index];
         }
         const T &operator[](std::size_t index) const
+        {
+            auto single = tryGetAsSingle();
+            return single ? *single : getAsList()[index];
+        }
+
+        T &at(std::size_t index)
+        {
+            auto single = tryGetAsSingle();
+            return single ? *single : getAsList().at(index);
+        }
+        const T &at(std::size_t index) const
         {
             auto single = tryGetAsSingle();
             return single ? *single : getAsList().at(index);
@@ -82,16 +129,23 @@ namespace sb::di
 
         [[nodiscard]] std::size_t size() const
         {
+            if (isSingle())
+            {
+                return 1;
+            }
             auto list = tryGetAsList();
-            return list ? list->size() : 1;
+            return list ? list->size() : 0;
         }
 
         [[nodiscard]] bool empty() const { return !size(); }
 
         void reserve(std::size_t newCapacity)
         {
-            tryConvertToList();
-            getAsList().reserve(newCapacity);
+            if (newCapacity > 1)
+            {
+                tryConvertToList();
+                getAsList().reserve(newCapacity);
+            }
         }
 
         void shrink()
@@ -102,31 +156,47 @@ namespace sb::di
             }
         }
 
+        void clear()
+        {
+            if (auto list = tryGetAsList())
+            {
+                list->clear();
+            }
+            else
+            {
+                _variant = Uninitialized{};
+            }
+        }
+
         template <class TFunc> void forEach(TFunc fcn)
         {
-            if (auto instance = tryGetAsSingle())
+            if (auto single = tryGetAsSingle())
             {
-                callFcn(fcn, *instance, 0);
-                return;
+                callFcn(fcn, *single, 0);
             }
-            std::size_t index = 0;
-            for (auto &instance : getAsList())
+            else if (auto list = tryGetAsList())
             {
-                callFcn(fcn, instance, index++);
+                std::size_t index = 0;
+                for (auto &instance : *list)
+                {
+                    callFcn(fcn, instance, index++);
+                }
             }
         }
 
         template <class TFunc> void forEach(TFunc fcn) const
         {
-            if (const auto instance = tryGetAsSingle())
+            if (const auto single = tryGetAsSingle())
             {
-                callFcn(fcn, *instance, 0);
-                return;
+                callFcn(fcn, *single, 0);
             }
-            std::size_t index = 0;
-            for (const auto &instance : getAsList())
+            else if (auto list = tryGetAsList())
             {
-                callFcn(fcn, instance, index++);
+                std::size_t index = 0;
+                for (auto &instance : *list)
+                {
+                    callFcn(fcn, instance, index++);
+                }
             }
         }
 
@@ -149,11 +219,18 @@ namespace sb::di
       private:
         void tryConvertToList()
         {
-            if (auto single = tryGetAsSingle())
+            if (!isList())
             {
-                std::vector<T> vec;
-                vec.emplace_back(std::move(*single));
-                _variant = std::move(vec);
+                if (auto single = tryGetAsSingle())
+                {
+                    std::vector<T> vec;
+                    vec.emplace_back(std::move(*single));
+                    _variant = std::move(vec);
+                }
+                else
+                {
+                    _variant = std::vector<T>{};
+                }
             }
         }
 

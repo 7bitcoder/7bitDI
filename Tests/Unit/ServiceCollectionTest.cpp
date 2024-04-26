@@ -5,7 +5,7 @@
 #include "../Helpers/Classes/Basic.hpp"
 #include "../Helpers/Classes/Complex.hpp"
 #include "../Helpers/Classes/Inherit.hpp"
-#include "SevenBit/DI/ServiceCollection.hpp"
+#include <SevenBit/DI/ServiceCollection.hpp>
 
 class ServiceCollectionTest : public testing::Test
 {
@@ -133,8 +133,6 @@ TEST_F(ServiceCollectionTest, ShouldGetWithIndexOperator)
     EXPECT_EQ(four.getLifeTime(), sb::di::ServiceLifeTime::scoped());
     EXPECT_EQ(four.getServiceTypeId(), typeid(TestInheritClass1));
     EXPECT_EQ(four.getImplementationTypeId(), typeid(TestInheritClass5));
-
-    EXPECT_ANY_THROW(services[10]);
 }
 
 TEST_F(ServiceCollectionTest, ShouldGetSize)

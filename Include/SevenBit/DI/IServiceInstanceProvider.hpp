@@ -98,14 +98,14 @@ namespace sb::di
          * @brief Creates service instances
          * @details If service was not registered or was registered as scoped/singleton, method returns null option
          */
-        virtual std::optional<OneOrList<ServiceInstance>> tryCreateInstances(TypeId serviceTypeId) = 0;
+        virtual OneOrList<ServiceInstance> tryCreateInstances(TypeId serviceTypeId) = 0;
 
         /**
          * @brief Creates service instances
          * @details If service was not registered or was registered as scoped/singleton, method returns null option
          */
-        virtual std::optional<OneOrList<ServiceInstance>> tryCreateKeyedInstances(TypeId serviceTypeId,
-                                                                                  std::string_view serviceKey) = 0;
+        virtual OneOrList<ServiceInstance> tryCreateKeyedInstances(TypeId serviceTypeId,
+                                                                   std::string_view serviceKey) = 0;
 
         /**
          * @brief Creates service instance in place, might throw exception

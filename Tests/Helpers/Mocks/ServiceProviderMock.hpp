@@ -1,11 +1,11 @@
 #pragma once
 
 #include "ServiceInstanceProviderMock.hpp"
-#include "SevenBit/DI/ServiceProvider.hpp"
+#include <SevenBit/DI/ServiceProvider.hpp>
 
-struct ServiceProviderMock : public sb::di::ServiceProvider
+struct ServiceProviderMock : sb::di::ServiceProvider
 {
-    ServiceProviderMock() : sb::di::ServiceProvider(prepare()) {}
+    ServiceProviderMock() : ServiceProvider(prepare()) {}
 
     [[nodiscard]] static sb::di::IServiceInstanceProvider::Ptr prepare()
     {

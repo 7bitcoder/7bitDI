@@ -8,8 +8,8 @@
 #include "SevenBit/DI/Details/Containers/ServiceDescriptorList.hpp"
 #include "SevenBit/DI/Details/Containers/ServiceInstancesMap.hpp"
 #include "SevenBit/DI/Details/Core/IServiceInstanceProviderRoot.hpp"
-#include "SevenBit/DI/Details/Core/ServiceInstanceCreator.hpp"
-#include "SevenBit/DI/Details/Core/ServiceInstancesResolver.hpp"
+#include "SevenBit/DI/Details/Core/ServiceAliasesCreator.hpp"
+#include "SevenBit/DI/Details/Core/ServiceInstancesCreator.hpp"
 #include "SevenBit/DI/IServiceInstanceProvider.hpp"
 #include "SevenBit/DI/ServiceProviderOptions.hpp"
 
@@ -18,7 +18,8 @@ namespace sb::di::details
     class EXPORT ServiceInstanceProvider : public IServiceInstanceProvider
     {
         ServiceProviderOptions _options;
-        ServiceInstanceCreator _instanceCreator;
+        ServiceInstancesCreator _instancesCreator;
+        ServiceAliasesCreator _aliasesCreator;
         IServiceInstanceProviderRoot &_root;
         ServiceInstancesMap _scoped;
 
@@ -59,7 +60,7 @@ namespace sb::di::details
         {
             return tryCreateInstance(ServiceId{serviceTypeId});
         }
-        std::optional<OneOrList<ServiceInstance>> tryCreateInstances(const TypeId serviceTypeId) override
+        OneOrList<ServiceInstance> tryCreateInstances(const TypeId serviceTypeId) override
         {
             return tryCreateInstances(ServiceId{serviceTypeId});
         }
@@ -96,8 +97,8 @@ namespace sb::di::details
         {
             return tryCreateInstance(ServiceId{serviceTypeId, serviceKey});
         }
-        std::optional<OneOrList<ServiceInstance>> tryCreateKeyedInstances(const TypeId serviceTypeId,
-                                                                          const std::string_view serviceKey) override
+        OneOrList<ServiceInstance> tryCreateKeyedInstances(const TypeId serviceTypeId,
+                                                           const std::string_view serviceKey) override
         {
             return tryCreateInstances(ServiceId{serviceTypeId, serviceKey});
         }
@@ -120,31 +121,30 @@ namespace sb::di::details
 
         ServiceInstance createInstance(const ServiceId &id);
         ServiceInstance tryCreateInstance(const ServiceId &id);
-        std::optional<OneOrList<ServiceInstance>> tryCreateInstances(const ServiceId &id);
+        OneOrList<ServiceInstance> tryCreateInstances(const ServiceId &id);
 
         ServiceInstance createInstanceInPlace(const ServiceId &id);
         ServiceInstance tryCreateInstanceInPlace(const ServiceId &id);
 
         void clear() { _scoped.clear(); }
 
-        ServiceInstanceList *findRegisteredInstances(const ServiceId &id);
+        ServiceInstanceList *findInstances(const ServiceId &id);
 
-        [[nodiscard]] const ServiceDescriptorList *findDescriptors(const ServiceId &id, bool transient) const;
+        [[nodiscard]] const ServiceDescriptorList *findDescriptors(const ServiceId &id) const;
+        [[nodiscard]] const ServiceDescriptorList *findTransientDescriptors(const ServiceId &id) const;
 
-        ServiceInstanceList *tryRegisterAndGet(const ServiceId &id, const ServiceDescriptorList &descriptors,
-                                               std::optional<ServiceInstanceList> &&instances);
+        [[nodiscard]] ServiceLifeTime getLifeTime(const ServiceDescriptor &descriptor) const;
+        ServiceInstancesMap &getInstancesMap(ServiceLifeTime lifetime);
 
-        std::optional<ServiceInstanceList> tryCreateNonTransient(const ServiceDescriptorList &descriptors);
-        std::optional<ServiceInstanceList> tryCreateAllNonTransient(const ServiceDescriptorList &descriptors);
-        ServiceInstanceList *createRestNonTransientAndGet(const ServiceDescriptorList &descriptors,
-                                                          ServiceInstanceList &instances);
+        ServiceInstance tryCreateInstance(const ServiceDescriptor &descriptor);
+        ServiceInstanceList tryCreateInstances(const ServiceDescriptorList &descriptors, std::size_t skipLast = 0);
 
-        ServiceInstance tryCreateTransient(const ServiceDescriptorList &descriptors);
-        std::optional<OneOrList<ServiceInstance>> tryCreateAllTransient(const ServiceDescriptorList &descriptors);
+        ServiceInstance tryCreateTransientInstance(const ServiceDescriptor &descriptor);
+        ServiceInstanceList tryCreateTransientInstances(const ServiceDescriptorList &descriptors);
 
-        ServiceInstancesResolver makeResolver(const ServiceDescriptorList &descriptors);
-
-        ServiceInstanceCreator &getInstanceCreator() { return _instanceCreator; }
+        ServiceInstancesCreator &selectCreator(const ServiceDescriptor &descriptor);
+        ServiceAliasesCreator &getAliasesCreator() { return _aliasesCreator; }
+        ServiceInstancesCreator &getCreator() { return _instancesCreator; }
     };
 } // namespace sb::di::details
 

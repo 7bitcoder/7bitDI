@@ -31,11 +31,11 @@ namespace sb::di::details
 
         void init(ServiceProvider &serviceProvider) override;
 
-        [[nodiscard]] const ServiceDescriptorsMap &getDescriptorsMap() const override;
+        [[nodiscard]] const ServiceDescriptorsMap &getDescriptorsMap() const override { return _descriptorsMap; }
 
-        ServiceInstancesMap &getSingletons() override;
+        ServiceInstancesMap &getSingletons() override { return _singletons; }
 
-        ServiceInstanceCreator &getRootInstanceCreator() override;
+        ServiceInstancesCreator &getRootCreator() override { return getCreator(); }
 
       private:
         void prebuildSingletons();

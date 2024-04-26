@@ -6,7 +6,7 @@ sb::di::details - Core
    :titlesonly:
 
    core/iserviceinstanceproviderroot.rst
-   core/serviceinstancecreator.rst
+   core/servicealiasescreator.rst
    core/serviceinstanceprovider.rst
    core/serviceinstanceproviderroot.rst
-   core/serviceinstancesresolver.rst
+   core/serviceinstancescreator.rst
