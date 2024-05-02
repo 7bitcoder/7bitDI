@@ -33,5 +33,7 @@ namespace sb::di
          * @details If set to true provider will search for service in singleton container first then in scoped
          */
         bool searchInSigletonsFirst = true;
+
+        bool threadSafe = false;
     };
 } // namespace sb::di

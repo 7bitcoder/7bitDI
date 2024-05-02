@@ -11,7 +11,8 @@ namespace sb::di
 {
     INLINE ServiceProvider ServiceCollection::buildServiceProvider(ServiceProviderOptions options)
     {
-        return ServiceProvider{std::make_unique<details::ServiceInstanceProviderRoot>(begin(), end(), options)};
+        return ServiceProvider{std::make_unique<details::ServiceInstanceProviderRoot>(begin(), end(), options),
+                               options.threadSafe};
     }
 
     INLINE ServiceProvider::Ptr ServiceCollection::buildServiceProviderAsPtr(ServiceProviderOptions options)

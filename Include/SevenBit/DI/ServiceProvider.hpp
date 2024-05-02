@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 #include <type_traits>
 #include <vector>
 
@@ -15,6 +16,7 @@ namespace sb::di
     class ServiceProvider
     {
         IServiceInstanceProvider::Ptr _instanceProvider;
+        std::unique_ptr<std::recursive_mutex> _mutex;
 
       public:
         using Ptr = std::unique_ptr<ServiceProvider>;
@@ -22,9 +24,13 @@ namespace sb::di
         /**
          * @brief Constructs service provider with specified instance provider
          */
-        explicit ServiceProvider(IServiceInstanceProvider::Ptr instanceProvider)
+        explicit ServiceProvider(IServiceInstanceProvider::Ptr instanceProvider, const bool threadSafe = false)
             : _instanceProvider(std::move(instanceProvider))
         {
+            if (threadSafe)
+            {
+                _mutex = std::make_unique<std::recursive_mutex>();
+            }
             details::Require::notNull(_instanceProvider);
             getInstanceProvider().init(*this);
         }
@@ -96,6 +102,7 @@ namespace sb::di
          */
         template <class TService> TService *tryGetService()
         {
+            auto _ = tryUniqueLock();
             if (const auto instancePtr = getInstanceProvider().tryGetInstance(typeid(TService));
                 instancePtr && *instancePtr)
             {
@@ -118,6 +125,7 @@ namespace sb::di
          */
         template <class TService> TService *tryGetKeyedService(const std::string_view serviceKey)
         {
+            auto _ = tryUniqueLock();
             if (const auto instancePtr = getInstanceProvider().tryGetKeyedInstance(typeid(TService), serviceKey);
                 instancePtr && *instancePtr)
             {
@@ -140,6 +148,7 @@ namespace sb::di
          */
         template <class TService> TService &getService()
         {
+            auto _ = tryUniqueLock();
             auto &instance = getInstanceProvider().getInstance(typeid(TService));
             details::RequireInstance::valid(instance);
             return *instance.getAs<TService>();
@@ -160,6 +169,7 @@ namespace sb::di
          */
         template <class TService> TService &getKeyedService(const std::string_view serviceKey)
         {
+            auto _ = tryUniqueLock();
             auto &instance = getInstanceProvider().getKeyedInstance(typeid(TService), serviceKey);
             details::RequireInstance::valid(instance);
             return *instance.getAs<TService>();
@@ -181,6 +191,7 @@ namespace sb::di
          */
         template <class TService> std::vector<TService *> getServices()
         {
+            auto _ = tryUniqueLock();
             if (auto instancesPtr = getInstanceProvider().tryGetInstances(typeid(TService)))
             {
                 return instancesPtr->map([](const ServiceInstance &instance) {
@@ -208,6 +219,7 @@ namespace sb::di
          */
         template <class TService> std::vector<TService *> getKeyedServices(const std::string_view serviceKey)
         {
+            auto _ = tryUniqueLock();
             if (auto instancesPtr = getInstanceProvider().tryGetKeyedInstances(typeid(TService), serviceKey))
             {
                 return instancesPtr->map([](const ServiceInstance &instance) {
@@ -231,6 +243,7 @@ namespace sb::di
          */
         template <class TService> std::unique_ptr<TService> tryCreateService()
         {
+            auto _ = tryUniqueLock();
             if (auto instance = getInstanceProvider().tryCreateInstance(typeid(TService)))
             {
                 return instance.moveOutAsUniquePtr<TService>();
@@ -252,6 +265,7 @@ namespace sb::di
          */
         template <class TService> std::unique_ptr<TService> tryCreateKeyedService(const std::string_view serviceKey)
         {
+            auto _ = tryUniqueLock();
             if (auto instance = getInstanceProvider().tryCreateKeyedInstance(typeid(TService), serviceKey))
             {
                 return instance.moveOutAsUniquePtr<TService>();
@@ -273,6 +287,7 @@ namespace sb::di
          */
         template <class TService> std::unique_ptr<TService> createService()
         {
+            auto _ = tryUniqueLock();
             auto instance = getInstanceProvider().createInstance(typeid(TService));
             details::RequireInstance::valid(instance);
             return instance.moveOutAsUniquePtr<TService>();
@@ -293,6 +308,7 @@ namespace sb::di
          */
         template <class TService> std::unique_ptr<TService> createKeyedService(const std::string_view serviceKey)
         {
+            auto _ = tryUniqueLock();
             auto instance = getInstanceProvider().createKeyedInstance(typeid(TService), serviceKey);
             details::RequireInstance::valid(instance);
             return instance.moveOutAsUniquePtr<TService>();
@@ -312,6 +328,7 @@ namespace sb::di
          */
         template <class TService> TService createServiceInPlace()
         {
+            auto _ = tryUniqueLock();
             auto instance = getInstanceProvider().createInstanceInPlace(typeid(TService));
             details::RequireInstance::valid(instance);
             if constexpr (std::is_move_constructible_v<TService>)
@@ -339,6 +356,7 @@ namespace sb::di
          */
         template <class TService> TService createKeyedServiceInPlace(const std::string_view serviceKey)
         {
+            auto _ = tryUniqueLock();
             auto instance = getInstanceProvider().createKeyedInstanceInPlace(typeid(TService), serviceKey);
             details::RequireInstance::valid(instance);
             if constexpr (std::is_move_constructible_v<TService>)
@@ -367,6 +385,7 @@ namespace sb::di
          */
         template <class TService> std::vector<std::unique_ptr<TService>> createServices()
         {
+            auto _ = tryUniqueLock();
             auto instances = getInstanceProvider().tryCreateInstances(typeid(TService));
             return instances.map([&](ServiceInstance &instance) {
                 details::RequireInstance::valid(instance);
@@ -392,11 +411,18 @@ namespace sb::di
         template <class TService>
         std::vector<std::unique_ptr<TService>> createKeyedServices(const std::string_view serviceKey)
         {
+            auto _ = tryUniqueLock();
             auto instances = getInstanceProvider().tryCreateKeyedInstances(typeid(TService), serviceKey);
             return instances.map([&](ServiceInstance &instance) {
                 details::RequireInstance::valid(instance);
                 return instance.moveOutAsUniquePtr<TService>();
             });
+        }
+
+      private:
+        std::optional<std::unique_lock<std::recursive_mutex>> tryUniqueLock()
+        {
+            return _mutex ? std::make_optional(std::unique_lock{*_mutex}) : std::nullopt;
         }
     };
 } // namespace sb::di

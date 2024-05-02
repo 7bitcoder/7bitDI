@@ -27,7 +27,7 @@ namespace sb::di::details
 
     INLINE IServiceInstanceProvider::Ptr ServiceInstanceProvider::createScope() const
     {
-        return std::make_unique<ServiceInstanceProvider>(_root, _options);
+        return std::make_unique<ServiceInstanceProvider>(_root, getOptions());
     }
 
     INLINE const ServiceInstance &ServiceInstanceProvider::getInstance(const ServiceId &id)
