@@ -16,7 +16,6 @@ namespace sb::di
     class ServiceProvider
     {
         IServiceInstanceProvider::Ptr _instanceProvider;
-        std::unique_ptr<std::recursive_mutex> _mutex;
 
       public:
         using Ptr = std::unique_ptr<ServiceProvider>;
@@ -24,13 +23,9 @@ namespace sb::di
         /**
          * @brief Constructs service provider with specified instance provider
          */
-        explicit ServiceProvider(IServiceInstanceProvider::Ptr instanceProvider, const bool threadSafe = false)
+        explicit ServiceProvider(IServiceInstanceProvider::Ptr instanceProvider)
             : _instanceProvider(std::move(instanceProvider))
         {
-            if (threadSafe)
-            {
-                _mutex = std::make_unique<std::recursive_mutex>();
-            }
             details::Require::notNull(_instanceProvider);
             getInstanceProvider().init(*this);
         }
@@ -422,7 +417,11 @@ namespace sb::di
       private:
         std::optional<std::unique_lock<std::recursive_mutex>> tryUniqueLock()
         {
-            return _mutex ? std::make_optional(std::unique_lock{*_mutex}) : std::nullopt;
+            if (const auto mutex = getInstanceProvider().tryGetSyncMutex())
+            {
+                return std::unique_lock{*mutex};
+            }
+            return std::nullopt;
         }
     };
 } // namespace sb::di

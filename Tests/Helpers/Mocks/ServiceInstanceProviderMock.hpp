@@ -7,6 +7,7 @@
 struct ServiceInstanceProviderMock : public sb::di::IServiceInstanceProvider
 {
     MOCK_METHOD((std::unique_ptr<sb::di::IServiceInstanceProvider>), createScope, (), (const override));
+    MOCK_METHOD((std::recursive_mutex *), tryGetSyncMutex, (), (override));
     MOCK_METHOD((void), init, (sb::di::ServiceProvider &), (override));
     MOCK_METHOD((const sb::di::ServiceInstance *), tryGetInstance, (sb::di::TypeId serviceTypeId), (override));
     MOCK_METHOD((const sb::di::ServiceInstance &), getInstance, (sb::di::TypeId serviceTypeId), (override));

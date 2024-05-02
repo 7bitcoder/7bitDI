@@ -39,6 +39,8 @@ namespace sb::di::details
 
         [[nodiscard]] IServiceInstanceProvider::Ptr createScope() const override;
 
+        std::recursive_mutex *tryGetSyncMutex() override { return _root.tryGetSyncMutex(); }
+
         const ServiceInstance &getInstance(const TypeId serviceTypeId) override
         {
             return getInstance(ServiceId{serviceTypeId});
