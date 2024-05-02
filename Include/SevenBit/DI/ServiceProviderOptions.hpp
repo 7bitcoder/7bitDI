@@ -34,6 +34,10 @@ namespace sb::di
          */
         bool searchInSigletonsFirst = true;
 
+        /**
+         * @brief Enables thread safe mode
+         * @details Provider will synchronize service accesses between threads
+         */
         bool threadSafe = false;
     };
 } // namespace sb::di

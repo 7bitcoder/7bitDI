@@ -113,9 +113,9 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
+         * auto provider = ServiceCollection{}.addKeyedScoped<TestClass>("key").buildServiceProvider();
          *
-         * TestClass* service = provider.tryGetService<TestClass>();
+         * TestClass* service = provider.tryGetKeyedService<TestClass>("key");
          * @endcode
          */
         template <class TService> TService *tryGetKeyedService(const std::string_view serviceKey)
@@ -157,9 +157,9 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * auto provider = ServiceCollection{}.addScoped<TestClass>().buildServiceProvider();
+         * auto provider = ServiceCollection{}.addKeyedScoped<TestClass>("key").buildServiceProvider();
          *
-         * TestClass& service = provider.getService<TestClass>();
+         * TestClass& service = provider.getKeyedService<TestClass>("key");
          * @endcode
          */
         template <class TService> TService &getKeyedService(const std::string_view serviceKey)
@@ -205,11 +205,11 @@ namespace sb::di
          * Example:
          * @code{.cpp}
          * auto provider = ServiceCollection{}
-         *              .addScoped<ITestClass, TestClass1>()
-         *              .addScoped<ITestClass, TestClass2>()
+         *              .addKeyedScoped<ITestClass, TestClass1>("key")
+         *              .addKeyedScoped<ITestClass, TestClass2>("key")
          *              .buildServiceProvider();
          *
-         * std::vector<ITestClass *> services = provider.getServices<ITestClass>();
+         * std::vector<ITestClass *> services = provider.getKeyedServices<ITestClass>("key");
          * @endcode
          */
         template <class TService> std::vector<TService *> getKeyedServices(const std::string_view serviceKey)
@@ -253,9 +253,9 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
+         * auto provider = ServiceCollection{}.addKeyedTransient<TestClass>("key").buildServiceProvider();
          *
-         * std::unique_ptr<TestClass> service = provider.tryCreateService<TestClass>();
+         * std::unique_ptr<TestClass> service = provider.tryCreateKeyedService<TestClass>("key");
          * @endcode
          */
         template <class TService> std::unique_ptr<TService> tryCreateKeyedService(const std::string_view serviceKey)
@@ -296,9 +296,9 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
+         * auto provider = ServiceCollection{}.addKeyedTransient<TestClass>("key").buildServiceProvider();
          *
-         * std::unique_ptr<TestClass> service = provider.createService<TestClass>();
+         * std::unique_ptr<TestClass> service = provider.createKeyedService<TestClass>("key");
          * @endcode
          */
         template <class TService> std::unique_ptr<TService> createKeyedService(const std::string_view serviceKey)
@@ -344,9 +344,9 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * auto provider = ServiceCollection{}.addTransient<TestClass>().buildServiceProvider();
+         * auto provider = ServiceCollection{}.addKeyedTransient<TestClass>("key").buildServiceProvider();
          *
-         * TestClass service = provider.createServiceInPlace<TestClass>();
+         * TestClass service = provider.createKeyedServiceInPlace<TestClass>("key");
          * @endcode
          */
         template <class TService> TService createKeyedServiceInPlace(const std::string_view serviceKey)
@@ -396,11 +396,11 @@ namespace sb::di
          * Example:
          * @code{.cpp}
          * auto provider = ServiceCollection{}
-         *              .addTransient<ITestClass, TestClass1>()
-         *              .addTransient<ITestClass, TestClass2>()
+         *              .addKeyedTransient<ITestClass, TestClass1>("key")
+         *              .addKeyedTransient<ITestClass, TestClass2>("key")
          *              .buildServiceProvider();
          *
-         * std::vector<std::unique_ptr<ITestClass>> services = provider.createServices<ITestClass>();
+         * std::vector<std::unique_ptr<ITestClass>> services = provider.createKeyedServices<ITestClass>("key");
          * @endcode
          */
         template <class TService>
@@ -417,11 +417,8 @@ namespace sb::di
       private:
         std::optional<std::unique_lock<std::recursive_mutex>> tryUniqueLock()
         {
-            if (const auto mutex = getInstanceProvider().tryGetSyncMutex())
-            {
-                return std::unique_lock{*mutex};
-            }
-            return std::nullopt;
+            const auto mutexPtr = getInstanceProvider().tryGetSyncMutex();
+            return mutexPtr ? std::make_optional(std::unique_lock{*mutexPtr}) : std::nullopt;
         }
     };
 } // namespace sb::di

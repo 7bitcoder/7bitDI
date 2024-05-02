@@ -30,6 +30,11 @@ namespace sb::di
          */
         [[nodiscard]] virtual Ptr createScope() const = 0;
 
+        /**
+         * @brief Get sync mutex
+         * @details Mutex can be used to synchronize service accesses between threads, can be null if synchronization is
+         * not needed
+         */
         virtual std::recursive_mutex *tryGetSyncMutex() = 0;
 
         /**
