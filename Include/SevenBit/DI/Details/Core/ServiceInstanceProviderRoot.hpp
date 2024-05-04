@@ -27,11 +27,6 @@ namespace sb::di::details
               _descriptorsMap(begin, end, options.checkServiceGlobalUniqueness),
               _singletons(options.strongDestructionOrder)
         {
-            if (options.threadSafe)
-            {
-                _mutex = std::make_unique<std::recursive_mutex>();
-            }
-            _descriptorsMap.seal();
         }
 
         void init(ServiceProvider &serviceProvider) override;

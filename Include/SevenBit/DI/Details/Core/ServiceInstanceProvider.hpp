@@ -18,9 +18,9 @@ namespace sb::di::details
     class EXPORT ServiceInstanceProvider : public IServiceInstanceProvider
     {
         ServiceProviderOptions _options;
+        IServiceInstanceProviderRoot &_root;
         ServiceInstancesCreator _instancesCreator;
         ServiceAliasesCreator _aliasesCreator;
-        IServiceInstanceProviderRoot &_root;
         ServiceInstancesMap _scoped;
 
       public:

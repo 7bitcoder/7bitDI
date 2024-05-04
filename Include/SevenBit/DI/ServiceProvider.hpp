@@ -32,11 +32,11 @@ namespace sb::di
             _syncMutex = _instanceProvider->tryGetSyncMutex();
         }
 
-        ServiceProvider(const ServiceProvider &parent) = delete;
+        ServiceProvider(const ServiceProvider &) = delete;
         ServiceProvider(ServiceProvider &&) = delete;
 
-        ServiceProvider &operator=(const ServiceProvider &parent) = delete;
-        ServiceProvider &operator=(ServiceProvider &&parent) = delete;
+        ServiceProvider &operator=(const ServiceProvider &) = delete;
+        ServiceProvider &operator=(ServiceProvider &&) = delete;
 
         /**
          * @brief Returns inner service instance provider

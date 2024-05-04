@@ -10,12 +10,16 @@ namespace sb::di::details
         : ServiceInstanceProvider(*this, options), _descriptorsMap(options.checkServiceGlobalUniqueness),
           _singletons(options.strongDestructionOrder)
     {
-        _descriptorsMap.seal();
     }
 
     INLINE void ServiceInstanceProviderRoot::init(ServiceProvider &serviceProvider)
     {
         ServiceInstanceProvider::init(serviceProvider);
+        _descriptorsMap.seal();
+        if (getOptions().threadSafe)
+        {
+            _mutex = std::make_unique<std::recursive_mutex>();
+        }
         if (getOptions().prebuildSingletons)
         {
             prebuildSingletons();
