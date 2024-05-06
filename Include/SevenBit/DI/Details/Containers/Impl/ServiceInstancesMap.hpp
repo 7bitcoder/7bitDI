@@ -42,9 +42,9 @@ namespace sb::di::details
         {
             for (auto it = _constructionOrder.rbegin(); it != _constructionOrder.rend(); ++it)
             {
-                if (const auto list = findInstances(*it))
+                if (const auto listPtr = findInstances(*it))
                 {
-                    list->clear();
+                    listPtr->clear();
                 }
             }
         }

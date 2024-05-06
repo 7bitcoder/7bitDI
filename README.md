@@ -17,7 +17,7 @@
   </p>
 
   <h4>
-    <a href="https://7bitDI.readthedocs.io/en/latest/index.html">Documentation & Examples</a>
+    <a href="https://7bitDI.readthedocs.io">Documentation & Examples</a>
   </h4>
 </div>
 
@@ -51,6 +51,10 @@ The library is officially supported on the following platforms:
 
 If you notice any problems/bugs, please file an issue on the repository GitHub Issue Tracker. Pull requests containing
 fixes are welcome!
+
+## Documentation
+
+https://7bitDI.readthedocs.io
 
 ## Installation
 
@@ -230,6 +234,6 @@ actionA, actionB executed.
 ```
 
 More examples and tutorials are available on the
-[Documentation & Examples](https://7bitDI.readthedocs.io/en/latest/index.html) page
+[Documentation & Examples](https://7bitDI.readthedocs.io) page
 
 @7bitcoder Sylwester Dawida 2023
