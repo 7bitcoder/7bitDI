@@ -26,11 +26,11 @@
 ## Main Features
 
 - Implementation separation
-- Multiple implementations support
+- Multiple implementations
 - Keyed services
 - Service aliases
-- Thread safe support
-- Strong destruction order support
+- Thread safe
+- Strong destruction order
 
 ## Supported Platforms
 
