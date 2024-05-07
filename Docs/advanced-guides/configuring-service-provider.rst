@@ -11,7 +11,7 @@ read comment documentation for details:
    :language: C++
 
 Pass the custom options to the ServiceCollection buildServiceProvider method to change produced
-service provider behaviour
+service provider behavior
 
 .. literalinclude:: ../../Examples/Guides/ConfiguredServiceProvider.cpp
    :caption: Examples/Guides/ConfiguredServiceProvider

@@ -1,6 +1,16 @@
 Getting Started
 ==========================
 
+Main Features
+--------------------
+
+* Implementation separation
+* Multiple implementations support
+* Keyed services
+* Service aliases
+* Thread safe support
+* Strong destruction order support
+
 Supported Platforms
 --------------------
 

@@ -1,10 +1,7 @@
 #include <gtest/gtest.h>
 #include <thread>
 
-#include "../Helpers/Classes/Basic.hpp"
-#include "../Helpers/Classes/CirularDependency.hpp"
 #include "../Helpers/Classes/Complex.hpp"
-#include <SevenBit/DI/Exceptions.hpp>
 #include <SevenBit/DI/ServiceCollection.hpp>
 
 class ThreadSafeTest : public testing::Test
@@ -67,8 +64,9 @@ TEST_F(ThreadSafeTest, ShouldGetSafeServices)
                         .addScoped<ITestComplexClass6, TestComplexClass6>()
                         .buildServiceProvider(options);
 
-    std::vector<std::thread> threads;
     constexpr size_t maxThreads = 50;
+    std::vector<std::thread> threads;
+    threads.reserve(maxThreads);
     for (size_t i = 0; i < maxThreads; ++i)
     {
         threads.emplace_back(getSafeServices, std::ref(provider));

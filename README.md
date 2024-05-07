@@ -23,13 +23,14 @@
 
 <br />
 
-## Built With
+## Main Features
 
-- [Google Test](https://github.com/google/googletest)
-- [Google Benchmark](https://github.com/google/benchmark)
-- [Sphinx](https://www.sphinx-doc.org/en/master/)
-- [Breathe](https://breathe.readthedocs.io/en/latest/)
-- [Quom](https://pypi.org/project/quom/)
+- Implementation separation
+- Multiple implementations support
+- Keyed services
+- Service aliases
+- Thread safe support
+- Strong destruction order support
 
 ## Supported Platforms
 
@@ -235,5 +236,13 @@ actionA, actionB executed.
 
 More examples and tutorials are available on the
 [Documentation & Examples](https://7bitDI.readthedocs.io) page
+
+## Built With
+
+- [Google Test](https://github.com/google/googletest)
+- [Google Benchmark](https://github.com/google/benchmark)
+- [Sphinx](https://www.sphinx-doc.org/en/master/)
+- [Breathe](https://breathe.readthedocs.io/en/latest/)
+- [Quom](https://pypi.org/project/quom/)
 
 @7bitcoder Sylwester Dawida 2023

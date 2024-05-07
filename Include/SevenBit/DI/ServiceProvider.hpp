@@ -23,6 +23,8 @@ namespace sb::di
 
         /**
          * @brief Constructs service provider with specified instance provider
+         * @details If service instance provider is nullptr, constructor throws exception
+         * @throws sb::di::NullPointerException
          */
         explicit ServiceProvider(IServiceInstanceProvider::Ptr instanceProvider)
             : _instanceProvider(std::move(instanceProvider))
@@ -40,15 +42,11 @@ namespace sb::di
 
         /**
          * @brief Returns inner service instance provider
-         * @details If service instance provider is nullptr, method throws exception
-         * @throws sb::di::NullPointerException
          */
         [[nodiscard]] const IServiceInstanceProvider &getInstanceProvider() const { return *_instanceProvider; }
 
         /**
          * @brief Returns inner service instance provider
-         * @details If service instance provider is nullptr, method throws exception
-         * @throws sb::di::NullPointerException
          */
         IServiceInstanceProvider &getInstanceProvider() { return *_instanceProvider; }
 

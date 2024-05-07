@@ -39,6 +39,7 @@ int main()
     options.strongDestructionOrder = true;
     options.prebuildSingletons = true;
     options.checkServiceGlobalUniqueness = false;
+    options.threadSafe = true;
 
     ServiceProvider provider = ServiceCollection{}
                                    .addSingleton<IService, Service>()
