@@ -18,9 +18,9 @@ namespace sb::di::details
     class EXPORT ServiceInstanceProvider : public IServiceInstanceProvider
     {
         ServiceProviderOptions _options;
+        IServiceInstanceProviderRoot &_root;
         ServiceInstancesCreator _instancesCreator;
         ServiceAliasesCreator _aliasesCreator;
-        IServiceInstanceProviderRoot &_root;
         ServiceInstancesMap _scoped;
 
       public:
@@ -38,6 +38,8 @@ namespace sb::di::details
         void init(ServiceProvider &serviceProvider) override;
 
         [[nodiscard]] IServiceInstanceProvider::Ptr createScope() const override;
+
+        std::recursive_mutex *tryGetSyncMutex() override { return _root.tryGetSyncMutex(); }
 
         const ServiceInstance &getInstance(const TypeId serviceTypeId) override
         {

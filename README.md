@@ -17,19 +17,20 @@
   </p>
 
   <h4>
-    <a href="https://7bitDI.readthedocs.io/en/latest/index.html">Documentation & Examples</a>
+    <a href="https://7bitDI.readthedocs.io">Documentation & Examples</a>
   </h4>
 </div>
 
 <br />
 
-## Built With
+## Main Features
 
-- [Google Test](https://github.com/google/googletest)
-- [Google Benchmark](https://github.com/google/benchmark)
-- [Sphinx](https://www.sphinx-doc.org/en/master/)
-- [Breathe](https://breathe.readthedocs.io/en/latest/)
-- [Quom](https://pypi.org/project/quom/)
+- Implementation separation
+- Multiple implementations
+- Keyed services
+- Service aliases
+- Thread safe
+- Strong destruction order
 
 ## Supported Platforms
 
@@ -52,11 +53,15 @@ The library is officially supported on the following platforms:
 If you notice any problems/bugs, please file an issue on the repository GitHub Issue Tracker. Pull requests containing
 fixes are welcome!
 
+## Documentation
+
+https://7bitDI.readthedocs.io
+
 ## Installation
 
 ### There are a few ways of installation:
 
-### 1. Using Cmake fetch content api - Recommended
+### 1. Using Cmake fetch content API - Recommended
 
 Update CMakeLists.txt file with the following code
 
@@ -65,7 +70,7 @@ include(FetchContent)
 FetchContent_Declare(
         7bitDI
         GIT_REPOSITORY https://github.com/7bitcoder/7bitDI.git
-        GIT_TAG v3.2.0
+        GIT_TAG v3.3.0
 )
 FetchContent_MakeAvailable(7bitDI)
 
@@ -78,7 +83,7 @@ Download and install A [Conan](https://conan.io/), and create conanfile.txt in t
 
 ```
 [requires]
-7bitdi/3.2.0
+7bitdi/3.3.0
 ```
 
 change the version to newer if available, then run the command:
@@ -230,6 +235,14 @@ actionA, actionB executed.
 ```
 
 More examples and tutorials are available on the
-[Documentation & Examples](https://7bitDI.readthedocs.io/en/latest/index.html) page
+[Documentation & Examples](https://7bitDI.readthedocs.io) page
+
+## Built With
+
+- [Google Test](https://github.com/google/googletest)
+- [Google Benchmark](https://github.com/google/benchmark)
+- [Sphinx](https://www.sphinx-doc.org/en/master/)
+- [Breathe](https://breathe.readthedocs.io/en/latest/)
+- [Quom](https://pypi.org/project/quom/)
 
 @7bitcoder Sylwester Dawida 2023

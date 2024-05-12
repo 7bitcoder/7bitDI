@@ -13,6 +13,7 @@ namespace sb::di::details
     {
         ServiceDescriptorsMap _descriptorsMap;
         ServiceInstancesMap _singletons;
+        std::unique_ptr<std::recursive_mutex> _mutex;
 
       public:
         using Ptr = std::unique_ptr<ServiceInstanceProviderRoot>;
@@ -26,7 +27,6 @@ namespace sb::di::details
               _descriptorsMap(begin, end, options.checkServiceGlobalUniqueness),
               _singletons(options.strongDestructionOrder)
         {
-            _descriptorsMap.seal();
         }
 
         void init(ServiceProvider &serviceProvider) override;
@@ -36,6 +36,8 @@ namespace sb::di::details
         ServiceInstancesMap &getSingletons() override { return _singletons; }
 
         ServiceInstancesCreator &getRootCreator() override { return getCreator(); }
+
+        std::recursive_mutex *tryGetSyncMutex() override { return _mutex.get(); }
 
       private:
         void prebuildSingletons();

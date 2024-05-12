@@ -476,8 +476,8 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.add<TestClass>(ServiceLifeTimes::Scoped, "key");
-         * ServiceCollection{}.add<BaseClass, ImplementationClass>(ServiceLifeTimes::Transient, "key");
+         * ServiceCollection{}.addKeyed<TestClass>(ServiceLifeTimes::Scoped, "key");
+         * ServiceCollection{}.addKeyed<BaseClass, ImplementationClass>(ServiceLifeTimes::Transient, "key");
          * @endcode
          */
         template <class TService, class TImplementation = TService>
@@ -515,8 +515,8 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addSingleton<TestClass>("key");
-         * ServiceCollection{}.addSingleton<BaseClass, ImplementationClass>("key");
+         * ServiceCollection{}.addKeyedSingleton<TestClass>("key");
+         * ServiceCollection{}.addKeyedSingleton<BaseClass, ImplementationClass>("key");
          * @endcode
          */
         template <class TService, class TImplementation = TService>
@@ -554,8 +554,8 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addScoped<TestClass>("key");
-         * ServiceCollection{}.addScoped<BaseClass, ImplementationClass>("key");
+         * ServiceCollection{}.addKeyedScoped<TestClass>("key");
+         * ServiceCollection{}.addKeyedScoped<BaseClass, ImplementationClass>("key");
          * @endcode
          */
         template <class TService, class TImplementation = TService>
@@ -593,8 +593,8 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addTransient<TestClass>("key");
-         * ServiceCollection{}.addTransient<BaseClass, ImplementationClass>("key");
+         * ServiceCollection{}.addKeyedTransient<TestClass>("key");
+         * ServiceCollection{}.addKeyedTransient<BaseClass, ImplementationClass>("key");
          * @endcode
          */
         template <class TService, class TImplementation = TService>
@@ -629,7 +629,7 @@ namespace sb::di
          * Example:
          * @code{.cpp}
          * TestClass test;
-         * ServiceCollection{}.addSingleton("key", &test);
+         * ServiceCollection{}.addKeyedSingleton("key", &test);
          * @endcode
          */
         template <class TService> ServiceCollection &addKeyedSingleton(std::string serviceKey, TService *service)
@@ -667,7 +667,7 @@ namespace sb::di
          * Example:
          * @code{.cpp}
          * ImplementationClass implementation;
-         * ServiceCollection{}.addSingleton<BaseClass>("key", &implementation);
+         * ServiceCollection{}.addKeyedSingleton<BaseClass>("key", &implementation);
          * @endcode
          */
         template <class TService, class TImplementation>
@@ -710,7 +710,7 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.add<BaseClass>(ServiceLifeTimes::Scoped, "key",
+         * ServiceCollection{}.addKeyed<BaseClass>(ServiceLifeTimes::Scoped, "key",
          *       []() { return std::make_unique<ImplementationClass>(); });
          * @endcode
          */
@@ -750,7 +750,8 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addSingleton<BaseClass>("key", []() { return std::make_unique<ImplementationClass>(); });
+         * ServiceCollection{}.addKeyedSingleton<BaseClass>("key", []() { return
+         * std::make_unique<ImplementationClass>(); });
          * @endcode
          */
         template <class TService, class FactoryFcn>
@@ -789,7 +790,8 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addScoped<BaseClass>("key", []() { return std::make_unique<ImplementationClass>(); });
+         * ServiceCollection{}.addKeyedScoped<BaseClass>("key", []() { return std::make_unique<ImplementationClass>();
+         * });
          * @endcode
          */
         template <class TService, class FactoryFcn>
@@ -828,7 +830,8 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addTransient<BaseClass>("key", []() { return std::make_unique<ImplementationClass>(); });
+         * ServiceCollection{}.addKeyedTransient<BaseClass>("key", []() { return
+         * std::make_unique<ImplementationClass>(); });
          * @endcode
          */
         template <class TService, class FactoryFcn>
@@ -867,7 +870,8 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.add(ServiceLifeTimes::Transient, "key", []() { return std::make_unique<TestClass>(); });
+         * ServiceCollection{}.addKeyed(ServiceLifeTimes::Transient, "key", []() { return std::make_unique<TestClass>();
+         * });
          * @endcode
          */
         template <class FactoryFcn>
@@ -904,7 +908,7 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addSingleton("key", []() { return std::make_unique<TestClass>(); });
+         * ServiceCollection{}.addKeyedSingleton("key", []() { return std::make_unique<TestClass>(); });
          * @endcode
          */
         template <class FactoryFcn> ServiceCollection &addKeyedSingleton(std::string serviceKey, FactoryFcn factory)
@@ -940,7 +944,7 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addScoped("key", []() { return std::make_unique<TestClass>(); });
+         * ServiceCollection{}.addKeyedScoped("key", []() { return std::make_unique<TestClass>(); });
          * @endcode
          */
         template <class FactoryFcn> ServiceCollection &addKeyedScoped(std::string serviceKey, FactoryFcn factory)
@@ -976,7 +980,7 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addTransient("key", []() { return std::make_unique<TestClass>(); });
+         * ServiceCollection{}.addKeyedTransient("key", []() { return std::make_unique<TestClass>(); });
          * @endcode
          */
         template <class FactoryFcn> ServiceCollection &addKeyedTransient(std::string serviceKey, FactoryFcn factory)
@@ -1026,7 +1030,7 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addAlias<AliasClass, ServiceClass>("aliasKey", "key");
+         * ServiceCollection{}.addKeyedAlias<AliasClass, ServiceClass>("aliasKey", "key");
          * @endcode
          */
         template <class TAlias, class TService>
@@ -1045,7 +1049,7 @@ namespace sb::di
          *
          * Example:
          * @code{.cpp}
-         * ServiceCollection{}.addAlias<AliasClass, ServiceClass>("aliasKey");
+         * ServiceCollection{}.addKeyedAlias<AliasClass, ServiceClass>("aliasKey");
          * @endcode
          */
         template <class TAlias, class TService> ServiceCollection &addKeyedAlias(std::string serviceAliasKey)

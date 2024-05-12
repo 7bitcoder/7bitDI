@@ -1,13 +1,13 @@
 Register Utility Class
 ========================================
 
-Library provides simple template RegisterService_ utility class.
-This base class can be used to automatically register class in service collection with use of specialised TRegisterer.
+The library provides a simple template RegisterService_ utility class.
+This base class can be used to automatically register class in service collection with the use of a specialized TRegisterer.
 There are already created aliases RegisterSingleton_, RegisterScoped_, RegisterTransient_ that are registering services
 in GlobalServices_ singleton.
 
 .. note::
-   Class should inherit Injected constructor with 'using Injected::Injected;' in public section
+   The class should inherit Injected constructor with 'using Injected::Injected;' in the public section
 
 .. _RegisterService: ../reference/di/utils/register.html
 .. _RegisterSingleton: ../reference/di/utils/register.html

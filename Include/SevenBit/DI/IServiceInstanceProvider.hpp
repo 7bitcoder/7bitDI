@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 #include <optional>
 #include <string_view>
 
@@ -28,6 +29,13 @@ namespace sb::di
          * @details Scoped service instance provider creates/holds its own scoped services
          */
         [[nodiscard]] virtual Ptr createScope() const = 0;
+
+        /**
+         * @brief Get sync mutex
+         * @details Mutex can be used to synchronize service accesses between threads, can be null if synchronization is
+         * not needed
+         */
+        virtual std::recursive_mutex *tryGetSyncMutex() = 0;
 
         /**
          * @brief Returns service instance reference, might throw exception

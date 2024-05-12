@@ -33,5 +33,11 @@ namespace sb::di
          * @details If set to true provider will search for service in singleton container first then in scoped
          */
         bool searchInSigletonsFirst = true;
+
+        /**
+         * @brief Enables thread safe mode
+         * @details Provider will synchronize service accesses between threads
+         */
+        bool threadSafe = false;
     };
 } // namespace sb::di

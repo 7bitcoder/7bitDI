@@ -1,6 +1,16 @@
 Getting Started
 ==========================
 
+Main Features
+--------------------
+
+* Implementation separation
+* Multiple implementations
+* Keyed services
+* Service aliases
+* Thread safe
+* Strong destruction order
+
 Supported Platforms
 --------------------
 
@@ -27,8 +37,8 @@ Installation
 **There are a few ways of installation:**
 
 
-#. Using Cmake fetch content api - Recommended
-    Update CMakeLists.txt file with following code
+#. Using Cmake fetch content API - Recommended
+    Update CMakeLists.txt file with the following code
 
     .. code-block:: Cmake
 
@@ -36,7 +46,7 @@ Installation
         FetchContent_Declare(
                 7bitDI
                 GIT_REPOSITORY https://github.com/7bitcoder/7bitDI.git
-                GIT_TAG v3.2.0
+                GIT_TAG v3.3.0
         )
         FetchContent_MakeAvailable(7bitDI)
 
@@ -48,7 +58,7 @@ Installation
     .. code-block:: Txt
 
         [requires]
-        7bitdi/3.2.0
+        7bitdi/3.3.0
     
     change the version to newer if available, then run the command:
 
