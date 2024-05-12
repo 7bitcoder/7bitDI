@@ -10,7 +10,7 @@ read comment documentation for details:
    :caption: Include/SevenBit/DI/ServiceProviderOptions.hpp
    :language: C++
 
-Pass the custom options to the ServiceCollection buildServiceProvider method to change produced
+Pass the custom options to the ServiceCollection buildServiceProvider method to change the produced
 service provider behavior
 
 .. literalinclude:: ../../Examples/Guides/ConfiguredServiceProvider.cpp

@@ -61,7 +61,7 @@ https://7bitDI.readthedocs.io
 
 ### There are a few ways of installation:
 
-### 1. Using Cmake fetch content api - Recommended
+### 1. Using Cmake fetch content API - Recommended
 
 Update CMakeLists.txt file with the following code
 
@@ -70,7 +70,7 @@ include(FetchContent)
 FetchContent_Declare(
         7bitDI
         GIT_REPOSITORY https://github.com/7bitcoder/7bitDI.git
-        GIT_TAG v3.2.0
+        GIT_TAG v3.3.0
 )
 FetchContent_MakeAvailable(7bitDI)
 
@@ -83,7 +83,7 @@ Download and install A [Conan](https://conan.io/), and create conanfile.txt in t
 
 ```
 [requires]
-7bitdi/3.2.0
+7bitdi/3.3.0
 ```
 
 change the version to newer if available, then run the command:

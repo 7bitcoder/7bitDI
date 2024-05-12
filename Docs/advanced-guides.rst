@@ -11,5 +11,4 @@ Advanced Guides
    advanced-guides/using-aliases
    advanced-guides/register-utility-class
    advanced-guides/injected-utility-class
-   advanced-guides/configuring-service-provider
    advanced-guides/building-library
