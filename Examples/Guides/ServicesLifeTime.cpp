@@ -1,4 +1,5 @@
 #include <SevenBit/DI.hpp>
+#include <cassert>
 #include <iostream>
 
 using namespace sb::di;
@@ -13,24 +14,6 @@ struct TransientService
 {
 };
 
-template <class TService, bool CreateService>
-bool compareServicePtrs(ServiceProvider &provider1, ServiceProvider &provider2)
-{
-    return CreateService ? provider1.createService<TService>() == provider2.createService<TService>()
-                         : &provider1.getService<TService>() == &provider2.getService<TService>();
-}
-
-template <class TService, bool CreateService = false>
-void compareServices(ServiceProvider &root, ServiceProvider &scoped)
-{
-    std::cout << "rootProvider \t == rootProvider:\t";
-    std::cout << compareServicePtrs<TService, CreateService>(root, root) << std::endl;
-    std::cout << "rootProvider \t == scopedProvider:\t";
-    std::cout << compareServicePtrs<TService, CreateService>(root, scoped) << std::endl;
-    std::cout << "scopedProvider \t == scopedProvider:\t";
-    std::cout << compareServicePtrs<TService, CreateService>(scoped, scoped) << std::endl;
-}
-
 int main()
 {
     ServiceProvider rootProvider = ServiceCollection{}
@@ -39,20 +22,26 @@ int main()
                                        .addTransient<TransientService>()
                                        .buildServiceProvider();
 
-    // Accessing Services
-    SingletonService &singleton = rootProvider.getService<SingletonService>();
-    ScopedService &scoped = rootProvider.getService<ScopedService>();
-    std::unique_ptr<TransientService> transient = rootProvider.createService<TransientService>();
+    // Accessing services
+    SingletonService &rootSingleton = rootProvider.getService<SingletonService>();
+    ScopedService &rootScoped = rootProvider.getService<ScopedService>();
+    std::unique_ptr<TransientService> rootTransient = rootProvider.createService<TransientService>();
 
     ServiceProvider scopedProvider = rootProvider.createScope();
 
-    std::cout << std::endl << "Singletons comparison" << std::endl;
-    compareServices<SingletonService>(rootProvider, scopedProvider);
+    // Accessing scoped services
+    SingletonService &singleton = scopedProvider.getService<SingletonService>();
+    ScopedService &scoped = scopedProvider.getService<ScopedService>();
+    std::unique_ptr<TransientService> transient = scopedProvider.createService<TransientService>();
 
-    std::cout << std::endl << "Scoped comparison" << std::endl;
-    compareServices<ScopedService>(rootProvider, scopedProvider);
+    assert(&rootSingleton == &singleton); // The same service for root and scoped provider
+    assert(&rootScoped != &scoped);       // Different service for root and scoped provider
+    assert(rootTransient != transient);   // Always different service (trivially different unique ptrs)
 
-    std::cout << std::endl << "Transient comparison" << std::endl;
-    compareServices<TransientService, true>(rootProvider, scopedProvider);
+    std::cout << "Service Addresses Table" << std::endl;
+    std::cout << "\t\t\trootProvider\tscopedProvider" << std::endl;
+    std::cout << "singleton\t" << &rootSingleton << "\t" << &singleton << std::endl;
+    std::cout << "scoped\t\t" << &rootScoped << "\t" << &scoped << std::endl;
+    std::cout << "transient\t" << rootTransient.get() << "\t" << transient.get() << std::endl;
     return 0;
 }
