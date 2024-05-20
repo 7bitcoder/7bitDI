@@ -33,5 +33,5 @@ Service can be registered as a singleton, scoped, or transient.
    Service Addresses Table
                rootProvider     scopedProvider
    singleton   0x600003ed0088   0x600003ed0088
-   scoped	   0x600003ed00a8   0x600003ed00f8
+   scoped      0x600003ed00a8   0x600003ed00f8
    transient   0x600003ed00c0   0x600003ed0110
