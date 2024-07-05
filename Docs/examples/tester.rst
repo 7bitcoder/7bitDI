@@ -1,4 +1,4 @@
-Simple
+Tester
 ========================================
 
 .. literalinclude:: ../../Examples/Tester.cpp
