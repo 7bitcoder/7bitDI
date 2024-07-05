@@ -28,19 +28,10 @@ Service can be registered as a singleton, scoped, or transient.
    :language: C++
 
 .. code-block:: console
-   :caption: Output
+   :caption: Possible Output
 
-   Singletons comparison
-   rootProvider     == rootProvider:       1
-   rootProvider     == scopedProvider:     1
-   scopedProvider   == scopedProvider:     1
-
-   Scoped comparison
-   rootProvider     == rootProvider:       1
-   rootProvider     == scopedProvider:     0
-   scopedProvider   == scopedProvider:     1
-
-   Transient comparison
-   rootProvider     == rootProvider:       0
-   rootProvider     == scopedProvider:     0
-   scopedProvider   == scopedProvider:     0
+   Service Addresses Table
+               rootProvider     scopedProvider
+   singleton   0x600003ed0088   0x600003ed0088
+   scoped      0x600003ed00a8   0x600003ed00f8
+   transient   0x600003ed00c0   0x600003ed0110
