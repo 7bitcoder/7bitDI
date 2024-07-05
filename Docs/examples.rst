@@ -8,3 +8,4 @@ Examples
    examples/simple
    examples/logger
    examples/cli
+   examples/tester
