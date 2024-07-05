@@ -15,5 +15,6 @@
   "SeparateImplementation": "^Hello from service.",
   "ServicesLifeTime": "\nSingletons comparison\nrootProvider\\s+== rootProvider:\\s+1\nrootProvider\\s+== scopedProvider:\\s+1\nscopedProvider\\s+== scopedProvider:\\s+1\n\nScoped comparison\nrootProvider\\s+== rootProvider:\\s+1\nrootProvider\\s+== scopedProvider:\\s+0\nscopedProvider\\s+== scopedProvider:\\s+1\n\nTransient comparison\nrootProvider\\s+== rootProvider:\\s+0\nrootProvider\\s+== scopedProvider:\\s+0\nscopedProvider\\s+== scopedProvider:\\s+0\n",
   "ServiceAliases": "actionA from top service, actionB from top service executed.",
-  "Simple": "^part a done!\npart b done!\n"
+  "Simple": "^part a done!\npart b done!\n",
+  "Tester": "Tests run: 2\/2"
 }
