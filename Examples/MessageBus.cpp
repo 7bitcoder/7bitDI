@@ -4,6 +4,7 @@
 #include <functional>
 #include <iostream>
 #include <thread>
+#include <unordered_map>
 
 using namespace sb::di;
 using namespace std::chrono_literals;
@@ -22,7 +23,7 @@ struct IMessageBus
     virtual ~IMessageBus() = default;
 };
 
-class OptimalMessageBus final : public IMessageBus
+class MessageBus final : public IMessageBus
 {
     std::unordered_map<std::type_index, std::vector<std::function<void(const std::any &)>>> _callbacks;
 
@@ -95,7 +96,7 @@ class ReceiverService
 int main()
 {
     ServiceProvider provider = ServiceCollection{}
-                                   .addSingleton<IMessageBus, OptimalMessageBus>()
+                                   .addSingleton<IMessageBus, MessageBus>()
                                    .addSingleton<SenderService>()
                                    .addSingleton<ReceiverService>()
                                    .buildServiceProvider();
