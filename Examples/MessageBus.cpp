@@ -3,8 +3,7 @@
 #include <chrono>
 #include <functional>
 #include <iostream>
-#include <typeinfo>
-#include <utility>
+#include <thread>
 
 using namespace sb::di;
 using namespace std::chrono_literals;
