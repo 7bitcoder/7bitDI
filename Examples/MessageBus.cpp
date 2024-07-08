@@ -22,7 +22,7 @@ struct IMessageBus
     virtual ~IMessageBus() = default;
 };
 
-class MessageBus final : public IMessageBus
+class OptimalMessageBus final : public IMessageBus
 {
     std::unordered_map<std::type_index, std::vector<std::function<void(const std::any &)>>> _callbacks;
 
@@ -95,7 +95,7 @@ class ReceiverService
 int main()
 {
     ServiceProvider provider = ServiceCollection{}
-                                   .addSingleton<IMessageBus, MessageBus>()
+                                   .addSingleton<IMessageBus, OptimalMessageBus>()
                                    .addSingleton<SenderService>()
                                    .addSingleton<ReceiverService>()
                                    .buildServiceProvider();
