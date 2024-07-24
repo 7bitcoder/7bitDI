@@ -160,6 +160,6 @@ namespace sb::di
         }
 
       private:
-        void *applyOffset(void *ptr) const { return details::Cast::applyCastOffset(ptr, _castOffset); }
+        void *applyOffset(void *ptr) const { return details::Cast::applyOffset(ptr, _castOffset); }
     };
 } // namespace sb::di

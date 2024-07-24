@@ -64,7 +64,7 @@ namespace sb::di::details
             {
                 auto index = static_cast<std::underlying_type_t<TEnum>>(value);
                 auto count = static_cast<std::underlying_type_t<TEnum>>(TEnum::Count);
-                throw InjectorException{"enum value: " + std::to_string(index) + " is invalid, shoud be in range [0" +
+                throw InjectorException{"enum value: " + std::to_string(index) + " is invalid, should be in range [0" +
                                         std::to_string(count) + ")"};
             }
         }

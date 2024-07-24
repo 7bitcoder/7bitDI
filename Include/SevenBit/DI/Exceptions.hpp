@@ -55,7 +55,7 @@ namespace sb::di
 
     struct EXPORT ServiceAliasMismatchException : InjectorException
     {
-        ServiceAliasMismatchException(TypeId typeIndex, TypeId interface, bool shoudBeAlias);
+        ServiceAliasMismatchException(TypeId typeIndex, TypeId interface, bool shouldBeAlias);
     };
 
     struct EXPORT CircularDependencyException : InjectorException
