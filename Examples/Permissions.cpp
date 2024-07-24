@@ -1,6 +1,5 @@
 #include <SevenBit/DI.hpp>
 #include <iostream>
-#include <utility>
 
 using namespace sb::di;
 
@@ -9,16 +8,8 @@ enum class Permission : int
     NONE = 0,
     READ = 1,
     UPDATE = 2,
+    ALL = READ | UPDATE
 };
-
-Permission operator|(Permission lhs, Permission rhs)
-{
-    return static_cast<Permission>(static_cast<int>(lhs) | static_cast<int>(rhs));
-}
-Permission operator&(Permission lhs, Permission rhs)
-{
-    return static_cast<Permission>(static_cast<int>(lhs) & static_cast<int>(rhs));
-}
 
 struct IUserPermission
 {
@@ -35,7 +26,7 @@ struct UserPermission final : IUserPermission
 
 struct AdminPermission final : IUserPermission
 {
-    Permission getPermissions(int userId) override { return Permission::READ | Permission::UPDATE; }
+    Permission getPermissions(int userId) override { return Permission::ALL; }
 };
 
 struct Data
@@ -77,7 +68,9 @@ class DataService final : public IDataService
   private:
     void assertPermission(const Permission permission)
     {
-        if ((_userPermission.getPermissions(1) & permission) != permission)
+        auto userPermission = _userPermission.getPermissions(1);
+        if (int check = static_cast<int>(userPermission) & static_cast<int>(permission);
+            static_cast<Permission>(check) != permission)
         {
             throw std::runtime_error("Insufficient permissions");
         }
