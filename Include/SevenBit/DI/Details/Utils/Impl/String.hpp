@@ -10,8 +10,8 @@ namespace sb::di::details
     {
         if (!fmt.empty())
         {
-            auto format = makeArgFmt(fmt, "s");
-            return dataToString(format.data(), const_cast<char *>(arg));
+            const auto format = makeArgFmt(fmt, "s");
+            return dataToString(format.c_str(), const_cast<char *>(arg));
         }
         return std::string(arg);
     }
@@ -20,8 +20,8 @@ namespace sb::di::details
     {
         if (!fmt.empty())
         {
-            auto format = makeArgFmt(fmt, "s");
-            return dataToString(format.data(), const_cast<std::string &>(arg).data());
+            const auto format = makeArgFmt(fmt, "s");
+            return dataToString(format.c_str(), const_cast<std::string &>(arg).c_str());
         }
         return arg;
     }
@@ -30,8 +30,8 @@ namespace sb::di::details
     {
         if (!fmt.empty())
         {
-            auto format = makeArgFmt(fmt, "s");
-            return dataToString(format.data(), arg.data());
+            const auto format = makeArgFmt(fmt, "s");
+            return dataToString(format.c_str(), arg.c_str());
         }
         return std::move(arg);
     }
@@ -41,8 +41,8 @@ namespace sb::di::details
         std::string strArg{arg};
         if (!fmt.empty())
         {
-            auto format = makeArgFmt(fmt, "s");
-            return dataToString(format.data(), strArg.data());
+            const auto format = makeArgFmt(fmt, "s");
+            return dataToString(format.c_str(), strArg.c_str());
         }
         return strArg;
     }

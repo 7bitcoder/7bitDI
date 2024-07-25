@@ -37,7 +37,7 @@ namespace sb::di::details
             if (!fmt.empty())
             {
                 auto format = makeArgFmt(fmt, type);
-                return dataToString(format.data(), arg);
+                return dataToString(format.c_str(), arg);
             }
             return std::to_string(arg);
         }
