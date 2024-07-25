@@ -40,27 +40,27 @@ namespace sb::di
 
     struct EXPORT ServiceNotFoundException : InjectorException
     {
-        ServiceNotFoundException(TypeId typeIndex, const std::string &reason);
+        ServiceNotFoundException(TypeId typeId, const std::string &reason);
     };
 
     struct EXPORT ServiceAlreadyRegisteredException : InjectorException
     {
-        explicit ServiceAlreadyRegisteredException(TypeId typeIndex);
+        explicit ServiceAlreadyRegisteredException(TypeId typeId);
     };
 
     struct EXPORT ServiceLifeTimeMismatchException : InjectorException
     {
-        ServiceLifeTimeMismatchException(TypeId typeIndex, TypeId interface);
+        ServiceLifeTimeMismatchException(TypeId typeId, TypeId interface);
     };
 
     struct EXPORT ServiceAliasMismatchException : InjectorException
     {
-        ServiceAliasMismatchException(TypeId typeIndex, TypeId interface, bool shouldBeAlias);
+        ServiceAliasMismatchException(TypeId typeId, TypeId interface, bool shouldBeAlias);
     };
 
     struct EXPORT CircularDependencyException : InjectorException
     {
-        explicit CircularDependencyException(TypeId typeIndex);
+        explicit CircularDependencyException(TypeId typeId);
     };
 } // namespace sb::di
 

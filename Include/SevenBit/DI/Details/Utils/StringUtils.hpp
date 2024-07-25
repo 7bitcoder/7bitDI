@@ -7,9 +7,8 @@
 
 namespace sb::di::details
 {
-    class EXPORT String
+    struct EXPORT StringUtils
     {
-      public:
         static std::string toString(const char *arg, std::string_view fmt = "");
         static std::string toString(const std::string &arg, std::string_view fmt = "");
         static std::string toString(std::string &&arg, std::string_view fmt = "");
@@ -32,11 +31,11 @@ namespace sb::di::details
             return std::string(buffer, size);
         }
 
-        template <class Number> static std::string toString(Number arg, std::string_view fmt, std::string_view type)
+        template <class Number> static std::string toString(Number arg, const std::string_view fmt, const std::string_view type)
         {
             if (!fmt.empty())
             {
-                auto format = makeArgFmt(fmt, type);
+                const auto format = makeArgFmt(fmt, type);
                 return dataToString(format.c_str(), arg);
             }
             return std::to_string(arg);
@@ -47,5 +46,5 @@ namespace sb::di::details
 } // namespace sb::di::details
 
 #ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Utils/Impl/String.hpp"
+#include "SevenBit/DI/Details/Utils/Impl/StringUtils.hpp"
 #endif

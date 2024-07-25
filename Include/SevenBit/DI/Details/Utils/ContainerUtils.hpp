@@ -6,7 +6,7 @@
 
 namespace sb::di::details
 {
-    struct Container
+    struct ContainerUtils
     {
         template <class ForwardIt, class UnaryPredicate>
         static ForwardIt removeIf(ForwardIt first, ForwardIt last, UnaryPredicate &&p)

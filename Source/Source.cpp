@@ -12,5 +12,6 @@
 #include <SevenBit/DI/Details/Helpers/Impl/ScopedGuard.hpp>
 #include <SevenBit/DI/Details/Utils/Impl/RequireDescriptor.hpp>
 #include <SevenBit/DI/Details/Utils/Impl/RequireInstance.hpp>
+#include <SevenBit/DI/Details/Utils/Impl/StringUtils.hpp>
 #include <SevenBit/DI/Impl/Exceptions.hpp>
 #include <SevenBit/DI/Impl/ServiceCollection.hpp>

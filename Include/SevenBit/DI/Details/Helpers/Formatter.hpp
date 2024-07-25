@@ -5,7 +5,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Utils/String.hpp"
+#include "SevenBit/DI/Details/Utils/StringUtils.hpp"
 
 namespace sb::di::details
 {
@@ -16,7 +16,7 @@ namespace sb::di::details
         std::string result;
 
       public:
-        explicit Formatter(std::string_view formatString) : formatString(formatString)
+        explicit Formatter(const std::string_view formatString) : formatString(formatString)
         {
             result.reserve(formatString.size());
         }
@@ -41,7 +41,7 @@ namespace sb::di::details
                 {
                     throw std::runtime_error("Invalid format string '{' should end with '}'");
                 }
-                result += String::toString(std::forward<Arg>(arg), formatString.substr(start, end - start));
+                result += StringUtils::toString(std::forward<Arg>(arg), formatString.substr(start, end - start));
                 current = end + 1;
                 return true;
             }
