@@ -5,46 +5,19 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
+#include "SevenBit/DI/Details/Helpers/Formatter.hpp"
+
 namespace sb::di::details
 {
-    struct EXPORT StringUtils
+    struct StringUtils
     {
-        static std::string toString(const char *arg, std::string_view fmt = "");
-        static std::string toString(const std::string &arg, std::string_view fmt = "");
-        static std::string toString(std::string &&arg, std::string_view fmt = "");
-        static std::string toString(std::string_view arg, std::string_view fmt = "");
-        static std::string toString(int arg, std::string_view fmt = "");
-        static std::string toString(long arg, std::string_view fmt = "");
-        static std::string toString(long long arg, std::string_view fmt = "");
-        static std::string toString(unsigned arg, std::string_view fmt = "");
-        static std::string toString(unsigned long arg, std::string_view fmt = "");
-        static std::string toString(unsigned long long arg, std::string_view fmt = "");
-        static std::string toString(float arg, std::string_view fmt = "");
-        static std::string toString(double arg, std::string_view fmt = "");
-        static std::string toString(long double arg, std::string_view fmt = "");
-
-      private:
-        template <class T> static std::string dataToString(const char *const fmt, T data)
+        template <class... Args> static std::string fmt(const std::string_view formatString, Args &&...args)
         {
-            char buffer[200];
-            auto size = std::snprintf(buffer, sizeof(buffer), fmt, data);
-            return std::string(buffer, size);
+            Formatter formatter{formatString};
+            formatter.format(args...);
+            return std::move(formatter).getResult();
         }
 
-        template <class Number> static std::string toString(Number arg, const std::string_view fmt, const std::string_view type)
-        {
-            if (!fmt.empty())
-            {
-                const auto format = makeArgFmt(fmt, type);
-                return dataToString(format.c_str(), arg);
-            }
-            return std::to_string(arg);
-        }
-
-        static std::string makeArgFmt(std::string_view fmt, std::string_view type);
+        template <class T> static std::string toString(T &&value) { return fmt("{}", value); }
     };
 } // namespace sb::di::details
-
-#ifdef _7BIT_DI_ADD_IMPL
-#include "SevenBit/DI/Details/Utils/Impl/StringUtils.hpp"
-#endif

@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <string_view>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
@@ -30,17 +31,17 @@ namespace sb::di
 
     struct EXPORT CannotReleaseServiceException : InjectorException
     {
-        CannotReleaseServiceException(TypeId typeId, const std::string &reason);
+        CannotReleaseServiceException(TypeId typeId, std::string_view reason);
     };
 
     struct EXPORT CannotMoveOutServiceException : InjectorException
     {
-        CannotMoveOutServiceException(TypeId typeId, const std::string &reason);
+        CannotMoveOutServiceException(TypeId typeId, std::string_view reason);
     };
 
     struct EXPORT ServiceNotFoundException : InjectorException
     {
-        ServiceNotFoundException(TypeId typeId, const std::string &reason);
+        ServiceNotFoundException(TypeId typeId, std::string_view reason);
     };
 
     struct EXPORT ServiceAlreadyRegisteredException : InjectorException
