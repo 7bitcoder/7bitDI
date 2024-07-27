@@ -3,7 +3,7 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Utils/Register.hpp"
-#include "SevenBit/DI/Utils/ServiceExtractor.hpp"
+#include "SevenBit/DI/Utils/ServiceInlineExtractor.hpp"
 
 namespace sb::di
 {
@@ -18,7 +18,7 @@ namespace sb::di
       protected:
         [[nodiscard]] ServiceProvider &getProvider() const { return _provider; }
 
-        [[nodiscard]] ServiceExtractor inject() const { return ServiceExtractor{getProvider()}; }
+        [[nodiscard]] ServiceInlineExtractor inject() const { return ServiceInlineExtractor{getProvider()}; }
     };
 
     template <class TService, class TImplementation = TService>

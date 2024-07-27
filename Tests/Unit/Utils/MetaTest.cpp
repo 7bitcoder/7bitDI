@@ -2,7 +2,7 @@
 
 #include "../../Helpers/Classes/Complex.hpp"
 #include "../../Helpers/Classes/MultiInherit.hpp"
-#include <SevenBit/DI/Details/Meta/Meta.hpp>
+#include <SevenBit/DI/Details/Meta/Type.hpp>
 
 class MetaTest : public testing::Test
 {

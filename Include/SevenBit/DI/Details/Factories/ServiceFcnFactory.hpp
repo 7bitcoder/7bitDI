@@ -5,8 +5,8 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Helpers/FunctorInjector.hpp"
-#include "SevenBit/DI/Details/Meta/Meta.hpp"
+#include "SevenBit/DI/Details/Meta/FunctorInjectorResolver.hpp"
+#include "SevenBit/DI/Details/Meta/Type.hpp"
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 #include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
@@ -15,28 +15,30 @@ namespace sb::di::details
 {
     template <class FactoryFcn> class ServiceFcnFactory final : public IServiceFactory
     {
+        using Injector = ResolveFunctorInjector<FactoryFcn>;
+
         mutable FactoryFcn _factoryFunction;
 
       public:
-        using FunctorReturnType = typename FunctorInjector<FactoryFcn>::ReturnType;
+        using FunctorReturnType = typename Injector::ReturnType;
         using ServiceType = RemoveUniquePtrT<FunctorReturnType>;
 
         explicit ServiceFcnFactory(FactoryFcn &&factoryFunction) : _factoryFunction{std::move(factoryFunction)} {}
 
         IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
-            FunctorInjector<FactoryFcn> injector{_factoryFunction, serviceProvider};
+            Injector injector{_factoryFunction, serviceProvider};
             if constexpr (IsUniquePtrV<FunctorReturnType>)
             {
-                return std::make_unique<UniquePtrService<ServiceType>>(injector.call());
+                return injector.template makeUnique<UniquePtrService<ServiceType>>();
             }
             else if constexpr (IsInPlaceServiceV<FunctorReturnType>)
             {
                 if (inPlaceRequest)
                 {
-                    return std::make_unique<InPlaceService<ServiceType>>(injector.call());
+                    return injector.template makeUnique<InPlaceService<ServiceType>>();
                 }
-                return std::make_unique<UniquePtrService<ServiceType>>(injector.call());
+                return injector.template makeUnique<UniquePtrService<ServiceType>>();
             }
             else
             {

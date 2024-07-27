@@ -14,10 +14,13 @@ namespace sb::di::details
 {
     template <class T> class ServiceFactory final : public IServiceFactory
     {
+      private:
+        using Injector = CtorInjector<T>;
+
       public:
         IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
-            CtorInjector<T> injector{serviceProvider};
+            Injector injector{serviceProvider};
             if (inPlaceRequest)
             {
                 return injector.template makeUnique<InPlaceService<T>>();

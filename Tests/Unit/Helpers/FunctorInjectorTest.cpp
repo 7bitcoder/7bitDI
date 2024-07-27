@@ -2,7 +2,7 @@
 
 #include "../../Helpers/Classes/Dependencies.hpp"
 #include "../../Helpers/Mocks/ServiceProviderMock.hpp"
-#include <SevenBit/DI/Details/Helpers/FunctorInjector.hpp>
+#include <SevenBit/DI/Details/Meta/FunctorInjectorResolver.hpp>
 #include <SevenBit/DI/Details/Services/InPlaceService.hpp>
 
 class FunctorInjectorTest : public testing::Test
@@ -34,7 +34,9 @@ TEST_F(FunctorInjectorTest, ShouldInvokeFuncFactory)
         return 1;
     };
 
-    sb::di::details::FunctorInjector<decltype(func)> invoker{func, mock};
+    sb::di::details::ResolveFunctorInjector<decltype(func)> invoker{func, mock};
 
-    EXPECT_EQ(invoker.call(), 1);
+    auto res = invoker.makeUnique<int>();
+    EXPECT_TRUE(res);
+    EXPECT_EQ(*res, 1);
 }

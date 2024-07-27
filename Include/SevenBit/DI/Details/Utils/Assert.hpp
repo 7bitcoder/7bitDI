@@ -2,7 +2,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Meta/Meta.hpp"
+#include "SevenBit/DI/Details/Meta/Type.hpp"
 
 namespace sb::di::details
 {
