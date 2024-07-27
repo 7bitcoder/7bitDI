@@ -7,7 +7,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Utils/ContainerUtils.hpp"
+#include "SevenBit/DI/Details/Utils/Container.hpp"
 #include "SevenBit/DI/ServiceDescriber.hpp"
 #include "SevenBit/DI/ServiceLifeTimes.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
@@ -348,7 +348,7 @@ namespace sb::di
          */
         template <class TPred> std::size_t removeIf(TPred pred)
         {
-            auto it = details::ContainerUtils::removeIf(begin(), end(), std::move(pred));
+            auto it = details::Container::removeIf(begin(), end(), std::move(pred));
             auto r = std::distance(it, end());
             removeRange(it, end());
             return r;

@@ -2,7 +2,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Helpers/ServiceGetter.hpp"
+#include "SevenBit/DI/Details/Meta/ServiceGetter.hpp"
 
 namespace sb::di::details
 {

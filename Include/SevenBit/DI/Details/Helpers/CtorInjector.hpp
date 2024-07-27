@@ -4,8 +4,8 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Helpers/ServiceCtorArgExtractor.hpp"
-#include "SevenBit/DI/Details/Utils/CtorParamsNumber.hpp"
+#include "SevenBit/DI/Details/Meta/CtorParamsNumber.hpp"
+#include "SevenBit/DI/Details/Meta/ServiceCtorArgExtractor.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 
 namespace sb::di::details
@@ -19,7 +19,7 @@ namespace sb::di::details
 
         template <class TWrapper> auto makeUnique()
         {
-            return makeUnique<TWrapper>(std::make_index_sequence<ctorParamsNumber<T>()>{});
+            return makeUnique<TWrapper>(std::make_index_sequence<CtorParamsNumber::value<T>>{});
         };
 
       private:

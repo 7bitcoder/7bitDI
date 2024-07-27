@@ -9,7 +9,7 @@
 
 namespace sb::di::details
 {
-    struct StringUtils
+    struct String
     {
         template <class... Args> static std::string fmt(const std::string_view formatString, Args &&...args)
         {

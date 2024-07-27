@@ -2,11 +2,11 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Utils/Meta.hpp"
+#include "SevenBit/DI/Details/Meta/Meta.hpp"
 
 namespace sb::di::details
 {
-    struct EXPORT Assert
+    struct Assert
     {
         template <class Type> static void serviceType()
         {

@@ -6,7 +6,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Utils/Meta.hpp"
+#include "SevenBit/DI/Details/Meta/Meta.hpp"
 
 namespace sb::di
 {
