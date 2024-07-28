@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "../../Helpers/Classes/Complex.hpp"
-#include <SevenBit/DI/Details/Meta/TypeCtorInfo.hpp>
+#include <SevenBit/DI/Details/Helpers/FunctorInjector.hpp>
 
 class CtorParamsNumberTest : public testing::Test
 {

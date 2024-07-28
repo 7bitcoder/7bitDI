@@ -5,7 +5,7 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Meta/Type.hpp"
+#include "SevenBit/DI/Details/Utils/Meta.hpp"
 #include "SevenBit/DI/ServiceProvider.hpp"
 
 namespace sb::di::details

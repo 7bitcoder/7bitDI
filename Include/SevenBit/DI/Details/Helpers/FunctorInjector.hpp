@@ -2,38 +2,33 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Meta/ServiceGetter.hpp"
+#include "ServiceGetter.hpp"
 
 namespace sb::di::details
 {
-    template <class R, class F, class... Args> class FunctorInjector
+    template <class F> class FunctorInjector
     {
         F &_functor;
         ServiceProvider &_serviceProvider;
 
       public:
-        using ReturnType = R;
+        static_assert(IsFunctorV<F> || notSupportedType<F>, "Object is not functor/lambda");
 
-        FunctorInjector(F &functor, ServiceProvider &serviceProvider)
-            : _functor(functor), _serviceProvider(serviceProvider)
-        {
-        }
+        FunctorInjector(F &functor, ServiceProvider &provider) : _functor(functor), _serviceProvider(provider) {}
+        FunctorInjector(F *functor, ServiceProvider *provider) : FunctorInjector(*functor, *provider) {}
+
+        auto operator()() { return matchCall(&F::operator()); }
 
         template <class TWrapper> std::unique_ptr<TWrapper> makeUnique()
         {
-            return std::make_unique<TWrapper>(_functor(ServiceGetter<Args>::get(_serviceProvider)...));
-        }
-    };
-
-    template <class F> struct BadFunctorInjector
-    {
-        using ReturnType = int;
-
-        BadFunctorInjector(F &, ServiceProvider &)
-        {
-            static_assert(notSupportedType<F>, "Object is not functor/lambda");
+            return std::make_unique<TWrapper>((*this)());
         }
 
-        template <class TWrapper> std::unique_ptr<TWrapper> makeUnique() { return nullptr; }
+      private:
+        template <class R, class T, class... Args> R matchCall(R (T::*)(Args...)) { return call<R, Args...>(); }
+
+        template <class R, class T, class... Args> R matchCall(R (T::*)(Args...) const) { return call<R, Args...>(); }
+
+        template <class R, class... Args> R call() { return _functor(ServiceGetter<Args>::get(_serviceProvider)...); }
     };
 } // namespace sb::di::details

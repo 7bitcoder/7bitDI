@@ -5,22 +5,22 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Meta/FunctorInjectorResolver.hpp"
-#include "SevenBit/DI/Details/Meta/Type.hpp"
+#include "SevenBit/DI/Details/Helpers/FunctorInjector.hpp"
 #include "SevenBit/DI/Details/Services/InPlaceService.hpp"
 #include "SevenBit/DI/Details/Services/UniquePtrService.hpp"
+#include "SevenBit/DI/Details/Utils/Meta.hpp"
 #include "SevenBit/DI/IServiceFactory.hpp"
 
 namespace sb::di::details
 {
     template <class FactoryFcn> class ServiceFcnFactory final : public IServiceFactory
     {
-        using Injector = ResolveFunctorInjector<FactoryFcn>;
+        using Injector = FunctorInjector<FactoryFcn>;
 
         mutable FactoryFcn _factoryFunction;
 
       public:
-        using FunctorReturnType = typename Injector::ReturnType;
+        using FunctorReturnType = decltype(Injector{nullptr, nullptr}());
         using ServiceType = RemoveUniquePtrT<FunctorReturnType>;
 
         explicit ServiceFcnFactory(FactoryFcn &&factoryFunction) : _factoryFunction{std::move(factoryFunction)} {}
@@ -47,6 +47,7 @@ namespace sb::di::details
             }
         }
 
+      private:
         static void badFunctor()
         {
             static_assert(notSupportedType<FactoryFcn>,
