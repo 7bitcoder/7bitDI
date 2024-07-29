@@ -41,6 +41,8 @@ namespace sb::di::details
         explicit CtorInjector(ServiceProvider &serviceProvider) : _serviceProvider(serviceProvider) {}
         explicit CtorInjector(ServiceProvider *serviceProvider) : CtorInjector(*serviceProvider) {}
 
+        T *operator()() { return makeNew(std::make_index_sequence<parametersNumber>{}); };
+
         template <class TWrapper> std::unique_ptr<TWrapper> makeUnique()
         {
             return makeUnique<TWrapper>(std::make_index_sequence<parametersNumber>{});
@@ -51,6 +53,11 @@ namespace sb::di::details
         std::unique_ptr<TWrapper> makeUnique(std::index_sequence<ParamNumber...>)
         {
             return std::make_unique<TWrapper>(ServiceExtractor<T>(&_serviceProvider, ParamNumber)...);
+        }
+
+        template <std::size_t... ParamNumber> T *makeNew(std::index_sequence<ParamNumber...>)
+        {
+            return new T *{ServiceExtractor<T>(&_serviceProvider, ParamNumber)...};
         }
     };
 

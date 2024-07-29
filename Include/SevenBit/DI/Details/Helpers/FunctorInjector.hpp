@@ -8,12 +8,12 @@ namespace sb::di::details
 {
     template <class F> class FunctorInjector
     {
+        static_assert(IsFunctorV<F> || notSupportedType<F>, "Object is not functor/lambda");
+
         F &_functor;
         ServiceProvider &_serviceProvider;
 
       public:
-        static_assert(IsFunctorV<F> || notSupportedType<F>, "Object is not functor/lambda");
-
         FunctorInjector(F &functor, ServiceProvider &provider) : _functor(functor), _serviceProvider(provider) {}
         FunctorInjector(F *functor, ServiceProvider *provider) : FunctorInjector(*functor, *provider) {}
 

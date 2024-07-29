@@ -20,13 +20,15 @@ namespace sb::di::details
       public:
         IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
-            Injector injector{serviceProvider};
             if (inPlaceRequest)
             {
-                return injector.template makeUnique<InPlaceService<T>>();
+                return std::unique_ptr<InPlaceService<T>>(inject<InPlaceService<T>>(serviceProvider));
             }
-            return injector.template makeUnique<UniquePtrService<T>>();
+            return std::unique_ptr<UniquePtrService<T>>(inject<UniquePtrService<T>>(serviceProvider));
         }
+
+      private:
+        template <class S> S *inject(ServiceProvider &serviceProvider) { return CtorInjector<S>{serviceProvider}(); }
     };
 
 } // namespace sb::di::details
