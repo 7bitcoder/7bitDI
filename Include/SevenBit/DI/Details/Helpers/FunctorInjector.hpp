@@ -19,11 +19,6 @@ namespace sb::di::details
 
         auto operator()() { return matchCall(&F::operator()); }
 
-        template <class TWrapper> std::unique_ptr<TWrapper> makeUnique()
-        {
-            return std::make_unique<TWrapper>((*this)());
-        }
-
       private:
         template <class R, class T, class... Args> R matchCall(R (T::*)(Args...)) { return call<R, Args...>(); }
 

@@ -12,12 +12,12 @@ namespace sb::di::details
     template <class T> class CtorInjector
     {
         template <std::size_t... Ns>
-        static constexpr auto paramsNumber(std::size_t) -> decltype(T{ServiceExtractor<T>{nullptr, Ns}...}, 0)
+        static constexpr auto parametersNumber(std::size_t) -> decltype(T{ServiceExtractor<T>{nullptr, Ns}...}, 0)
         {
             return sizeof...(Ns);
         }
 
-        template <std::size_t... Ns> static constexpr std::size_t paramsNumber(...)
+        template <std::size_t... Ns> static constexpr std::size_t parametersNumber(...)
         {
             if constexpr (sizeof...(Ns) > _7BIT_DI_CTOR_PARAMS_LIMIT)
             {
@@ -29,35 +29,23 @@ namespace sb::di::details
             }
             else
             {
-                return paramsNumber<Ns..., sizeof...(Ns)>(0);
+                return parametersNumber<Ns..., sizeof...(Ns)>(0);
             }
         }
 
         ServiceProvider &_serviceProvider;
 
       public:
-        static constexpr std::size_t parametersNumber = paramsNumber(0);
+        static constexpr std::size_t paramsNumber = parametersNumber(0);
 
         explicit CtorInjector(ServiceProvider &serviceProvider) : _serviceProvider(serviceProvider) {}
-        explicit CtorInjector(ServiceProvider *serviceProvider) : CtorInjector(*serviceProvider) {}
 
-        T *operator()() { return makeNew(std::make_index_sequence<parametersNumber>{}); };
-
-        template <class TWrapper> std::unique_ptr<TWrapper> makeUnique()
-        {
-            return makeUnique<TWrapper>(std::make_index_sequence<parametersNumber>{});
-        };
+        template <class F> auto operator()(F &&f) { return injectInto(f, std::make_index_sequence<paramsNumber>{}); };
 
       private:
-        template <class TWrapper, std::size_t... ParamNumber>
-        std::unique_ptr<TWrapper> makeUnique(std::index_sequence<ParamNumber...>)
+        template <class F, std::size_t... ParamNumber> auto injectInto(F &&f, std::index_sequence<ParamNumber...>)
         {
-            return std::make_unique<TWrapper>(ServiceExtractor<T>(&_serviceProvider, ParamNumber)...);
-        }
-
-        template <std::size_t... ParamNumber> T *makeNew(std::index_sequence<ParamNumber...>)
-        {
-            return new T *{ServiceExtractor<T>(&_serviceProvider, ParamNumber)...};
+            return f(ServiceExtractor<T>(&_serviceProvider, ParamNumber)...);
         }
     };
 

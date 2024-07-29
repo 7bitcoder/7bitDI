@@ -16,29 +16,29 @@ namespace sb::di::details
     template <class FactoryFcn> class ServiceFcnFactory final : public IServiceFactory
     {
         using Injector = FunctorInjector<FactoryFcn>;
-        using FunctorReturnType = decltype(Injector{nullptr, nullptr}());
-        static constexpr bool isReturnTypeOk = IsUniquePtrV<FunctorReturnType> || IsInPlaceServiceV<FunctorReturnType>;
-        static_assert(isReturnTypeOk || notSupportedType<FactoryFcn>,
+        using ReturnType = decltype(Injector{nullptr, nullptr}());
+
+        static_assert(IsUniquePtrV<ReturnType> || IsInPlaceServiceV<ReturnType> || notSupportedType<FactoryFcn>,
                       "Service factory return type must be std::unique_ptr<TService> or copyable/movable object");
 
         mutable FactoryFcn _factoryFunction;
 
       public:
-        using ServiceType = RemoveUniquePtrT<FunctorReturnType>;
+        using ServiceType = RemoveUniquePtrT<ReturnType>;
 
         explicit ServiceFcnFactory(FactoryFcn &&factoryFunction) : _factoryFunction{std::move(factoryFunction)} {}
 
         IServiceInstance::Ptr createInstance(ServiceProvider &serviceProvider, const bool inPlaceRequest) const override
         {
             Injector injector{_factoryFunction, serviceProvider};
-            if constexpr (!IsUniquePtrV<FunctorReturnType>)
+            if constexpr (!IsUniquePtrV<ReturnType>)
             {
                 if (inPlaceRequest)
                 {
-                    return injector.template makeUnique<InPlaceService<ServiceType>>();
+                    return std::make_unique<InPlaceService<ServiceType>>(injector());
                 }
             }
-            return injector.template makeUnique<UniquePtrService<ServiceType>>();
+            return std::make_unique<UniquePtrService<ServiceType>>(injector());
         }
     };
 } // namespace sb::di::details

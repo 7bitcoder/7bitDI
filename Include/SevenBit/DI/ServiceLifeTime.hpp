@@ -68,5 +68,20 @@ namespace sb::di
 
         constexpr bool operator!=(const ServiceLifeTime &lifeTime) const { return _type != lifeTime._type; }
         constexpr bool operator==(const ServiceLifeTime &lifeTime) const { return _type == lifeTime._type; }
+
+        [[nodiscard]] std::string_view toString() const
+        {
+            switch (_type)
+            {
+            case Type::Singleton:
+                return "Singleton";
+            case Type::Scoped:
+                return "Scoped";
+            case Type::Transient:
+                return "Transient";
+            default:
+                return "Unknown";
+            }
+        }
     };
 } // namespace sb::di

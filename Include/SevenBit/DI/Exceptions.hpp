@@ -23,40 +23,30 @@ namespace sb::di
         explicit NullPointerException(const std::string &why);
     };
 
-    struct EXPORT InvalidServiceException : InjectorException
+    struct EXPORT ServiceRegisterException : InjectorException
     {
-        explicit InvalidServiceException();
-        explicit InvalidServiceException(TypeId typeId);
-    };
-
-    struct EXPORT CannotReleaseServiceException : InjectorException
-    {
-        CannotReleaseServiceException(TypeId typeId, std::string_view reason);
+        explicit ServiceRegisterException(TypeId typeId, const std::string &reason);
     };
 
     struct EXPORT CannotMoveOutServiceException : InjectorException
     {
-        CannotMoveOutServiceException(TypeId typeId, std::string_view reason);
+        CannotMoveOutServiceException(TypeId typeId, const std::string &reason);
+    };
+
+    struct EXPORT CannotReleaseServiceException : InjectorException
+    {
+        CannotReleaseServiceException(TypeId typeId, const std::string &reason);
     };
 
     struct EXPORT ServiceNotFoundException : InjectorException
     {
-        ServiceNotFoundException(TypeId typeId, std::string_view reason);
+        ServiceNotFoundException(TypeId typeId, const std::string &reason);
     };
 
-    struct EXPORT ServiceAlreadyRegisteredException : InjectorException
+    struct EXPORT InvalidServiceException : InjectorException
     {
-        explicit ServiceAlreadyRegisteredException(TypeId typeId);
-    };
-
-    struct EXPORT ServiceLifeTimeMismatchException : InjectorException
-    {
-        ServiceLifeTimeMismatchException(TypeId typeId, TypeId interface);
-    };
-
-    struct EXPORT ServiceAliasMismatchException : InjectorException
-    {
-        ServiceAliasMismatchException(TypeId typeId, TypeId interface, bool shouldBeAlias);
+        explicit InvalidServiceException();
+        explicit InvalidServiceException(TypeId typeId);
     };
 
     struct EXPORT CircularDependencyException : InjectorException

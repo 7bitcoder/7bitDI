@@ -1,6 +1,6 @@
-ServiceExtractor
+ServiceInlineExtractor
 ========================================
 
-.. doxygenstruct:: sb::di::ServiceExtractor
+.. doxygenstruct:: sb::di::ServiceInlineExtractor
    :members:
    :undoc-members:

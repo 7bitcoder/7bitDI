@@ -14,7 +14,10 @@ namespace sb::di::details
             checkBaseType(descriptor);
             checkKey(descriptor);
             checkAlias(descriptor);
-            checkLifeTime(descriptor);
+            if (!isAlias())
+            {
+                checkLifeTime(descriptor);
+            }
         }
         OneOrList::add(std::move(descriptor));
     }
@@ -29,18 +32,18 @@ namespace sb::di::details
 
     INLINE void ServiceDescriptorList::checkBaseType(const ServiceDescriptor &descriptor) const
     {
-        if (getServiceTypeId() != descriptor.getServiceTypeId())
+        if (getServiceTypeId() != descriptor.getServiceTypeId()) // should not happen
         {
-            throw InjectorException{"Service base type does not match"};
+            throw ServiceRegisterException{descriptor.getImplementationTypeId(), "Service base type does not match"};
         }
     }
 
     INLINE void ServiceDescriptorList::checkKey(const ServiceDescriptor &descriptor) const
     {
         if (static_cast<bool>(getServiceKey()) != static_cast<bool>(descriptor.getServiceKey()) ||
-            (getServiceKey() && *getServiceKey() != *descriptor.getServiceKey()))
+            (getServiceKey() && *getServiceKey() != *descriptor.getServiceKey())) // should not happen
         {
-            throw InjectorException{"Service key does not match"};
+            throw ServiceRegisterException{descriptor.getImplementationTypeId(), "Service key does not match"};
         }
     }
 
@@ -48,15 +51,21 @@ namespace sb::di::details
     {
         if (isAlias() != descriptor.isAlias())
         {
-            throw ServiceAliasMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId(), isAlias()};
+            auto reason = details::String::fmt(
+                "Service was expected to be registered as {}, like other services registered with this base type '{}'",
+                (isAlias() ? "alias" : "not alias"), getServiceTypeId().name());
+            throw ServiceRegisterException{descriptor.getImplementationTypeId(), reason};
         }
     }
 
     INLINE void ServiceDescriptorList::checkLifeTime(const ServiceDescriptor &descriptor) const
     {
-        if (!isAlias() && !descriptor.isAlias() && getLifeTime() != descriptor.getLifeTime())
+        if (getLifeTime() != descriptor.getLifeTime())
         {
-            throw ServiceLifeTimeMismatchException{descriptor.getImplementationTypeId(), getServiceTypeId()};
+            auto reason = details::String::fmt(
+                "Service was expected to be registered as {}, like other services registered with this base type '{}'",
+                getLifeTime().toString(), getServiceTypeId().name());
+            throw ServiceRegisterException{descriptor.getImplementationTypeId(), reason};
         }
     }
 } // namespace sb::di::details

@@ -40,7 +40,7 @@ namespace sb::di::details
         const ServiceId id{descriptor.getImplementationTypeId(), descriptor.getServiceKey()};
         if (_registeredServices->count(id))
         {
-            throw ServiceAlreadyRegisteredException{descriptor.getImplementationTypeId()};
+            throw ServiceRegisterException{descriptor.getImplementationTypeId(), "Service was already registered"};
         }
         addDescriptor(std::move(descriptor));
         _registeredServices->insert(id);

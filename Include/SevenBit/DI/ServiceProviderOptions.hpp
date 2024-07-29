@@ -32,7 +32,7 @@ namespace sb::di
          * @brief Set service search strategy
          * @details If set to true provider will search for service in singleton container first then in scoped
          */
-        bool searchInSigletonsFirst = true;
+        bool searchInSingletonsFirst = true;
 
         /**
          * @brief Enables thread safe mode

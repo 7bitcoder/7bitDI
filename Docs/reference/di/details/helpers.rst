@@ -6,8 +6,9 @@ sb::di::details - Helpers
    :titlesonly:
 
    helpers/circulardependencyguard.rst
+   helpers/ctorinjector.rst
+   helpers/formatter.rst
+   helpers/functorinjector.rst
    helpers/scopedguard.rst
-   helpers/servicectorinvoker.rst
-   helpers/servicectorparamconverter.rst
-   helpers/servicefactoryinvoker.rst
-   helpers/serviceparamprovider.rst
+   helpers/serviceextractor.rst
+   helpers/servicegetter.rst
