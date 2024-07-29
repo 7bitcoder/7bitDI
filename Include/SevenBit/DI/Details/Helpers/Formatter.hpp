@@ -79,7 +79,7 @@ namespace sb::di::details
             else
             {
                 std::vector<char> largeBuff(size + 1);
-                assertFormatRes(std::sprintf(largeBuff.data(), fmt, data), fmt);
+                assertFormatRes(std::snprintf(largeBuff.data(), size + 1, fmt, data), fmt);
                 result += std::string_view(largeBuff.data(), size);
             }
         }
