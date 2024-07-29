@@ -54,7 +54,7 @@ TEST_F(ServiceDescriptorsMapTest, ShouldCheckUniqeness)
 
     auto act = [&] { map.add(sb::di::ServiceDescriber::describeSingleton<TestInheritClass1, TestInheritClass3>()); };
 
-    EXPECT_THROW(act(), sb::di::ServiceAlreadyRegisteredException);
+    EXPECT_THROW(act(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(ServiceDescriptorsMapTest, ShouldCheckUniqenessForKeyed)
@@ -78,7 +78,7 @@ TEST_F(ServiceDescriptorsMapTest, ShouldCheckUniqenessForKeyed)
         map.add(desc);
     };
 
-    EXPECT_THROW(act(), sb::di::ServiceAlreadyRegisteredException);
+    EXPECT_THROW(act(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(ServiceDescriptorsMapTest, ShouldCheckUniqenessForAlias)
@@ -136,7 +136,7 @@ TEST_F(ServiceDescriptorsMapTest, ShouldFailAddServiceDescriptorAlreadyRegistere
 
     auto act = [&] { sb::di::details::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end(), true}; };
 
-    EXPECT_THROW(act(), sb::di::ServiceAlreadyRegisteredException);
+    EXPECT_THROW(act(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(ServiceDescriptorsMapTest, ShouldFailAddKeyedServiceDescriptorAlreadyRegistered)
@@ -157,7 +157,7 @@ TEST_F(ServiceDescriptorsMapTest, ShouldFailAddKeyedServiceDescriptorAlreadyRegi
 
     auto act = [&] { sb::di::details::ServiceDescriptorsMap map{_descriptors.begin(), _descriptors.end(), true}; };
 
-    EXPECT_THROW(act(), sb::di::ServiceAlreadyRegisteredException);
+    EXPECT_THROW(act(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(ServiceDescriptorsMapTest, ShouldSealDescriptors)

@@ -9,11 +9,7 @@ Exceptions
    :members:
    :undoc-members:
 
-.. doxygenstruct:: sb::di::InvalidServiceException
-   :members:
-   :undoc-members:
-
-.. doxygenstruct:: sb::di::CannotReleaseServiceException
+.. doxygenstruct:: sb::di::ServiceRegisterException
    :members:
    :undoc-members:
 
@@ -21,19 +17,15 @@ Exceptions
    :members:
    :undoc-members:
 
+.. doxygenstruct:: sb::di::CannotReleaseServiceException
+   :members:
+   :undoc-members:
+
 .. doxygenstruct:: sb::di::ServiceNotFoundException
    :members:
    :undoc-members:
 
-.. doxygenstruct:: sb::di::ServiceAlreadyRegisteredException
-   :members:
-   :undoc-members:
-
-.. doxygenstruct:: sb::di::ServiceBaseTypeMismatchException
-   :members:
-   :undoc-members:
-
-.. doxygenstruct:: sb::di::ServiceLifeTimeMismatchException
+.. doxygenstruct:: sb::di::InvalidServiceException
    :members:
    :undoc-members:
 

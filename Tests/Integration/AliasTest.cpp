@@ -27,7 +27,7 @@ TEST_F(AliasTest, ShouldFailGetServiceDueToAliasMissmatchService)
     collection.addSingleton<TestMultiInherit2Class1, TestMultiInheritClass3>();
     collection.addAlias<TestMultiInherit2Class1, TestMultiInheritClass4>();
 
-    EXPECT_THROW(collection.buildServiceProvider(), sb::di::ServiceAliasMismatchException);
+    EXPECT_THROW(collection.buildServiceProvider(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(AliasTest, ShouldFailGetServiceDueToAliasMissmatchServiceOpposite)
@@ -38,7 +38,7 @@ TEST_F(AliasTest, ShouldFailGetServiceDueToAliasMissmatchServiceOpposite)
     collection.addAlias<TestMultiInherit2Class1, TestMultiInheritClass3>();
     collection.addSingleton<TestMultiInherit2Class1, TestMultiInheritClass4>();
 
-    EXPECT_THROW(collection.buildServiceProvider(), sb::di::ServiceAliasMismatchException);
+    EXPECT_THROW(collection.buildServiceProvider(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(AliasTest, ShouldTryGetAliasesService)

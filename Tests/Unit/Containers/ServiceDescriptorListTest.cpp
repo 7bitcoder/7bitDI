@@ -56,7 +56,7 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorAliasMismatch)
 
     auto act = [&] { list.add(sb::di::ServiceDescriber::describeScoped<TestInheritClass1, TestInheritClass5>()); };
 
-    EXPECT_THROW(act(), sb::di::ServiceAliasMismatchException);
+    EXPECT_THROW(act(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorAliasMismatchOpposite)
@@ -68,7 +68,7 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorAliasMismatchOpp
 
     auto act = [&] { list.add(sb::di::ServiceDescriber::describeAlias<TestInheritClass1, TestInheritClass5>()); };
 
-    EXPECT_THROW(act(), sb::di::ServiceAliasMismatchException);
+    EXPECT_THROW(act(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorLifeTimeMismatch)
@@ -80,7 +80,7 @@ TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorLifeTimeMismatch
 
     auto act = [&] { list.add(sb::di::ServiceDescriber::describeScoped<TestInheritClass1, TestInheritClass5>()); };
 
-    EXPECT_THROW(act(), sb::di::ServiceLifeTimeMismatchException);
+    EXPECT_THROW(act(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(ServiceDescriptorListTest, ShouldFailAddServiceDescriptorBaseTypeMismatch)

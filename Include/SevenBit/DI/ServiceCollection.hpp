@@ -43,8 +43,8 @@ namespace sb::di
         /**
          * @brief Builds service provider with specified options
          * @details might throw exceptions
-         * @throws sb::di::ServiceAlreadyRegisteredException if service was already registered
-         * @throws sb::di::ServiceLifeTimeMismatchException if service has different lifetime than other already
+         * @throws sb::di::ServiceRegisterException if service was already registered
+         * @throws sb::di::ServiceRegisterException if service has different lifetime than other already
          * registered with same base type
          */
         ServiceProvider buildServiceProvider(ServiceProviderOptions options = {});
@@ -52,8 +52,8 @@ namespace sb::di
         /**
          * @brief Builds service provider as unique_ptr with specified options
          * @details might throw exceptions
-         * @throws sb::di::ServiceAlreadyRegisteredException if service was already registered
-         * @throws sb::di::ServiceLifeTimeMismatchException if service has different lifetime than other already
+         * @throws sb::di::ServiceRegisterException if service was already registered
+         * @throws sb::di::ServiceRegisterException if service has different lifetime than other already
          * registered with same base type
          */
         ServiceProvider::Ptr buildServiceProviderAsPtr(ServiceProviderOptions options = {});
