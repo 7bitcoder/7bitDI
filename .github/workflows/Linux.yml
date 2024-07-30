@@ -56,6 +56,7 @@ jobs:
             cc: clang
             generator: Ninja
         exclude:
+          - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 11 } }
           - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 12 } }
           - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 13 } }
           - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 14 } }
@@ -67,16 +68,36 @@ jobs:
           - { os: ubuntu-20.04, compiler: { tool: clang, ver: 18 } }
           - { os: ubuntu-22.04, compiler: { tool: gcc, ver: 7 } }
           - { os: ubuntu-22.04, compiler: { tool: gcc, ver: 8 } }
+          - { os: ubuntu-22.04, compiler: { tool: gcc, ver: 13 } }
+          - { os: ubuntu-22.04, compiler: { tool: gcc, ver: 14 } }
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 7 } }
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 8 } }
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 9 } }
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 10 } }
+          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 16 } }
+          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 17 } }
+          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 18 } }
           - { os: ubuntu-24.04, compiler: { tool: gcc, ver: 7 } }
           - { os: ubuntu-24.04, compiler: { tool: gcc, ver: 8 } }
           - { os: ubuntu-24.04, compiler: { tool: clang, ver: 7 } }
           - { os: ubuntu-24.04, compiler: { tool: clang, ver: 8 } }
           - { os: ubuntu-24.04, compiler: { tool: clang, ver: 9 } }
           - { os: ubuntu-24.04, compiler: { tool: clang, ver: 10 } }
+          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 11 } }
+          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 12 } }
+          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 13 } }
+          - { compiler: { tool: gcc, ver: 7 }, std: 20 }
+          - { compiler: { tool: gcc, ver: 7 }, std: 23 }
+          - { compiler: { tool: gcc, ver: 8 }, std: 23 }
+          - { compiler: { tool: gcc, ver: 9 }, std: 23 }
+          - { compiler: { tool: gcc, ver: 10 }, std: 23 }
+          - { compiler: { tool: clang, ver: 7 }, std: 20 }
+          - { compiler: { tool: clang, ver: 7 }, std: 23 }
+          - { compiler: { tool: clang, ver: 8 }, std: 20 }
+          - { compiler: { tool: clang, ver: 8 }, std: 23 }
+          - { compiler: { tool: clang, ver: 9 }, std: 23 }
+          - { compiler: { tool: clang, ver: 10 }, std: 23 }
+          - { compiler: { tool: clang, ver: 11 }, std: 23 }
 
     runs-on: ${{matrix.os}}
     steps:
