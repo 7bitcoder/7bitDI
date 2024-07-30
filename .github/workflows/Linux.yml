@@ -2,7 +2,7 @@ name: Linux
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
     paths-ignore:
       - "Docs/**"
       - ".readthedocs.yaml"
@@ -23,6 +23,7 @@ jobs:
           - { tool: gcc, ver: 11 }
           - { tool: gcc, ver: 12 }
           - { tool: gcc, ver: 13 }
+          - { tool: gcc, ver: 14 }
           - { tool: clang, ver: 7 }
           - { tool: clang, ver: 8 }
           - { tool: clang, ver: 9 }
@@ -32,9 +33,12 @@ jobs:
           - { tool: clang, ver: 13 }
           - { tool: clang, ver: 14 }
           - { tool: clang, ver: 15 }
+          - { tool: clang, ver: 16 }
+          - { tool: clang, ver: 17 }
+          - { tool: clang, ver: 18 }
         build_type: [ Release ]
-        os: [ ubuntu-20.04, ubuntu-22.04 ]
-        std: [ 17 ]
+        os: [ ubuntu-20.04, ubuntu-22.04, ubuntu-24.04 ]
+        std: [ 17, 20, 23 ]
         library_type: [ Static ]
         include:
           - compiler: { tool: gcc }
@@ -48,15 +52,25 @@ jobs:
         exclude:
           - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 12 } }
           - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 13 } }
+          - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 14 } }
           - { os: ubuntu-20.04, compiler: { tool: clang, ver: 13 } }
           - { os: ubuntu-20.04, compiler: { tool: clang, ver: 14 } }
           - { os: ubuntu-20.04, compiler: { tool: clang, ver: 15 } }
+          - { os: ubuntu-20.04, compiler: { tool: clang, ver: 16 } }
+          - { os: ubuntu-20.04, compiler: { tool: clang, ver: 17 } }
+          - { os: ubuntu-20.04, compiler: { tool: clang, ver: 18 } }
           - { os: ubuntu-22.04, compiler: { tool: gcc, ver: 7 } }
           - { os: ubuntu-22.04, compiler: { tool: gcc, ver: 8 } }
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 7 } }
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 8 } }
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 9 } }
           - { os: ubuntu-22.04, compiler: { tool: clang, ver: 10 } }
+          - { os: ubuntu-24.04, compiler: { tool: gcc, ver: 7 } }
+          - { os: ubuntu-24.04, compiler: { tool: gcc, ver: 8 } }
+          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 7 } }
+          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 8 } }
+          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 9 } }
+          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 10 } }
 
     runs-on: ${{matrix.os}}
     steps:
