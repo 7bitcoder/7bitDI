@@ -52,7 +52,7 @@ jobs:
       - name: Try Setup LLVM Environment
         if: matrix.compiler.tool == 'llvm'
         run: |
-          "PATH=$(brew --prefix llvm@${{matrix.compiler.ver}})/bin:${PATH}" >> $GITHUB_ENV
+          echo "PATH=$(brew --prefix llvm@${{matrix.compiler.ver}})/bin:${PATH}" >> $GITHUB_ENV
 
       - name: Configure
         env:
