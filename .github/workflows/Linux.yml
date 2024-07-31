@@ -98,6 +98,11 @@ jobs:
           - { compiler: { tool: clang, ver: 9 }, std: 23 }
           - { compiler: { tool: clang, ver: 10 }, std: 23 }
           - { compiler: { tool: clang, ver: 11 }, std: 23 }
+          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 14 }, std: 20 } # gtest broken for now
+          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 14 }, std: 23 } # gtest broken for now
+          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 15 }, std: 20 } # gtest broken for now
+          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 15 }, std: 23 } # gtest broken for now
+          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 17 }, std: 23 } # gtest broken for now
 
     runs-on: ${{matrix.os}}
     steps:
