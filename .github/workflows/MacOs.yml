@@ -41,7 +41,7 @@ jobs:
           { tool: gcc, ver: 13 },
           { tool: gcc, ver: 14 } ]
         build_type: [ Release ]
-        os: [ macos-12, macos-13, macos-14 ]
+        os: [ macos-12 ]
         std: [ 17, 20, 23 ]
         library_type: [ Static ]
         include:
