@@ -1,6 +1,12 @@
 name: MacOs
 
 on:
+  push:
+    branches: [ "dev" ]
+    paths-ignore:
+      - "Docs/**"
+      - ".readthedocs.yaml"
+      - "README.md"
   pull_request:
     branches: [ "main" ]
     paths-ignore:
@@ -17,17 +23,34 @@ jobs:
       matrix:
         compiler: [
           { tool: apple-clang },
+          { tool: llvm, ver: 9 },
+          { tool: llvm, ver: 11 },
+          { tool: llvm, ver: 12 },
+          { tool: llvm, ver: 13 },
+          { tool: llvm, ver: 14 },
+          { tool: llvm, ver: 15 },
+          { tool: llvm, ver: 16 },
+          { tool: llvm, ver: 17 },
+          { tool: llvm, ver: 18 },
+          { tool: gcc, ver: 7 },
+          { tool: gcc, ver: 8 },
+          { tool: gcc, ver: 9 },
           { tool: gcc, ver: 10 },
           { tool: gcc, ver: 11 },
-          { tool: gcc, ver: 12 } ]
+          { tool: gcc, ver: 12 },
+          { tool: gcc, ver: 13 },
+          { tool: gcc, ver: 14 } ]
         build_type: [ Release ]
-        os: [ macos-12 ]
-        std: [ 17 ]
+        os: [ macos-12, macos-13, macos-14 ]
+        std: [ 17, 20, 23 ]
         library_type: [ Static ]
         include:
           - compiler: { tool: gcc }
             cxx: g++
             cc: gcc
+          - compiler: { tool: clang }
+            cxx: clang++
+            cc: clang
           - compiler: { tool: apple-clang }
             cxx: ''
             cc: ''

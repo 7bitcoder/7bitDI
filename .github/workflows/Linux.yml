@@ -1,12 +1,6 @@
 name: Linux
 
 on:
-  push:
-    branches: [ "dev" ]
-    paths-ignore:
-      - "Docs/**"
-      - ".readthedocs.yaml"
-      - "README.md"
   pull_request:
     branches: [ "main" ]
     paths-ignore:
