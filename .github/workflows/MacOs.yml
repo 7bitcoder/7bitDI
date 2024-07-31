@@ -45,7 +45,7 @@ jobs:
       - name: Create Build Environment
         if: matrix.compiler.tool != 'apple-clang'
         run: |
-          brew upgrade &&
+          brew update &&
           brew install ${{matrix.compiler.tool}}@${{matrix.compiler.ver}} ninja
           cmake -E make_directory ${{runner.workspace}}/build
 
