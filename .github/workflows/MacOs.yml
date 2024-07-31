@@ -48,6 +48,9 @@ jobs:
           - compiler: { tool: gcc }
             cxx: g++
             cc: gcc
+          - compiler: { tool: llvm }
+            cxx: clang++
+            cc: clang
           - compiler: { tool: apple-clang }
             cxx: ''
             cc: ''
