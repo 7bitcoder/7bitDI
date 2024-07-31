@@ -52,7 +52,6 @@ jobs:
         exclude:
           - { os: macos-14, compiler: { tool: gcc, ver: 10 } }
           - { compiler: { tool: gcc, ver: 10 }, std: 23 }
-          - { compiler: { tool: gcc } }
 
     runs-on: ${{matrix.os}}
     steps:
