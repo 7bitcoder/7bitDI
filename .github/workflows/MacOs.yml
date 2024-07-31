@@ -23,8 +23,6 @@ jobs:
       matrix:
         compiler: [
           { tool: apple-clang },
-          { tool: llvm, ver: 9 },
-          { tool: llvm, ver: 11 },
           { tool: llvm, ver: 12 },
           { tool: llvm, ver: 13 },
           { tool: llvm, ver: 14 },
@@ -32,9 +30,6 @@ jobs:
           { tool: llvm, ver: 16 },
           { tool: llvm, ver: 17 },
           { tool: llvm, ver: 18 },
-          { tool: gcc, ver: 7 },
-          { tool: gcc, ver: 8 },
-          { tool: gcc, ver: 9 },
           { tool: gcc, ver: 10 },
           { tool: gcc, ver: 11 },
           { tool: gcc, ver: 12 },
@@ -49,11 +44,14 @@ jobs:
             cxx: g++
             cc: gcc
           - compiler: { tool: llvm }
-            cxx: clang++
-            cc: clang
+            cxx: opt/homebrew/opt/llvm/bin/clang++
+            cc: opt/homebrew/opt/llvm/bin/clang
           - compiler: { tool: apple-clang }
             cxx: ''
             cc: ''
+        exclude:
+          - { os: macos-14, compiler: { tool: gcc, ver: 10 } }
+          - { compiler: { tool: gcc, ver: 10 }, std: 23 }
 
     runs-on: ${{matrix.os}}
     steps:
@@ -65,8 +63,8 @@ jobs:
           brew update &&
           brew install ${{matrix.compiler.tool}}@${{matrix.compiler.ver}} ninja
           cmake -E make_directory ${{runner.workspace}}/build
-          echo "CXX=${{matrix.cxx}}-${{matrix.compiler.ver}}" >> $GITHUB_ENV
-          echo "CC=${{matrix.cc}}-${{matrix.compiler.ver}}" >> $GITHUB_ENV
+          echo "CXX=${{matrix.cxx}}" >> $GITHUB_ENV
+          echo "CC=${{matrix.cc}}" >> $GITHUB_ENV
 
       - name: Configure
         run: cmake -B ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_ALL_TESTS=ON
