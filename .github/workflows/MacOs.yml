@@ -35,8 +35,8 @@ jobs:
         library_type: [ Static ]
         include:
           - compiler: { tool: llvm }
-            cxx: /opt/homebrew/opt/llvm/bin/clang++
-            cc: /opt/homebrew/opt/llvm/bin/clang
+            cxx: clang++
+            cc: clang
 
     runs-on: ${{matrix.os}}
     steps:
@@ -45,9 +45,19 @@ jobs:
       - name: Create Build Environment
         if: matrix.compiler.tool != 'apple-clang'
         run: |
-          brew update &&
+          brew upgrade &&
           brew install ${{matrix.compiler.tool}}@${{matrix.compiler.ver}} ninja
           cmake -E make_directory ${{runner.workspace}}/build
+
+      - name: Setup Environment
+        if: matrix.compiler.tool == 'llvm'
+        run: |
+          echo "CXX=/opt/homebrew/opt/llvm@${{matrix.compiler.ver}}/bin/${{matrix.cxx}}" >> $GITHUB_ENV
+          echo "CC=/opt/homebrew/opt/llvm@${{matrix.compiler.ver}}/bin/${{matrix.cc}}" >> $GITHUB_ENV
+
+      - name: Setup Environment
+        if: matrix.compiler.tool == 'gcc'
+        run: |
           echo "CXX=${{matrix.cxx}}" >> $GITHUB_ENV
           echo "CC=${{matrix.cc}}" >> $GITHUB_ENV
 
