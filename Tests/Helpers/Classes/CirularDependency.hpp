@@ -18,9 +18,13 @@ struct CircularDependencyUniqueB;
 struct CircularDependencyUniqueA
 {
     explicit CircularDependencyUniqueA(std::unique_ptr<CircularDependencyUniqueB> b) {}
+
+    ~CircularDependencyUniqueA() = default;
 };
 
 struct CircularDependencyUniqueB
 {
     explicit CircularDependencyUniqueB(std::unique_ptr<CircularDependencyUniqueA> a) {}
+
+    ~CircularDependencyUniqueB() = default;
 };

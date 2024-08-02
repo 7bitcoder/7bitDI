@@ -28,21 +28,21 @@ jobs:
           { name: MSVC, ver: 141 },
           { name: MSVC, ver: 142 },
           { name: MSVC, ver: 143 },
-          #          { name: MinGW, ver: 7.5.0 },
-          #          { name: MinGW, ver: 8.5.0 },
-          #          { name: MinGW, ver: 9.4.0 },
-          #          { name: MinGW, ver: 10.3.0 },
-          #          { name: MinGW, ver: 11.2.0 },
-          #          { name: MinGW, ver: 12.2.0 },
+          { name: MinGW, ver: 7.5.0 },
+          { name: MinGW, ver: 8.5.0 },
+          { name: MinGW, ver: 9.4.0 },
+          { name: MinGW, ver: 10.3.0 },
+          { name: MinGW, ver: 11.2.0 },
+          { name: MinGW, ver: 12.2.0 },
           { name: MinGW, ver: 13.2.0 },
-          #          { name: Clang, ver: 11.1.0 },
-          #          { name: Clang, ver: 12.0.1 },
-          #          { name: Clang, ver: 13.0.1 },
-          #          { name: Clang, ver: 14.0.6 },
-          #          { name: Clang, ver: 15.0.7 },
-          #          { name: Clang, ver: 16.0.6 },
-          #          { name: Clang, ver: 17.0.6 },
-          #          { name: Clang, ver: 18.1.2 },
+          { name: Clang, ver: 11.1.0 },
+          { name: Clang, ver: 12.0.1 },
+          { name: Clang, ver: 13.0.1 },
+          { name: Clang, ver: 14.0.6 },
+          { name: Clang, ver: 15.0.7 },
+          { name: Clang, ver: 16.0.6 },
+          { name: Clang, ver: 17.0.6 },
+          { name: Clang, ver: 18.1.2 },
           { name: Clang, ver: 18.1.8 } ]
         build_type: [ Release ]
         os: [ windows-2019, windows-2022 ]
@@ -63,6 +63,10 @@ jobs:
             cc: clang
             package: LLVM
             generator: Ninja
+        exclude:
+          - { os: windows-2019, compiler: { name: MSVC, ver: 143 } }
+          - { os: windows-2022, compiler: { name: MSVC, ver: 141 } }
+          - { compiler: { name: MSVC, ver: 141 }, std: 23 }
 
     runs-on: ${{matrix.os}}
     steps:
@@ -75,7 +79,8 @@ jobs:
 
       - name: Try Setup MinGW Environment
         if: matrix.compiler.name == 'MinGW'
-        run: ("PATH=${{env.CHOCO_MINGW_BIN_DIR}};" + (Get-Content $env:GITHUB_PATH)) >> $env:GITHUB_ENV
+        run: ("${{env.CHOCO_MINGW_BIN_DIR}};" + (Get-Content -Path $env:GITHUB_PATH)) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
+        shell: pwsh
 
       - name: Configure
         env:
