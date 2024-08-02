@@ -98,13 +98,15 @@ jobs:
       - name: Try Setup MinGW Environment
         if: matrix.compiler.name == 'MinGW'
         shell: bash
-        run: echo "PATH=${{env.CHOCO_MINGW_BIN_DIR}};${PATH}" >> $GITHUB_ENV
+        run: |
+          echo "PATH=${{env.CHOCO_MINGW_BIN_DIR}};${PATH}" |
+          echo "PATH=${{env.CHOCO_MINGW_BIN_DIR}};${PATH}" >> $GITHUB_ENV
 
       - name: Configure
         env:
           CXX: ${{matrix.cxx}}
           CC: ${{matrix.cc}}
-        run: cmake -B ${{runner.workspace}}/build -G ${{matrix.generator}} ${{env.PARAMETERS}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_ALL_TESTS=ON
+        run: cmake -B ${{runner.workspace}}/build -G "${{matrix.generator}}" ${{env.PARAMETERS}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_ALL_TESTS=ON
 
       - name: Build
         run: cmake --build ${{runner.workspace}}/build --config ${{matrix.build_type}} -j

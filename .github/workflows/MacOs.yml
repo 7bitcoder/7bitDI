@@ -69,7 +69,8 @@ jobs:
 
       - name: Try Setup LLVM Environment
         if: matrix.compiler.name == 'Clang'
-        run: echo "PATH=$(brew --prefix llvm@${{matrix.compiler.ver}})/bin:${PATH}" >> $GITHUB_ENV
+        run: |
+          echo "PATH=$(brew --prefix llvm@${{matrix.compiler.ver}})/bin:${PATH}" >> $GITHUB_ENV
 
       - name: Configure
         env:
