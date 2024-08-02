@@ -64,17 +64,17 @@ jobs:
           - compiler: { name: 'Visual Studio 2017' }
             cxx: ''
             cc: ''
-            package: visualstudio2017buildtools
+            package: visualstudio2017community
             generator: 'Visual Studio 15 2017'
           - compiler: { name: 'Visual Studio 2019' }
             cxx: ''
             cc: ''
-            package: visualstudio2019buildtools
+            package: visualstudio2019community
             generator: 'Visual Studio 16 2019'
           - compiler: { name: 'Visual Studio 2022' }
             cxx: ''
             cc: ''
-            package: visualstudio2022buildtools
+            package: visualstudio2022community
             generator: 'Visual Studio 17 2022'
           - compiler: { name: MinGW }
             cxx: g++
@@ -99,7 +99,7 @@ jobs:
         if: matrix.compiler.name == 'MinGW'
         shell: bash
         run: |
-          echo "{{env.CHOCO_MINGW_BIN_DIR}}" >> $GITHUB_PATH
+          echo "PATH=${{env.CHOCO_MINGW_BIN_DIR}}:${PATH}" >> $GITHUB_ENV
 
       - name: Configure
         env:
