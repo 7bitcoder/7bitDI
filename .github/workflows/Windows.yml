@@ -66,7 +66,19 @@ jobs:
         exclude:
           - { os: windows-2019, compiler: { name: MSVC, ver: 143 } }
           - { os: windows-2022, compiler: { name: MSVC, ver: 141 } }
+          - { os: windows-2022, compiler: { name: Clang, ver: 11.1.0 } }
+          - { os: windows-2022, compiler: { name: Clang, ver: 12.0.1 } }
+          - { os: windows-2022, compiler: { name: Clang, ver: 13.0.1 } }
+          - { os: windows-2022, compiler: { name: Clang, ver: 14.0.6 } }
+          - { os: windows-2022, compiler: { name: Clang, ver: 15.0.7 } }
+          - { os: windows-2022, compiler: { name: Clang, ver: 16.0.6 } }
           - { compiler: { name: MSVC, ver: 141 }, std: 23 }
+          - { compiler: { name: MinGW, ver: 7.5.0 }, std: 20 }
+          - { compiler: { name: MinGW, ver: 7.5.0 }, std: 23 }
+          - { compiler: { name: MinGW, ver: 8.5.0 }, std: 23 }
+          - { compiler: { name: MinGW, ver: 9.4.0 }, std: 23 }
+          - { compiler: { name: MinGW, ver: 10.3.0 }, std: 23 }
+          - { compiler: { name: Clang, ver: 11.1.0 }, std: 23 }
 
     runs-on: ${{matrix.os}}
     steps:

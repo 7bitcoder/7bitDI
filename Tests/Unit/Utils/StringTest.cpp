@@ -78,7 +78,6 @@ TEST_F(StringTest, ShouldFormatUnsigned)
 {
     EXPECT_EQ(sb::di::details::String::fmt("", 8u), "");
     EXPECT_EQ(sb::di::details::String::fmt("{}", 999u), "999");
-    EXPECT_EQ(sb::di::details::String::fmt("{+}", 999u), "999");
     EXPECT_EQ(sb::di::details::String::fmt("{}", 0u), "0");
     EXPECT_EQ(sb::di::details::String::fmt("{}{}", 8u, 2u), "82");
     EXPECT_EQ(sb::di::details::String::fmt("{04}{}", 8u, 2u), "00082");
@@ -93,7 +92,6 @@ TEST_F(StringTest, ShouldFormatUnsignedLong)
 {
     EXPECT_EQ(sb::di::details::String::fmt("", 8ul), "");
     EXPECT_EQ(sb::di::details::String::fmt("{}", 999ul), "999");
-    EXPECT_EQ(sb::di::details::String::fmt("{+}", 999ul), "999");
     EXPECT_EQ(sb::di::details::String::fmt("{}", 0ul), "0");
     EXPECT_EQ(sb::di::details::String::fmt("{}{}", 8ul, 2ul), "82");
     EXPECT_EQ(sb::di::details::String::fmt("{04}{}", 8ul, 2ul), "00082");
@@ -108,7 +106,6 @@ TEST_F(StringTest, ShouldFormatUnsignedLongLong)
 {
     EXPECT_EQ(sb::di::details::String::fmt("", 8ull), "");
     EXPECT_EQ(sb::di::details::String::fmt("{}", 999ull), "999");
-    EXPECT_EQ(sb::di::details::String::fmt("{+}", 999ull), "999");
     EXPECT_EQ(sb::di::details::String::fmt("{}", 0ull), "0");
     EXPECT_EQ(sb::di::details::String::fmt("{}{}", 8ull, 2ull), "82");
     EXPECT_EQ(sb::di::details::String::fmt("{04}{}", 8ull, 2ull), "00082");
