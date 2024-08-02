@@ -1,18 +1,12 @@
 name: MacOs
 
 on:
-  push:
-    branches: [ "dev" ]
-    paths-ignore:
-      - "Docs/**"
-      - ".readthedocs.yaml"
-      - "README.md"
   pull_request:
-    branches: [ "main" ]
+    branches: [ 'main' ]
     paths-ignore:
-      - "Docs/**"
-      - ".readthedocs.yaml"
-      - "README.md"
+      - 'Docs/**'
+      - '.readthedocs.yaml'
+      - 'README.md'
 
 jobs:
   test:
@@ -22,62 +16,67 @@ jobs:
       fail-fast: false
       matrix:
         compiler: [
-          { tool: apple-clang },
-          { tool: llvm, ver: 12 },
-          { tool: llvm, ver: 13 },
-          { tool: llvm, ver: 14 },
-          { tool: llvm, ver: 15 },
-          { tool: llvm, ver: 16 },
-          { tool: llvm, ver: 17 },
-          { tool: llvm, ver: 18 },
-          { tool: gcc, ver: 10 },
-          { tool: gcc, ver: 11 },
-          { tool: gcc, ver: 12 },
-          { tool: gcc, ver: 13 },
-          { tool: gcc, ver: 14 } ]
+          { name: 'Apple Clang' },
+          { name: Clang, ver: 12 },
+          { name: Clang, ver: 13 },
+          { name: Clang, ver: 14 },
+          { name: Clang, ver: 15 },
+          { name: Clang, ver: 16 },
+          { name: Clang, ver: 17 },
+          { name: Clang, ver: 18 },
+          { name: GCC, ver: 10 },
+          { name: GCC, ver: 11 },
+          { name: GCC, ver: 12 },
+          { name: GCC, ver: 13 },
+          { name: GCC, ver: 14 } ]
         build_type: [ Release ]
         os: [ macos-12, macos-13, macos-14 ]
         std: [ 17, 20, 23 ]
         library_type: [ Static ]
         include:
-          - compiler: { tool: gcc }
-            cxx: g++
-            cc: gcc
-          - compiler: { tool: llvm }
-            cxx: clang++
-            cc: clang
-          - compiler: { tool: apple-clang }
+          - compiler: { name: 'Apple Clang' }
             cxx: ''
             cc: ''
+            generator: Ninja
+          - compiler: { name: Clang }
+            cxx: clang++
+            cc: clang
+            package: llvm,
+            generator: Ninja
+          - compiler: { name: GCC }
+            cxx: 'g++-{0}'
+            cc: 'g++-{0}'
+            package: gcc,
+            generator: Ninja
         exclude:
-          - { os: macos-12, compiler: { tool: gcc, ver: 13 } }
-          - { os: macos-13, compiler: { tool: gcc, ver: 10 } }
-          - { os: macos-13, compiler: { tool: gcc, ver: 11 } }
-          - { os: macos-13, compiler: { tool: gcc, ver: 13 } }
-          - { os: macos-14, compiler: { tool: gcc, ver: 10 } }
-          - { compiler: { tool: gcc, ver: 10 }, std: 23 }
+          - { os: macos-12, compiler: { name: GCC, ver: 13 } }
+          - { os: macos-13, compiler: { name: GCC, ver: 10 } }
+          - { os: macos-13, compiler: { name: GCC, ver: 11 } }
+          - { os: macos-13, compiler: { name: GCC, ver: 13 } }
+          - { os: macos-14, compiler: { name: GCC, ver: 10 } }
+          - { compiler: { name: GCC, ver: 10 }, std: 23 }
 
     runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v4
 
       - name: Create Build Environment
-        if: matrix.compiler.tool != 'apple-clang'
+        if: matrix.compiler.name != 'Apple Clang'
         run: |
           brew update &&
-          brew install ${{matrix.compiler.tool}}@${{matrix.compiler.ver}} ninja
+          brew install ${{matrix.package}}@${{matrix.compiler.ver}} ninja
           cmake -E make_directory ${{runner.workspace}}/build
 
       - name: Try Setup LLVM Environment
-        if: matrix.compiler.tool == 'llvm'
+        if: matrix.compiler.name == 'Clang'
         run: |
           echo "PATH=$(brew --prefix llvm@${{matrix.compiler.ver}})/bin:${PATH}" >> $GITHUB_ENV
 
       - name: Configure
         env:
-          CXX: "${{ matrix.compiler.tool == 'gcc' &&  format('{0}-{1}', matrix.cxx, matrix.compiler.ver) || matrix.cxx }}"
-          CC: "${{ matrix.compiler.tool == 'gcc' &&  format('{0}-{1}', matrix.cc, matrix.compiler.ver) || matrix.cc }}"
-        run: cmake -B ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_ALL_TESTS=ON
+          CXX: ${{format(matrix.cxx, matrix.compiler.ver)}}
+          CC: ${{format(matrix.cc, matrix.compiler.ver)}}
+        run: cmake -B ${{runner.workspace}}/build -G ${{matrix.generator}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_ALL_TESTS=ON
 
       - name: Build
         run: cmake --build ${{runner.workspace}}/build --config ${{matrix.build_type}} -j

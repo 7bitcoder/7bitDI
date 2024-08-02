@@ -16,98 +16,98 @@ jobs:
       fail-fast: false
       matrix:
         compiler:
-          - { tool: gcc, ver: 7 }
-          - { tool: gcc, ver: 8 }
-          - { tool: gcc, ver: 9 }
-          - { tool: gcc, ver: 10 }
-          - { tool: gcc, ver: 11 }
-          - { tool: gcc, ver: 12 }
-          - { tool: gcc, ver: 13 }
-          - { tool: gcc, ver: 14 }
-          - { tool: clang, ver: 7 }
-          - { tool: clang, ver: 8 }
-          - { tool: clang, ver: 9 }
-          - { tool: clang, ver: 10 }
-          - { tool: clang, ver: 11 }
-          - { tool: clang, ver: 12 }
-          - { tool: clang, ver: 13 }
-          - { tool: clang, ver: 14 }
-          - { tool: clang, ver: 15 }
-          - { tool: clang, ver: 16 }
-          - { tool: clang, ver: 17 }
-          - { tool: clang, ver: 18 }
+          - { name: GCC, ver: 7 }
+          - { name: GCC, ver: 8 }
+          - { name: GCC, ver: 9 }
+          - { name: GCC, ver: 10 }
+          - { name: GCC, ver: 11 }
+          - { name: GCC, ver: 12 }
+          - { name: GCC, ver: 13 }
+          - { name: GCC, ver: 14 }
+          - { name: Clang, ver: 7 }
+          - { name: Clang, ver: 8 }
+          - { name: Clang, ver: 9 }
+          - { name: Clang, ver: 10 }
+          - { name: Clang, ver: 11 }
+          - { name: Clang, ver: 12 }
+          - { name: Clang, ver: 13 }
+          - { name: Clang, ver: 14 }
+          - { name: Clang, ver: 15 }
+          - { name: Clang, ver: 16 }
+          - { name: Clang, ver: 17 }
+          - { name: Clang, ver: 18 }
         build_type: [ Release ]
         os: [ ubuntu-20.04, ubuntu-22.04, ubuntu-24.04 ]
         std: [ 17, 20, 23 ]
         library_type: [ Static ]
         include:
-          - compiler: { tool: gcc }
+          - compiler: { name: GCC }
             cxx: g++
             cc: gcc
+            packages: 'gcc-{0} g++-{0}'
             generator: Ninja
-          - compiler: { tool: clang }
+          - compiler: { name: Clang }
             cxx: clang++
             cc: clang
+            packages: 'clang-{0}'
             generator: Ninja
         exclude:
-          - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 11 } }
-          - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 12 } }
-          - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 13 } }
-          - { os: ubuntu-20.04, compiler: { tool: gcc, ver: 14 } }
-          - { os: ubuntu-20.04, compiler: { tool: clang, ver: 13 } }
-          - { os: ubuntu-20.04, compiler: { tool: clang, ver: 14 } }
-          - { os: ubuntu-20.04, compiler: { tool: clang, ver: 15 } }
-          - { os: ubuntu-20.04, compiler: { tool: clang, ver: 16 } }
-          - { os: ubuntu-20.04, compiler: { tool: clang, ver: 17 } }
-          - { os: ubuntu-20.04, compiler: { tool: clang, ver: 18 } }
-          - { os: ubuntu-22.04, compiler: { tool: gcc, ver: 7 } }
-          - { os: ubuntu-22.04, compiler: { tool: gcc, ver: 8 } }
-          - { os: ubuntu-22.04, compiler: { tool: gcc, ver: 13 } }
-          - { os: ubuntu-22.04, compiler: { tool: gcc, ver: 14 } }
-          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 7 } }
-          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 8 } }
-          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 9 } }
-          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 10 } }
-          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 16 } }
-          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 17 } }
-          - { os: ubuntu-22.04, compiler: { tool: clang, ver: 18 } }
-          - { os: ubuntu-24.04, compiler: { tool: gcc, ver: 7 } }
-          - { os: ubuntu-24.04, compiler: { tool: gcc, ver: 8 } }
-          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 7 } }
-          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 8 } }
-          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 9 } }
-          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 10 } }
-          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 11 } }
-          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 12 } }
-          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 13 } }
-          - { compiler: { tool: gcc, ver: 7 }, std: 20 }
-          - { compiler: { tool: gcc, ver: 7 }, std: 23 }
-          - { compiler: { tool: gcc, ver: 8 }, std: 23 }
-          - { compiler: { tool: gcc, ver: 9 }, std: 23 }
-          - { compiler: { tool: gcc, ver: 10 }, std: 23 }
-          - { compiler: { tool: clang, ver: 7 }, std: 20 }
-          - { compiler: { tool: clang, ver: 7 }, std: 23 }
-          - { compiler: { tool: clang, ver: 8 }, std: 20 }
-          - { compiler: { tool: clang, ver: 8 }, std: 23 }
-          - { compiler: { tool: clang, ver: 9 }, std: 23 }
-          - { compiler: { tool: clang, ver: 10 }, std: 23 }
-          - { compiler: { tool: clang, ver: 11 }, std: 23 }
-          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 14 }, std: 20 } # gtest broken for now
-          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 14 }, std: 23 } # gtest broken for now
-          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 15 }, std: 20 } # gtest broken for now
-          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 15 }, std: 23 } # gtest broken for now
-          - { os: ubuntu-24.04, compiler: { tool: clang, ver: 17 }, std: 23 } # gtest broken for now
+          - { os: ubuntu-20.04, compiler: { name: GCC, ver: 11 } }
+          - { os: ubuntu-20.04, compiler: { name: GCC, ver: 12 } }
+          - { os: ubuntu-20.04, compiler: { name: GCC, ver: 13 } }
+          - { os: ubuntu-20.04, compiler: { name: GCC, ver: 14 } }
+          - { os: ubuntu-20.04, compiler: { name: Clang, ver: 13 } }
+          - { os: ubuntu-20.04, compiler: { name: Clang, ver: 14 } }
+          - { os: ubuntu-20.04, compiler: { name: Clang, ver: 15 } }
+          - { os: ubuntu-20.04, compiler: { name: Clang, ver: 16 } }
+          - { os: ubuntu-20.04, compiler: { name: Clang, ver: 17 } }
+          - { os: ubuntu-20.04, compiler: { name: Clang, ver: 18 } }
+          - { os: ubuntu-22.04, compiler: { name: GCC, ver: 7 } }
+          - { os: ubuntu-22.04, compiler: { name: GCC, ver: 8 } }
+          - { os: ubuntu-22.04, compiler: { name: GCC, ver: 13 } }
+          - { os: ubuntu-22.04, compiler: { name: GCC, ver: 14 } }
+          - { os: ubuntu-22.04, compiler: { name: Clang, ver: 7 } }
+          - { os: ubuntu-22.04, compiler: { name: Clang, ver: 8 } }
+          - { os: ubuntu-22.04, compiler: { name: Clang, ver: 9 } }
+          - { os: ubuntu-22.04, compiler: { name: Clang, ver: 10 } }
+          - { os: ubuntu-22.04, compiler: { name: Clang, ver: 16 } }
+          - { os: ubuntu-22.04, compiler: { name: Clang, ver: 17 } }
+          - { os: ubuntu-22.04, compiler: { name: Clang, ver: 18 } }
+          - { os: ubuntu-24.04, compiler: { name: GCC, ver: 7 } }
+          - { os: ubuntu-24.04, compiler: { name: GCC, ver: 8 } }
+          - { os: ubuntu-24.04, compiler: { name: Clang, ver: 7 } }
+          - { os: ubuntu-24.04, compiler: { name: Clang, ver: 8 } }
+          - { os: ubuntu-24.04, compiler: { name: Clang, ver: 9 } }
+          - { os: ubuntu-24.04, compiler: { name: Clang, ver: 10 } }
+          - { os: ubuntu-24.04, compiler: { name: Clang, ver: 11 } }
+          - { os: ubuntu-24.04, compiler: { name: Clang, ver: 12 } }
+          - { os: ubuntu-24.04, compiler: { name: Clang, ver: 13 } }
+          - { compiler: { name: GCC, ver: 7 }, std: 20 }
+          - { compiler: { name: GCC, ver: 7 }, std: 23 }
+          - { compiler: { name: GCC, ver: 8 }, std: 23 }
+          - { compiler: { name: GCC, ver: 9 }, std: 23 }
+          - { compiler: { name: GCC, ver: 10 }, std: 23 }
+          - { compiler: { name: Clang, ver: 7 }, std: 20 }
+          - { compiler: { name: Clang, ver: 7 }, std: 23 }
+          - { compiler: { name: Clang, ver: 8 }, std: 20 }
+          - { compiler: { name: Clang, ver: 8 }, std: 23 }
+          - { compiler: { name: Clang, ver: 9 }, std: 23 }
+          - { compiler: { name: Clang, ver: 10 }, std: 23 }
+          - { compiler: { name: Clang, ver: 11 }, std: 23 }
+          - { os: ubuntu-24.04, compiler: { name: Clang, ver: 14 }, std: 20 } # gtest broken for now
+          - { os: ubuntu-24.04, compiler: { name: Clang, ver: 14 }, std: 23 } # gtest broken for now
+          - { os: ubuntu-24.04, compiler: { name: Clang, ver: 15 }, std: 20 } # gtest broken for now
+          - { os: ubuntu-24.04, compiler: { name: Clang, ver: 15 }, std: 23 } # gtest broken for now
+          - { os: ubuntu-24.04, compiler: { name: Clang, ver: 17 }, std: 23 } # gtest broken for now
 
     runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v4
 
       - name: Create Build Environment
-        env:
-          PACKAGES: ${{ matrix.compiler.tool == 'gcc' &&  format('gcc-{0} g++-{0}', matrix.compiler.ver) || format('{0}-{1}', matrix.compiler.tool, matrix.compiler.ver) }}
         run: |
           sudo apt update
-          sudo apt install ${{env.PACKAGES}} ninja-build -y
+          sudo apt install ${{format(matrix.packages, matrix.compiler.ver)}} ninja-build -y
           sudo apt install locales-all
           cmake -E make_directory ${{runner.workspace}}/build
 
