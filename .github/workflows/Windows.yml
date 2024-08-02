@@ -25,57 +25,34 @@ jobs:
       fail-fast: false
       matrix:
         compiler: [
-          #          { name: 'Visual Studio 2017', ver: 15.8.0.0 },
-          #          { name: 'Visual Studio 2017', ver: 15.9.20.0 },
-          #          { name: 'Visual Studio 2017', ver: 15.9.40.0 },
-          #          { name: 'Visual Studio 2017', ver: 15.9.55.0 },
-          { name: 'Visual Studio 2017', ver: 15.9.64 },
-          #          { name: 'Visual Studio 2019', ver: 16.0.0.0 },
-          #          { name: 'Visual Studio 2019', ver: 16.4.0.0 },
-          #          { name: 'Visual Studio 2019', ver: 16.8.0.0 },
-          #          { name: 'Visual Studio 2019', ver: 16.10.0.0 },
-          { name: 'Visual Studio 2019', ver: 16.11.38 },
-          #          { name: 'Visual Studio 2022', ver: 117.0.0.0 },
-          #          { name: 'Visual Studio 2022', ver: 117.4.0.0 },
-          #          { name: 'Visual Studio 2022', ver: 117.8.0.0 },
-          #          { name: 'Visual Studio 2022', ver: 117.9.0.0 },
-          { name: 'Visual Studio 2022', ver: 117.10.5 },
-          #          { name: MinGW, ver: 7.5.0 },
-          #          { name: MinGW, ver: 8.5.0 },
-          #          { name: MinGW, ver: 9.4.0 },
-          #          { name: MinGW, ver: 10.3.0 },
-          #          { name: MinGW, ver: 11.2.0 },
-          #          { name: MinGW, ver: 12.2.0 },
+          { name: MSVC, ver: 141 },
+          { name: MSVC, ver: 142 },
+          { name: MSVC, ver: 143 },
+          { name: MinGW, ver: 7.5.0 },
+          { name: MinGW, ver: 8.5.0 },
+          { name: MinGW, ver: 9.4.0 },
+          { name: MinGW, ver: 10.3.0 },
+          { name: MinGW, ver: 11.2.0 },
+          { name: MinGW, ver: 12.2.0 },
           { name: MinGW, ver: 13.2.0 },
-          #          { name: Clang, ver: 11.1.0 },
-          #          { name: Clang, ver: 12.0.1 },
-          #          { name: Clang, ver: 13.0.1 },
-          #          { name: Clang, ver: 14.0.6 },
-          #          { name: Clang, ver: 15.0.7 },
-          #          { name: Clang, ver: 16.0.6 },
-          #          { name: Clang, ver: 17.0.6 },
-          #          { name: Clang, ver: 18.1.2 },
+          { name: Clang, ver: 11.1.0 },
+          { name: Clang, ver: 12.0.1 },
+          { name: Clang, ver: 13.0.1 },
+          { name: Clang, ver: 14.0.6 },
+          { name: Clang, ver: 15.0.7 },
+          { name: Clang, ver: 16.0.6 },
+          { name: Clang, ver: 17.0.6 },
+          { name: Clang, ver: 18.1.2 },
           { name: Clang, ver: 18.1.8 } ]
         build_type: [ Release ]
         os: [ windows-2019, windows-2022 ]
         std: [ 17, 20, 23 ]
         library_type: [ Static ]
         include:
-          - compiler: { name: 'Visual Studio 2017' }
+          - compiler: { name: MSVC }
             cxx: ''
             cc: ''
-            package: visualstudio2017community
-            generator: 'Visual Studio 15 2017'
-          - compiler: { name: 'Visual Studio 2019' }
-            cxx: ''
-            cc: ''
-            package: visualstudio2019community
-            generator: 'Visual Studio 16 2019'
-          - compiler: { name: 'Visual Studio 2022' }
-            cxx: ''
-            cc: ''
-            package: visualstudio2022community
-            generator: 'Visual Studio 17 2022'
+            generator: ''
           - compiler: { name: MinGW }
             cxx: g++
             cc: gcc
@@ -92,6 +69,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Create Build Environment
+        if: matrix.compiler.tool != 'MSVC'
         shell: bash
         run: choco install ${{matrix.package}} --version ${{matrix.compiler.ver}} --allow-downgrade -y && choco install ninja && cmake -E make_directory ${{runner.workspace}}/build
 
@@ -99,12 +77,13 @@ jobs:
         if: matrix.compiler.name == 'MinGW'
         shell: bash
         run: |
-          echo "PATH=${{env.CHOCO_MINGW_BIN_DIR}}:${PATH}" >> $GITHUB_ENV
+          echo "PATH=${{env.CHOCO_MINGW_BIN_DIR}};${PATH}" >> $GITHUB_ENV
 
       - name: Configure
         env:
           CXX: ${{matrix.cxx}}
           CC: ${{matrix.cc}}
+          PARAMETERS: ${{ matrix.compiler.tool == 'MSVC' && format('-A x64 -T v{0}', matrix.compiler.ver) || format('-G "{0}"', matrix.generator) }}
         run: cmake -B ${{runner.workspace}}/build -G "${{matrix.generator}}" ${{env.PARAMETERS}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_ALL_TESTS=ON
 
       - name: Build
