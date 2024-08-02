@@ -15,7 +15,7 @@ on:
       - 'README.md'
 
 env:
-  CHOCO_MINGW_BIN_DIR: C:\\ProgramData\\chocolatey\\lib\\mingw\\tools\\install\\mingw64\\bin
+  CHOCO_MINGW_BIN_DIR: C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin
 
 jobs:
   test:
@@ -99,8 +99,7 @@ jobs:
         if: matrix.compiler.name == 'MinGW'
         shell: bash
         run: |
-          echo "PATH=${{env.CHOCO_MINGW_BIN_DIR}};${PATH}" |
-          echo "PATH=${{env.CHOCO_MINGW_BIN_DIR}};${PATH}" >> $GITHUB_ENV
+          echo "{{env.CHOCO_MINGW_BIN_DIR}}" >> $GITHUB_PATH
 
       - name: Configure
         env:
