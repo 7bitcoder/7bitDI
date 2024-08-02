@@ -95,10 +95,6 @@ jobs:
         shell: bash
         run: choco install ${{matrix.package}} --version ${{matrix.compiler.ver}} --allow-downgrade -y && choco install ninja && cmake -E make_directory ${{runner.workspace}}/build
 
-      - name: Try Setup MinGW Environment
-        if: matrix.compiler.name == 'MinGW'
-        run: "PATH=${{env.CHOCO_MINGW_BIN_DIR}};"+$env:path >> $GITHUB_ENV
-
       - name: Configure
         env:
           CXX: ${{matrix.cxx}}
