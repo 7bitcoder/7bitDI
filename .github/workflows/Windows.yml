@@ -75,7 +75,7 @@ jobs:
 
       - name: Try Setup MinGW Environment
         if: matrix.compiler.name == 'MinGW'
-        run: "PATH=${{env.CHOCO_MINGW_BIN_DIR}};" + (Get-Content $env:GITHUB_PATH))" >> $env:GITHUB_ENV
+        run: ("PATH=${{env.CHOCO_MINGW_BIN_DIR}};" + (Get-Content $env:GITHUB_PATH)) >> $env:GITHUB_ENV
 
       - name: Configure
         env:
