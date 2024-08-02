@@ -1,6 +1,18 @@
 Meta
 ========================================
 
+.. doxygenstruct:: sb::di::details::IsFunctor
+   :members:
+   :undoc-members:
+
+.. doxygenstruct:: sb::di::details::IsFunctor< R (T::*)(Args...) >
+   :members:
+   :undoc-members:
+
+.. doxygenstruct:: sb::di::details::IsFunctor< R (T::*)(Args...) const >
+   :members:
+   :undoc-members:
+
 .. doxygenstruct:: sb::di::details::IsCopyCtor
    :members:
    :undoc-members:
@@ -18,6 +30,14 @@ Meta
    :undoc-members:
 
 .. doxygenstruct:: sb::di::details::IsUniquePtr< std::unique_ptr< T > >
+   :members:
+   :undoc-members:
+
+.. doxygenstruct:: sb::di::details::IsInitializerList
+   :members:
+   :undoc-members:
+
+.. doxygenstruct:: sb::di::details::IsInitializerList< std::initializer_list< T > >
    :members:
    :undoc-members:
 

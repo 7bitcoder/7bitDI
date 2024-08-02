@@ -67,7 +67,7 @@ TEST_F(StringTest, ShouldFormatLongLong)
     EXPECT_EQ(sb::di::details::String::fmt("{}", 0ll), "0");
     EXPECT_EQ(sb::di::details::String::fmt("{}{}", 8ll, 2ll), "82");
     EXPECT_EQ(sb::di::details::String::fmt("{04}{}", 8ll, 2ll), "00082");
-    EXPECT_EQ(sb::di::details::String::fmt("{} n {}", 8ll, 2ll), "8 n 2");
+    EXPECT_EQ(sb::di::details::String::fmt("{} no {}", 8ll, 2ll), "8 no 2");
     EXPECT_EQ(sb::di::details::String::fmt("alice", 8ll, 2ll), "alice");
     EXPECT_EQ(sb::di::details::String::fmt("alice {}", 8ll, 2ll), "alice 8");
     EXPECT_EQ(sb::di::details::String::fmt("{} alice '{}'", 8ll, 2ll), "8 alice '2'");
