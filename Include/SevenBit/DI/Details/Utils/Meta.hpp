@@ -16,7 +16,7 @@ namespace sb::di::details
     template <class R, class T, class... Args> struct IsFunctor<R (T::*)(Args...) const> : std::true_type
     {
     };
-    template <class T> inline static constexpr bool IsFunctorV = IsFunctor<decltype(&T::operator())>::value;
+    template <class T> inline constexpr bool IsFunctorV = IsFunctor<decltype(&T::operator())>::value;
 
     template <class, class> struct IsCopyCtor : std::false_type
     {
@@ -27,7 +27,7 @@ namespace sb::di::details
     template <class T> struct IsCopyCtor<T, const T> : std::true_type
     {
     };
-    template <class T, class U> inline static constexpr bool IsCopyCtorV = IsCopyCtor<T, U>::value;
+    template <class T, class U> inline constexpr bool IsCopyCtorV = IsCopyCtor<T, U>::value;
 
     template <class T> struct IsUniquePtr : std::false_type
     {

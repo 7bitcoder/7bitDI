@@ -1,18 +1,6 @@
 Meta
 ========================================
 
-.. doxygenstruct:: sb::di::details::IsFunctor
-   :members:
-   :undoc-members:
-
-.. doxygenstruct:: sb::di::details::IsFunctor< R (T::*)(Args...) >
-   :members:
-   :undoc-members:
-
-.. doxygenstruct:: sb::di::details::IsFunctor< R (T::*)(Args...) const >
-   :members:
-   :undoc-members:
-
 .. doxygenstruct:: sb::di::details::IsCopyCtor
    :members:
    :undoc-members:
