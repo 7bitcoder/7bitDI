@@ -46,7 +46,7 @@ jobs:
           - compiler: { name: GCC }
             cxx: 'g++-{0}'
             cc: 'g++-{0}'
-            package: gcc,
+            package: gcc
             generator: Ninja
         exclude:
           - { os: macos-12, compiler: { name: GCC, ver: 13 } }
