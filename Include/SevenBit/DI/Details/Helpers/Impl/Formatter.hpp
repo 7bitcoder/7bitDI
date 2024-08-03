@@ -10,7 +10,7 @@ namespace sb::di::details
 {
     namespace FormatterInternal
     {
-        int assertFormatRes(int result, const char *fmt)
+        inline int assertFormatRes(int result, const char *fmt)
         {
             if (result < 0)
             {
@@ -36,7 +36,7 @@ namespace sb::di::details
             }
         }
 
-        std::string makeArgFmt(std::string_view coreFmt, std::string_view baseFmt)
+        inline std::string makeArgFmt(std::string_view coreFmt, std::string_view baseFmt)
         {
             std::string fmt = "%";
             fmt += coreFmt;
