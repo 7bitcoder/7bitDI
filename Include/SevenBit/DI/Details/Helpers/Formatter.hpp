@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <utility>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
@@ -56,37 +57,6 @@ namespace sb::di::details
         void append(float arg, std::string_view fmt = "");
         void append(double arg, std::string_view fmt = "");
         void append(long double arg, std::string_view fmt = "");
-
-        template <class N> void appendNum(N arg, const std::string_view coreFmt, const char *baseFmt)
-        {
-            if (!coreFmt.empty())
-            {
-                const auto format = makeArgFmt(coreFmt, baseFmt);
-                return appendFormatted(arg, format.c_str());
-            }
-            return appendFormatted(arg, baseFmt);
-        }
-
-        template <class T> void appendFormatted(T data, const char *fmt)
-        {
-            constexpr size_t buffSize = 100;
-            char buffer[buffSize];
-            auto size = assertFormatRes(std::snprintf(buffer, buffSize, fmt, data), fmt);
-            if (size < buffSize)
-            {
-                result += std::string_view(buffer, size);
-            }
-            else
-            {
-                std::vector<char> largeBuff(size + 1);
-                assertFormatRes(std::snprintf(largeBuff.data(), size + 1, fmt, data), fmt);
-                result += std::string_view(largeBuff.data(), size);
-            }
-        }
-
-        static std::string makeArgFmt(std::string_view coreFmt, std::string_view baseFmt);
-
-        static int assertFormatRes(int result, const char *fmt);
     };
 } // namespace sb::di::details
 
