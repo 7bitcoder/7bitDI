@@ -35,7 +35,7 @@ TEST_F(InheritanceExternalKeyedTest, ShouldFailGetServiceDueToAlreadyRegisteredS
 
     sb::di::ServiceProviderOptions options;
     options.checkServiceGlobalUniqueness = true;
-    EXPECT_THROW(collection.buildServiceProvider(options), sb::di::ServiceAlreadyRegisteredException);
+    EXPECT_THROW(collection.buildServiceProvider(options), sb::di::ServiceRegisterException);
 }
 
 TEST_F(InheritanceExternalKeyedTest, ShouldNotFailGetServiceDueToAlreadyRegisteredService)

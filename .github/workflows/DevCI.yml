@@ -15,9 +15,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-22.04, macos-12, windows-2022 ]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
         library_type: [ HeaderOnly, Static, Shared ]
-        std: [ 17, 20 ]
+        std: [ 17, 20, 23 ]
         build_type: [ Release ]
 
     runs-on: ${{matrix.os}}

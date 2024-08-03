@@ -11,5 +11,4 @@ add_custom_command(OUTPUT ${_7BIT_DI_SINGLE_OUT}
 add_custom_target(GenerateSingleHeader
         ALL DEPENDS
         ${_7BIT_DI_SINGLE_OUT}
-        ${_7BIT_DI_MAIN_HEADER}
 )

@@ -14,3 +14,4 @@ sb::di::details - Utils
    utils/require.rst
    utils/requiredescriptor.rst
    utils/requireinstance.rst
+   utils/string.rst

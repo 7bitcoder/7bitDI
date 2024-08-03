@@ -134,7 +134,7 @@ namespace sb::di
                     nullptr,
                     lifeTime,
                     std::make_unique<details::ServiceFactory<TImplementation>>(),
-                    details::Cast::getCastOffset<TService, TImplementation>()};
+                    details::Cast::getOffset<TService, TImplementation>()};
         }
 
         /**
@@ -206,7 +206,7 @@ namespace sb::di
                     nullptr,
                     ServiceLifeTime::singleton(),
                     std::make_unique<details::ExternalServiceFactory<TImplementation>>(service),
-                    details::Cast::getCastOffset<TService, TImplementation>()};
+                    details::Cast::getOffset<TService, TImplementation>()};
         }
 
         /**
@@ -457,7 +457,7 @@ namespace sb::di
                     nullptr,
                     lifeTime,
                     std::make_unique<Factory>(std::forward<FactoryFcn>(factory)),
-                    details::Cast::getCastOffset<TFinalService, TImplementation>()};
+                    details::Cast::getOffset<TFinalService, TImplementation>()};
         }
 
         /**
@@ -492,7 +492,7 @@ namespace sb::di
                     std::move(serviceKey),
                     ServiceLifeTime::scoped(),
                     nullptr,
-                    details::Cast::getCastOffset<TAlias, TService>()};
+                    details::Cast::getOffset<TAlias, TService>()};
         }
     };
 } // namespace sb::di

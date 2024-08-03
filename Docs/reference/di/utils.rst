@@ -8,4 +8,4 @@ sb::di - Utils
    utils/globalservices
    utils/injected
    utils/register
-   utils/serviceextractor
+   utils/serviceinlineextractor

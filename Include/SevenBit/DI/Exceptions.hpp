@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <string_view>
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
@@ -22,45 +23,35 @@ namespace sb::di
         explicit NullPointerException(const std::string &why);
     };
 
+    struct EXPORT ServiceRegisterException : InjectorException
+    {
+        explicit ServiceRegisterException(TypeId typeId, std::string_view reason);
+    };
+
+    struct EXPORT CannotMoveOutServiceException : InjectorException
+    {
+        CannotMoveOutServiceException(TypeId typeId, std::string_view reason);
+    };
+
+    struct EXPORT CannotReleaseServiceException : InjectorException
+    {
+        CannotReleaseServiceException(TypeId typeId, std::string_view reason);
+    };
+
+    struct EXPORT ServiceNotFoundException : InjectorException
+    {
+        ServiceNotFoundException(TypeId typeId, std::string_view reason);
+    };
+
     struct EXPORT InvalidServiceException : InjectorException
     {
         explicit InvalidServiceException();
         explicit InvalidServiceException(TypeId typeId);
     };
 
-    struct EXPORT CannotReleaseServiceException : InjectorException
-    {
-        CannotReleaseServiceException(TypeId typeId, const std::string &reason);
-    };
-
-    struct EXPORT CannotMoveOutServiceException : InjectorException
-    {
-        CannotMoveOutServiceException(TypeId typeId, const std::string &reason);
-    };
-
-    struct EXPORT ServiceNotFoundException : InjectorException
-    {
-        ServiceNotFoundException(TypeId typeIndex, const std::string &reason);
-    };
-
-    struct EXPORT ServiceAlreadyRegisteredException : InjectorException
-    {
-        explicit ServiceAlreadyRegisteredException(TypeId typeIndex);
-    };
-
-    struct EXPORT ServiceLifeTimeMismatchException : InjectorException
-    {
-        ServiceLifeTimeMismatchException(TypeId typeIndex, TypeId interface);
-    };
-
-    struct EXPORT ServiceAliasMismatchException : InjectorException
-    {
-        ServiceAliasMismatchException(TypeId typeIndex, TypeId interface, bool shoudBeAlias);
-    };
-
     struct EXPORT CircularDependencyException : InjectorException
     {
-        explicit CircularDependencyException(TypeId typeIndex);
+        explicit CircularDependencyException(TypeId typeId);
     };
 } // namespace sb::di
 

@@ -21,6 +21,14 @@ Meta
    :members:
    :undoc-members:
 
+.. doxygenstruct:: sb::di::details::IsInitializerList
+   :members:
+   :undoc-members:
+
+.. doxygenstruct:: sb::di::details::IsInitializerList< std::initializer_list< T > >
+   :members:
+   :undoc-members:
+
 .. doxygenstruct:: sb::di::details::RemoveUniquePtr
    :members:
    :undoc-members:

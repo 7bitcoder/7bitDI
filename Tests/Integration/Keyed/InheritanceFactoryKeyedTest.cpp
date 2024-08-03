@@ -31,7 +31,7 @@ TEST_F(InheritanceFactoryKeyedTest, ShouldFailGetServiceDueToAlreadyRegisteredSe
 
     sb::di::ServiceProviderOptions options;
     options.checkServiceGlobalUniqueness = true;
-    EXPECT_THROW(collection.buildServiceProvider(options), sb::di::ServiceAlreadyRegisteredException);
+    EXPECT_THROW(collection.buildServiceProvider(options), sb::di::ServiceRegisterException);
 }
 
 TEST_F(InheritanceFactoryKeyedTest, ShouldNotFailGetServiceDueToAlreadyRegisteredService)
@@ -55,7 +55,7 @@ TEST_F(InheritanceFactoryKeyedTest, ShouldFailGetServiceDueToLifetimeMissmatchSe
     collection.addKeyedSingleton<TestInheritClass1>("key", [] { return TestInheritClass5{}; });
     collection.addKeyedTransient<TestInheritClass1>("key", [] { return TestInheritClass4{}; });
 
-    EXPECT_THROW(collection.buildServiceProvider(), sb::di::ServiceLifeTimeMismatchException);
+    EXPECT_THROW(collection.buildServiceProvider(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(InheritanceFactoryKeyedTest, ShouldTryGetService)

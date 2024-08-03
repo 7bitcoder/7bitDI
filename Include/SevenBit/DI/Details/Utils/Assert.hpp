@@ -6,7 +6,7 @@
 
 namespace sb::di::details
 {
-    struct EXPORT Assert
+    struct Assert
     {
         template <class Type> static void serviceType()
         {
@@ -40,7 +40,6 @@ namespace sb::di::details
             serviceType<TService>();
 
             static_assert(InheritanceV<TAlias, TService>, "TService must inherit from alias type: TAlias");
-
             static_assert(!std::is_same_v<TAlias, TService>, "Alias type: TAlias cannot be same as TService");
         }
     };

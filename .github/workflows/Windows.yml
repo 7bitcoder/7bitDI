@@ -2,14 +2,14 @@ name: Windows
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: [ 'main' ]
     paths-ignore:
-      - "Docs/**"
-      - ".readthedocs.yaml"
-      - "README.md"
+      - 'Docs/**'
+      - '.readthedocs.yaml'
+      - 'README.md'
 
 env:
-  CHOCO_LIB_DIR: C:\\ProgramData\\chocolatey\\lib
+  CHOCO_MINGW_BIN_DIR: C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin
 
 jobs:
   test:
@@ -19,60 +19,79 @@ jobs:
       fail-fast: false
       matrix:
         compiler: [
-          { tool: msvc, ver: 141 },
-          { tool: msvc, ver: 142 },
-          { tool: mingw, ver: 7.5.0 },
-          { tool: mingw, ver: 8.5.0 },
-          { tool: mingw, ver: 9.4.0 },
-          { tool: mingw, ver: 10.3.0 },
-          { tool: mingw, ver: 11.2.0 },
-          { tool: mingw, ver: 12.2.0 },
-          { tool: mingw, ver: 13.2.0 },
-          { tool: LLVM, ver: 11.1.0 },
-          { tool: LLVM, ver: 12.0.1 },
-          { tool: LLVM, ver: 13.0.1 },
-          { tool: LLVM, ver: 14.0.6 },
-          { tool: LLVM, ver: 15.0.7 },
-          { tool: LLVM, ver: 16.0.6 },
-          { tool: LLVM, ver: 17.0.6 },
-          { tool: LLVM, ver: 18.1.2 } ]
+          { name: MSVC, ver: 141 },
+          { name: MSVC, ver: 142 },
+          { name: MSVC, ver: 143 },
+          { name: MinGW, ver: 7.5.0 },
+          { name: MinGW, ver: 8.5.0 },
+          { name: MinGW, ver: 9.4.0 },
+          { name: MinGW, ver: 10.3.0 },
+          { name: MinGW, ver: 11.2.0 },
+          { name: MinGW, ver: 12.2.0 },
+          { name: Clang, ver: 11.1.0 },
+          { name: Clang, ver: 12.0.1 },
+          { name: Clang, ver: 13.0.1 },
+          { name: Clang, ver: 14.0.6 },
+          { name: Clang, ver: 15.0.7 },
+          { name: Clang, ver: 16.0.6 },
+          { name: Clang, ver: 17.0.6 },
+          { name: Clang, ver: 18.1.2 },
+          { name: Clang, ver: 18.1.8 } ]
         build_type: [ Release ]
-        os: [ windows-2019 ]
-        std: [ 17 ]
+        os: [ windows-2019, windows-2022 ]
+        std: [ 17, 20, 23 ]
         library_type: [ Static ]
         include:
-          - compiler: { tool: mingw }
-            cxx: g++
-            cc: gcc
-            generator: 'MinGW Makefiles'
-          - compiler: { tool: LLVM }
-            cxx: clang++
-            cc: clang
-            generator: Ninja
-          - compiler: { tool: msvc }
+          - compiler: { name: MSVC }
             cxx: ''
             cc: ''
             generator: ''
+          - compiler: { name: MinGW }
+            cxx: g++
+            cc: gcc
+            package: mingw
+            generator: 'MinGW Makefiles'
+          - compiler: { name: Clang }
+            cxx: clang++
+            cc: clang
+            package: LLVM
+            generator: Ninja
+        exclude:
+          - { os: windows-2019, compiler: { name: MSVC, ver: 143 } }
+          - { os: windows-2022, compiler: { name: MSVC, ver: 141 } }
+          - { os: windows-2022, compiler: { name: Clang, ver: 11.1.0 } }
+          - { os: windows-2022, compiler: { name: Clang, ver: 12.0.1 } }
+          - { os: windows-2022, compiler: { name: Clang, ver: 13.0.1 } }
+          - { os: windows-2022, compiler: { name: Clang, ver: 14.0.6 } }
+          - { os: windows-2022, compiler: { name: Clang, ver: 15.0.7 } }
+          - { os: windows-2022, compiler: { name: Clang, ver: 16.0.6 } }
+          - { compiler: { name: MSVC, ver: 141 }, std: 23 }
+          - { compiler: { name: MinGW, ver: 7.5.0 }, std: 20 }
+          - { compiler: { name: MinGW, ver: 7.5.0 }, std: 23 }
+          - { compiler: { name: MinGW, ver: 8.5.0 }, std: 23 }
+          - { compiler: { name: MinGW, ver: 9.4.0 }, std: 23 }
+          - { compiler: { name: MinGW, ver: 10.3.0 }, std: 23 }
+          - { compiler: { name: Clang, ver: 11.1.0 }, std: 23 }
 
     runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v4
 
       - name: Create Build Environment
-        if: matrix.compiler.tool != 'msvc'
+        if: matrix.compiler.name != 'MSVC'
         shell: bash
-        run: choco install ${{matrix.compiler.tool}} --version ${{matrix.compiler.ver}} --allow-downgrade -y && choco install ninja && cmake -E make_directory ${{runner.workspace}}/build
+        run: choco install ${{matrix.package}} --version ${{matrix.compiler.ver}} --allow-downgrade -y && choco install ninja && cmake -E make_directory ${{runner.workspace}}/build
 
-      - name: Update Sys Path
-        if: matrix.compiler.tool == 'mingw'
-        run: ("${{env.CHOCO_LIB_DIR}}\\mingw\\tools\\install\\mingw64\\bin;" + (Get-Content -Path $env:GITHUB_PATH)) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
+      - name: Try Setup MinGW Environment
+        if: matrix.compiler.name == 'MinGW'
+        run: ("${{env.CHOCO_MINGW_BIN_DIR}};" + (Get-Content -Path $env:GITHUB_PATH)) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
         shell: pwsh
 
       - name: Configure
         env:
           CXX: ${{matrix.cxx}}
           CC: ${{matrix.cc}}
-          PARAMETERS: ${{ matrix.compiler.tool == 'msvc' && format('-A x64 -T v{0}', matrix.compiler.ver) || format('-G "{0}"', matrix.generator) }}
+          PARAMETERS: ${{ matrix.compiler.name == 'MSVC' && format('-A x64 -T v{0}', matrix.compiler.ver) || format('-G "{0}"', matrix.generator) }}
         run: cmake -B ${{runner.workspace}}/build ${{env.PARAMETERS}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_ALL_TESTS=ON
 
       - name: Build

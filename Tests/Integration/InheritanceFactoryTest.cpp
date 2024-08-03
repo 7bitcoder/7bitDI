@@ -31,7 +31,7 @@ TEST_F(InheritanceFactoryTest, ShouldFailGetServiceDueToAlreadyRegisteredService
 
     sb::di::ServiceProviderOptions options;
     options.checkServiceGlobalUniqueness = true;
-    EXPECT_THROW(collection.buildServiceProvider(options), sb::di::ServiceAlreadyRegisteredException);
+    EXPECT_THROW(collection.buildServiceProvider(options), sb::di::ServiceRegisterException);
 }
 
 TEST_F(InheritanceFactoryTest, ShouldNotFailGetServiceDueToAlreadyRegisteredService)
@@ -55,7 +55,7 @@ TEST_F(InheritanceFactoryTest, ShouldFailGetServiceDueToLifetimeMissmatchService
     collection.addSingleton<TestInheritClass1>([] { return TestInheritClass5{}; });
     collection.addTransient<TestInheritClass1>([] { return TestInheritClass4{}; });
 
-    EXPECT_THROW(collection.buildServiceProvider(), sb::di::ServiceLifeTimeMismatchException);
+    EXPECT_THROW(collection.buildServiceProvider(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(InheritanceFactoryTest, ShouldTryGetService)

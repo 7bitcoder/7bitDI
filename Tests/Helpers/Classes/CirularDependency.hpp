@@ -17,10 +17,19 @@ struct CircularDependencyUniqueB;
 
 struct CircularDependencyUniqueA
 {
-    explicit CircularDependencyUniqueA(std::unique_ptr<CircularDependencyUniqueB> b) {}
+    explicit CircularDependencyUniqueA(std::unique_ptr<CircularDependencyUniqueB>);
+
+    ~CircularDependencyUniqueA();
 };
 
 struct CircularDependencyUniqueB
 {
-    explicit CircularDependencyUniqueB(std::unique_ptr<CircularDependencyUniqueA> a) {}
+    explicit CircularDependencyUniqueB(std::unique_ptr<CircularDependencyUniqueA>);
+
+    ~CircularDependencyUniqueB();
 };
+
+inline CircularDependencyUniqueA::CircularDependencyUniqueA(std::unique_ptr<CircularDependencyUniqueB> b) {}
+inline CircularDependencyUniqueA::~CircularDependencyUniqueA() = default;
+inline CircularDependencyUniqueB::CircularDependencyUniqueB(std::unique_ptr<CircularDependencyUniqueA> a) {}
+inline CircularDependencyUniqueB::~CircularDependencyUniqueB() = default;

@@ -5,6 +5,9 @@ Examples
    :maxdepth: 2
    :titlesonly:
 
-   examples/simple
-   examples/logger
    examples/cli
+   examples/logger
+   examples/message-bus
+   examples/permissions
+   examples/simple
+   examples/tester

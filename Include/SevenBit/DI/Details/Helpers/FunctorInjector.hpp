@@ -2,53 +2,28 @@
 
 #include "SevenBit/DI/LibraryConfig.hpp"
 
-#include "SevenBit/DI/Details/Helpers/ServiceGetter.hpp"
+#include "ServiceGetter.hpp"
 
 namespace sb::di::details
 {
-    template <class R, class F, class... Args> class InternalFunctorInjector
+    template <class F> class FunctorInjector
     {
+        static_assert(IsFunctorV<F> || notSupportedType<F>, "Object is not functor/lambda");
+
         F &_functor;
         ServiceProvider &_serviceProvider;
 
       public:
-        using ReturnType = R;
+        FunctorInjector(F &functor, ServiceProvider &provider) : _functor(functor), _serviceProvider(provider) {}
+        FunctorInjector(F *functor, ServiceProvider *provider) : FunctorInjector(*functor, *provider) {}
 
-        InternalFunctorInjector(F &functor, ServiceProvider &serviceProvider)
-            : _functor(functor), _serviceProvider(serviceProvider)
-        {
-        }
+        auto operator()() { return matchCall(&F::operator()); }
 
-        R call() { return _functor(ServiceGetter<Args>::get(_serviceProvider)...); }
+      private:
+        template <class R, class T, class... Args> R matchCall(R (T::*)(Args...)) { return call<R, Args...>(); }
+
+        template <class R, class T, class... Args> R matchCall(R (T::*)(Args...) const) { return call<R, Args...>(); }
+
+        template <class R, class... Args> R call() { return _functor(ServiceGetter<Args>::get(_serviceProvider)...); }
     };
-
-    template <class F> struct InternalBadFunctor
-    {
-        using ReturnType = int;
-
-        InternalBadFunctor(F &, ServiceProvider &)
-        {
-            static_assert(notSupportedType<F>, "Object is not functor/lambda");
-        }
-
-        int call() { return 0; }
-    };
-
-    template <class F> struct FunctorInjectorResolver
-    {
-        using Injector = InternalBadFunctor<F>;
-    };
-
-    template <class R, class F, class... Args> struct FunctorInjectorResolver<R (F::*)(Args...) const>
-    {
-        using Injector = InternalFunctorInjector<R, F, Args...>;
-    };
-
-    template <class R, class F, class... Args> struct FunctorInjectorResolver<R (F::*)(Args...)>
-    {
-        using Injector = InternalFunctorInjector<R, F, Args...>;
-    };
-
-    template <class TFunctor>
-    using FunctorInjector = typename FunctorInjectorResolver<decltype(&TFunctor::operator())>::Injector;
 } // namespace sb::di::details

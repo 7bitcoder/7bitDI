@@ -36,5 +36,5 @@ TEST_F(FunctorInjectorTest, ShouldInvokeFuncFactory)
 
     sb::di::details::FunctorInjector<decltype(func)> invoker{func, mock};
 
-    EXPECT_EQ(invoker.call(), 1);
+    EXPECT_EQ(invoker(), 1);
 }

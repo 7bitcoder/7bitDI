@@ -54,7 +54,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAlreadyRegister
         provider.init(mock);
     };
 
-    EXPECT_THROW(act(), sb::di::ServiceAlreadyRegisteredException);
+    EXPECT_THROW(act(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAlreadyRegisteredKeyedService)
@@ -74,7 +74,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAlreadyRegister
         provider.init(mock);
     };
 
-    EXPECT_THROW(act(), sb::di::ServiceAlreadyRegisteredException);
+    EXPECT_THROW(act(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAlreadyRegisteredInheritedService)
@@ -91,7 +91,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAlreadyRegister
         provider.init(mock);
     };
 
-    EXPECT_THROW(act(), sb::di::ServiceAlreadyRegisteredException);
+    EXPECT_THROW(act(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAlreadyRegisteredKeyedInheritedService)
@@ -111,7 +111,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAlreadyRegister
         provider.init(mock);
     };
 
-    EXPECT_THROW(act(), sb::di::ServiceAlreadyRegisteredException);
+    EXPECT_THROW(act(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAliasMissmatchInheritedService)
@@ -128,7 +128,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAliasMissmatchI
         provider.init(mock);
     };
 
-    EXPECT_THROW(act(), sb::di::ServiceAliasMismatchException);
+    EXPECT_THROW(act(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAliasMissmatchOpositeInheritedService)
@@ -145,7 +145,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToAliasMissmatchO
         provider.init(mock);
     };
 
-    EXPECT_THROW(act(), sb::di::ServiceAliasMismatchException);
+    EXPECT_THROW(act(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(ServiceInstanceProviderRootTest, ShouldNotFailGetServiceDueToAlreadyRegisteredService)
@@ -248,7 +248,7 @@ TEST_F(ServiceInstanceProviderRootTest, ShouldFailGetServiceDueToLifetimeMissmat
         provider.init(mock);
     };
 
-    EXPECT_THROW(act(), sb::di::ServiceLifeTimeMismatchException);
+    EXPECT_THROW(act(), sb::di::ServiceRegisterException);
 }
 
 TEST_F(ServiceInstanceProviderRootTest, ShouldPrebuildSingletons)

@@ -5,6 +5,7 @@
 #include "SevenBit/DI/LibraryConfig.hpp"
 
 #include "SevenBit/DI/Details/Utils/Check.hpp"
+#include "SevenBit/DI/Details/Utils/String.hpp"
 #include "SevenBit/DI/Exceptions.hpp"
 
 namespace sb::di::details
@@ -45,9 +46,9 @@ namespace sb::di::details
         {
             if (!ptr)
             {
-                const auto message = !failMessage.empty()
-                                         ? std::string{failMessage}
-                                         : std::string{"Object of type: '"} + typeid(T).name() + "' cannot be null";
+                const auto message = failMessage.empty()
+                                         ? details::String::fmt("Object of type: '{}' cannot be null", typeid(T).name())
+                                         : std::string{failMessage};
                 throw NullPointerException(message);
             }
         }
@@ -64,8 +65,8 @@ namespace sb::di::details
             {
                 auto index = static_cast<std::underlying_type_t<TEnum>>(value);
                 auto count = static_cast<std::underlying_type_t<TEnum>>(TEnum::Count);
-                throw InjectorException{"enum value: " + std::to_string(index) + " is invalid, shoud be in range [0" +
-                                        std::to_string(count) + ")"};
+                throw InjectorException{
+                    details::String::fmt("Enum value: {} is invalid, should be in range [0 {})", index, count)};
             }
         }
     };

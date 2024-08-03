@@ -9,7 +9,7 @@
 
 namespace sb::di
 {
-    struct ServiceExtractor
+    struct ServiceInlineExtractor
     {
         ServiceProvider &provider;
 

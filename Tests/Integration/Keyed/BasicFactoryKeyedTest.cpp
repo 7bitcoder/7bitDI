@@ -33,7 +33,7 @@ TEST_F(BasicFactoryKeyedTest, ShouldFailGetServiceDueToAlreadyRegisteredService)
 
     sb::di::ServiceProviderOptions options;
     options.checkServiceGlobalUniqueness = true;
-    EXPECT_THROW(collection.buildServiceProvider(options), sb::di::ServiceAlreadyRegisteredException);
+    EXPECT_THROW(collection.buildServiceProvider(options), sb::di::ServiceRegisterException);
 }
 
 TEST_F(BasicFactoryKeyedTest, ShouldNotFailGetServiceDueToAlreadyRegisteredService)
