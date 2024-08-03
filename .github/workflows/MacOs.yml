@@ -76,7 +76,7 @@ jobs:
         env:
           CXX: ${{format(matrix.cxx, matrix.compiler.ver)}}
           CC: ${{format(matrix.cc, matrix.compiler.ver)}}
-        run: cmake -B ${{runner.workspace}}/build -G ${{matrix.generator}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_ALL_TESTS=ON
+        run: cmake -B ${{runner.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} -D_7BIT_DI_LIBRARY_TYPE=${{matrix.library_type}} -D_7BIT_DI_BUILD_ALL_TESTS=ON
 
       - name: Build
         run: cmake --build ${{runner.workspace}}/build --config ${{matrix.build_type}} -j
