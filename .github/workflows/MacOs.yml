@@ -45,7 +45,7 @@ jobs:
             generator: Ninja
           - compiler: { name: GCC }
             cxx: 'g++-{0}'
-            cc: 'g++-{0}'
+            cc: 'gcc-{0}'
             package: gcc
             generator: Ninja
         exclude:
