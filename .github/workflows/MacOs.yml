@@ -41,7 +41,7 @@ jobs:
           - compiler: { name: Clang }
             cxx: clang++
             cc: clang
-            package: llvm,
+            package: llvm
             generator: Ninja
           - compiler: { name: GCC }
             cxx: 'g++-{0}'
