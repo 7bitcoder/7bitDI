@@ -19,6 +19,11 @@ namespace sb::di
         [[nodiscard]] ServiceProvider &getProvider() const { return _provider; }
 
         [[nodiscard]] ServiceInlineExtractor inject() const { return ServiceInlineExtractor{getProvider()}; }
+
+        [[nodiscard]] KeyedServiceInlineExtractor inject(const std::string_view key) const
+        {
+            return KeyedServiceInlineExtractor{getProvider(), key};
+        }
     };
 
     template <class TService, class TImplementation = TService>
